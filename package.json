@@ -101,7 +101,7 @@
     ],
     "globals": {
       "ts-jest": {
-        "tsConfigFile": "/Users/jeongjingyeong/workspace/research/codechain-explorer/tsconfig.test.json"
+        "tsConfigFile": "/Users/jeongjingyeong/workspace/research/codechain-explorer/tsconfig.client.test.json"
       }
     }
   },
