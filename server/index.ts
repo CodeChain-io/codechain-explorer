@@ -4,6 +4,7 @@ import * as web from "./web";
 
 export interface ServerConfig {
     httpPort: number;
+    sdkHttpServer: string;
 }
 
 const main = () => {

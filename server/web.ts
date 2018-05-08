@@ -5,8 +5,11 @@ import * as bodyParser from "body-parser";
 import * as express from "express";
 
 import { ServerConfig } from "./";
+import { createApiRouter } from "./api";
+import { ServerContext } from "./context";
 
-export function run(options: ServerConfig) {
+export async function run(options: ServerConfig) {
+    const context = await ServerContext.newInstance(options);
     const app = express();
 
     // Enable reverse proxy support in Express. This causes the
@@ -21,6 +24,7 @@ export function run(options: ServerConfig) {
 
     const cwd = process.cwd();
     app.use("/", express.static(path.resolve(cwd, "build")));
+    app.use("/api", createApiRouter(context, true));
 
     const httpServer = http.createServer(app);
     httpServer.listen(options.httpPort, () => {

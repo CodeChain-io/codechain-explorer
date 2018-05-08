@@ -1,3 +1,4 @@
 {
-    "httpPort": 8081
+    "httpPort": 8081,
+    "sdkHttpServer": "http://localhost:8080"
 }
