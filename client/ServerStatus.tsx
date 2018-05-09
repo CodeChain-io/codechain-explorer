@@ -1,7 +1,7 @@
 import * as React from "react";
 import { connect, Dispatch } from "react-redux";
 
-import { IRootState } from "./redux/reducers";
+import { IRootState } from "./redux/actions";
 
 interface IServerStatusProps {
     isNodeAlive: boolean | null;
