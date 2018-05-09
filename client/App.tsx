@@ -3,6 +3,8 @@ import './App.css';
 
 import logo from './logo.svg';
 
+import ServerStatus from "./ServerStatus";
+
 class App extends React.Component {
   public render() {
     return (
@@ -14,6 +16,7 @@ class App extends React.Component {
         <p className="App-intro">
           To get started, edit <code>client/App.tsx</code> and save to reload.
         </p>
+        <ServerStatus />
       </div>
     );
   }
