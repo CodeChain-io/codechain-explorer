@@ -3,11 +3,11 @@ type ActionType = "PING";
 // FIXME: Annotate types;
 type ActionPayload = any;
 
-export type ReduxAction = {
+export interface IReduxAction {
     type: ActionType;
     payload: ActionPayload
 }
-export type ReduxDispatcher = () => ReduxAction;
+export type ReduxDispatcher = () => IReduxAction;
 
 // FIXME: hardcoded "pong"
 export const ping: ReduxDispatcher = () => ({ type: "PING", payload: "pong" });

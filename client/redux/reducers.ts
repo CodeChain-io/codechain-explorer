@@ -1,14 +1,14 @@
-import { ReduxAction } from "./actions";
+import { IReduxAction } from "./actions";
 
-export interface RootState {
+export interface IRootState {
     isNodeAlive: boolean | null;
 }
 
-const initialState: RootState = {
+const initialState: IRootState = {
     isNodeAlive: null
 };
 
-export const rootReducer = (state: RootState = initialState, action: ReduxAction): RootState => {
+export const rootReducer = (state = initialState, action: IReduxAction): IRootState => {
     switch (action.type) {
         case "PING":
             return {
