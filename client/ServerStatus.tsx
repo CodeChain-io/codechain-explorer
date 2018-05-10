@@ -1,7 +1,7 @@
 import * as React from "react";
 import { connect, Dispatch } from "react-redux";
 
-import { IRootState } from "./redux/actions";
+import { getPingDispatcher, IRootState } from "./redux/actions";
 
 interface IServerStatusProps {
     isNodeAlive: boolean | null;
@@ -9,7 +9,7 @@ interface IServerStatusProps {
 
 // FIXME:
 interface IDispatcherProps {
-    ping: any
+    ping: () => Promise<void>
 }
 
 class ServerStatusInternal extends React.Component<IServerStatusProps & IDispatcherProps> {
@@ -34,15 +34,7 @@ class ServerStatusInternal extends React.Component<IServerStatusProps & IDispatc
 const mapStateToProps = (state: IRootState) => ({ isNodeAlive: state.isNodeAlive });
 const mapDispatchToProps = (dispatch: Dispatch) => {
     return {
-        ping: async () => {
-            fetch("http://localhost:8081/api/ping").then(res => {
-                return res.text()
-            }).then(text => {
-                dispatch({ type: "PING", payload: text });
-            }).catch(err => {
-                dispatch({ type: "PING", payload: null });
-            });
-        }
+        ping: getPingDispatcher(dispatch)
     } as IDispatcherProps;
 };
 
