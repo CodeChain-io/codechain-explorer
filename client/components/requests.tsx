@@ -15,6 +15,25 @@ const blockNumberReducer = (state: RootState, _: undefined, res: BlockNumberResp
 };
 export const RequestBlockNumber = () => <ApiDispatcher api={"blockNumber"} reducer={blockNumberReducer}/>
 
+interface RequestBlockHashProps {
+    num: number;
+}
+type BlockHashResponse = string;
+const blockHashReducer = (state: RootState, req: RequestBlockHashProps, res: BlockHashResponse) => {
+    return {
+        blockHashesByNumber: {
+            ...state.blockHashesByNumber,
+            [req.num]: res,
+        }
+    }
+}
+export const RequestBlockHash = (props: RequestBlockHashProps) => {
+    return <ApiDispatcher
+        api={`block/${props.num}/hash`}
+        reducer={blockHashReducer}
+        requestProps={props} />
+}
+
 interface RequestBlockProps {
     num: number;
 }
