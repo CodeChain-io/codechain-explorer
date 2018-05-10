@@ -1,4 +1,5 @@
 import * as React from "react";
+import { Link } from "react-router-dom";
 
 interface Props {
     block: any;
@@ -33,7 +34,7 @@ const BlockHeaderTable = (props: Props) => {
                 </tr>
                 <tr>
                     <td>Parent Block Hash</td>
-                    <td>{parentHash}</td>
+                    <td><Link to={`/block/${parentHash}`}>{parentHash}</Link></td>
                 </tr>
                 <tr>
                     <td>Score</td>
