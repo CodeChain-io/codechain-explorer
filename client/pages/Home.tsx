@@ -27,7 +27,7 @@ class HomeInternal extends React.Component<StateProps> {
                     <div key={`home-block-num-${n}`}>
                         <Link to={`/block/${n}`}>{n}</Link>
                     </div>
-                ))};
+                ))}
             </div>
         );
     }
