@@ -37,13 +37,17 @@ export function createApiRouter(context: ServerContext, useCors = false) {
         }).catch(next);
     });
 
-    router.get("/block/:blockNumber", async (req, res, next) => {
-        const { blockNumber } = req.params;
-        context.codechainSdk.getBlockHash(Number.parseInt(blockNumber)).then(hash => {
-            return context.codechainSdk.getBlock(hash);
-        }).then(block => {
+    router.get("/block/:id", async (req, res, next) => {
+        const { id } = req.params;
+        try {
+            const hash = id.length === 66
+                ? { value: id.slice(2) }
+                : await context.codechainSdk.getBlockHash(Number.parseInt(id));
+            const block = await context.codechainSdk.getBlock(hash);
             res.send(JSON.stringify(block));
-        }).catch(next);
+        } catch (e) {
+            next(e);
+        }
     });
 
     router.get("/tx/:txhash/invoice", async (req, res, next) => {
