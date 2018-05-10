@@ -1,29 +1,29 @@
 import { Dispatch } from "redux";
 
-export interface IRootState {
+export interface RootState {
     isNodeAlive: boolean | null;
 }
 
 const initialState = {
     isNodeAlive: null
-} as IRootState;
+} as RootState;
 
 type ActionType = "PING" | "ERROR";
-type StateUpdate = Partial<IRootState>;
+type StateUpdate = Partial<RootState>;
 
-export const createApiDispatcher = (dispatch: Dispatch, apiName: string, type: ActionType, okReducer: (state: IRootState, json: ApiResponse) => StateUpdate) => {
+export const createApiDispatcher = (dispatch: Dispatch, apiName: string, type: ActionType, okReducer: (state: RootState, json: ApiResponse) => StateUpdate) => {
     return () => {
         fetch(`http://localhost:8081/api/${apiName}`)
             .then(res => res.text())
             .then(json => {
                 dispatch({
-                    getUpdate: (state: IRootState) => okReducer(state, json),
+                    getUpdate: (state: RootState) => okReducer(state, json),
                     type,
                 } as IReduxAction);
             }).catch(err => {
                 dispatch({
                     // FIXME:
-                    getUpdate: (state: IRootState) => ({}),
+                    getUpdate: (state: RootState) => ({}),
                     type: "ERROR",
                 } as IReduxAction);
             });
@@ -33,7 +33,7 @@ export const createApiDispatcher = (dispatch: Dispatch, apiName: string, type: A
 type ApiResponse = PingResponse;
 type PingResponse = string;
 
-const pingReducer = (state: IRootState, json: PingResponse): StateUpdate => {
+const pingReducer = (state: RootState, json: PingResponse): StateUpdate => {
     return { isNodeAlive: json === "pong" };
 };
 
@@ -41,7 +41,7 @@ export const getPingDispatcher = (dispatch: Dispatch) => createApiDispatcher(dis
 
 interface IReduxAction {
     type: ActionType;
-    getUpdate: (state: IRootState) => StateUpdate;
+    getUpdate: (state: RootState) => StateUpdate;
 }
 
 export const rootReducer = (state = initialState, action: any) => {

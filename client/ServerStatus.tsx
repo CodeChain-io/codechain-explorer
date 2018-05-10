@@ -1,18 +1,18 @@
 import * as React from "react";
 import { connect, Dispatch } from "react-redux";
 
-import { getPingDispatcher, IRootState } from "./redux/actions";
+import { getPingDispatcher, RootState } from "./redux/actions";
 
-interface IServerStatusProps {
+interface ServerStatusProps {
     isNodeAlive: boolean | null;
 }
 
 // FIXME:
-interface IDispatcherProps {
+interface DispatcherProps {
     ping: () => Promise<void>
 }
 
-class ServerStatusInternal extends React.Component<IServerStatusProps & IDispatcherProps> {
+class ServerStatusInternal extends React.Component<ServerStatusProps & DispatcherProps> {
     public componentDidMount() {
         setInterval(() => {
             this.props.ping();
@@ -31,11 +31,11 @@ class ServerStatusInternal extends React.Component<IServerStatusProps & IDispatc
     }
 }
 
-const mapStateToProps = (state: IRootState) => ({ isNodeAlive: state.isNodeAlive });
+const mapStateToProps = (state: RootState) => ({ isNodeAlive: state.isNodeAlive });
 const mapDispatchToProps = (dispatch: Dispatch) => {
     return {
         ping: getPingDispatcher(dispatch)
-    } as IDispatcherProps;
+    } as DispatcherProps;
 };
 
 const ServerStatus = connect(mapStateToProps, mapDispatchToProps)(ServerStatusInternal);
