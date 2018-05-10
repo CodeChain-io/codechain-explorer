@@ -14,7 +14,7 @@ type StateUpdate = Partial<RootState>;
 export const createApiDispatcher = (dispatch: Dispatch, apiName: string, type: ActionType, okReducer: (state: RootState, json: ApiResponse) => StateUpdate) => {
     return () => {
         fetch(`http://localhost:8081/api/${apiName}`)
-            .then(res => res.text())
+            .then(res => res.json())
             .then(json => {
                 dispatch({
                     getUpdate: (state: RootState) => okReducer(state, json),

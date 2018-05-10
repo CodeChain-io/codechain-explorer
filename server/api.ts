@@ -20,7 +20,7 @@ export function createApiRouter(context: ServerContext, useCors = false) {
     router.get("/ping", async (req, res, next) => {
         const { codechainSdk } = context;
         codechainSdk.ping().then(text => {
-            res.send(text);
+            res.send(JSON.stringify(text));
         }).catch(next);
     });
 
