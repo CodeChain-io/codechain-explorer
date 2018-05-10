@@ -2,6 +2,7 @@
   "extends": ["tslint:recommended", "tslint-react", "tslint-config-prettier"],
   "rules": {
     "interface-name": false,
+    "no-console": false,
     "object-literal-sort-keys": false
   },
   "linterOptions": {
