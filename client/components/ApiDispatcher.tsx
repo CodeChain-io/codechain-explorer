@@ -4,7 +4,8 @@ import { RootState } from "../redux/actions";
 
 interface Props {
     api: string;
-    reducer: (state: RootState, json: any) => Partial<RootState>
+    requestProps?: any;
+    reducer: (state: RootState, request: any, json: any) => Partial<RootState>
 }
 
 interface ExternalProps {
@@ -13,7 +14,7 @@ interface ExternalProps {
 
 class ApiDispatcherInternal extends React.Component<Props & ExternalProps> {
     public componentDidMount() {
-        const { dispatch, api, reducer } = this.props;
+        const { dispatch, api, reducer, requestProps } = this.props;
         fetch(`http://localhost:8081/api/${api}`)
             .then(res => {
                 if (res.status !== 200) {
@@ -21,10 +22,10 @@ class ApiDispatcherInternal extends React.Component<Props & ExternalProps> {
                 }
                 return res.json();
             })
-            .then(json => {
+            .then(response => {
                 dispatch({
                     type: "API_DISPATCHER_OK",
-                    getUpdate: (state: RootState) => reducer(state, json)
+                    getUpdate: (state: RootState) => reducer(state, requestProps, response)
                 });
             })
             .catch(err => {

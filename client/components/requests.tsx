@@ -3,23 +3,23 @@ import ApiDispatcher from "./ApiDispatcher";
 import { RootState } from "../redux/actions";
 
 type PingResponse = string;
-const pingReducer = (state: RootState, res: PingResponse) => {
+const pingReducer = (state: RootState, _: undefined, res: PingResponse) => {
     return { isNodeAlive: res === "pong" };
 };
 
 export const RequestPing = () => <ApiDispatcher api={"ping"} reducer={pingReducer}/>
 
 type BlockNumberResponse = number;
-const blockNumberReducer = (state: RootState, res: BlockNumberResponse) => {
+const blockNumberReducer = (state: RootState, _: undefined, res: BlockNumberResponse) => {
     return { bestBlockNumber: res };
 };
 export const RequestBlockNumber = () => <ApiDispatcher api={"blockNumber"} reducer={blockNumberReducer}/>
 
 interface RequestBlockProps {
-    number: number;
+    num: number;
 }
 type BlockResponse = any;
-const blockReducer = (state: RootState, res: BlockResponse) => {
+const blockReducer = (state: RootState, req: RequestBlockProps, res: BlockResponse) => {
     return {
         blocksByNumber: {
             ...state.blocksByNumber,
@@ -31,4 +31,4 @@ const blockReducer = (state: RootState, res: BlockResponse) => {
         }
     };
 };
-export const RequestBlock = (props: RequestBlockProps) => <ApiDispatcher api={`block/${props.number}`} reducer={blockReducer} />
+export const RequestBlock = (props: RequestBlockProps) => <ApiDispatcher api={`block/${props.num}`} reducer={blockReducer} requestProps={props}/>
