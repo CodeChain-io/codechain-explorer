@@ -1,27 +1,16 @@
 import * as React from "react";
-import { connect, Dispatch } from "react-redux";
+import { connect } from "react-redux";
 
-import { getPingDispatcher, RootState } from "./redux/actions";
+import { RootState } from "./redux/actions";
 
 interface ServerStatusProps {
-    isNodeAlive: boolean | null;
+    isNodeAlive?: boolean;
 }
 
-// FIXME:
-interface DispatcherProps {
-    ping: () => Promise<void>
-}
-
-class ServerStatusInternal extends React.Component<ServerStatusProps & DispatcherProps> {
-    public componentDidMount() {
-        setInterval(() => {
-            this.props.ping();
-        }, 3000);
-    }
-
+class ServerStatusInternal extends React.Component<ServerStatusProps> {
     public render() {
         const { isNodeAlive } = this.props;
-        if (isNodeAlive === null) {
+        if (isNodeAlive === undefined) {
             return <div>Checking whether node is alive</div>
         } else if (isNodeAlive) {
             return <div>Node is available</div>
@@ -32,12 +21,6 @@ class ServerStatusInternal extends React.Component<ServerStatusProps & Dispatche
 }
 
 const mapStateToProps = (state: RootState) => ({ isNodeAlive: state.isNodeAlive });
-const mapDispatchToProps = (dispatch: Dispatch) => {
-    return {
-        ping: getPingDispatcher(dispatch)
-    } as DispatcherProps;
-};
-
-const ServerStatus = connect(mapStateToProps, mapDispatchToProps)(ServerStatusInternal);
+const ServerStatus = connect(mapStateToProps, null)(ServerStatusInternal);
 
 export default ServerStatus;
