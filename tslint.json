@@ -3,7 +3,8 @@
   "rules": {
     "interface-name": false,
     "no-console": false,
-    "object-literal-sort-keys": false
+    "object-literal-sort-keys": false,
+    "ordered-imports": false
   },
   "linterOptions": {
     "exclude": [
