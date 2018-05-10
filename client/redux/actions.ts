@@ -3,6 +3,9 @@ export interface RootState {
     bestBlockNumber?: number;
     blocksByNumber: {
         [n: number]: any;
+    },
+    blocksByHash: {
+        [hash: string]: any;
     }
 }
 
@@ -10,6 +13,7 @@ const initialState = {
     isNodeAlive: undefined,
     bestBlockNumber: undefined,
     blocksByNumber: {},
+    blocksByHash: {},
 } as RootState;
 
 export const rootReducer = (state = initialState, action: any) => {

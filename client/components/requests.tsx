@@ -20,9 +20,15 @@ interface RequestBlockProps {
 }
 type BlockResponse = any;
 const blockReducer = (state: RootState, res: BlockResponse) => {
-    return { blocksByNumber: {
-        ...state.blocksByNumber,
-        [res.number]: res,
-    }};
+    return {
+        blocksByNumber: {
+            ...state.blocksByNumber,
+            [res.number]: res,
+        },
+        blocksByHash: {
+            ...state.blocksByHash,
+            [res.hash]: res,
+        }
+    };
 };
 export const RequestBlock = (props: RequestBlockProps) => <ApiDispatcher api={`block/${props.number}`} reducer={blockReducer} />
