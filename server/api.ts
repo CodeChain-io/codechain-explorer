@@ -30,6 +30,13 @@ export function createApiRouter(context: ServerContext, useCors = false) {
         }).catch(next);
     });
 
+    router.get("/block/:blockNumber/hash", async (req, res, next) => {
+        const { blockNumber } = req.params;
+        context.codechainSdk.getBlockHash(Number.parseInt(blockNumber)).then(hash => {
+            res.send(JSON.stringify(hash));
+        }).catch(next);
+    });
+
     router.get("/block/:blockNumber", async (req, res, next) => {
         const { blockNumber } = req.params;
         context.codechainSdk.getBlockHash(Number.parseInt(blockNumber)).then(hash => {
