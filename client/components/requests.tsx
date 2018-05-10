@@ -42,7 +42,7 @@ export const RequestBlockHash = (props: RequestBlockHashProps) => {
 }
 
 interface RequestBlockProps {
-    num: number;
+    id: number | string;
 }
 type BlockResponse = any;
 const blockReducer = (state: RootState, req: RequestBlockProps, res: BlockResponse) => {
@@ -59,7 +59,7 @@ const blockReducer = (state: RootState, req: RequestBlockProps, res: BlockRespon
 };
 export const RequestBlock = (props: RequestBlockProps) => (
     <ApiDispatcher
-        api={`block/${props.num}`}
+        api={`block/${props.id}`}
         reducer={blockReducer}
         requestProps={props} />
 );

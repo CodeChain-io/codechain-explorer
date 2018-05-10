@@ -21,7 +21,7 @@ class BlockDetailsInternal extends React.Component<Props & StateProps> {
         const { blockNumber, blocksByNumber } = this.props;
         const block = blocksByNumber[blockNumber];
         if (!block) {
-            return <RequestBlock num={blockNumber} />
+            return <RequestBlock id={blockNumber} />
         }
 
         return (

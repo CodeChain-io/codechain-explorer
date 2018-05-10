@@ -20,11 +20,11 @@ class BlockInternal extends React.Component<Props & StateProps> {
         const block = blocksByHash[id] || blocksByNumber[Number.parseInt(id)];
 
         if (!block) {
-            return <RequestBlock num={id} />;
+            return <RequestBlock id={id} />;
         }
         return (
             <div>
-                <BlockDetails blockNumber={id} />
+                <BlockDetails blockNumber={block.number} />
             </div>
         );
     }
