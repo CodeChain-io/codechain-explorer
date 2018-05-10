@@ -7,7 +7,7 @@ interface Props {
 const BlockTransactionList = (props: Props) => {
     const { transactions } = props;
     return <div>{transactions.map(tx => (
-        <div>
+        <div key={`block-tx-${tx.hash}`}>
             <div>Hash {tx.hash}</div>
             <div>Nonce {tx.nonce}</div>
             <div>Fee {tx.fee}</div>
