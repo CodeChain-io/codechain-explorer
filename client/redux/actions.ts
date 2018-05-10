@@ -9,6 +9,7 @@ export interface RootState {
 const initialState = {
     isNodeAlive: undefined,
     bestBlockNumber: undefined,
+    blocksByNumber: {},
 } as RootState;
 
 export const rootReducer = (state = initialState, action: any) => {
