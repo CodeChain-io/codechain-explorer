@@ -1,6 +1,9 @@
 export interface RootState {
     isNodeAlive?: boolean;
     bestBlockNumber?: number;
+    blocksByNumber: {
+        [n: number]: any;
+    }
 }
 
 const initialState = {

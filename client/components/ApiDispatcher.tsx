@@ -1,6 +1,6 @@
 import * as React from "react";
 import { connect, Dispatch } from "react-redux";
-import { RootState } from "./redux/actions";
+import { RootState } from "../redux/actions";
 
 interface Props {
     api: string;
