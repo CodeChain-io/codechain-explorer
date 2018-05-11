@@ -23,11 +23,14 @@ class HomeInternal extends React.Component<StateProps> {
         return (
             <div>
                 <div>Current Block Number: {bestBlockNumber}</div>
-                {_.map(_.range(1, bestBlockNumber + 1), n => (
-                    <div key={`home-block-num-${n}`}>
-                        <Link to={`/block/${n}`}>{n}</Link>
-                    </div>
-                ))}
+                {_.map(_.reverse(_.range(1, bestBlockNumber + 1)), n => {
+                    return (
+                        <div key={`home-block-num-${n}`}>
+                            <hr />
+                            <h3><Link to={`/block/${n}`}>Block {n}</Link></h3>
+                        </div>
+                    );
+                })}
             </div>
         );
     }
@@ -35,7 +38,7 @@ class HomeInternal extends React.Component<StateProps> {
 
 const Home = connect((state: RootState) => {
     return {
-        bestBlockNumber: state.bestBlockNumber
+        bestBlockNumber: state.bestBlockNumber,
     } as StateProps;
 })(HomeInternal);
 
