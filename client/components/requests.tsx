@@ -82,3 +82,22 @@ export const RequestTransaction = (props: RequestTransactionProps) => (
         reducer={transactionReducer}
         requestProps={props} />
 );
+
+interface RequestTransactionInvoiceProps {
+    hash: string;
+}
+type TransactionInvoiceResponse = any;
+const transactionInvoiceReducer = (state: RootState, req: RequestTransactionInvoiceProps, res: TransactionInvoiceResponse) => {
+    return {
+        transactionInvoicesByHash: {
+            ...state.transactionInvoicesByHash,
+            [req.hash]: res
+        }
+    };
+};
+export const RequestTransactionInvoice = (props: RequestTransactionInvoiceProps) => (
+    <ApiDispatcher
+        api={`tx/${props.hash}/invoice`}
+        reducer={transactionInvoiceReducer}
+        requestProps={props} />
+);
