@@ -1,4 +1,5 @@
 import * as React from "react";
+import { Link } from "react-router-dom";
 
 interface Props {
     transactions: any[];
@@ -6,12 +7,12 @@ interface Props {
 
 const BlockTransactionList = (props: Props) => {
     const { transactions } = props;
-    return <div>{transactions.map(tx => (
+    return <div>{transactions.map((tx: any, i: number) => (
         <div key={`block-tx-${tx.hash}`}>
-            <div>Hash {tx.hash}</div>
-            <div>Nonce {tx.nonce}</div>
-            <div>Fee {tx.fee}</div>
-            <div>NetworkId {tx.networkId}</div>
+            <hr />
+            <b>Transaction {i} - </b>
+            <span><Link to={`/tx/${tx.hash}`}>{tx.hash}</Link></span>
+            <span> Action: {Object.keys(tx.action)}</span>
         </div>
     ))}</div>
 };
