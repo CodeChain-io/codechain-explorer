@@ -2,6 +2,7 @@ import * as React from "react";
 import { RequestTransaction, RequestTransactionInvoice } from "../components/requests";
 import { connect } from "react-redux";
 import { RootState } from "../redux/actions";
+import TransactionDetails from "../components/TransactionDetails";
 
 interface Props {
     match: any;
@@ -22,11 +23,13 @@ class TransactionInternal extends React.Component<Props & StateProps> {
         return (
             <div>
                 {transaction
-                    ? <div>{JSON.stringify(transaction)}</div>
+                    ? <TransactionDetails transaction={transaction} />
                     : <div>loading tx ... <RequestTransaction hash={hash} /></div>}
+                <hr />
+                <h4>Invoice</h4>
                 {invoice
-                    ? <div>{JSON.stringify(invoice)}</div>
-                    : <div>loading invoice ... <RequestTransactionInvoice hash={hash} /></div>}
+                    ? <div><pre>{JSON.stringify(invoice, null, 4)}</pre></div>
+                    : <div>loading ... <RequestTransactionInvoice hash={hash} /></div>}
             </div>
         )
     }
