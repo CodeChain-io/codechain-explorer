@@ -67,17 +67,27 @@ export function createApiRouter(context: ServerContext, useCors = false) {
         }).catch(next);
     });
 
-    router.get("/address/:address/nonce", async (req, res, next) => {
+    router.get("/account/:address", async (req, res, next) => {
+        const { address } = req.params;
+        Promise.all([
+            context.codechainSdk.getNonce({ value: address.slice(2) } as any)
+        ]).then(([nonce]) => {
+            // FIXME: getBalance is not implemented yet
+            res.send(JSON.stringify({ nonce, balance: nonce }));
+        });
+    });
+
+    router.get("/account/:address/nonce", async (req, res, next) => {
         const { address } = req.params;
         context.codechainSdk.getNonce({ value: address.slice(2) } as any).then(nonce => {
             res.send(JSON.stringify(nonce));
         }).catch(next);
     });
 
-    router.get("/address/:address/balance", async (req, res, next) => {
+    router.get("/account/:address/balance", async (req, res, next) => {
         const { address } = req.params;
         // FIXME: not implemented
-        res.send(JSON.stringify({ value: "0" }));
+        res.sendStatus(501);
     });
 
     return router;

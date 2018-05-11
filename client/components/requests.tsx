@@ -101,3 +101,22 @@ export const RequestTransactionInvoice = (props: RequestTransactionInvoiceProps)
         reducer={transactionInvoiceReducer}
         requestProps={props} />
 );
+
+interface RequestAccountProps {
+    address: string;
+}
+type AccountResponse = any;
+export const RequestAccount = (props: RequestAccountProps) => {
+    const reducer = (state: RootState, req: RequestAccountProps, res: AccountResponse) => {
+        return {
+            accountsByAddress: {
+                ...state.accountsByAddress,
+                [req.address]: res
+            }
+        };
+    };
+    return <ApiDispatcher
+        api={`account/${props.address}`}
+        reducer={reducer}
+        requestProps={props} />
+};
