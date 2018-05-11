@@ -2,16 +2,17 @@ import * as React from 'react';
 import * as _ from "lodash";
 import { connect } from 'react-redux';
 import { RootState } from '../redux/actions';
-import { RequestBlockNumber } from '../components/requests';
+import { RequestBlockNumber, RequestBlock } from '../components/requests';
 import { Link } from 'react-router-dom';
 
 interface StateProps {
     bestBlockNumber?: number;
+    blocksByNumber: any;
 }
 
 class HomeInternal extends React.Component<StateProps> {
     public render() {
-        const { bestBlockNumber } = this.props;
+        const { bestBlockNumber, blocksByNumber } = this.props;
         if (bestBlockNumber === undefined) {
             return (
                 <div>
@@ -28,6 +29,16 @@ class HomeInternal extends React.Component<StateProps> {
                         <div key={`home-block-num-${n}`}>
                             <hr />
                             <h3><Link to={`/block/${n}`}>Block {n}</Link></h3>
+                            {blocksByNumber[n]
+                                ? (
+                                    <div>
+                                        <div>Hash: {blocksByNumber[n].hash}</div>
+                                        <div>Author: {blocksByNumber[n].author}</div>
+                                        <div>Total {blocksByNumber[n].transactions.length} Transactions</div>
+                                    </div>
+                                )
+                                : <RequestBlock id={n} />
+                            }
                         </div>
                     );
                 })}
@@ -39,6 +50,7 @@ class HomeInternal extends React.Component<StateProps> {
 const Home = connect((state: RootState) => {
     return {
         bestBlockNumber: state.bestBlockNumber,
+        blocksByNumber: state.blocksByNumber
     } as StateProps;
 })(HomeInternal);
 
