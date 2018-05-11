@@ -57,5 +57,18 @@ export function createApiRouter(context: ServerContext, useCors = false) {
         }).catch(next);
     });
 
+    router.get("/address/:address/nonce", async (req, res, next) => {
+        const { address } = req.params;
+        context.codechainSdk.getNonce({ value: address.slice(2) } as any).then(nonce => {
+            res.send(JSON.stringify(nonce));
+        }).catch(next);
+    });
+
+    router.get("/address/:address/balance", async (req, res, next) => {
+        const { address } = req.params;
+        // FIXME: not implemented
+        res.send(JSON.stringify({ value: "0" }));
+    });
+
     return router;
 }
