@@ -11,6 +11,7 @@ import Block from './pages/Block';
 import ServerStatus from './ServerStatus';
 import { RequestPing } from './components/requests';
 import Home from './pages/Home';
+import Transaction from './pages/Transaction';
 
 // FIXME:
 const Status = () => <div>Status</div>;
@@ -29,6 +30,7 @@ ReactDOM.render(
         <Route exact={true} path="/" component={Home} />
         <Route path="/status" component={Status} />
         <Route path="/block/:id" component={Block} />
+        <Route path="/tx/:hash" component={Transaction} />
       </div>
     </Router>
   </Provider>,
