@@ -10,6 +10,9 @@ export interface RootState {
     blockHashesByNumber: {
         [n: number]: string;
     };
+    transactionsByHash: {
+        [hash: string]: any;
+    };
 }
 
 const initialState = {
@@ -18,6 +21,7 @@ const initialState = {
     blocksByNumber: {},
     blocksByHash: {},
     blockHashesByNumber: {},
+    transactionsByHash: {},
 } as RootState;
 
 export const rootReducer = (state = initialState, action: any) => {
