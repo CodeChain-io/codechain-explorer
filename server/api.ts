@@ -50,6 +50,17 @@ export function createApiRouter(context: ServerContext, useCors = false) {
         }
     });
 
+    router.get("/tx/:txhash", async (req, res, next) => {
+        const { txhash } = req.params;
+        const { getBlockHash, getBlock } = context.codechainSdk;
+        // FIXME: implement when sdk support getTransaction
+        try {
+            const hash = await getBlockHash(1);
+            const block = await getBlock(hash);
+            res.send(JSON.stringify(block.transactions[0]));
+        } catch (e) { next(e); }
+    });
+
     router.get("/tx/:txhash/invoice", async (req, res, next) => {
         const { txhash } = req.params;
         context.codechainSdk.getTransactionInvoice(txhash, 0).then(invoice => {
