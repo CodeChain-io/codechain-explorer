@@ -1,5 +1,8 @@
 import * as cors from 'cors';
 import * as express from 'express';
+
+import { H256, H160 } from "codechain-sdk";
+
 import { ServerContext } from './context';
 
 const corsOptions = {
@@ -41,7 +44,7 @@ export function createApiRouter(context: ServerContext, useCors = false) {
         const { id } = req.params;
         try {
             const hash = id.length === 66
-                ? { value: id.slice(2) }
+                ? new H256(id)
                 : await context.codechainSdk.getBlockHash(Number.parseInt(id));
             const block = await context.codechainSdk.getBlock(hash);
             res.send(JSON.stringify(block));
@@ -50,19 +53,19 @@ export function createApiRouter(context: ServerContext, useCors = false) {
         }
     });
 
-    router.get("/tx/:txhash", async (req, res, next) => {
-        const { txhash } = req.params;
+    router.get("/parcel/:hash", async (req, res, next) => {
+        const { hash } = req.params;
         // FIXME: implement when sdk support getTransaction
         try {
-            const hash = await context.codechainSdk.getBlockHash(1);
-            const block = await context.codechainSdk.getBlock(hash);
-            res.send(JSON.stringify(block.transactions[0]));
+            const blockHash = await context.codechainSdk.getBlockHash(1);
+            const block = await context.codechainSdk.getBlock(blockHash);
+            res.send(JSON.stringify(block.parcels[0]));
         } catch (e) { next(e); }
     });
 
-    router.get("/tx/:txhash/invoice", async (req, res, next) => {
-        const { txhash } = req.params;
-        context.codechainSdk.getTransactionInvoice({ value: txhash.slice(2) } as any, 0).then(invoice => {
+    router.get("/tx/:hash/invoice", async (req, res, next) => {
+        const { hash } = req.params;
+        context.codechainSdk.getParcelInvoice(new H256(hash), 0).then(invoice => {
             res.send(JSON.stringify(invoice));
         }).catch(next);
     });
@@ -70,7 +73,7 @@ export function createApiRouter(context: ServerContext, useCors = false) {
     router.get("/account/:address", async (req, res, next) => {
         const { address } = req.params;
         Promise.all([
-            context.codechainSdk.getNonce({ value: address.slice(2) } as any)
+            context.codechainSdk.getNonce(new H160(address))
         ]).then(([nonce]) => {
             // FIXME: getBalance is not implemented yet
             res.send(JSON.stringify({ nonce, balance: nonce }));
@@ -79,7 +82,7 @@ export function createApiRouter(context: ServerContext, useCors = false) {
 
     router.get("/account/:address/nonce", async (req, res, next) => {
         const { address } = req.params;
-        context.codechainSdk.getNonce({ value: address.slice(2) } as any).then(nonce => {
+        context.codechainSdk.getNonce(new H160(address)).then(nonce => {
             res.send(JSON.stringify(nonce));
         }).catch(next);
     });

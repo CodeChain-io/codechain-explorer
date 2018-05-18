@@ -3,7 +3,7 @@ import { RootState } from "../redux/actions";
 import { connect } from "react-redux";
 import BlockHeaderTable from "./BlockHeaderTable";
 import { RequestBlock } from "./requests";
-import BlockTransactionList from "./BlockTransactionList";
+import BlockParcelList from "./BlockParcelList";
 
 interface Props {
     // FIXME: blockNumber or blockHash
@@ -27,7 +27,7 @@ class BlockDetailsInternal extends React.Component<Props & StateProps> {
         return (
             <div>
                 <BlockHeaderTable block={block} />
-                <BlockTransactionList transactions={block.transactions} />
+                <BlockParcelList parcels={block.parcels} />
             </div>
         );
     }

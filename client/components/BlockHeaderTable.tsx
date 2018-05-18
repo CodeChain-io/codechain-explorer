@@ -8,7 +8,7 @@ interface Props {
 const BlockHeaderTable = (props: Props) => {
     const { author, extraData, hash, invoicesRoot,
         stateRoot, parentHash, score, seal, timestamp,
-        transactions, transactionsRoot } = props.block;
+        parcels, parcelssRoot } = props.block;
     return (
         <table>
             <tbody>
@@ -49,12 +49,12 @@ const BlockHeaderTable = (props: Props) => {
                     <td>{timestamp}</td>
                 </tr>
                 <tr>
-                    <td>Transactions Root</td>
-                    <td>{transactionsRoot}</td>
+                    <td>Parcels Root</td>
+                    <td>{parcelssRoot}</td>
                 </tr>
                 <tr>
-                    <td>Number of Transactions</td>
-                    <td>{transactions.length}</td>
+                    <td>Number of Parcels</td>
+                    <td>{parcels.length}</td>
                 </tr>
             </tbody>
         </table>

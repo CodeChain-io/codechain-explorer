@@ -34,7 +34,7 @@ class HomeInternal extends React.Component<StateProps> {
                                     <div>
                                         <div>Hash: {blocksByNumber[n].hash}</div>
                                         <div>Author: {blocksByNumber[n].author}</div>
-                                        <div>Total {blocksByNumber[n].transactions.length} Transactions</div>
+                                        <div>Total {blocksByNumber[n].parcels.length} Transactions</div>
                                     </div>
                                 )
                                 : <RequestBlock id={n} />

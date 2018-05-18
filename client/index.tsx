@@ -11,7 +11,7 @@ import Block from './pages/Block';
 import ServerStatus from './ServerStatus';
 import { RequestPing } from './components/requests';
 import Home from './pages/Home';
-import Transaction from './pages/Transaction';
+import Parcel from './pages/Parcel';
 import Account from './pages/Account';
 
 // FIXME:
@@ -31,7 +31,7 @@ ReactDOM.render(
         <Route exact={true} path="/" component={Home} />
         <Route path="/status" component={Status} />
         <Route path="/block/:id" component={Block} />
-        <Route path="/tx/:hash" component={Transaction} />
+        <Route path="/parcel/:hash" component={Parcel} />
         <Route path="/account/:address" component={Account} />
       </div>
     </Router>

@@ -64,11 +64,11 @@ export const RequestBlock = (props: RequestBlockProps) => (
         requestProps={props} />
 );
 
-interface RequestTransactionProps {
+interface RequestParcelProps {
     hash: string;
 }
-type TransactionResponse = any;
-const transactionReducer = (state: RootState, req: RequestTransactionProps, res: TransactionResponse) => {
+type ParcelResponse = any;
+const parcelReducer = (state: RootState, req: RequestParcelProps, res: ParcelResponse) => {
     return {
         transactionsByHash: {
             ...state.transactionsByHash,
@@ -76,10 +76,10 @@ const transactionReducer = (state: RootState, req: RequestTransactionProps, res:
         }
     };
 };
-export const RequestTransaction = (props: RequestTransactionProps) => (
+export const RequestParcel = (props: RequestParcelProps) => (
     <ApiDispatcher
-        api={`tx/${props.hash}`}
-        reducer={transactionReducer}
+        api={`parcel/${props.hash}`}
+        reducer={parcelReducer}
         requestProps={props} />
 );
 

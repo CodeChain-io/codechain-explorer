@@ -1,26 +1,26 @@
 import * as React from "react";
 
 interface Props {
-    transaction: any;
+    parcel: any;
 }
 
-const TransactionDetails = (props: Props) => {
-    const { transaction } = props;
-    const { action, fee, hash, networkId, nonce } = transaction;
-    const actionType = Object.keys(action)[0];
-    const actionData = action[actionType];
+const ParcelDetails = (props: Props) => {
+    const { parcel } = props;
+    const { transaction, fee, hash, networkId, nonce } = parcel;
+    const txType = Object.keys(transaction)[0];
+    const txData = transaction[txType];
 
     return <div>
-        <h4>Transaction {hash}</h4>
+        <h4>Parcel {hash}</h4>
         <table>
             <tbody>
                 <tr>
-                    <td>Action Type</td>
-                    <td>{actionType}</td>
+                    <td>Transaction Type</td>
+                    <td>{txType}</td>
                 </tr>
                 <tr>
-                    <td>Action Data</td>
-                    <td><pre>{JSON.stringify(actionData, null, 4)}</pre></td>
+                    <td>Transaction Data</td>
+                    <td><pre>{JSON.stringify(txData, null, 4)}</pre></td>
                 </tr>
                 <tr>
                     <td>Fee</td>
@@ -39,4 +39,4 @@ const TransactionDetails = (props: Props) => {
     </div>
 };
 
-export default TransactionDetails;
+export default ParcelDetails;
