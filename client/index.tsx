@@ -13,6 +13,7 @@ import { RequestPing } from './components/requests';
 import Home from './pages/Home';
 import Parcel from './pages/Parcel';
 import Account from './pages/Account';
+import Asset from "./pages/Asset";
 import NodeInfo from "./pages/NodeInfo";
 
 ReactDOM.render(
@@ -31,6 +32,7 @@ ReactDOM.render(
         <Route path="/block/:id" component={Block} />
         <Route path="/parcel/:hash" component={Parcel} />
         <Route path="/account/:address" component={Account} />
+        <Route path="/asset/:type" component={Asset} />
       </div>
     </Router>
   </Provider>,
