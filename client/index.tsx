@@ -13,9 +13,7 @@ import { RequestPing } from './components/requests';
 import Home from './pages/Home';
 import Parcel from './pages/Parcel';
 import Account from './pages/Account';
-
-// FIXME:
-const Status = () => <div>Status</div>;
+import NodeInfo from "./pages/NodeInfo";
 
 ReactDOM.render(
   <Provider store={store}>
@@ -23,13 +21,13 @@ ReactDOM.render(
       <div>
         <ul>
           <li><Link to="/">Home</Link></li>
-          <li><Link to="/status">Status</Link></li>
+          <li><Link to="/node_info">Node Info</Link></li>
         </ul>
         <HealthChecker />
         <RequestPing />
         <hr/>
         <Route exact={true} path="/" component={Home} />
-        <Route path="/status" component={Status} />
+        <Route path="/node_info" component={NodeInfo} />
         <Route path="/block/:id" component={Block} />
         <Route path="/parcel/:hash" component={Parcel} />
         <Route path="/account/:address" component={Account} />
