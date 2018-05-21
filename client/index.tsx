@@ -8,7 +8,7 @@ import './index.css';
 import { store } from "./redux/store";
 import registerServiceWorker from './registerServiceWorker';
 import Block from './pages/Block';
-import ServerStatus from './ServerStatus';
+import HealthChecker from './components/HealthChecker';
 import { RequestPing } from './components/requests';
 import Home from './pages/Home';
 import Parcel from './pages/Parcel';
@@ -25,7 +25,7 @@ ReactDOM.render(
           <li><Link to="/">Home</Link></li>
           <li><Link to="/status">Status</Link></li>
         </ul>
-        <ServerStatus />
+        <HealthChecker />
         <RequestPing />
         <hr/>
         <Route exact={true} path="/" component={Home} />

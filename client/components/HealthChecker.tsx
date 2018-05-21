@@ -1,13 +1,13 @@
 import * as React from "react";
 import { connect } from "react-redux";
 
-import { RootState } from "./redux/actions";
+import { RootState } from "../redux/actions";
 
-interface ServerStatusProps {
+interface HealthCheckerProps {
     isNodeAlive?: boolean;
 }
 
-class ServerStatusInternal extends React.Component<ServerStatusProps> {
+class HealthCheckerInternal extends React.Component<HealthCheckerProps> {
     public render() {
         const { isNodeAlive } = this.props;
         if (isNodeAlive === undefined) {
@@ -21,6 +21,6 @@ class ServerStatusInternal extends React.Component<ServerStatusProps> {
 }
 
 const mapStateToProps = (state: RootState) => ({ isNodeAlive: state.isNodeAlive });
-const ServerStatus = connect(mapStateToProps, null)(ServerStatusInternal);
+const HealthChecker = connect(mapStateToProps, null)(HealthCheckerInternal);
 
-export default ServerStatus;
+export default HealthChecker;
