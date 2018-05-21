@@ -63,7 +63,7 @@
     "start-server": "ts-node server/index.ts",
     "build": "node scripts/build.js",
     "test": "node scripts/test.js --env=jsdom",
-    "upgrade-sdk": "yarn add file:../../codechain-sdk-js"
+    "upgrade-sdk": "yarn add --force file:../../codechain-sdk-js"
   },
   "devDependencies": {
     "@types/body-parser": "^1.17.0",
