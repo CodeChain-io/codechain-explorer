@@ -37,7 +37,7 @@ class ParcelInternal extends React.Component<Props & StateProps> {
 
 const Parcel = connect((state: RootState) => {
     return {
-        parcelByHash: state.transactionsByHash,
+        parcelByHash: state.parcelByHash,
         parcelInvoiceByHash: state.transactionInvoicesByHash,
     } as StateProps;
 })(ParcelInternal);

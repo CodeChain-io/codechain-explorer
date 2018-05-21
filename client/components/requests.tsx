@@ -70,8 +70,8 @@ interface RequestParcelProps {
 type ParcelResponse = any;
 const parcelReducer = (state: RootState, req: RequestParcelProps, res: ParcelResponse) => {
     return {
-        transactionsByHash: {
-            ...state.transactionsByHash,
+        parcelByHash: {
+            ...state.parcelByHash,
             [req.hash]: res
         }
     };

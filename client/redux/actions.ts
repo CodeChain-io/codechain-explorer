@@ -10,7 +10,7 @@ export interface RootState {
     blockHashesByNumber: {
         [n: number]: string;
     };
-    transactionsByHash: {
+    parcelByHash: {
         [hash: string]: any;
     };
     transactionInvoicesByHash: {
@@ -30,7 +30,7 @@ const initialState = {
     blocksByNumber: {},
     blocksByHash: {},
     blockHashesByNumber: {},
-    transactionsByHash: {},
+    parcelByHash: {},
     transactionInvoicesByHash: {},
     accountsByAddress: {},
 } as RootState;
