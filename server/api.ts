@@ -55,12 +55,9 @@ export function createApiRouter(context: ServerContext, useCors = false) {
 
     router.get("/parcel/:hash", async (req, res, next) => {
         const { hash } = req.params;
-        // FIXME: implement when sdk support getTransaction
-        try {
-            const blockHash = await context.codechainSdk.getBlockHash(1);
-            const block = await context.codechainSdk.getBlock(blockHash);
-            res.send(JSON.stringify(block.parcels[0]));
-        } catch (e) { next(e); }
+        context.codechainSdk.getParcel(new H256(hash)).then(parcel => {
+            res.send(parcel);
+        }).catch(next);
     });
 
     router.get("/tx/:hash/invoice", async (req, res, next) => {
