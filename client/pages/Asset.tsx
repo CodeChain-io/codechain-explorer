@@ -40,7 +40,7 @@ class AssetInternal extends React.Component<Props & StateProps> {
 }
 
 const Asset = connect((state: RootState) => ({
-    } as StateProps
-))(AssetInternal);
+    assetByType: {}
+} as StateProps))(AssetInternal);
 
 export default Asset;
