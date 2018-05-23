@@ -90,5 +90,14 @@ export function createApiRouter(context: ServerContext, useCors = false) {
         res.sendStatus(501);
     });
 
+    // FIXME: Change to use asset type instead of txhash. It requires codechain and
+    // sdk to be changed also
+    router.get("/asset/:txhash", async (req, res, next) => {
+        const { txhash } = req.params;
+        context.codechainSdk.getAssetScheme(new H256(txhash)).then(assetScheme => {
+            res.send(JSON.stringify(assetScheme));
+        }).catch(next);
+    });
+
     return router;
 }

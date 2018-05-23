@@ -22,6 +22,9 @@ export interface RootState {
             balance: any;
         }
     };
+    assetSchemeByTxhash: {
+        [txhash: string]: any
+    };
 }
 
 const initialState = {
@@ -33,6 +36,7 @@ const initialState = {
     parcelByHash: {},
     transactionInvoicesByHash: {},
     accountsByAddress: {},
+    assetSchemeByTxhash: {},
 } as RootState;
 
 export const rootReducer = (state = initialState, action: any) => {

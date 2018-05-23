@@ -120,3 +120,22 @@ export const RequestAccount = (props: RequestAccountProps) => {
         reducer={reducer}
         requestProps={props} />
 };
+
+interface RequestAssetSchemeProps {
+    txhash: string;
+}
+type AssetSchemeResponse = any;
+export const RequestAssetScheme = (props: RequestAssetSchemeProps) => {
+    const reducer = (state: RootState, req: RequestAssetSchemeProps, res: AssetSchemeResponse) => {
+        return {
+            assetSchemeByTxhash: {
+                ...state.assetSchemeByTxhash,
+                [req.txhash]: res
+            }
+        };
+    };
+    return <ApiDispatcher
+        api={`asset/${props.txhash}`}
+        reducer={reducer}
+        requestProps={props} />
+}
