@@ -12,10 +12,17 @@ const ParcelDetails = (props: Props) => {
     const { transaction: { type, data }, fee, hash, networkId, nonce } = parcel;
 
     /* FIXME: Use some kind of Transaction.fromJSON() */
-    const assetSchemeAddress = type === "assetMint" && new AssetMintTransaction({
+    const assetMintTx = type === "assetMint" && new AssetMintTransaction({
         ...data,
         lockScriptHash: new H256(data.lock_script_hash),
-    }).getAssetSchemeAddress().value;
+    });
+
+    let assetSchemeAddress;
+    let assetMintTxHash;
+    if (assetMintTx instanceof AssetMintTransaction) {
+        assetSchemeAddress = assetMintTx.getAssetSchemeAddress().value;
+        assetMintTxHash = assetMintTx.hash().value;
+    }
 
     return <div>
         <h4>Parcel {hash}</h4>
@@ -29,10 +36,10 @@ const ParcelDetails = (props: Props) => {
                     <td>Transaction Data</td>
                     <td>
                         <pre>{JSON.stringify(data, null, 4)}</pre>
-                        {assetSchemeAddress && (
+                        {assetMintTx && (
                             <div>
                                 AssetSchemeAddress:
-                                <Link to={`/asset/${assetSchemeAddress}`}>{assetSchemeAddress}</Link>
+                                <Link to={`/asset/${assetMintTxHash}`}>{assetSchemeAddress}</Link>
                             </div>
                         )}
                     </td>
