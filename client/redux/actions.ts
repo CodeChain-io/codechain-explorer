@@ -25,6 +25,9 @@ export interface RootState {
     assetSchemeByTxhash: {
         [txhash: string]: any
     };
+    pendingParcels: {
+        [hash: string]: any;
+    };
 }
 
 const initialState = {
@@ -37,6 +40,7 @@ const initialState = {
     transactionInvoicesByHash: {},
     accountsByAddress: {},
     assetSchemeByTxhash: {},
+    pendingParcels: {},
 } as RootState;
 
 export const rootReducer = (state = initialState, action: any) => {

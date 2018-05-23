@@ -1,9 +1,11 @@
 import * as React from "react";
+import * as _ from "lodash";
+
 import ApiDispatcher from "./ApiDispatcher";
 import { RootState } from "../redux/actions";
 
 type PingResponse = string;
-const pingReducer = (state: RootState, _: undefined, res: PingResponse) => {
+const pingReducer = (state: RootState, __: undefined, res: PingResponse) => {
     return { isNodeAlive: res === "pong" };
 };
 export const RequestPing = () => (
@@ -13,7 +15,7 @@ export const RequestPing = () => (
 );
 
 type BlockNumberResponse = number;
-const blockNumberReducer = (state: RootState, _: undefined, res: BlockNumberResponse) => {
+const blockNumberReducer = (state: RootState, __: undefined, res: BlockNumberResponse) => {
     return { bestBlockNumber: res };
 };
 export const RequestBlockNumber = () => (
@@ -139,3 +141,18 @@ export const RequestAssetScheme = (props: RequestAssetSchemeProps) => {
         reducer={reducer}
         requestProps={props} />
 }
+
+type PendingParcelsResponse = any[];
+export const RequestPendingParcels = () => {
+    const reducer = (state: RootState, __: undefined, res: PendingParcelsResponse) => {
+        return {
+            pendingParcels: {
+                ...state.pendingParcels,
+                ..._.keyBy(res, parcel => parcel.hash)
+            }
+        };
+    };
+    return <ApiDispatcher
+        api={`parcel/pending`}
+        reducer={reducer} />
+};

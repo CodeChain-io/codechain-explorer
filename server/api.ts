@@ -53,6 +53,12 @@ export function createApiRouter(context: ServerContext, useCors = false) {
         }
     });
 
+    router.get("/parcel/pending", async (req, res, next) => {
+        context.codechainSdk.getPendingParcels().then(parcels => {
+            res.send(JSON.stringify(parcels));
+        }).catch(next);
+    });
+
     router.get("/parcel/:hash", async (req, res, next) => {
         const { hash } = req.params;
         context.codechainSdk.getParcel(new H256(hash)).then(parcel => {
