@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import { RootState } from '../redux/actions';
 import { RequestBlockNumber, RequestBlock } from '../components/requests';
 import { Link } from 'react-router-dom';
+import PendingParcelList from '../components/PendingParcelList';
 
 interface StateProps {
     bestBlockNumber?: number;
@@ -39,6 +40,8 @@ class HomeInternal extends React.Component<StateProps> {
                                 )
                                 : <RequestBlock id={n} />
                             }
+                            <hr />
+                            <PendingParcelList />
                         </div>
                     );
                 })}
