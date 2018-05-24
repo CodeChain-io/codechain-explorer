@@ -14,7 +14,7 @@ const ParcelDetails = (props: Props) => {
     /* FIXME: Use some kind of Transaction.fromJSON() */
     const assetMintTx = type === "assetMint" && new AssetMintTransaction({
         ...data,
-        lockScriptHash: new H256(data.lock_script_hash),
+        lockScriptHash: new H256(data.lockScriptHash),
     });
 
     let assetSchemeAddress;
