@@ -5,6 +5,7 @@ import { RootState } from "../redux/actions";
 interface Props {
     api: string;
     requestProps?: any;
+    body?: any;
     reducer: (state: RootState, request: any, json: any) => Partial<RootState>
 }
 
@@ -14,8 +15,14 @@ interface ExternalProps {
 
 class ApiDispatcherInternal extends React.Component<Props & ExternalProps> {
     public componentDidMount() {
-        const { dispatch, api, reducer, requestProps } = this.props;
-        fetch(`http://localhost:8081/api/${api}`)
+        const { dispatch, api, body, reducer, requestProps } = this.props;
+        fetch(`http://localhost:8081/api/${api}`, body && {
+            body: JSON.stringify(body),
+            headers: {
+                "Content-Type": "application/json"
+            },
+            method: "POST",
+        })
             .then(res => {
                 if (res.status !== 200) {
                     throw new Error(res.statusText);
