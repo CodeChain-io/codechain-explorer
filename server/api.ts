@@ -23,20 +23,20 @@ export function createApiRouter(context: ServerContext, useCors = false) {
     router.get("/ping", async (req, res, next) => {
         const { codechainSdk } = context;
         codechainSdk.ping().then(text => {
-            res.send(JSON.stringify(text));
+            res.send(text);
         }).catch(next);
     });
 
     router.get("/blockNumber", async (req, res, next) => {
-        context.codechainSdk.getBlockNumber().then(text => {
-            res.send(JSON.stringify(text));
+        context.codechainSdk.getBlockNumber().then(n => {
+            res.send(n.toString());
         }).catch(next);
     });
 
     router.get("/block/:blockNumber/hash", async (req, res, next) => {
         const { blockNumber } = req.params;
         context.codechainSdk.getBlockHash(Number.parseInt(blockNumber)).then(hash => {
-            res.send(JSON.stringify(hash));
+            res.send(hash.value);
         }).catch(next);
     });
 
@@ -47,7 +47,7 @@ export function createApiRouter(context: ServerContext, useCors = false) {
                 ? new H256(id)
                 : await context.codechainSdk.getBlockHash(Number.parseInt(id));
             const block = await context.codechainSdk.getBlock(hash);
-            res.send(JSON.stringify(block));
+            res.send(block.toJSON());
         } catch (e) {
             next(e);
         }
@@ -55,45 +55,49 @@ export function createApiRouter(context: ServerContext, useCors = false) {
 
     router.get("/parcel/pending", async (req, res, next) => {
         context.codechainSdk.getPendingParcels().then(parcels => {
-            res.send(JSON.stringify(parcels));
+            res.send(parcels.map(p => p.toJSON()));
         }).catch(next);
     });
 
     router.get("/parcel/:hash", async (req, res, next) => {
         const { hash } = req.params;
         context.codechainSdk.getParcel(new H256(hash)).then(parcel => {
-            res.send(parcel);
+            res.send(parcel.toJSON());
         }).catch(next);
     });
 
     router.get("/tx/:hash/invoice", async (req, res, next) => {
         const { hash } = req.params;
         context.codechainSdk.getTransactionInvoice(new H256(hash)).then(invoice => {
-            res.send(JSON.stringify(invoice));
+            res.send(invoice.toJSON());
         }).catch(next);
     });
 
     router.get("/account/:address", async (req, res, next) => {
         const { address } = req.params;
         Promise.all([
-            context.codechainSdk.getNonce(new H160(address))
-        ]).then(([nonce]) => {
-            // FIXME: getBalance is not implemented yet
-            res.send(JSON.stringify({ nonce, balance: nonce }));
+            context.codechainSdk.getNonce(new H160(address)),
+            context.codechainSdk.getBalance(new H160(address)),
+        ]).then(([nonce, balance]) => {
+            res.send(({
+                nonce: nonce.value.toString(),
+                balance: balance.value.toString()
+            }));
         });
     });
 
     router.get("/account/:address/nonce", async (req, res, next) => {
         const { address } = req.params;
         context.codechainSdk.getNonce(new H160(address)).then(nonce => {
-            res.send(JSON.stringify(nonce));
+            res.send(nonce.value.toString());
         }).catch(next);
     });
 
     router.get("/account/:address/balance", async (req, res, next) => {
         const { address } = req.params;
-        // FIXME: not implemented
-        res.sendStatus(501);
+        context.codechainSdk.getBalance(new H160(address)).then(balance => {
+            res.send(balance.value.toString());
+        }).catch(next);
     });
 
     // FIXME: Change to use asset type instead of txhash. It requires codechain and
@@ -101,7 +105,7 @@ export function createApiRouter(context: ServerContext, useCors = false) {
     router.get("/asset/:txhash", async (req, res, next) => {
         const { txhash } = req.params;
         context.codechainSdk.getAssetScheme(new H256(txhash)).then(assetScheme => {
-            res.send(JSON.stringify(assetScheme));
+            res.send(assetScheme.toJSON());
         }).catch(next);
     });
 
