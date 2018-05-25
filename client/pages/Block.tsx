@@ -1,5 +1,8 @@
 import * as React from "react";
 import { connect } from "react-redux";
+
+import { Block as CoreBlock } from "codechain-sdk/lib/primitives";
+
 import { RootState } from "../redux/actions";
 import { RequestBlock } from "../components/requests";
 import BlockDetails from "../components/BlockDetails";
@@ -9,8 +12,12 @@ interface Props {
 }
 
 interface StateProps {
-    blocksByNumber: any;
-    blocksByHash: any;
+    blocksByNumber: {
+        [n: number]: CoreBlock;
+    };
+    blocksByHash: {
+        [hash: string]: CoreBlock;
+    }
 }
 
 class BlockInternal extends React.Component<Props & StateProps> {

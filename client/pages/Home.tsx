@@ -5,10 +5,13 @@ import { RootState } from '../redux/actions';
 import { RequestBlockNumber, RequestBlock } from '../components/requests';
 import { Link } from 'react-router-dom';
 import PendingParcelList from '../components/PendingParcelList';
+import { Block } from 'codechain-sdk/lib/primitives';
 
 interface StateProps {
     bestBlockNumber?: number;
-    blocksByNumber: any;
+    blocksByNumber: {
+        [n: number]: Block;
+    };
 }
 
 class HomeInternal extends React.Component<StateProps> {
@@ -33,9 +36,9 @@ class HomeInternal extends React.Component<StateProps> {
                             {blocksByNumber[n]
                                 ? (
                                     <div>
-                                        <div>Hash: {blocksByNumber[n].hash}</div>
-                                        <div>Author: {blocksByNumber[n].author}</div>
-                                        <div>Total {blocksByNumber[n].parcels.length} Transactions</div>
+                                        <div>Hash: {blocksByNumber[n].hash.value}</div>
+                                        <div>Author: {blocksByNumber[n].author.value}</div>
+                                        <div>Total {blocksByNumber[n].parcels.length} Parcels</div>
                                     </div>
                                 )
                                 : <RequestBlock id={n} />

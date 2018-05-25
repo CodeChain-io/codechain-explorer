@@ -1,20 +1,24 @@
 import * as React from "react";
 import { Link } from "react-router-dom";
 
+import { SignedParcel } from "codechain-sdk/lib/primitives";
+
 interface Props {
-    parcels: any[];
+    parcels: SignedParcel[];
 }
 
 const BlockParcelList = (props: Props) => {
     const { parcels } = props;
-    return <div>{parcels.map((parcel: any, i: number) => (
-        <div key={`block-tx-${parcel.hash}`}>
+    return <div>{parcels.map((parcel, i: number) => {
+        const hash = parcel.hash().value;
+        const { transactions } = parcel.unsigned;
+        return <div key={`block-tx-${hash}`}>
             <hr />
             <b>Parcel {i} - </b>
-            <span><Link to={`/parcel/${parcel.hash}`}>{parcel.hash}</Link></span>
-            <span> Transaction: {Object.keys(parcel.transactions)}</span>
+            <span><Link to={`/parcel/${hash}`}>{hash}</Link></span>
+            <span> Transaction: {Object.keys(transactions)}</span>
         </div>
-    ))}</div>
+    })}</div>
 };
 
 export default BlockParcelList;

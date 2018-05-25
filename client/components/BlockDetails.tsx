@@ -1,9 +1,12 @@
 import * as React from "react";
 import { RootState } from "../redux/actions";
 import { connect } from "react-redux";
-import BlockHeaderTable from "./BlockHeaderTable";
+
+import { Block } from "codechain-sdk/lib/primitives";
+
 import { RequestBlock } from "./requests";
 import BlockParcelList from "./BlockParcelList";
+import BlockHeaderTable from "./BlockHeaderTable";
 
 interface Props {
     // FIXME: blockNumber or blockHash
@@ -12,7 +15,7 @@ interface Props {
 
 interface StateProps {
     blocksByNumber: {
-        [n: number]: any;
+        [n: number]: Block;
     };
 }
 
