@@ -9,7 +9,9 @@ interface Props {
 
 const ParcelDetails = (props: Props) => {
     const { parcel } = props;
-    const { transaction: { type, data }, fee, hash, networkId, nonce } = parcel;
+    const { transactions, fee, hash, networkId, nonce } = parcel;
+    // FIXME: it's possible that parcel have 0 transactions
+    const { type, data } = transactions[0];
 
     /* FIXME: Use some kind of Transaction.fromJSON() */
     const assetMintTx = type === "assetMint" && new AssetMintTransaction({

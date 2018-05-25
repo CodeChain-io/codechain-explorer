@@ -68,7 +68,7 @@ export function createApiRouter(context: ServerContext, useCors = false) {
 
     router.get("/tx/:hash/invoice", async (req, res, next) => {
         const { hash } = req.params;
-        context.codechainSdk.getParcelInvoice(new H256(hash), 0).then(invoice => {
+        context.codechainSdk.getTransactionInvoice(new H256(hash)).then(invoice => {
             res.send(JSON.stringify(invoice));
         }).catch(next);
     });

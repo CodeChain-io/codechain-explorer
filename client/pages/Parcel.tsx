@@ -18,6 +18,7 @@ class ParcelInternal extends React.Component<Props & StateProps> {
         const { parcelByHash, parcelInvoiceByHash, match } = this.props;
         const { hash } = match.params;
         const parcel = parcelByHash[hash];
+        // FIXME: broken invoice
         const invoice = parcelInvoiceByHash[hash];
 
         return (
