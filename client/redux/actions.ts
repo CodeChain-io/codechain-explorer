@@ -1,32 +1,34 @@
+import { Block, H256, Invoice, U256, AssetScheme, SignedParcel } from "codechain-sdk/lib/primitives";
+
 export interface RootState {
     isNodeAlive?: boolean;
     bestBlockNumber?: number;
     blocksByNumber: {
-        [n: number]: any;
+        [n: number]: Block;
     };
     blocksByHash: {
-        [hash: string]: any;
+        [hash: string]: Block;
     };
     blockHashesByNumber: {
-        [n: number]: string;
+        [n: number]: H256;
     };
     parcelByHash: {
-        [hash: string]: any;
+        [hash: string]: SignedParcel;
     };
     transactionInvoicesByHash: {
-        [hash: string]: any;
+        [hash: string]: Invoice;
     };
     accountsByAddress: {
         [address: string]: {
-            nonce: any;
-            balance: any;
+            nonce: U256;
+            balance: U256;
         }
     };
     assetSchemeByTxhash: {
-        [txhash: string]: any
+        [txhash: string]: AssetScheme;
     };
     pendingParcels: {
-        [hash: string]: any;
+        [hash: string]: SignedParcel;
     };
 }
 

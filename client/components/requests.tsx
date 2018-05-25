@@ -1,11 +1,12 @@
 import * as React from "react";
 import * as _ from "lodash";
 
+import { Block, SignedParcel, AssetScheme, U256, H256, Invoice } from "codechain-sdk/lib/primitives";
+
 import ApiDispatcher from "./ApiDispatcher";
 import { RootState } from "../redux/actions";
 
-type PingResponse = string;
-const pingReducer = (state: RootState, __: undefined, res: PingResponse) => {
+const pingReducer = (state: RootState, __: undefined, res: string) => {
     return { isNodeAlive: res === "pong" };
 };
 export const RequestPing = () => (
@@ -14,9 +15,8 @@ export const RequestPing = () => (
         reducer={pingReducer} />
 );
 
-type BlockNumberResponse = number;
-const blockNumberReducer = (state: RootState, __: undefined, res: BlockNumberResponse) => {
-    return { bestBlockNumber: res };
+const blockNumberReducer = (state: RootState, __: undefined, res: string) => {
+    return { bestBlockNumber: Number.parseInt(res) };
 };
 export const RequestBlockNumber = () => (
     <ApiDispatcher
@@ -27,12 +27,11 @@ export const RequestBlockNumber = () => (
 interface RequestBlockHashProps {
     num: number;
 }
-type BlockHashResponse = string;
-const blockHashReducer = (state: RootState, req: RequestBlockHashProps, res: BlockHashResponse) => {
+const blockHashReducer = (state: RootState, req: RequestBlockHashProps, res: string) => {
     return {
         blockHashesByNumber: {
             ...state.blockHashesByNumber,
-            [req.num]: res,
+            [req.num]: new H256(res),
         }
     }
 }
@@ -46,16 +45,16 @@ export const RequestBlockHash = (props: RequestBlockHashProps) => {
 interface RequestBlockProps {
     id: number | string;
 }
-type BlockResponse = any;
-const blockReducer = (state: RootState, req: RequestBlockProps, res: BlockResponse) => {
+const blockReducer = (state: RootState, req: RequestBlockProps, res: any) => {
+    const block = Block.fromJSON(res);
     return {
         blocksByNumber: {
             ...state.blocksByNumber,
-            [res.number]: res,
+            [res.number]: block,
         },
         blocksByHash: {
             ...state.blocksByHash,
-            [res.hash]: res,
+            [res.hash]: block,
         }
     };
 };
@@ -69,12 +68,12 @@ export const RequestBlock = (props: RequestBlockProps) => (
 interface RequestParcelProps {
     hash: string;
 }
-type ParcelResponse = any;
-const parcelReducer = (state: RootState, req: RequestParcelProps, res: ParcelResponse) => {
+const parcelReducer = (state: RootState, req: RequestParcelProps, res: any) => {
+    const parcel = SignedParcel.fromJSON(res);
     return {
         parcelByHash: {
             ...state.parcelByHash,
-            [req.hash]: res
+            [req.hash]: parcel
         }
     };
 };
@@ -88,12 +87,12 @@ export const RequestParcel = (props: RequestParcelProps) => (
 interface RequestTransactionInvoiceProps {
     hash: string;
 }
-type TransactionInvoiceResponse = any;
-const transactionInvoiceReducer = (state: RootState, req: RequestTransactionInvoiceProps, res: TransactionInvoiceResponse) => {
+const transactionInvoiceReducer = (state: RootState, req: RequestTransactionInvoiceProps, res: any) => {
+    const invoice = Invoice.fromJSON(res);
     return {
         transactionInvoicesByHash: {
             ...state.transactionInvoicesByHash,
-            [req.hash]: res
+            [req.hash]: invoice
         }
     };
 };
@@ -107,13 +106,16 @@ export const RequestTransactionInvoice = (props: RequestTransactionInvoiceProps)
 interface RequestAccountProps {
     address: string;
 }
-type AccountResponse = any;
 export const RequestAccount = (props: RequestAccountProps) => {
-    const reducer = (state: RootState, req: RequestAccountProps, res: AccountResponse) => {
+    const reducer = (state: RootState, req: RequestAccountProps, res: any) => {
+        const { nonce, balance } = res;
         return {
             accountsByAddress: {
                 ...state.accountsByAddress,
-                [req.address]: res
+                [req.address]: {
+                    nonce: new U256(nonce),
+                    balance: new U256(balance),
+                }
             }
         };
     };
@@ -126,13 +128,13 @@ export const RequestAccount = (props: RequestAccountProps) => {
 interface RequestAssetSchemeProps {
     txhash: string;
 }
-type AssetSchemeResponse = any;
 export const RequestAssetScheme = (props: RequestAssetSchemeProps) => {
-    const reducer = (state: RootState, req: RequestAssetSchemeProps, res: AssetSchemeResponse) => {
+    const reducer = (state: RootState, req: RequestAssetSchemeProps, res: any) => {
+        const assetScheme = AssetScheme.fromJSON(res);
         return {
             assetSchemeByTxhash: {
                 ...state.assetSchemeByTxhash,
-                [req.txhash]: res
+                [req.txhash]: assetScheme
             }
         };
     };
@@ -142,13 +144,13 @@ export const RequestAssetScheme = (props: RequestAssetSchemeProps) => {
         requestProps={props} />
 }
 
-type PendingParcelsResponse = any[];
 export const RequestPendingParcels = () => {
-    const reducer = (state: RootState, __: undefined, res: PendingParcelsResponse) => {
+    const reducer = (state: RootState, __: undefined, res: any[]) => {
+        const parcels = res.map(p => SignedParcel.fromJSON(p));
         return {
             pendingParcels: {
                 ...state.pendingParcels,
-                ..._.keyBy(res, parcel => parcel.hash)
+                ..._.keyBy(parcels, parcel => parcel.hash().value)
             }
         };
     };
