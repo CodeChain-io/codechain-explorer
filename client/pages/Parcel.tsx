@@ -1,7 +1,10 @@
 import * as React from "react";
-import { RequestParcel, RequestTransactionInvoice } from "../components/requests";
 import { connect } from "react-redux";
+
+import { SignedParcel } from "codechain-sdk/lib";
+
 import { RootState } from "../redux/actions";
+import { RequestParcel } from "../components/requests";
 import ParcelDetails from "../components/ParcelDetails";
 
 interface Props {
@@ -9,28 +12,23 @@ interface Props {
 }
 
 interface StateProps {
-    parcelByHash: any;
-    parcelInvoiceByHash: any;
+    parcelByHash: {
+        [hash: string]: SignedParcel;
+    };
 }
 
 class ParcelInternal extends React.Component<Props & StateProps> {
     public render() {
-        const { parcelByHash, parcelInvoiceByHash, match } = this.props;
+        const { parcelByHash, match } = this.props;
         const { hash } = match.params;
         const parcel = parcelByHash[hash];
-        // FIXME: broken invoice
-        const invoice = parcelInvoiceByHash[hash];
-
         return (
             <div>
                 {parcel
                     ? <ParcelDetails parcel={parcel} />
                     : <div>loading tx ... <RequestParcel hash={hash} /></div>}
                 <hr />
-                <h4>Invoice</h4>
-                {invoice
-                    ? <div><pre>{JSON.stringify(invoice, null, 4)}</pre></div>
-                    : <div>loading ... <RequestTransactionInvoice hash={hash} /></div>}
+                {/* Show Parcel Invoices here */}
             </div>
         )
     }
@@ -39,7 +37,6 @@ class ParcelInternal extends React.Component<Props & StateProps> {
 const Parcel = connect((state: RootState) => {
     return {
         parcelByHash: state.parcelByHash,
-        parcelInvoiceByHash: state.transactionInvoicesByHash,
     } as StateProps;
 })(ParcelInternal);
 
