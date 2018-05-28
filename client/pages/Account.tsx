@@ -1,5 +1,8 @@
 import * as React from "react";
 import { connect } from "react-redux";
+
+import { U256 } from "codechain-sdk/lib"
+
 import { RootState } from "../redux/actions";
 import { RequestAccount } from "../components/requests";
 
@@ -8,7 +11,12 @@ interface Props {
 }
 
 interface StateProps {
-    accountsByAddress: any;
+    accountsByAddress: {
+        [address: string]: {
+            nonce: U256;
+            balance: U256;
+        }
+    }
 }
 
 class AccountInternal extends React.Component<Props & StateProps> {
@@ -23,8 +31,8 @@ class AccountInternal extends React.Component<Props & StateProps> {
         return (
             <div>
                 <h4>{address}</h4>
-                <div>Balance: {account.balance.value}</div>
-                <div>Nonce: {account.nonce.value}</div>
+                <div>Balance: {account.balance.value.toString()}</div>
+                <div>Nonce: {account.nonce.value.toString()}</div>
                 <hr />
                 <div>Transaction List</div>
                 <hr />
