@@ -88,11 +88,10 @@ interface RequestTransactionInvoiceProps {
     hash: string;
 }
 const transactionInvoiceReducer = (state: RootState, req: RequestTransactionInvoiceProps, res: any) => {
-    const invoice = Invoice.fromJSON(res);
     return {
         transactionInvoicesByHash: {
             ...state.transactionInvoicesByHash,
-            [req.hash]: invoice
+            [req.hash]: res && Invoice.fromJSON(res),
         }
     };
 };
