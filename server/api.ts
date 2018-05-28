@@ -1,7 +1,8 @@
 import * as cors from 'cors';
 import * as express from 'express';
 
-import { H256, H160 } from "codechain-sdk";
+import { H256, H160, SignedParcel, Parcel, U256 } from "codechain-sdk/lib/primitives";
+import { getTransactionFromJSON } from "codechain-sdk/lib/primitives/transaction";
 
 import { ServerContext } from './context';
 
@@ -64,6 +65,21 @@ export function createApiRouter(context: ServerContext, useCors = false) {
         context.codechainSdk.getParcel(new H256(hash)).then(parcel => {
             res.send(parcel.toJSON());
         }).catch(next);
+    });
+
+    router.post("/parcel/signed", async (req, res, next) => {
+        const parcel = SignedParcel.fromJSON(req.body);
+        context.codechainSdk.sendSignedParcel(parcel).then(hash => {
+            res.send(hash);
+        }).catch(e => {
+            const { code, message } = e;
+            if (code === -32010) {
+                // NOTE: ParcelError
+                res.status(400).send(message);
+            } else {
+                next(e);
+            }
+        });
     });
 
     router.get("/tx/:hash/invoice", async (req, res, next) => {
