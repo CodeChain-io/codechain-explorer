@@ -43,11 +43,11 @@ class HomeInternal extends React.Component<StateProps> {
                                 )
                                 : <RequestBlock id={n} />
                             }
-                            <hr />
-                            <PendingParcelList />
                         </div>
                     );
                 })}
+                <hr />
+                <PendingParcelList />
             </div>
         );
     }
