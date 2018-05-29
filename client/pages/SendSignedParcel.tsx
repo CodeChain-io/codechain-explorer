@@ -33,7 +33,8 @@ export default class SendSignedParcel extends React.Component<{}, State> {
             status: "input",
             transaction: new PaymentTransaction({
                 nonce: new U256(1),
-                address: new H160("0xa6594b7196808d161b6fb137e781abbc251385d9"),
+                sender: new H160("0xa6594b7196808d161b6fb137e781abbc251385d9"),
+                receiver: new H160("0xa6594b7196808d161b6fb137e781abbc251385d9"),
                 value: new U256(0),
             }),
         };

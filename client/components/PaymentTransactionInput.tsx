@@ -10,7 +10,8 @@ interface Props {
 
 interface State {
     nonce: number;
-    address: string;
+    sender: string;
+    receiver: string;
     value: number;
 }
 
@@ -19,7 +20,8 @@ export default class PaymentTransactionInput extends React.Component<Props, Stat
         super(props);
         this.state = {
             nonce: this.props.nonce || 0,
-            address: "0xa6594b7196808d161b6fb137e781abbc251385d9",
+            sender: "0xa6594b7196808d161b6fb137e781abbc251385d9",
+            receiver: "0xa6594b7196808d161b6fb137e781abbc251385d9",
             value: 0,
         };
         this.emitChange();
@@ -32,12 +34,14 @@ export default class PaymentTransactionInput extends React.Component<Props, Stat
     }
 
     public render() {
-        const { nonce, address, value } = this.state;
+        const { nonce, receiver, sender, value } = this.state;
         return <div>
             <span>Nonce</span>
             <input onChange={this.onChangeNonce} value={nonce} />
-            <span>Address</span>
-            <input onChange={this.onChangeAddress} value={address} />
+            <span>Sender</span>
+            <input onChange={this.onChangeSender} value={sender} />
+            <span>Receiver</span>
+            <input onChange={this.onChangeReceiver} value={receiver} />
             <span>Value</span>
             <input onChange={this.onChangeValue} value={value} />
         </div>
@@ -50,10 +54,17 @@ export default class PaymentTransactionInput extends React.Component<Props, Stat
         });
     }
 
-    private onChangeAddress = (event: any) => {
+    private onChangeSender = (event: any) => {
         this.setState({
             ...this.state,
-            address: event.target.value,
+            sender: event.target.value,
+        });
+    }
+
+    private onChangeReceiver = (event: any) => {
+        this.setState({
+            ...this.state,
+            receiver: event.target.value,
         });
     }
 
@@ -66,10 +77,11 @@ export default class PaymentTransactionInput extends React.Component<Props, Stat
 
     // FIXME: throttle
     private emitChange = () => {
-        const { nonce, address, value } = this.state;
+        const { nonce, sender, receiver, value } = this.state;
         this.props.onChange(new PaymentTransaction({
             nonce: new U256(nonce),
-            address: new H160(address),
+            sender: new H160(sender),
+            receiver: new H160(receiver),
             value: new U256(value),
         }))
     }

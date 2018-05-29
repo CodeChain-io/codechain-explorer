@@ -38,8 +38,10 @@ export default class AssetMintTransactionInput extends React.Component<Props, St
     }
 
     public render() {
-        const { metadata, lockScriptHash, amount, registrar } = this.state;
+        const { nonce, metadata, lockScriptHash, amount, registrar } = this.state;
         return <div>
+            <span>Nonce</span>
+            <input onChange={this.onChangeNonce} value={nonce} />
             <span>Metadata</span>
             <input onChange={this.onChangeMetadata} value={metadata} />
             <span>Lock Script Hash</span>
@@ -49,6 +51,13 @@ export default class AssetMintTransactionInput extends React.Component<Props, St
             <span>Registrar</span>
             <input onChange={this.onChangeRegistrar} value={registrar} />
         </div>;
+    }
+
+    private onChangeNonce = (event: any) => {
+        this.setState({
+            ...this.state,
+            nonce: event.target.value
+        });
     }
 
     private onChangeMetadata = (event: any) => {
@@ -81,8 +90,9 @@ export default class AssetMintTransactionInput extends React.Component<Props, St
 
     // FIXME: throttle
     private emitChange = () => {
-        const { metadata, lockScriptHash, amount, registrar } = this.state;
+        const { nonce, metadata, lockScriptHash, amount, registrar } = this.state;
         this.props.onChange(new AssetMintTransaction({
+            nonce,
             metadata,
             lockScriptHash: new H256(lockScriptHash),
             // FIXME:
