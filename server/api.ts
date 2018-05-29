@@ -37,7 +37,7 @@ export function createApiRouter(context: ServerContext, useCors = false) {
     router.get("/block/:blockNumber/hash", async (req, res, next) => {
         const { blockNumber } = req.params;
         context.codechainSdk.getBlockHash(Number.parseInt(blockNumber)).then(hash => {
-            res.send(hash.value);
+            res.send(hash === null ? JSON.stringify(null) : hash.value);
         }).catch(next);
     });
 
@@ -48,7 +48,7 @@ export function createApiRouter(context: ServerContext, useCors = false) {
                 ? new H256(id)
                 : await context.codechainSdk.getBlockHash(Number.parseInt(id));
             const block = await context.codechainSdk.getBlock(hash);
-            res.send(block.toJSON());
+            res.send(block === null ? JSON.stringify(null) : block.toJSON());
         } catch (e) {
             next(e);
         }
@@ -63,7 +63,7 @@ export function createApiRouter(context: ServerContext, useCors = false) {
     router.get("/parcel/:hash", async (req, res, next) => {
         const { hash } = req.params;
         context.codechainSdk.getParcel(new H256(hash)).then(parcel => {
-            res.send(parcel.toJSON());
+            res.send(parcel === null ? JSON.stringify(null) : parcel.toJSON());
         }).catch(next);
     });
 
@@ -85,11 +85,7 @@ export function createApiRouter(context: ServerContext, useCors = false) {
     router.get("/tx/:hash/invoice", async (req, res, next) => {
         const { hash } = req.params;
         context.codechainSdk.getTransactionInvoice(new H256(hash)).then(invoice => {
-            if (invoice === null) {
-                res.send(JSON.stringify(null));
-            } else {
-                res.send(invoice.toJSON());
-            }
+            res.send(invoice === null ? JSON.stringify(null) : invoice.toJSON());
         }).catch(next);
     });
 
@@ -125,7 +121,7 @@ export function createApiRouter(context: ServerContext, useCors = false) {
     router.get("/asset/:txhash", async (req, res, next) => {
         const { txhash } = req.params;
         context.codechainSdk.getAssetScheme(new H256(txhash)).then(assetScheme => {
-            res.send(assetScheme.toJSON());
+            res.send(assetScheme === null ? JSON.stringify(null) : assetScheme.toJSON());
         }).catch(next);
     });
 
