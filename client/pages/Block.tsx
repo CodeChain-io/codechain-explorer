@@ -4,7 +4,7 @@ import { connect } from "react-redux";
 import { Block as CoreBlock } from "codechain-sdk/lib/primitives";
 
 import { RootState } from "../redux/actions";
-import { RequestBlock } from "../components/requests";
+import { RequestBlock } from "../components/api_request";
 import BlockDetails from "../components/BlockDetails";
 
 interface Props {

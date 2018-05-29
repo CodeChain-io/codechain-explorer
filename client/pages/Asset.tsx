@@ -2,7 +2,7 @@ import * as React from "react";
 import { connect } from "react-redux";
 import { RootState } from "../redux/actions";
 
-import { RequestAssetScheme } from "../components/requests";
+import { RequestAssetScheme } from "../components/api_request";
 
 interface Props {
     match: any;

@@ -4,7 +4,7 @@ import { connect } from "react-redux";
 import { U256 } from "codechain-sdk/lib"
 
 import { RootState } from "../redux/actions";
-import { RequestAccount } from "../components/requests";
+import { RequestAccount } from "../components/api_request";
 
 interface Props {
     match: any;

@@ -3,7 +3,7 @@ import * as _ from "lodash";
 import { connect } from "react-redux";
 
 import { RootState } from "../redux/actions";
-import { RequestPendingParcels } from "./requests";
+import { RequestPendingParcels } from "./api_request";
 
 interface StateProps {
     pendingParcels: any;

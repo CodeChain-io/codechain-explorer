@@ -4,7 +4,7 @@ import { connect } from "react-redux";
 import { SignedParcel } from "codechain-sdk/lib";
 
 import { RootState } from "../redux/actions";
-import { RequestParcel } from "../components/requests";
+import { RequestParcel } from "../components/api_request";
 import ParcelDetails from "../components/ParcelDetails";
 
 interface Props {

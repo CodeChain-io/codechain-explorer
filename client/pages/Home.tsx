@@ -2,7 +2,7 @@ import * as React from 'react';
 import * as _ from "lodash";
 import { connect } from 'react-redux';
 import { RootState } from '../redux/actions';
-import { RequestBlockNumber, RequestBlock } from '../components/requests';
+import { RequestBlockNumber, RequestBlock } from '../components/api_request';
 import { Link } from 'react-router-dom';
 import PendingParcelList from '../components/PendingParcelList';
 import { Block } from 'codechain-sdk/lib/primitives';

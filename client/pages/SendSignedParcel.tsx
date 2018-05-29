@@ -2,7 +2,7 @@ import * as React from "react";
 
 import { Parcel, U256, H160, H256 } from "codechain-sdk/lib/primitives"
 import { PaymentTransaction, Transaction } from "codechain-sdk/lib/primitives/transaction";
-import { RequestSendSignedParcel } from "../components/RequestSendSignedParcel";
+import { RequestSendSignedParcel } from "../components/api_request/RequestSendSignedParcel";
 import TransactionInput from "../components/TransactionInput";
 import { Link } from "react-router-dom";
 

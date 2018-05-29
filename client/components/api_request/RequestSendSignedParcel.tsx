@@ -2,7 +2,7 @@ import * as React from "react";
 
 import { H256, SignedParcel } from "codechain-sdk/lib/primitives";
 
-import { RootState } from "../redux/actions";
+import { RootState } from "../../redux/actions";
 import ApiDispatcher from "./ApiDispatcher";
 
 interface Props {

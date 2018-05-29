@@ -9,7 +9,7 @@ import { store } from "./redux/store";
 import registerServiceWorker from './registerServiceWorker';
 import Block from './pages/Block';
 import HealthChecker from './components/HealthChecker';
-import { RequestPing } from './components/requests';
+import { RequestPing } from './components/api_request';
 import Home from './pages/Home';
 import Parcel from './pages/Parcel';
 import Account from './pages/Account';

@@ -4,7 +4,7 @@ import * as _ from "lodash";
 import { Block, SignedParcel, AssetScheme, U256, H256, Invoice } from "codechain-sdk/lib/primitives";
 
 import ApiDispatcher from "./ApiDispatcher";
-import { RootState } from "../redux/actions";
+import { RootState } from "../../redux/actions";
 
 const pingReducer = (state: RootState, __: undefined, res: string) => {
     return { isNodeAlive: res === "pong" };

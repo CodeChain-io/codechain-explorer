@@ -4,7 +4,7 @@ import { connect } from "react-redux";
 
 import { Block } from "codechain-sdk/lib/primitives";
 
-import { RequestBlock } from "./requests";
+import { RequestBlock } from "./api_request";
 import BlockParcelList from "./BlockParcelList";
 import BlockHeaderTable from "./BlockHeaderTable";
 
