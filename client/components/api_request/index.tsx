@@ -1,10 +1,16 @@
 import * as React from "react";
 import * as _ from "lodash";
 
-import { Block, SignedParcel, AssetScheme, U256, H256, Invoice } from "codechain-sdk/lib/primitives";
+import { SignedParcel, AssetScheme, U256, H256, Invoice } from "codechain-sdk/lib/primitives";
+
+import RequestBlockNumber from "./RequestBlockNumber";
+import RequestBlock from "./RequestBlock";
 
 import ApiDispatcher from "./ApiDispatcher";
 import { RootState } from "../../redux/actions";
+
+export { RequestBlockNumber };
+export { RequestBlock };
 
 const pingReducer = (state: RootState, __: undefined, res: string) => {
     return { isNodeAlive: res === "pong" };
@@ -13,15 +19,6 @@ export const RequestPing = () => (
     <ApiDispatcher
         api={"ping"}
         reducer={pingReducer} />
-);
-
-const blockNumberReducer = (state: RootState, __: undefined, res: string) => {
-    return { bestBlockNumber: Number.parseInt(res) };
-};
-export const RequestBlockNumber = () => (
-    <ApiDispatcher
-        api={"blockNumber"}
-        reducer={blockNumberReducer} />
 );
 
 interface RequestBlockHashProps {
@@ -41,29 +38,6 @@ export const RequestBlockHash = (props: RequestBlockHashProps) => {
         reducer={blockHashReducer}
         requestProps={props} />
 }
-
-interface RequestBlockProps {
-    id: number | string;
-}
-const blockReducer = (state: RootState, req: RequestBlockProps, res: any) => {
-    const block = Block.fromJSON(res);
-    return {
-        blocksByNumber: {
-            ...state.blocksByNumber,
-            [res.number]: block,
-        },
-        blocksByHash: {
-            ...state.blocksByHash,
-            [res.hash]: block,
-        }
-    };
-};
-export const RequestBlock = (props: RequestBlockProps) => (
-    <ApiDispatcher
-        api={`block/${props.id}`}
-        reducer={blockReducer}
-        requestProps={props} />
-);
 
 interface RequestParcelProps {
     hash: string;

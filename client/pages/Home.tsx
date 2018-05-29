@@ -8,20 +8,30 @@ import PendingParcelList from '../components/PendingParcelList';
 import { Block } from 'codechain-sdk/lib/primitives';
 
 interface StateProps {
-    bestBlockNumber?: number;
     blocksByNumber: {
         [n: number]: Block;
     };
 }
 
-class HomeInternal extends React.Component<StateProps> {
+interface State {
+    bestBlockNumber?: number;
+}
+
+class HomeInternal extends React.Component<StateProps, State> {
+    constructor(props: StateProps) {
+        super(props);
+        this.state = {};
+    }
+
     public render() {
-        const { bestBlockNumber, blocksByNumber } = this.props;
+        const { blocksByNumber } = this.props;
+        const { bestBlockNumber } = this.state;
         if (bestBlockNumber === undefined) {
             return (
                 <div>
                     Loading ...
-                    <RequestBlockNumber />
+                    <RequestBlockNumber
+                        onFinish={this.onBestBlockNumber} />
                 </div>
             );
         }
@@ -51,11 +61,14 @@ class HomeInternal extends React.Component<StateProps> {
             </div>
         );
     }
+
+    private onBestBlockNumber = (n: number) => {
+        this.setState({ ...this.state, bestBlockNumber: n });
+    }
 }
 
 const Home = connect((state: RootState) => {
     return {
-        bestBlockNumber: state.bestBlockNumber,
         blocksByNumber: state.blocksByNumber
     } as StateProps;
 })(HomeInternal);
