@@ -1,37 +1,34 @@
 import * as React from 'react';
 import * as _ from "lodash";
-import { connect } from 'react-redux';
-import { RootState } from '../redux/actions';
 import { RequestBlockNumber, RequestBlock } from '../components/api_request';
 import { Link } from 'react-router-dom';
 import PendingParcelList from '../components/PendingParcelList';
 import { Block } from 'codechain-sdk/lib/primitives';
 
-interface StateProps {
-    blocksByNumber: {
-        [n: number]: Block;
-    };
-}
-
 interface State {
     bestBlockNumber?: number;
+    blocksByNumber: {
+        [n: number]: Block;
+    }
 }
 
-class HomeInternal extends React.Component<StateProps, State> {
-    constructor(props: StateProps) {
+class Home extends React.Component<{}, State> {
+    constructor(props: {}) {
         super(props);
-        this.state = {};
+        this.state = {
+            blocksByNumber: {}
+        };
     }
 
     public render() {
-        const { blocksByNumber } = this.props;
-        const { bestBlockNumber } = this.state;
+        const { bestBlockNumber, blocksByNumber } = this.state;
         if (bestBlockNumber === undefined) {
             return (
                 <div>
                     Loading ...
                     <RequestBlockNumber
-                        onFinish={this.onBestBlockNumber} />
+                        onBlockNumber={this.onBlockNumber}
+                        onError={this.onError}/>
                 </div>
             );
         }
@@ -51,7 +48,7 @@ class HomeInternal extends React.Component<StateProps, State> {
                                         <div>Total {blocksByNumber[n].parcels.length} Parcels</div>
                                     </div>
                                 )
-                                : <RequestBlock id={n} />
+                                : <RequestBlock id={n} onBlock={this.onBlock} onError={this.onError} />
                             }
                         </div>
                     );
@@ -62,15 +59,22 @@ class HomeInternal extends React.Component<StateProps, State> {
         );
     }
 
-    private onBestBlockNumber = (n: number) => {
+    private onBlock = (block: Block) => {
+        const blocksByNumber = {
+            ...this.state.blocksByNumber,
+            [block.number]: block
+        }
+        this.setState({
+            ...this.state,
+            blocksByNumber
+        });
+    }
+
+    private onBlockNumber = (n: number) => {
         this.setState({ ...this.state, bestBlockNumber: n });
     }
-}
 
-const Home = connect((state: RootState) => {
-    return {
-        blocksByNumber: state.blocksByNumber
-    } as StateProps;
-})(HomeInternal);
+    private onError = () => ({/* Not implemented */})
+}
 
 export default Home;

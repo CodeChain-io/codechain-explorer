@@ -1,32 +1,17 @@
 import * as React from "react";
-import { RootState } from "../redux/actions";
-import { connect } from "react-redux";
 
 import { Block } from "codechain-sdk/lib/primitives";
 
-import { RequestBlock } from "./api_request";
 import BlockParcelList from "./BlockParcelList";
 import BlockHeaderTable from "./BlockHeaderTable";
 
-interface Props {
-    // FIXME: blockNumber or blockHash
-    blockNumber: number;
+interface OwnProps {
+    block: Block;
 }
 
-interface StateProps {
-    blocksByNumber: {
-        [n: number]: Block;
-    };
-}
-
-class BlockDetailsInternal extends React.Component<Props & StateProps> {
+class BlockDetails extends React.Component<OwnProps> {
     public render() {
-        const { blockNumber, blocksByNumber } = this.props;
-        const block = blocksByNumber[blockNumber];
-        if (!block) {
-            return <RequestBlock id={blockNumber} />
-        }
-
+        const { block } = this.props;
         return (
             <div>
                 <BlockHeaderTable block={block} />
@@ -35,11 +20,5 @@ class BlockDetailsInternal extends React.Component<Props & StateProps> {
         );
     }
 }
-
-const BlockDetails = connect((state: RootState) => {
-    return {
-        blocksByNumber: state.blocksByNumber
-    } as StateProps;
-})(BlockDetailsInternal);
 
 export default BlockDetails;

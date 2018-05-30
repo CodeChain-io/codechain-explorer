@@ -1,48 +1,43 @@
 import * as React from "react";
-import { connect } from "react-redux";
 
 import { Block as CoreBlock } from "codechain-sdk/lib/primitives";
 
-import { RootState } from "../redux/actions";
 import { RequestBlock } from "../components/api_request";
 import BlockDetails from "../components/BlockDetails";
+
+interface States {
+    block?: CoreBlock;
+}
 
 interface Props {
     match: any;
 }
 
-interface StateProps {
-    blocksByNumber: {
-        [n: number]: CoreBlock;
-    };
-    blocksByHash: {
-        [hash: string]: CoreBlock;
+class Block extends React.Component<Props, States> {
+    constructor(props: Props) {
+        super(props);
+        this.state = {};
     }
-}
-
-class BlockInternal extends React.Component<Props & StateProps> {
     public render() {
-        const { blocksByNumber, blocksByHash, match } = this.props;
+        const { match } = this.props;
         const { id } = match.params;
-        const block = blocksByHash[id] || blocksByNumber[Number.parseInt(id)];
+        const { block } = this.state;
 
         if (!block) {
-            return <RequestBlock id={id} />;
+            return <RequestBlock id={id} onBlock={this.onBlock} onError={this.onError} />;
         }
         return (
             <div>
-                <BlockDetails blockNumber={block.number} />
+                <BlockDetails block={block} />
             </div>
         );
     }
-}
 
-const Block = connect((state: RootState) => {
-    // FIXME:
-    return {
-        blocksByNumber: state.blocksByNumber,
-        blocksByHash: state.blocksByHash
-    } as StateProps;
-})(BlockInternal);
+    private onBlock = (block: CoreBlock) => {
+        this.setState({ block });
+    };
+
+    private onError = () => ({});
+}
 
 export default Block;
