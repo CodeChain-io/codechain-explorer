@@ -2,24 +2,27 @@ import * as React from "react";
 
 import { H256, SignedParcel } from "codechain-sdk/lib/primitives";
 
-import { RootState } from "../../redux/actions";
-import ApiDispatcher from "./ApiDispatcher";
+import { apiRequest, ApiError } from "./ApiRequest";
 
-interface Props {
+interface OwnProps {
     parcel: SignedParcel,
-    onStart?: () => void;
-    onFinish?: (hash: H256) => void;
-    onError?: (e: any) => void;
+    onSuccess: (hash: H256) => void;
+    onError: (e: ApiError) => void;
 }
 
-const reducer = (state: RootState, req: Props, res: any) => ({});
+export class RequestSendSignedParcel extends React.Component<OwnProps> {
+    public componentWillMount() {
+        const { parcel, onSuccess, onError } = this.props;
+        apiRequest({
+            path: `parcel/signed`,
+            body: parcel.toJSON()
+        }).then((response: string) => {
+            const hash = new H256(response);
+            onSuccess(hash);
+        }).catch(onError);
+    }
 
-export const RequestSendSignedParcel = (props: Props) => {
-    const { parcel, onFinish, onError } = props;
-    return <ApiDispatcher
-        api={`parcel/signed`}
-        reducer={reducer}
-        body={parcel.toJSON()}
-        onSuccess={onFinish}
-        onError={onError} />
-};
+    public render() {
+        return (null);
+    }
+}

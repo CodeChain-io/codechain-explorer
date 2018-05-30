@@ -63,7 +63,7 @@ export default class SendSignedParcel extends React.Component<{}, State> {
             ).sign(new H256(secret));
             return <RequestSendSignedParcel
                 parcel={parcel}
-                onFinish={this.onFinishSend}
+                onSuccess={this.onFinishSend}
                 onError={this.onErrorSend} />;
         }
 
@@ -154,7 +154,7 @@ export default class SendSignedParcel extends React.Component<{}, State> {
         })
     }
 
-    private onErrorSend = (message: string) => {
+    private onErrorSend = ({ message }: { message: string }) => {
         this.setState({
             ...this.state,
             status: "error",
