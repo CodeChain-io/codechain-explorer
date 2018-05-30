@@ -13,7 +13,7 @@ interface OwnProps {
 }
 
 interface StateProps {
-    cached: Block;
+    cached?: Block;
 }
 
 interface DispatchProps {
