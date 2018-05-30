@@ -5,10 +5,12 @@ import { SignedParcel, AssetScheme, U256, H256, Invoice } from "codechain-sdk/li
 
 import RequestBlockNumber from "./RequestBlockNumber";
 import RequestBlock from "./RequestBlock";
+import RequestParcel from "./RequestParcel";
 
 import ApiDispatcher from "./ApiDispatcher";
 import { RootState } from "../../redux/actions";
 
+export { RequestParcel };
 export { RequestBlockNumber };
 export { RequestBlock };
 
@@ -38,25 +40,6 @@ export const RequestBlockHash = (props: RequestBlockHashProps) => {
         reducer={blockHashReducer}
         requestProps={props} />
 }
-
-interface RequestParcelProps {
-    hash: string;
-}
-const parcelReducer = (state: RootState, req: RequestParcelProps, res: any) => {
-    const parcel = SignedParcel.fromJSON(res);
-    return {
-        parcelByHash: {
-            ...state.parcelByHash,
-            [req.hash]: parcel
-        }
-    };
-};
-export const RequestParcel = (props: RequestParcelProps) => (
-    <ApiDispatcher
-        api={`parcel/${props.hash}`}
-        reducer={parcelReducer}
-        requestProps={props} />
-);
 
 interface RequestTransactionInvoiceProps {
     hash: string;

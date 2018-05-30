@@ -1,9 +1,7 @@
 import * as React from "react";
-import { connect } from "react-redux";
 
 import { SignedParcel } from "codechain-sdk/lib";
 
-import { RootState } from "../redux/actions";
 import { RequestParcel } from "../components/api_request";
 import ParcelDetails from "../components/ParcelDetails";
 
@@ -11,33 +9,45 @@ interface Props {
     match: any;
 }
 
-interface StateProps {
-    parcelByHash: {
-        [hash: string]: SignedParcel;
-    };
+interface State {
+    parcel?: SignedParcel;
 }
 
-class ParcelInternal extends React.Component<Props & StateProps> {
+class Parcel extends React.Component<Props, State> {
+    constructor(props: Props) {
+        super(props);
+        this.state = {};
+    }
+
     public render() {
-        const { parcelByHash, match } = this.props;
+        const { match } = this.props;
         const { hash } = match.params;
-        const parcel = parcelByHash[hash];
+        const { parcel } = this.state;
         return (
             <div>
                 {parcel
                     ? <ParcelDetails parcel={parcel} />
-                    : <div>loading tx ... <RequestParcel hash={hash} /></div>}
+                    : <div>loading tx ...
+                        <RequestParcel hash={hash}
+                            onParcel={this.onParcel}
+                            onParcelNotExist={this.onParcelNotExist}
+                            onError={this.onError}/>
+                    </div>}
                 <hr />
                 {/* Show Parcel Invoices here */}
             </div>
         )
     }
-}
 
-const Parcel = connect((state: RootState) => {
-    return {
-        parcelByHash: state.parcelByHash,
-    } as StateProps;
-})(ParcelInternal);
+    private onParcel = (parcel: SignedParcel) => {
+        this.setState({ parcel });
+    }
+
+    private onParcelNotExist = () => {
+        console.log("parcel not exist");
+    }
+
+    private onError = () => ({/* Not implemented */});
+}
 
 export default Parcel;

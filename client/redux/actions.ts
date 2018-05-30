@@ -55,7 +55,12 @@ interface CacheBlockAction {
     data: Block;
 };
 
-type Action = BestBlockNumberAction | CacheBlockAction | ApiDispatcherResult;
+interface CacheParcelAction {
+    type: "CACHE_PARCEL";
+    data: SignedParcel;
+}
+
+type Action = BestBlockNumberAction | CacheBlockAction | CacheParcelAction | ApiDispatcherResult;
 
 interface ApiDispatcherResult {
     type: "API_DISPATCHER_OK" | "API_DISPATCHER_ERROR";
@@ -70,6 +75,10 @@ export const rootReducer = (state = initialState, action: any | Action) => {
         const blocksByNumber = { ...state.blocksByNumber, [n]: action.data };
         const blocksByHash = { ...state.blocksByNumber, [hash.value]: action.data };
         return { ...state, blocksByNumber, blocksByHash };
+    } else if (action.type === "CACHE_PARCEL") {
+        const parcel = action.data as SignedParcel;
+        const parcelByHash = { ...state.parcelByHash, [parcel.hash().value]: parcel };
+        return { ...state, parcelByHash };
     }
 
     const update = action.getUpdate ? action.getUpdate(state) : {};
