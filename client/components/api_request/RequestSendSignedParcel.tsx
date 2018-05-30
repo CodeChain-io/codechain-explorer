@@ -15,12 +15,11 @@ interface Props {
 const reducer = (state: RootState, req: Props, res: any) => ({});
 
 export const RequestSendSignedParcel = (props: Props) => {
-    const { parcel, onStart, onFinish, onError } = props;
+    const { parcel, onFinish, onError } = props;
     return <ApiDispatcher
         api={`parcel/signed`}
         reducer={reducer}
         body={parcel.toJSON()}
-        onStart={onStart}
-        onFinish={onFinish}
+        onSuccess={onFinish}
         onError={onError} />
 };

@@ -16,7 +16,6 @@ interface StateProps {
 }
 interface Props {
     id: number | string;
-    onStart?: () => void;
     onBlock?: (b: Block) => void;
     onError?: (e: any) => void;
 }
@@ -45,14 +44,13 @@ class RequestBlockInternal extends React.Component<Props & StateProps> {
     }
 
     public render() {
-        const { id, blocksByNumber, blocksByHash, onStart, onBlock, onError } = this.props;
+        const { id, blocksByNumber, blocksByHash, onBlock, onError } = this.props;
         const cached = blocksByNumber[id] || blocksByHash[id];
         if (!cached) {
             return <ApiDispatcher
                 api={`block/${id}`}
                 reducer={reducer}
-                onStart={onStart}
-                onFinish={onBlock}
+                onSuccess={onBlock}
                 onError={onError}
                 requestProps={{ id }} />
         }
