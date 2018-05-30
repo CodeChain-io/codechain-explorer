@@ -37,7 +37,7 @@ export function createApiRouter(context: ServerContext, useCors = false) {
     router.get("/block/:blockNumber/hash", async (req, res, next) => {
         const { blockNumber } = req.params;
         context.codechainSdk.getBlockHash(Number.parseInt(blockNumber)).then(hash => {
-            res.send(hash === null ? JSON.stringify(null) : hash.value);
+            res.send(hash === null ? JSON.stringify(null) : JSON.stringify(hash.value));
         }).catch(next);
     });
 
@@ -70,7 +70,7 @@ export function createApiRouter(context: ServerContext, useCors = false) {
     router.post("/parcel/signed", async (req, res, next) => {
         const parcel = SignedParcel.fromJSON(req.body);
         context.codechainSdk.sendSignedParcel(parcel).then(hash => {
-            res.send(hash);
+            res.send(JSON.stringify(hash.value));
         }).catch(e => {
             const { code, message } = e;
             if (code === -32010) {
