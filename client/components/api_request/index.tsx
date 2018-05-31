@@ -1,8 +1,7 @@
 import * as React from "react";
 
-import { H256 } from "codechain-sdk/lib/primitives";
-
 import RequestBlockNumber from "./RequestBlockNumber";
+import RequestBlockHash from "./RequestBlockHash";
 import RequestBlock from "./RequestBlock";
 import RequestParcel from "./RequestParcel";
 import RequestAssetScheme from "./RequestAssetScheme";
@@ -15,6 +14,7 @@ import { RootState } from "../../redux/actions";
 
 export { RequestParcel };
 export { RequestBlockNumber };
+export { RequestBlockHash };
 export { RequestBlock };
 export { RequestAssetScheme };
 export { RequestAccount };
@@ -29,21 +29,3 @@ export const RequestPing = () => (
         api={"ping"}
         reducer={pingReducer} />
 );
-
-interface RequestBlockHashProps {
-    num: number;
-}
-const blockHashReducer = (state: RootState, req: RequestBlockHashProps, res: string) => {
-    return {
-        blockHashesByNumber: {
-            ...state.blockHashesByNumber,
-            [req.num]: new H256(res),
-        }
-    }
-}
-export const RequestBlockHash = (props: RequestBlockHashProps) => {
-    return <ApiDispatcher
-        api={`block/${props.num}/hash`}
-        reducer={blockHashReducer}
-        requestProps={props} />
-}
