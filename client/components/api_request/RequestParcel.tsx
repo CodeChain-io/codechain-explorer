@@ -26,7 +26,8 @@ class RequestParcelInternal extends React.Component<Props> {
     public componentWillMount() {
         const { cached, dispatch, hash, onParcel, onParcelNotExist, onError } = this.props;
         if (cached) {
-            return onParcel(cached);
+            setTimeout(() => onParcel(cached));
+            return;
         }
         apiRequest({ path: `parcel/${hash}` }).then((response: object) => {
             if (response === null) {
