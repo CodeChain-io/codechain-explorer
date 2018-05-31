@@ -1,11 +1,12 @@
 import * as React from "react";
+import { match } from "react-router";
 
 import { U256 } from "codechain-sdk/lib"
 
 import { RequestAccount } from "../components/api_request";
 
 interface Props {
-    match: any;
+    match: match<{ address: string }>;
 }
 
 interface State {
@@ -20,9 +21,17 @@ class Account extends React.Component<Props, State> {
         super(props);
         this.state = {};
     }
+
+    public componentWillReceiveProps(props: Props) {
+        const { match: { params: { address } } } = this.props;
+        const { match: { params: { address: nextAddress } } } = props;
+        if (nextAddress !== address) {
+            this.setState({ account: undefined });
+        }
+    }
+
     public render() {
-        const { match } = this.props;
-        const { address } = match.params;
+        const { match: { params: { address } } } = this.props;
         const { account } = this.state;
 
         if (!account) {

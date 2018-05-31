@@ -1,10 +1,11 @@
 import * as React from "react";
+import { match } from "react-router";
 
 import { RequestAssetScheme } from "../components/api_request";
 import { AssetScheme as CoreAssetScheme } from "codechain-sdk/lib/primitives";
 
 interface Props {
-    match: any;
+    match: match<{ type: string }>;
 }
 
 interface State {
@@ -30,9 +31,17 @@ class Asset extends React.Component<Props, State> {
         super(props);
         this.state = { notFound: false };
     }
+
+    public componentWillReceiveProps(props: Props) {
+        const { match: { params: { type } } } = this.props;
+        const { match: { params: { type: nextType } } } = props;
+        if (nextType !== type) {
+            this.setState({ ...this.state, assetScheme: undefined });
+        }
+    }
+
     public render() {
-        const { match } = this.props;
-        const { type } = match.params;
+        const { match: { params: { type } } } = this.props;
         const { notFound, assetScheme } = this.state;
         if (notFound) {
             return <div>Asset not exist for txhash: {type}</div>

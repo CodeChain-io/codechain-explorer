@@ -1,4 +1,5 @@
 import * as React from "react";
+import { match } from "react-router";
 
 import { Block as CoreBlock } from "codechain-sdk/lib/primitives";
 
@@ -10,7 +11,7 @@ interface State {
 }
 
 interface Props {
-    match: any;
+    match: match<{ id: number | string }>;
 }
 
 class Block extends React.Component<Props, State> {
@@ -18,9 +19,17 @@ class Block extends React.Component<Props, State> {
         super(props);
         this.state = {};
     }
+
+    public componentWillReceiveProps(props: Props) {
+        const { match: { params: { id } } } = this.props;
+        const { match: { params: { id: nextId } } } = props;
+        if (nextId !== id) {
+            this.setState({ block: undefined });
+        }
+    }
+
     public render() {
-        const { match } = this.props;
-        const { id } = match.params;
+        const { match: { params: { id } } } = this.props;
         const { block } = this.state;
 
         if (!block) {

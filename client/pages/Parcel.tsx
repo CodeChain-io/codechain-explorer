@@ -1,4 +1,5 @@
 import * as React from "react";
+import { match } from "react-router";
 
 import { SignedParcel } from "codechain-sdk/lib";
 
@@ -6,7 +7,7 @@ import { RequestParcel } from "../components/api_request";
 import ParcelDetails from "../components/ParcelDetails";
 
 interface Props {
-    match: any;
+    match: match<{ hash: string }>;
 }
 
 interface State {
@@ -19,9 +20,16 @@ class Parcel extends React.Component<Props, State> {
         this.state = {};
     }
 
+    public componentWillReceiveProps(props: Props) {
+        const { match: { params: { hash } } } = this.props;
+        const { match: { params: { hash: nextHash } } } = props;
+        if (nextHash !== hash) {
+            this.setState({ parcel: undefined });
+        }
+    }
+
     public render() {
-        const { match } = this.props;
-        const { hash } = match.params;
+        const { match: { params: { hash } } } = this.props;
         const { parcel } = this.state;
         return (
             <div>
