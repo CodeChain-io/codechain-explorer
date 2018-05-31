@@ -21,9 +21,6 @@ export interface RootState {
     assetSchemeByTxhash: {
         [txhash: string]: AssetScheme;
     };
-    pendingParcels: {
-        [hash: string]: SignedParcel;
-    };
 }
 
 const initialState: RootState = {
@@ -35,7 +32,6 @@ const initialState: RootState = {
     parcelByHash: {},
     transactionInvoicesByHash: {},
     assetSchemeByTxhash: {},
-    pendingParcels: {},
 };
 
 interface BestBlockNumberAction {

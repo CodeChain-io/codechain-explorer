@@ -1,13 +1,13 @@
 import * as React from "react";
-import * as _ from "lodash";
 
-import { SignedParcel, H256, Invoice } from "codechain-sdk/lib/primitives";
+import { H256, Invoice } from "codechain-sdk/lib/primitives";
 
 import RequestBlockNumber from "./RequestBlockNumber";
 import RequestBlock from "./RequestBlock";
 import RequestParcel from "./RequestParcel";
 import RequestAssetScheme from "./RequestAssetScheme";
 import RequestAccount from "./RequestAccount";
+import RequestPendingParcels from "./RequestPendingParcels";
 
 import ApiDispatcher from "./ApiDispatcher";
 import { RootState } from "../../redux/actions";
@@ -17,6 +17,7 @@ export { RequestBlockNumber };
 export { RequestBlock };
 export { RequestAssetScheme };
 export { RequestAccount };
+export { RequestPendingParcels };
 
 const pingReducer = (state: RootState, __: undefined, res: string) => {
     return { isNodeAlive: res === "pong" };
@@ -62,18 +63,3 @@ export const RequestTransactionInvoice = (props: RequestTransactionInvoiceProps)
         reducer={transactionInvoiceReducer}
         requestProps={props} />
 );
-
-export const RequestPendingParcels = () => {
-    const reducer = (state: RootState, __: undefined, res: any[]) => {
-        const parcels = res.map(p => SignedParcel.fromJSON(p));
-        return {
-            pendingParcels: {
-                ...state.pendingParcels,
-                ..._.keyBy(parcels, parcel => parcel.hash().value)
-            }
-        };
-    };
-    return <ApiDispatcher
-        api={`parcel/pending`}
-        reducer={reducer} />
-};
