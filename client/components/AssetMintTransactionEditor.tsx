@@ -22,7 +22,6 @@ export default class AssetMintTransactionEditor extends React.Component<Props, S
     constructor(props: Props) {
         super(props);
         this.state = {
-            // FIXME: currently nonce is not used for AssetMint.
             nonce: 0,
             metadata: "",
             lockScriptHash: "0000000000000000000000000000000000000000000000000000000000000000",
