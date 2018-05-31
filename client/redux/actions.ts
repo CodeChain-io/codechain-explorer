@@ -55,7 +55,7 @@ export const rootReducer = (state = initialState, action: any | Action) => {
     } else if (action.type === "CACHE_BLOCK") {
         const { number: n, hash } = action.data as Block;
         const blocksByNumber = { ...state.blocksByNumber, [n]: action.data };
-        const blocksByHash = { ...state.blocksByNumber, [hash.value]: action.data };
+        const blocksByHash = { ...state.blocksByHash, [hash.value]: action.data };
         return { ...state, blocksByNumber, blocksByHash };
     } else if (action.type === "CACHE_PARCEL") {
         const parcel = action.data as SignedParcel;
