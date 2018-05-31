@@ -27,7 +27,7 @@ class RequestAssetSchemeInternal extends React.Component<Props> {
     public componentWillMount() {
         const { cached, dispatch, txhash, onAssetScheme, onNotFound, onError } = this.props;
         if (cached) {
-            onAssetScheme(cached);
+            return onAssetScheme(cached);
         }
         apiRequest({ path: `asset/${txhash}` }).then((response: object) => {
             if (response === null) {

@@ -24,7 +24,7 @@ class RequestBlockInternal extends React.Component<OwnProps & StateProps & Dispa
     public componentWillMount() {
         const { cached, dispatch, onError, onBlock, id } = this.props;
         if (cached) {
-            onBlock(cached);
+            return onBlock(cached);
         }
         apiRequest({ path: `block/${id}` }).then(response => {
             const block = Block.fromJSON(response);
