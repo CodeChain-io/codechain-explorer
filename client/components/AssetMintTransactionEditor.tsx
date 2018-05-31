@@ -8,10 +8,12 @@ interface Props {
 }
 
 interface State {
+    // FIXME: U64
     nonce: number;
     metadata: string;
     lockScriptHash: string;
     parameters: string[];
+    // FIXME: U64
     amount: number;
     registrar: string;
 }
@@ -53,35 +55,35 @@ export default class AssetMintTransactionEditor extends React.Component<Props, S
         </div>;
     }
 
-    private onChangeNonce = (event: any) => {
+    private onChangeNonce = (event: React.ChangeEvent<HTMLInputElement>) => {
         this.setState({
             ...this.state,
-            nonce: event.target.value
+            nonce: Number.parseInt(event.target.value)
         });
     }
 
-    private onChangeMetadata = (event: any) => {
+    private onChangeMetadata = (event: React.ChangeEvent<HTMLInputElement>) => {
         this.setState({
             ...this.state,
             metadata: event.target.value
         });
     }
 
-    private onChangeLockScriptHash = (event: any) => {
+    private onChangeLockScriptHash = (event: React.ChangeEvent<HTMLInputElement>) => {
         this.setState({
             ...this.state,
             lockScriptHash: event.target.value
         });
     }
 
-    private onChangeAmount = (event: any) => {
+    private onChangeAmount = (event: React.ChangeEvent<HTMLInputElement>) => {
         this.setState({
             ...this.state,
-            amount: event.target.value
+            amount: Number.parseInt(event.target.value)
         });
     }
 
-    private onChangeRegistrar = (event: any) => {
+    private onChangeRegistrar = (event: React.ChangeEvent<HTMLInputElement>) => {
         this.setState({
             ...this.state,
             registrar: event.target.value

@@ -9,9 +9,11 @@ interface Props {
 }
 
 interface State {
+    // FIXME: U64
     nonce: number;
     sender: string;
     receiver: string;
+    // FIXME: U256
     value: number;
 }
 
@@ -47,31 +49,31 @@ export default class PaymentTransactionEditor extends React.Component<Props, Sta
         </div>
     }
 
-    private onChangeNonce = (event: any) => {
+    private onChangeNonce = (event: React.ChangeEvent<HTMLInputElement>) => {
         this.setState({
             ...this.state,
-            nonce: event.target.value,
+            nonce: Number.parseInt(event.target.value),
         });
     }
 
-    private onChangeSender = (event: any) => {
+    private onChangeSender = (event: React.ChangeEvent<HTMLInputElement>) => {
         this.setState({
             ...this.state,
             sender: event.target.value,
         });
     }
 
-    private onChangeReceiver = (event: any) => {
+    private onChangeReceiver = (event: React.ChangeEvent<HTMLInputElement>) => {
         this.setState({
             ...this.state,
             receiver: event.target.value,
         });
     }
 
-    private onChangeValue = (event: any) => {
+    private onChangeValue = (event: React.ChangeEvent<HTMLInputElement>) => {
         this.setState({
             ...this.state,
-            value: event.target.value,
+            value: Number.parseInt(event.target.value),
         });
     }
 

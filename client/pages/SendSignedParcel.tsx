@@ -7,10 +7,13 @@ import TransactionEditor from "../components/TransactionEditor";
 import { Link } from "react-router-dom";
 
 type Status = "input" | "sending" | "sent" | "error";
+type TransactionType = "payment" | "setRegularKey" | "assetMint" | "assetTransfer";
 
 interface State {
-    transactionType: "payment" | "setRegularKey" | "assetMint" | "assetTransfer";
+    transactionType: TransactionType;
+    // FIXME: U256
     nonce: number;
+    // FIXME: U256
     fee: number;
     networkId: number;
     secret: string;
@@ -97,10 +100,10 @@ export default class SendSignedParcel extends React.Component<{}, State> {
         </div>
     }
 
-    private onChangeTransactionType = (event: any) => {
+    private onChangeTransactionType = (event: React.ChangeEvent<HTMLSelectElement>) => {
         this.setState({
             ...this.state,
-            transactionType: event.target.value
+            transactionType: event.target.value as TransactionType
         });
     }
 
@@ -111,28 +114,28 @@ export default class SendSignedParcel extends React.Component<{}, State> {
         });
     }
 
-    private onChangeNonce = (event: any) => {
+    private onChangeNonce = (event: React.ChangeEvent<HTMLInputElement>) => {
         this.setState({
             ...this.state,
-            nonce: event.target.value
+            nonce: Number.parseInt(event.target.value)
         });
     }
 
-    private onChangeFee = (event: any) => {
+    private onChangeFee = (event: React.ChangeEvent<HTMLInputElement>) => {
         this.setState({
             ...this.state,
-            fee: event.target.value
+            fee: Number.parseInt(event.target.value)
         });
     }
 
-    private onChangeNetworkId = (event: any) => {
+    private onChangeNetworkId = (event: React.ChangeEvent<HTMLInputElement>) => {
         this.setState({
             ...this.state,
-            networkId: event.target.value
+            networkId: Number.parseInt(event.target.value)
         });
     }
 
-    private onChangeSecret = (event: any) => {
+    private onChangeSecret = (event: React.ChangeEvent<HTMLInputElement>) => {
         this.setState({
             ...this.state,
             secret: event.target.value
