@@ -1,11 +1,12 @@
 import * as React from "react";
 import * as _ from "lodash";
 
-import { SignedParcel, AssetScheme, U256, H256, Invoice } from "codechain-sdk/lib/primitives";
+import { SignedParcel, U256, H256, Invoice } from "codechain-sdk/lib/primitives";
 
 import RequestBlockNumber from "./RequestBlockNumber";
 import RequestBlock from "./RequestBlock";
 import RequestParcel from "./RequestParcel";
+import RequestAssetScheme from "./RequestAssetScheme";
 
 import ApiDispatcher from "./ApiDispatcher";
 import { RootState } from "../../redux/actions";
@@ -13,6 +14,7 @@ import { RootState } from "../../redux/actions";
 export { RequestParcel };
 export { RequestBlockNumber };
 export { RequestBlock };
+export { RequestAssetScheme };
 
 const pingReducer = (state: RootState, __: undefined, res: string) => {
     return { isNodeAlive: res === "pong" };
@@ -80,25 +82,6 @@ export const RequestAccount = (props: RequestAccountProps) => {
         reducer={reducer}
         requestProps={props} />
 };
-
-interface RequestAssetSchemeProps {
-    txhash: string;
-}
-export const RequestAssetScheme = (props: RequestAssetSchemeProps) => {
-    const reducer = (state: RootState, req: RequestAssetSchemeProps, res: any) => {
-        const assetScheme = AssetScheme.fromJSON(res);
-        return {
-            assetSchemeByTxhash: {
-                ...state.assetSchemeByTxhash,
-                [req.txhash]: assetScheme
-            }
-        };
-    };
-    return <ApiDispatcher
-        api={`asset/${props.txhash}`}
-        reducer={reducer}
-        requestProps={props} />
-}
 
 export const RequestPendingParcels = () => {
     const reducer = (state: RootState, __: undefined, res: any[]) => {

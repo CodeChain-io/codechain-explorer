@@ -60,7 +60,15 @@ interface CacheParcelAction {
     data: SignedParcel;
 }
 
-type Action = BestBlockNumberAction | CacheBlockAction | CacheParcelAction | ApiDispatcherResult;
+interface CacheAssetSchemeAction {
+    type: "CACHE_ASSET_SCHEME";
+    data: {
+        txhash: string;
+        assetScheme: AssetScheme;
+    };
+}
+
+type Action = BestBlockNumberAction | CacheAssetSchemeAction | CacheBlockAction | CacheParcelAction | ApiDispatcherResult;
 
 interface ApiDispatcherResult {
     type: "API_DISPATCHER_OK" | "API_DISPATCHER_ERROR";
@@ -79,6 +87,10 @@ export const rootReducer = (state = initialState, action: any | Action) => {
         const parcel = action.data as SignedParcel;
         const parcelByHash = { ...state.parcelByHash, [parcel.hash().value]: parcel };
         return { ...state, parcelByHash };
+    } else if (action.type === "CACHE_ASSET_SCHEME") {
+        const { txhash, assetScheme } = (action as CacheAssetSchemeAction).data;
+        const assetSchemeByTxhash = { ...state.assetSchemeByTxhash, [txhash]: assetScheme };
+        return { ...state, assetSchemeByTxhash };
     }
 
     const update = action.getUpdate ? action.getUpdate(state) : {};

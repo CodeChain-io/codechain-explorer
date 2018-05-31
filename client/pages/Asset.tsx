@@ -1,20 +1,21 @@
 import * as React from "react";
-import { connect } from "react-redux";
-import { RootState } from "../redux/actions";
 
 import { RequestAssetScheme } from "../components/api_request";
+import { AssetScheme as CoreAssetScheme } from "codechain-sdk/lib/primitives";
 
 interface Props {
     match: any;
 }
 
-interface StateProps {
-    assetSchemeByTxhash: any;
+interface State {
+    assetScheme?: CoreAssetScheme;
+    notFound: boolean;
 }
 
 interface AssetSchemeProps {
-    assetScheme: any;
+    assetScheme: CoreAssetScheme;
 }
+
 const AssetScheme = (props: AssetSchemeProps) => {
     const { metadata, amount, registrar } = props.assetScheme;
     return <div>
@@ -24,28 +25,36 @@ const AssetScheme = (props: AssetSchemeProps) => {
     </div>
 };
 
-class AssetInternal extends React.Component<Props & StateProps> {
+class Asset extends React.Component<Props, State> {
+    constructor(props: Props) {
+        super(props);
+        this.state = { notFound: false };
+    }
     public render() {
-        const { assetSchemeByTxhash, match } = this.props;
+        const { match } = this.props;
         const { type } = match.params;
-        const assetScheme = assetSchemeByTxhash[type];
-        if (assetScheme === null) {
+        const { notFound, assetScheme } = this.state;
+        if (notFound) {
             return <div>Asset not exist for txhash: {type}</div>
         }
         return (
             <div>
                 {assetScheme
                     ? <div><AssetScheme assetScheme={assetScheme} /></div>
-                    : <div><RequestAssetScheme txhash={type} /></div>}
+                    : <div><RequestAssetScheme txhash={type} onAssetScheme={this.onAssetScheme} onNotFound={this.onAssetSchemeNotFound} onError={this.onError}/></div>}
                 <hr />
                 <div>{/* FIXME: RequestAssetTransactions */}</div>
             </div>
         )
     }
-}
 
-const Asset = connect((state: RootState) => ({
-    assetSchemeByTxhash: state.assetSchemeByTxhash
-} as StateProps))(AssetInternal);
+    private onAssetScheme = (assetScheme: CoreAssetScheme) => {
+        this.setState({ assetScheme });
+    }
+
+    private onAssetSchemeNotFound = () => console.error("AssetScheme not found");
+
+    private onError = (e: any) => console.error(e);
+}
 
 export default Asset;
