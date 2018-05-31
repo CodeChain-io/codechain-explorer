@@ -35,10 +35,6 @@
   dependencies:
     "@types/express" "*"
 
-"@types/es6-shim@^0.31.37":
-  version "0.31.37"
-  resolved "https://registry.yarnpkg.com/@types/es6-shim/-/es6-shim-0.31.37.tgz#d01fa9b61a6692e57387dde5483b0255659ba70f"
-
 "@types/events@*":
   version "1.2.0"
   resolved "https://registry.yarnpkg.com/@types/events/-/events-1.2.0.tgz#81a6731ce4df43619e5c8c945383b3e62a89ea86"
