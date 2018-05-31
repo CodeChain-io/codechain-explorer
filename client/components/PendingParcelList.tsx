@@ -5,11 +5,11 @@ import { SignedParcel } from "codechain-sdk/lib/primitives";
 
 import { RequestPendingParcels } from "./api_request";
 
-interface States {
+interface State {
     pendingParcels?: SignedParcel[];
 }
 
-class PendingParcelList extends React.Component<{}, States> {
+class PendingParcelList extends React.Component<{}, State> {
     constructor(props: {}) {
         super(props);
         this.state = {}

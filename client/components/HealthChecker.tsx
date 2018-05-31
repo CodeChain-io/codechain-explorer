@@ -2,11 +2,11 @@ import * as React from "react";
 
 import { RequestPing } from "./api_request";
 
-interface States {
+interface State {
     isNodeAlive?: boolean;
 }
 
-class HealthChecker extends React.Component<{}, States> {
+class HealthChecker extends React.Component<{}, State> {
     constructor(props: {}) {
         super(props);
         this.state = {};

@@ -8,14 +8,14 @@ interface Props {
     match: any;
 }
 
-interface States {
+interface State {
     account?: {
         nonce: U256;
         balance: U256;
     }
 }
 
-class Account extends React.Component<Props, States> {
+class Account extends React.Component<Props, State> {
     constructor(props: Props) {
         super(props);
         this.state = {};

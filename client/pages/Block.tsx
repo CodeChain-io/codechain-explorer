@@ -5,7 +5,7 @@ import { Block as CoreBlock } from "codechain-sdk/lib/primitives";
 import { RequestBlock } from "../components/api_request";
 import BlockDetails from "../components/BlockDetails";
 
-interface States {
+interface State {
     block?: CoreBlock;
 }
 
@@ -13,7 +13,7 @@ interface Props {
     match: any;
 }
 
-class Block extends React.Component<Props, States> {
+class Block extends React.Component<Props, State> {
     constructor(props: Props) {
         super(props);
         this.state = {};
