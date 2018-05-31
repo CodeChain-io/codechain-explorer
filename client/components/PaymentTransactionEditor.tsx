@@ -15,7 +15,7 @@ interface State {
     value: number;
 }
 
-export default class PaymentTransactionInput extends React.Component<Props, State> {
+export default class PaymentTransactionEditor extends React.Component<Props, State> {
     constructor(props: Props) {
         super(props);
         this.state = {

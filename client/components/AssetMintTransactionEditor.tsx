@@ -16,7 +16,7 @@ interface State {
     registrar: string;
 }
 
-export default class AssetMintTransactionInput extends React.Component<Props, State> {
+export default class AssetMintTransactionEditor extends React.Component<Props, State> {
     constructor(props: Props) {
         super(props);
         this.state = {

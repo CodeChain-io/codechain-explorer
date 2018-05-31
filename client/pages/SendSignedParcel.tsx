@@ -3,7 +3,7 @@ import * as React from "react";
 import { Parcel, U256, H160, H256 } from "codechain-sdk/lib/primitives"
 import { PaymentTransaction, Transaction } from "codechain-sdk/lib/primitives/transaction";
 import { RequestSendSignedParcel } from "../components/api_request/RequestSendSignedParcel";
-import TransactionInput from "../components/TransactionInput";
+import TransactionEditor from "../components/TransactionEditor";
 import { Link } from "react-router-dom";
 
 type Status = "input" | "sending" | "sent" | "error";
@@ -88,7 +88,7 @@ export default class SendSignedParcel extends React.Component<{}, State> {
                 <option value="assetMint">Asset Mint</option>
                 <option value="assetTransfer">Asset Transfer</option>
             </select>
-            <TransactionInput
+            <TransactionEditor
                 type={transactionType}
                 nonce={nonce + 1}
                 onChangeTransaction={this.onChangeTransaction} />
