@@ -1,6 +1,6 @@
 import * as React from "react";
 
-import { H256, Invoice } from "codechain-sdk/lib/primitives";
+import { H256 } from "codechain-sdk/lib/primitives";
 
 import RequestBlockNumber from "./RequestBlockNumber";
 import RequestBlock from "./RequestBlock";
@@ -8,6 +8,7 @@ import RequestParcel from "./RequestParcel";
 import RequestAssetScheme from "./RequestAssetScheme";
 import RequestAccount from "./RequestAccount";
 import RequestPendingParcels from "./RequestPendingParcels";
+import RequestTransactionInvoice from "./RequestTransactionInvoice";
 
 import ApiDispatcher from "./ApiDispatcher";
 import { RootState } from "../../redux/actions";
@@ -18,6 +19,7 @@ export { RequestBlock };
 export { RequestAssetScheme };
 export { RequestAccount };
 export { RequestPendingParcels };
+export { RequestTransactionInvoice };
 
 const pingReducer = (state: RootState, __: undefined, res: string) => {
     return { isNodeAlive: res === "pong" };
@@ -45,21 +47,3 @@ export const RequestBlockHash = (props: RequestBlockHashProps) => {
         reducer={blockHashReducer}
         requestProps={props} />
 }
-
-interface RequestTransactionInvoiceProps {
-    hash: string;
-}
-const transactionInvoiceReducer = (state: RootState, req: RequestTransactionInvoiceProps, res: any) => {
-    return {
-        transactionInvoicesByHash: {
-            ...state.transactionInvoicesByHash,
-            [req.hash]: res && Invoice.fromJSON(res),
-        }
-    };
-};
-export const RequestTransactionInvoice = (props: RequestTransactionInvoiceProps) => (
-    <ApiDispatcher
-        api={`tx/${props.hash}/invoice`}
-        reducer={transactionInvoiceReducer}
-        requestProps={props} />
-);

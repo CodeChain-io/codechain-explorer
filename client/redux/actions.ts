@@ -1,4 +1,4 @@
-import { Block, H256, Invoice, AssetScheme, SignedParcel } from "codechain-sdk/lib/primitives";
+import { Block, H256, AssetScheme, SignedParcel } from "codechain-sdk/lib/primitives";
 
 export interface RootState {
     isNodeAlive?: boolean;
@@ -15,9 +15,6 @@ export interface RootState {
     parcelByHash: {
         [hash: string]: SignedParcel;
     };
-    transactionInvoicesByHash: {
-        [hash: string]: Invoice;
-    };
     assetSchemeByTxhash: {
         [txhash: string]: AssetScheme;
     };
@@ -30,7 +27,6 @@ const initialState: RootState = {
     blocksByHash: {},
     blockHashesByNumber: {},
     parcelByHash: {},
-    transactionInvoicesByHash: {},
     assetSchemeByTxhash: {},
 };
 
