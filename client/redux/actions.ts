@@ -47,12 +47,7 @@ interface CacheAssetSchemeAction {
     };
 }
 
-type Action = BestBlockNumberAction | CacheAssetSchemeAction | CacheBlockAction | CacheParcelAction | ApiDispatcherResult;
-
-interface ApiDispatcherResult {
-    type: "API_DISPATCHER_OK" | "API_DISPATCHER_ERROR";
-    getUpdate: (state: RootState) => Partial<RootState>;
-}
+type Action = BestBlockNumberAction | CacheAssetSchemeAction | CacheBlockAction | CacheParcelAction;
 
 export const rootReducer = (state = initialState, action: any | Action) => {
     if (action.type === "BEST_BLOCK_NUMBER_ACTION") {
@@ -70,11 +65,7 @@ export const rootReducer = (state = initialState, action: any | Action) => {
         const { txhash, assetScheme } = (action as CacheAssetSchemeAction).data;
         const assetSchemeByTxhash = { ...state.assetSchemeByTxhash, [txhash]: assetScheme };
         return { ...state, assetSchemeByTxhash };
+    } else {
+        return state;
     }
-
-    const update = action.getUpdate ? action.getUpdate(state) : {};
-    return {
-        ...state,
-        ...update
-    };
 };
