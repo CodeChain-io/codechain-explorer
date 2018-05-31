@@ -16,7 +16,7 @@ const BlockParcelList = (props: Props) => {
             <hr />
             <b>Parcel {i} - </b>
             <span><Link to={`/parcel/${hash}`}>{hash}</Link></span>
-            <span> Transaction: {Object.keys(transactions)}</span>
+            <span> Transaction: {Object.keys(transactions).length}</span>
         </div>
     })}</div>
 };
