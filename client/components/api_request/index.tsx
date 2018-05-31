@@ -1,12 +1,13 @@
 import * as React from "react";
 import * as _ from "lodash";
 
-import { SignedParcel, U256, H256, Invoice } from "codechain-sdk/lib/primitives";
+import { SignedParcel, H256, Invoice } from "codechain-sdk/lib/primitives";
 
 import RequestBlockNumber from "./RequestBlockNumber";
 import RequestBlock from "./RequestBlock";
 import RequestParcel from "./RequestParcel";
 import RequestAssetScheme from "./RequestAssetScheme";
+import RequestAccount from "./RequestAccount";
 
 import ApiDispatcher from "./ApiDispatcher";
 import { RootState } from "../../redux/actions";
@@ -15,6 +16,7 @@ export { RequestParcel };
 export { RequestBlockNumber };
 export { RequestBlock };
 export { RequestAssetScheme };
+export { RequestAccount };
 
 const pingReducer = (state: RootState, __: undefined, res: string) => {
     return { isNodeAlive: res === "pong" };
@@ -60,28 +62,6 @@ export const RequestTransactionInvoice = (props: RequestTransactionInvoiceProps)
         reducer={transactionInvoiceReducer}
         requestProps={props} />
 );
-
-interface RequestAccountProps {
-    address: string;
-}
-export const RequestAccount = (props: RequestAccountProps) => {
-    const reducer = (state: RootState, req: RequestAccountProps, res: any) => {
-        const { nonce, balance } = res;
-        return {
-            accountsByAddress: {
-                ...state.accountsByAddress,
-                [req.address]: {
-                    nonce: new U256(nonce),
-                    balance: new U256(balance),
-                }
-            }
-        };
-    };
-    return <ApiDispatcher
-        api={`account/${props.address}`}
-        reducer={reducer}
-        requestProps={props} />
-};
 
 export const RequestPendingParcels = () => {
     const reducer = (state: RootState, __: undefined, res: any[]) => {
