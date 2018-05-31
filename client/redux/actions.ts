@@ -49,7 +49,7 @@ interface CacheAssetSchemeAction {
 
 type Action = BestBlockNumberAction | CacheAssetSchemeAction | CacheBlockAction | CacheParcelAction;
 
-export const rootReducer = (state = initialState, action: any | Action) => {
+export const rootReducer = (state = initialState, action: Action) => {
     if (action.type === "BEST_BLOCK_NUMBER_ACTION") {
         return { ...state, bestBlockNumber: action.data }
     } else if (action.type === "CACHE_BLOCK") {
