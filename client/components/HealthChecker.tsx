@@ -1,26 +1,35 @@
 import * as React from "react";
-import { connect } from "react-redux";
 
-import { RootState } from "../redux/actions";
+import { RequestPing } from "./api_request";
 
-interface HealthCheckerProps {
+interface States {
     isNodeAlive?: boolean;
 }
 
-class HealthCheckerInternal extends React.Component<HealthCheckerProps> {
+class HealthChecker extends React.Component<{}, States> {
+    constructor(props: {}) {
+        super(props);
+        this.state = {};
+    }
+
     public render() {
-        const { isNodeAlive } = this.props;
+        const { isNodeAlive } = this.state;
         if (isNodeAlive === undefined) {
-            return <div>Checking whether node is alive</div>
+            return <div>Checking whether node is alive <RequestPing onPong={this.onPong} onError={this.onError} /></div>
         } else if (isNodeAlive) {
             return <div>Node is available</div>
         } else {
             return <div>Node is not available</div>
         }
     }
-}
 
-const mapStateToProps = (state: RootState) => ({ isNodeAlive: state.isNodeAlive });
-const HealthChecker = connect(mapStateToProps, null)(HealthCheckerInternal);
+    private onPong = () => {
+        this.setState({ isNodeAlive: true });
+    }
+
+    private onError = () => {
+        this.setState({ isNodeAlive: false });
+    }
+}
 
 export default HealthChecker;

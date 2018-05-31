@@ -1,7 +1,6 @@
 import { Block, AssetScheme, SignedParcel } from "codechain-sdk/lib/primitives";
 
 export interface RootState {
-    isNodeAlive?: boolean;
     bestBlockNumber?: number;
     blocksByNumber: {
         [n: number]: Block;
@@ -18,7 +17,6 @@ export interface RootState {
 }
 
 const initialState: RootState = {
-    isNodeAlive: undefined,
     bestBlockNumber: undefined,
     blocksByNumber: {},
     blocksByHash: {},
