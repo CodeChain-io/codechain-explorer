@@ -6,14 +6,52 @@ import { apiRequest, ApiError } from "./ApiRequest";
 interface OwnProps {
     onBlockNumber: (n: number) => void;
     onError: () => void;
+    repeat?: number;
 }
 
 interface DispatchProps {
     dispatch: Dispatch;
 }
 
-class RequestBlockNumberInternal extends React.Component<OwnProps & DispatchProps> {
+type Props = OwnProps & DispatchProps;
+
+interface State {
+    // FIXME: | number
+    timer?: NodeJS.Timer;
+}
+
+class RequestBlockNumberInternal extends React.Component<Props, State> {
     public componentWillMount() {
+        const { repeat } = this.props;
+        if (repeat) {
+            const timer = setInterval(() => this.request(), repeat);
+            this.setState({ timer });
+        } else {
+            this.request();
+        }
+    }
+
+    public componentWillReceiveProps(props: Props) {
+        if (props.repeat === this.props.repeat) {
+            return;
+        }
+        const { timer } = this.state;
+        if (timer) {
+            clearInterval(timer);
+        }
+        if (props.repeat) {
+            const newTimer = setInterval(() => this.request(), props.repeat);
+            this.setState({ timer: newTimer });
+        } else {
+            this.setState({ timer: undefined });
+        }
+    }
+
+    public render() {
+        return (null);
+    }
+
+    private request() {
         const { dispatch, onBlockNumber, onError } = this.props;
         apiRequest({ path: "blockNumber" }).then((response: string) => {
             const num = Number.parseInt(response)
@@ -25,10 +63,6 @@ class RequestBlockNumberInternal extends React.Component<OwnProps & DispatchProp
         }).catch((_: ApiError) => {
             onError();
         });
-    }
-
-    public render() {
-        return (null);
     }
 }
 

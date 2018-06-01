@@ -27,6 +27,7 @@ class Home extends React.Component<{}, State> {
                 <div>
                     Loading ...
                     <RequestBlockNumber
+                        repeat={1000}
                         onBlockNumber={this.onBlockNumber}
                         onError={this.onError}/>
                 </div>
