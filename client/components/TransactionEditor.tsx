@@ -3,6 +3,7 @@ import * as React from "react";
 import { Transaction } from "codechain-sdk/lib";
 import PaymentTransactionEditor from "./PaymentTransactionEditor";
 import AssetMintTransactionEditor from "./AssetMintTransactionEditor";
+import AssetTransferTransactionEditor from "./AssetTransferTransactionEditor";
 
 interface Props {
     type: "payment" | "setRegularKey" | "assetMint" | "assetTransfer";
@@ -20,6 +21,10 @@ export default class TransactionEditor extends React.Component<Props> {
         }
         if (type === "assetMint") {
             return <AssetMintTransactionEditor
+                onChange={this.props.onChangeTransaction} />
+        }
+        if (type === "assetTransfer") {
+            return <AssetTransferTransactionEditor
                 onChange={this.props.onChangeTransaction} />
         }
         return <div>Not implemented for type: {type}</div>

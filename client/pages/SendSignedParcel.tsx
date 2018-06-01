@@ -87,9 +87,9 @@ export default class SendSignedParcel extends React.Component<{}, State> {
             <hr/>
             <select onChange={this.onChangeTransactionType}>
                 <option value="payment">Payment</option>
-                <option value="setRegularKey">Set Regular Key</option>
+                <option value="setRegularKey">(Not implemented)Set Regular Key</option>
                 <option value="assetMint">Asset Mint</option>
-                <option value="assetTransfer">Asset Transfer</option>
+                <option value="assetTransfer">(Not implemented)Asset Transfer</option>
             </select>
             <TransactionEditor
                 type={transactionType}
