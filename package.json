@@ -61,7 +61,7 @@
   },
   "scripts": {
     "start": "node scripts/start.js",
-    "start-server": "ts-node server/index.ts",
+    "start-server": "ts-node --project tsconfig.server.json server/index.ts",
     "build": "node scripts/build.js",
     "test": "node scripts/test.js --env=jsdom",
     "upgrade-sdk": "yarn add --force file:../codechain-sdk-js"
