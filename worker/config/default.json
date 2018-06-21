@@ -1,0 +1,11 @@
+{
+    "elasticSearch": {
+        "host": "http://localhost:9200"
+    },
+    "codeChain": {
+        "host": "http://localhost:8080"
+    },
+    "cron": {
+        "blockWatch": "*/10 * * * * *"
+    }
+}
