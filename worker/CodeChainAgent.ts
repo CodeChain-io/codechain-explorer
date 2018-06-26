@@ -1,5 +1,4 @@
-import { Block } from "codechain-sdk/lib/primitives";
-import { SDK } from "codechain-sdk";
+import { Block, SDK } from "codechain-sdk";
 
 export class CodeChainAgent {
     private sdk: SDK;

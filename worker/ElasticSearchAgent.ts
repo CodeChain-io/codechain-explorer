@@ -1,5 +1,5 @@
 import { Client, SearchResponse } from "elasticsearch";
-import { BlockDoc, BlockDocValue } from "./elasticsearch/docType";
+import { Block, H256 } from "codechain-sdk";
 
 export class ElasticSearchAgent {
     private client: Client;
@@ -19,23 +19,25 @@ export class ElasticSearchAgent {
         });
     }
 
-    private index(body: BlockDoc): Promise<any> {
+    private index(block: Block): Promise<any> {
+        let blockDoc: any = block.toJSON();
+        blockDoc.isRetracted = false;
         return this.client.index({
             index: "block",
             type: "_doc",
-            id: body.hash,
-            body: body,
+            id: block.hash.value,
+            body: blockDoc,
             refresh: "wait_for"
         }).catch((err) => {
             console.error('Elastic search index error %s', err);
         });
     }
 
-    private update(id: string, partial: any): Promise<any> {
+    private update(hash: H256, partial: any): Promise<any> {
         return this.client.update({
             index: "block",
             type: "_doc",
-            id: id,
+            id: hash.value,
             refresh: "wait_for",
             body: {
                 doc: partial
@@ -75,7 +77,7 @@ export class ElasticSearchAgent {
                     ]
                 }
             }
-        }).then((response: SearchResponse<BlockDocValue>) => {
+        }).then((response: SearchResponse<any>) => {
             if (response.hits.total == 0) {
                 return 0;
             }
@@ -83,7 +85,7 @@ export class ElasticSearchAgent {
         });
     }
 
-    public getBlock = async (blockNumber: number): Promise<BlockDoc> => {
+    public getBlock = async (blockNumber: number): Promise<Block> => {
         return this.search({
             query: {
                 "bool": {
@@ -93,20 +95,20 @@ export class ElasticSearchAgent {
                     ]
                 }
             }
-        }).then((response: SearchResponse<BlockDocValue>) => {
-            return new BlockDoc(response.hits.hits[0]._source);
+        }).then((response: SearchResponse<any>) => {
+            return Block.fromJSON(response.hits.hits[0]._source);
         });
     }
 
-    public addBlock = async (blockDoc: BlockDoc): Promise<void> => {
-        return this.index(blockDoc).then((doc: any) => {
+    public addBlock = async (block: Block): Promise<void> => {
+        return this.index(block).then((doc: any) => {
             console.log("%s block is indexed", doc._id);
         });
     }
 
-    public retractBlock = async (blockHash: string): Promise<void> => {
+    public retractBlock = async (blockHash: H256): Promise<void> => {
         return this.update(blockHash, { "isRetracted": true }).then(() => {
-            console.log("%s block is retracted", blockHash);
+            console.log("%s block is retracted", blockHash.value);
         });
     }
 }

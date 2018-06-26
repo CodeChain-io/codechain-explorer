@@ -2,8 +2,7 @@ import { scheduleJob, Job } from "node-schedule";
 import { WorkerConfig } from "./";
 import { CodeChainAgent } from "./CodeChainAgent";
 import { ElasticSearchAgent } from "./ElasticSearchAgent";
-import { Block } from "codechain-sdk/lib/primitives";
-import { BlockDoc } from "./elasticsearch/docType";
+import { Block } from "codechain-sdk";
 
 export class BlockSyncWorker {
     private watchJob: Job;
@@ -53,16 +52,16 @@ export class BlockSyncWorker {
 
             if (latestSyncBlockNumber > 0) {
                 console.log("checking indexed block : %d", latestSyncBlockNumber);
-                const lastSyncBlock: BlockDoc = await this.elasticSearchAgent.getBlock(latestSyncBlockNumber);
-                console.log("indexed block hash : %s", lastSyncBlock.hash);
+                const lastSyncBlock: Block = await this.elasticSearchAgent.getBlock(latestSyncBlockNumber);
+                console.log("indexed block hash : %s", lastSyncBlock.hash.value);
                 console.log("codechain block hash : %s", nextBlock.parentHash.value);
-                if (nextBlock.parentHash.value !== lastSyncBlock.hash) {
+                if (nextBlock.parentHash.value !== lastSyncBlock.hash.value) {
                     latestSyncBlockNumber = await this.checkRetractAndReturnSyncNumber(latestSyncBlockNumber);
                     continue;
                 }
             }
 
-            await this.elasticSearchAgent.addBlock(BlockDoc.fromBlock(nextBlock));
+            await this.elasticSearchAgent.addBlock(nextBlock);
             latestSyncBlockNumber = nextBlockIndex;
         }
         console.log("sync done");
@@ -70,10 +69,10 @@ export class BlockSyncWorker {
 
     private checkRetractAndReturnSyncNumber = async (currentBlockNumber): Promise<number> => {
         while (currentBlockNumber > 0) {
-            const lastSynchronizedBlock: BlockDoc = await this.elasticSearchAgent.getBlock(currentBlockNumber);
+            const lastSynchronizedBlock: Block = await this.elasticSearchAgent.getBlock(currentBlockNumber);
             const codechainBlock: Block = await this.codeChainAgent.getBlock(currentBlockNumber);
 
-            if (codechainBlock.hash.value === lastSynchronizedBlock.hash) {
+            if (codechainBlock.hash.value === lastSynchronizedBlock.hash.value) {
                 break;
             }
 
