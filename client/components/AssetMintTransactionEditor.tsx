@@ -1,7 +1,6 @@
 import * as React from "react";
 
-import { H160, H256 } from "codechain-sdk/lib/primitives";
-import { AssetMintTransaction } from "codechain-sdk/lib/primitives/transaction";
+import { H160, H256, AssetMintTransaction } from "codechain-sdk";
 
 interface Props {
     onChange: (t: AssetMintTransaction) => void;

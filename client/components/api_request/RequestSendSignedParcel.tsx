@@ -1,6 +1,6 @@
 import * as React from "react";
 
-import { H256, SignedParcel } from "codechain-sdk/lib/primitives";
+import { H256, SignedParcel } from "codechain-sdk";
 
 import { apiRequest, ApiError } from "./ApiRequest";
 

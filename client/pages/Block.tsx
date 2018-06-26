@@ -1,7 +1,7 @@
 import * as React from "react";
 import { match } from "react-router";
 
-import { Block as CoreBlock } from "codechain-sdk/lib/primitives";
+import { Block as CoreBlock } from "codechain-sdk";
 
 import { RequestBlock } from "../components/api_request";
 import BlockDetails from "../components/BlockDetails";

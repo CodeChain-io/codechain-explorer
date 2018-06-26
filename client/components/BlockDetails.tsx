@@ -1,6 +1,6 @@
 import * as React from "react";
 
-import { Block } from "codechain-sdk/lib/primitives";
+import { Block } from "codechain-sdk";
 
 import BlockParcelList from "./BlockParcelList";
 import BlockHeaderTable from "./BlockHeaderTable";

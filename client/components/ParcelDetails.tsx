@@ -1,7 +1,6 @@
 import * as React from "react";
 
-import { SignedParcel } from "codechain-sdk/lib/primitives";
-import { AssetMintTransaction } from "codechain-sdk/lib/primitives/transaction";
+import { SignedParcel, AssetMintTransaction, Transaction } from "codechain-sdk";
 
 import { Link } from "react-router-dom";
 
@@ -11,7 +10,8 @@ interface Props {
 
 const ParcelDetails = (props: Props) => {
     const { parcel } = props;
-    const { transactions, fee, networkId, nonce } = parcel.unsigned;
+    const { fee, networkId, nonce } = parcel.unsigned;
+    const transactions: Transaction[] = [];
     const parcelHash = parcel.hash();
     const txRows = transactions.map((tx, i) => (<tr key={`${parcelHash}-${i}`}>
         <td>Tx {i}</td>

@@ -1,13 +1,12 @@
 import * as React from "react";
 
-import { Parcel, U256, H160, H256 } from "codechain-sdk/lib/primitives"
-import { PaymentTransaction, Transaction } from "codechain-sdk/lib/primitives/transaction";
+import { Parcel, U256, H256, Transaction, AssetMintTransaction } from "codechain-sdk"
 import { RequestSendSignedParcel } from "../components/api_request/RequestSendSignedParcel";
 import TransactionEditor from "../components/TransactionEditor";
 import { Link } from "react-router-dom";
 
 type Status = "input" | "sending" | "sent" | "error";
-type TransactionType = "payment" | "setRegularKey" | "assetMint" | "assetTransfer";
+type TransactionType = "assetMint" | "assetTransfer";
 
 interface State {
     transactionType: TransactionType;
@@ -28,17 +27,19 @@ export default class SendSignedParcel extends React.Component<{}, State> {
     constructor(props: any) {
         super(props);
         this.state = {
-            transactionType: "payment",
+            transactionType: "assetMint",
             nonce: 0,
             fee: 10,
             networkId: 17,
             secret: "ede1d4ccb4ec9a8bbbae9a13db3f4a7b56ea04189be86ac3a6a439d9a0a1addd",
             status: "input",
-            transaction: new PaymentTransaction({
-                nonce: new U256(1),
-                sender: new H160("0xa6594b7196808d161b6fb137e781abbc251385d9"),
-                receiver: new H160("0xa6594b7196808d161b6fb137e781abbc251385d9"),
-                value: new U256(0),
+            transaction: new AssetMintTransaction({
+                nonce: 1,
+                metadata: "mint meta data",
+                lockScriptHash: new H256("563d207a7b1d91f9b4440536bc4818e90263ada0707b41d119e667ed35524b68"),
+                parameters: [],
+                amount: 10,
+                registrar: null,
             }),
         };
     }
@@ -58,7 +59,7 @@ export default class SendSignedParcel extends React.Component<{}, State> {
         }
 
         if (status === "sending") {
-            const parcel = new Parcel(
+            const parcel = Parcel.transactions(
                 new U256(nonce),
                 new U256(fee),
                 networkId,
@@ -86,8 +87,6 @@ export default class SendSignedParcel extends React.Component<{}, State> {
 
             <hr/>
             <select onChange={this.onChangeTransactionType}>
-                <option value="payment">Payment</option>
-                <option value="setRegularKey">(Not implemented)Set Regular Key</option>
                 <option value="assetMint">Asset Mint</option>
                 <option value="assetTransfer">(Not implemented)Asset Transfer</option>
             </select>

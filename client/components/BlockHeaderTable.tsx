@@ -1,7 +1,7 @@
 import * as React from "react";
 import { Link } from "react-router-dom";
 
-import { Block } from "codechain-sdk/lib/primitives";
+import { Block } from "codechain-sdk";
 
 interface Props {
     block: Block;

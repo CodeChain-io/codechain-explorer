@@ -1,6 +1,6 @@
 import * as React from "react";
 
-import { U256 } from "codechain-sdk/lib/primitives";
+import { U256 } from "codechain-sdk";
 
 import { apiRequest, ApiError } from "./ApiRequest";
 

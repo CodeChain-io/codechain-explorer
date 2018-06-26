@@ -1,7 +1,7 @@
 import * as React from "react";
 import * as _ from "lodash";
 
-import { SignedParcel } from "codechain-sdk/lib/primitives";
+import { SignedParcel } from "codechain-sdk";
 
 import { apiRequest, ApiError } from "./ApiRequest";
 

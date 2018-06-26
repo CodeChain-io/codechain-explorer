@@ -1,7 +1,7 @@
 import * as React from "react";
 import { connect, Dispatch } from "react-redux";
 
-import { AssetScheme } from "codechain-sdk/lib/primitives";
+import { AssetScheme } from "codechain-sdk";
 
 import { apiRequest, ApiError } from "./ApiRequest";
 import { RootState } from "../../redux/actions";

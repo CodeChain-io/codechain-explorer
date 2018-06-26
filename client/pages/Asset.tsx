@@ -2,7 +2,7 @@ import * as React from "react";
 import { match } from "react-router";
 
 import { RequestAssetScheme } from "../components/api_request";
-import { AssetScheme as CoreAssetScheme } from "codechain-sdk/lib/primitives";
+import { AssetScheme as CoreAssetScheme } from "codechain-sdk";
 
 interface Props {
     match: match<{ type: string }>;

@@ -1,4 +1,4 @@
-import { Block, AssetScheme, SignedParcel } from "codechain-sdk/lib/primitives";
+import { Block, AssetScheme, SignedParcel } from "codechain-sdk";
 
 export interface RootState {
     bestBlockNumber?: number;

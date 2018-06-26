@@ -1,8 +1,7 @@
 import * as cors from 'cors';
 import * as express from 'express';
 
-import { H256, H160, SignedParcel, Parcel, U256 } from "codechain-sdk/lib/primitives";
-import { getTransactionFromJSON } from "codechain-sdk/lib/primitives/transaction";
+import { H256, H160, SignedParcel } from "codechain-sdk";
 
 import { ServerContext } from './context';
 

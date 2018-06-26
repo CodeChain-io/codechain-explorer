@@ -3,7 +3,7 @@ import * as _ from "lodash";
 import { RequestBlockNumber, RequestBlock } from '../components/api_request';
 import { Link } from 'react-router-dom';
 import PendingParcelList from '../components/PendingParcelList';
-import { Block } from 'codechain-sdk/lib/primitives';
+import { Block } from 'codechain-sdk';
 
 interface State {
     bestBlockNumber?: number;
