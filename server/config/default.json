@@ -1,4 +1,10 @@
 {
     "httpPort": 8081,
-    "sdkHttpServer": "http://localhost:8080"
+    "codeChain": {
+        "host": "http://localhost:8080"
+    },
+    "elasticSearch": {
+        "host": "http://localhost:9200"
+    }
+
 }

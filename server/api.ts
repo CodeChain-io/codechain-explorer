@@ -21,32 +21,30 @@ export function createApiRouter(context: ServerContext, useCors = false) {
     }
 
     router.get("/ping", async (req, res, next) => {
-        const { codechainSdk } = context;
-        codechainSdk.ping().then(text => {
+        context.db.ping().then(text => {
             res.send(JSON.stringify(text));
         }).catch(next);
     });
 
     router.get("/blockNumber", async (req, res, next) => {
-        context.codechainSdk.getBlockNumber().then(n => {
+        context.db.getLastBlockNumber().then(n => {
             res.send(n.toString());
         }).catch(next);
     });
 
     router.get("/block/:blockNumber/hash", async (req, res, next) => {
         const { blockNumber } = req.params;
-        context.codechainSdk.getBlockHash(Number.parseInt(blockNumber)).then(hash => {
-            res.send(hash === null ? JSON.stringify(null) : JSON.stringify(hash.value));
+        context.db.getBlock(Number.parseInt(blockNumber)).then(hash => {
+            res.send(hash === null ? JSON.stringify(null) : JSON.stringify(hash));
         }).catch(next);
     });
 
     router.get("/block/:id", async (req, res, next) => {
         const { id } = req.params;
         try {
-            const hash = id.length === 66
-                ? new H256(id)
-                : await context.codechainSdk.getBlockHash(Number.parseInt(id));
-            const block = await context.codechainSdk.getBlock(hash);
+            const block = id.length === 66
+                ? await context.db.getBlockByHash(new H256(id))
+                : await context.db.getBlock(Number.parseInt(id));
             res.send(block === null ? JSON.stringify(null) : block.toJSON());
         } catch (e) {
             next(e);
@@ -61,7 +59,7 @@ export function createApiRouter(context: ServerContext, useCors = false) {
 
     router.get("/parcel/:hash", async (req, res, next) => {
         const { hash } = req.params;
-        context.codechainSdk.getParcel(new H256(hash)).then(parcel => {
+        context.db.getParcel(new H256(hash)).then(parcel => {
             res.send(parcel === null ? JSON.stringify(null) : parcel.toJSON());
         }).catch(next);
     });
@@ -83,7 +81,7 @@ export function createApiRouter(context: ServerContext, useCors = false) {
 
     router.get("/tx/:hash/invoice", async (req, res, next) => {
         const { hash } = req.params;
-        context.codechainSdk.getTransactionInvoice(new H256(hash)).then(invoice => {
+        context.db.getTransactionInvoice(new H256(hash)).then(invoice => {
             res.send(invoice === null ? JSON.stringify(null) : invoice.toJSON());
         }).catch(next);
     });
@@ -91,8 +89,8 @@ export function createApiRouter(context: ServerContext, useCors = false) {
     router.get("/account/:address", async (req, res, next) => {
         const { address } = req.params;
         Promise.all([
-            context.codechainSdk.getNonce(new H160(address)),
-            context.codechainSdk.getBalance(new H160(address)),
+            context.db.getNonce(new H160(address)),
+            context.db.getBalance(new H160(address)),
         ]).then(([nonce, balance]) => {
             res.send(({
                 nonce: nonce.value.toString(),
@@ -103,14 +101,14 @@ export function createApiRouter(context: ServerContext, useCors = false) {
 
     router.get("/account/:address/nonce", async (req, res, next) => {
         const { address } = req.params;
-        context.codechainSdk.getNonce(new H160(address)).then(nonce => {
+        context.db.getNonce(new H160(address)).then(nonce => {
             res.send(nonce.value.toString());
         }).catch(next);
     });
 
     router.get("/account/:address/balance", async (req, res, next) => {
         const { address } = req.params;
-        context.codechainSdk.getBalance(new H160(address)).then(balance => {
+        context.db.getBalance(new H160(address)).then(balance => {
             res.send(balance.value.toString());
         }).catch(next);
     });
@@ -119,7 +117,7 @@ export function createApiRouter(context: ServerContext, useCors = false) {
     // sdk to be changed also
     router.get("/asset/:txhash", async (req, res, next) => {
         const { txhash } = req.params;
-        context.codechainSdk.getAssetScheme(new H256(txhash)).then(assetScheme => {
+        context.db.getAssetScheme(new H256(txhash)).then(assetScheme => {
             res.send(assetScheme === null ? JSON.stringify(null) : assetScheme.toJSON());
         }).catch(next);
     });
