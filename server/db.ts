@@ -43,7 +43,7 @@ export class ElasticSearchAgent {
             }
         }).then((response: SearchResponse<any>) => {
             if (response.hits.total == 0) {
-                return 0;
+                return -1;
             }
             return response.hits.hits[0]._source.number;
         });

@@ -44,7 +44,11 @@ export class BlockSyncWorker {
         console.log("sync start");
         let latestSyncBlockNumber: number = await this.elasticSearchAgent.getLastBlockNumber();
         const latestCodechainBlockNumber: number = await this.codeChainAgent.getLastBlockNumber();
-        console.log("lastSyncBlockNumber : %d", latestSyncBlockNumber);
+        if (latestSyncBlockNumber == -1) {
+            console.log("There is no synchronized block");
+        } else {
+            console.log("lastSyncBlockNumber : %d", latestSyncBlockNumber);
+        }
         console.log("lastCodechainBlockNumber : %d", latestCodechainBlockNumber);
         while (latestSyncBlockNumber < latestCodechainBlockNumber) {
             const nextBlockIndex: number = latestSyncBlockNumber + 1;
@@ -62,13 +66,14 @@ export class BlockSyncWorker {
             }
 
             await this.elasticSearchAgent.addBlock(nextBlock);
+            console.log("%d block is synchronized", nextBlockIndex);
             latestSyncBlockNumber = nextBlockIndex;
         }
         console.log("sync done");
     }
 
     private checkRetractAndReturnSyncNumber = async (currentBlockNumber): Promise<number> => {
-        while (currentBlockNumber > 0) {
+        while (currentBlockNumber > -1) {
             const lastSynchronizedBlock: Block = await this.elasticSearchAgent.getBlock(currentBlockNumber);
             const codechainBlock: Block = await this.codeChainAgent.getBlock(currentBlockNumber);
 
