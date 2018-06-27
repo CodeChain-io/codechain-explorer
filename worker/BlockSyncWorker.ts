@@ -28,7 +28,6 @@ export class BlockSyncWorker {
     }
 
     private async startSync() {
-        await this.elasticSearchAgent.checkIndexOrCreate();
         try {
             await this.sync();
         } catch (error) {
@@ -42,6 +41,7 @@ export class BlockSyncWorker {
 
     private async sync() {
         console.log("sync start");
+        await this.elasticSearchAgent.checkIndexOrCreate();
         let latestSyncBlockNumber: number = await this.elasticSearchAgent.getLastBlockNumber();
         const latestCodechainBlockNumber: number = await this.codeChainAgent.getLastBlockNumber();
         if (latestSyncBlockNumber == -1) {
