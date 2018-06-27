@@ -4,7 +4,12 @@ import * as web from "./web";
 
 export interface ServerConfig {
     httpPort: number;
-    sdkHttpServer: string;
+    codeChain: {
+        host: string;
+    };
+    elasticSearch: {
+        host: string;
+    }
 }
 
 const main = () => {
