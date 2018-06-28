@@ -8,7 +8,7 @@ import './index.css';
 import { store } from "./redux/store";
 import RegisterServiceWorker from './register_service_worker';
 import Block from './pages/Block';
-import HealthChecker from './components/HealthChecker';
+import HealthChecker from './components/util/HealthChecker';
 import Home from './pages/Home';
 import Parcel from './pages/Parcel';
 import Account from './pages/Account';

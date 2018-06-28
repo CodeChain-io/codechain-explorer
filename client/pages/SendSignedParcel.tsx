@@ -1,8 +1,8 @@
 import * as React from "react";
 
 import { Parcel, U256, H256, Transaction, AssetMintTransaction } from "codechain-sdk"
-import { RequestSendSignedParcel } from "../components/api_request/RequestSendSignedParcel";
-import TransactionEditor from "../components/TransactionEditor";
+import { RequestSendSignedParcel } from "../request/RequestSendSignedParcel";
+import TransactionEditor from "../components/editor/TransactionEditor";
 import { Link } from "react-router-dom";
 
 type Status = "input" | "sending" | "sent" | "error";

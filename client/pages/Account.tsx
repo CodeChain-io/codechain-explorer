@@ -3,7 +3,7 @@ import { match } from "react-router";
 
 import { U256 } from "codechain-sdk/lib"
 
-import { RequestAccount } from "../components/api_request";
+import { RequestAccount } from "../request";
 
 interface Props {
     match: match<{ address: string }>;

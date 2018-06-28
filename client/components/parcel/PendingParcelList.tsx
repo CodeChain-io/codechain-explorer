@@ -3,7 +3,7 @@ import * as _ from "lodash";
 
 import { SignedParcel } from "codechain-sdk";
 
-import { RequestPendingParcels } from "./api_request";
+import { RequestPendingParcels } from "../../request";
 
 interface State {
     pendingParcels?: SignedParcel[];

@@ -3,8 +3,8 @@ import { match } from "react-router";
 
 import { SignedParcel } from "codechain-sdk/lib";
 
-import { RequestParcel } from "../components/api_request";
-import ParcelDetails from "../components/ParcelDetails";
+import { RequestParcel } from "../request";
+import ParcelDetails from "../components/parcel/ParcelDetails";
 
 interface Props {
     match: match<{ hash: string }>;

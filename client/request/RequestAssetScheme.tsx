@@ -4,7 +4,7 @@ import { connect, Dispatch } from "react-redux";
 import { AssetScheme } from "codechain-sdk";
 
 import { apiRequest, ApiError } from "./ApiRequest";
-import { RootState } from "../../redux/actions";
+import { RootState } from "../redux/actions";
 
 interface OwnProps {
     txhash: string;

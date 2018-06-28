@@ -2,7 +2,7 @@ import * as React from "react";
 import { connect, Dispatch } from "react-redux";
 import { SignedParcel } from "codechain-sdk";
 
-import { RootState } from "../../redux/actions";
+import { RootState } from "../redux/actions";
 import { ApiError, apiRequest } from "./ApiRequest";
 
 interface OwnProps {

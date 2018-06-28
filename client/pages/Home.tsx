@@ -1,8 +1,8 @@
 import * as React from 'react';
 import * as _ from "lodash";
-import { RequestBlockNumber, RequestBlock } from '../components/api_request';
+import { RequestBlockNumber, RequestBlock } from '../request';
 import { Link } from 'react-router-dom';
-import PendingParcelList from '../components/PendingParcelList';
+import PendingParcelList from '../components/parcel/PendingParcelList';
 import { Block } from 'codechain-sdk';
 
 interface State {

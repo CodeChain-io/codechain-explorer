@@ -4,7 +4,7 @@ import { connect, Dispatch } from "react-redux";
 import { Block } from "codechain-sdk";
 
 import { apiRequest } from "./ApiRequest";
-import { RootState } from "../../redux/actions";
+import { RootState } from "../redux/actions";
 
 interface OwnProps {
     id: number | string;
