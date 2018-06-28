@@ -1,5 +1,6 @@
 import * as React from "react";
 import { match } from "react-router";
+import { Grid } from 'react-bootstrap';
 
 import { U256 } from "codechain-sdk/lib"
 
@@ -35,17 +36,19 @@ class Account extends React.Component<Props, State> {
         const { account } = this.state;
 
         if (!account) {
-            return <div>Loading ... <RequestAccount address={address} onAccount={this.onAccount} onError={this.onError} /></div>
+            return <div><Grid>Loading ... <RequestAccount address={address} onAccount={this.onAccount} onError={this.onError} /></Grid></div>
         }
         return (
             <div>
-                <h4>{address}</h4>
-                <div>Balance: {account.balance.value.toString()}</div>
-                <div>Nonce: {account.nonce.value.toString()}</div>
-                <hr />
-                <div>Transaction List</div>
-                <hr />
-                {/* FIXME: not implemented */}
+                <Grid>
+                    <h4>{address}</h4>
+                    <div>Balance: {account.balance.value.toString()}</div>
+                    <div>Nonce: {account.nonce.value.toString()}</div>
+                    <hr />
+                    <div>Transaction List</div>
+                    <hr />
+                    {/* FIXME: not implemented */}
+                </Grid>
             </div>
         )
     }

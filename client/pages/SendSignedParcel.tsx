@@ -4,6 +4,7 @@ import { Parcel, U256, H256, Transaction, AssetMintTransaction } from "codechain
 import { RequestSendSignedParcel } from "../request/RequestSendSignedParcel";
 import TransactionEditor from "../components/editor/TransactionEditor";
 import { Link } from "react-router-dom";
+import { Grid } from 'react-bootstrap';
 
 type Status = "input" | "sending" | "sent" | "error";
 type TransactionType = "assetMint" | "assetTransfer";
@@ -50,7 +51,9 @@ export default class SendSignedParcel extends React.Component<{}, State> {
 
         if (status === "sent" && sentHash) {
             return <div>
-                <Link to={`/parcel/${sentHash.value}`}>{sentHash.value}</Link>
+                <Grid>
+                    <Link to={`/parcel/${sentHash.value}`}>{sentHash.value}</Link>
+                </Grid>
             </div>
         }
 
@@ -72,30 +75,32 @@ export default class SendSignedParcel extends React.Component<{}, State> {
         }
 
         return <div>
-            <h4>Send Signed Parcel</h4>
-            <span>Nonce</span>
-            <input onChange={this.onChangeNonce} value={nonce} />
-            <br />
-            <span>Fee</span>
-            <input onChange={this.onChangeFee} value={fee} />
-            <br />
-            <span>Network Id</span>
-            <input onChange={this.onChangeNetworkId} value={networkId} />
-            <br />
-            <span>Secret</span>
-            <input onChange={this.onChangeSecret} value={secret} />
+            <Grid>
+                <h4>Send Signed Parcel</h4>
+                <span>Nonce</span>
+                <input onChange={this.onChangeNonce} value={nonce} />
+                <br />
+                <span>Fee</span>
+                <input onChange={this.onChangeFee} value={fee} />
+                <br />
+                <span>Network Id</span>
+                <input onChange={this.onChangeNetworkId} value={networkId} />
+                <br />
+                <span>Secret</span>
+                <input onChange={this.onChangeSecret} value={secret} />
 
-            <hr />
-            <select onChange={this.onChangeTransactionType}>
-                <option value="assetMint">Asset Mint</option>
-                <option value="assetTransfer">(Not implemented)Asset Transfer</option>
-            </select>
-            <TransactionEditor
-                type={transactionType}
-                nonce={nonce + 1}
-                onChangeTransaction={this.onChangeTransaction} />
-            <hr />
-            <button onClick={this.onClickSend}>Send</button>
+                <hr />
+                <select onChange={this.onChangeTransactionType}>
+                    <option value="assetMint">Asset Mint</option>
+                    <option value="assetTransfer">(Not implemented)Asset Transfer</option>
+                </select>
+                <TransactionEditor
+                    type={transactionType}
+                    nonce={nonce + 1}
+                    onChangeTransaction={this.onChangeTransaction} />
+                <hr />
+                <button onClick={this.onClickSend}>Send</button>
+            </Grid>
         </div>
     }
 

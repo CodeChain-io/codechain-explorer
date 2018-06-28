@@ -1,5 +1,6 @@
 import * as React from "react";
 import { match } from "react-router";
+import { Grid } from 'react-bootstrap';
 
 import { RequestAssetScheme } from "../request";
 import { AssetScheme as CoreAssetScheme } from "codechain-sdk";
@@ -44,15 +45,17 @@ class Asset extends React.Component<Props, State> {
         const { match: { params: { type } } } = this.props;
         const { notFound, assetScheme } = this.state;
         if (notFound) {
-            return <div>Asset not exist for txhash: {type}</div>
+            return <div><Grid>Asset not exist for txhash: {type}</Grid></div>
         }
         return (
             <div>
-                {assetScheme
-                    ? <div><AssetScheme assetScheme={assetScheme} /></div>
-                    : <div><RequestAssetScheme txhash={type} onAssetScheme={this.onAssetScheme} onNotFound={this.onAssetSchemeNotFound} onError={this.onError} /></div>}
-                <hr />
-                <div>{/* FIXME: RequestAssetTransactions */}</div>
+                <Grid>
+                    {assetScheme
+                        ? <div><AssetScheme assetScheme={assetScheme} /></div>
+                        : <div><RequestAssetScheme txhash={type} onAssetScheme={this.onAssetScheme} onNotFound={this.onAssetSchemeNotFound} onError={this.onError} /></div>}
+                    <hr />
+                    <div>{/* FIXME: RequestAssetTransactions */}</div>
+                </Grid>
             </div>
         )
     }

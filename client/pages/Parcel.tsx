@@ -1,5 +1,6 @@
 import * as React from "react";
 import { match } from "react-router";
+import { Grid } from 'react-bootstrap';
 
 import { SignedParcel } from "codechain-sdk/lib";
 
@@ -33,16 +34,18 @@ class Parcel extends React.Component<Props, State> {
         const { parcel } = this.state;
         return (
             <div>
-                {parcel
-                    ? <ParcelDetails parcel={parcel} />
-                    : <div>loading tx ...
+                <Grid>
+                    {parcel
+                        ? <ParcelDetails parcel={parcel} />
+                        : <div>loading tx ...
                         <RequestParcel hash={hash}
-                            onParcel={this.onParcel}
-                            onParcelNotExist={this.onParcelNotExist}
-                            onError={this.onError} />
-                    </div>}
-                <hr />
-                {/* Show Parcel Invoices here */}
+                                onParcel={this.onParcel}
+                                onParcelNotExist={this.onParcelNotExist}
+                                onError={this.onError} />
+                        </div>}
+                    <hr />
+                    {/* Show Parcel Invoices here */}
+                </Grid>
             </div>
         )
     }

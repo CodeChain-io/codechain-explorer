@@ -49,9 +49,12 @@ ReactDOM.render(
               </NavItem>
             </IndexLinkContainer>
           </Nav>
+          <Nav pullRight={true}>
+            <NavItem>
+              <HealthChecker />
+            </NavItem>
+          </Nav>
         </Navbar>
-        <HealthChecker />
-        <hr />
         <Route exact={true} path="/" component={Home} />
         <Route path="/send_signed_parcel" component={SendSignedParcel} />
         <Route path="/node_info" component={NodeInfo} />

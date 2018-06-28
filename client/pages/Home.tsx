@@ -2,6 +2,7 @@ import * as React from 'react';
 import * as _ from "lodash";
 import { RequestBlockNumber, RequestBlock } from '../request';
 import { Link } from 'react-router-dom';
+import { Grid } from 'react-bootstrap';
 import PendingParcelList from '../components/parcel/PendingParcelList';
 import { Block } from 'codechain-sdk';
 
@@ -25,37 +26,41 @@ class Home extends React.Component<{}, State> {
         if (bestBlockNumber === undefined) {
             return (
                 <div>
-                    Loading ...
-                    <RequestBlockNumber
-                        repeat={1000}
-                        onBlockNumber={this.onBlockNumber}
-                        onError={this.onError} />
+                    <Grid>
+                        Loading ...
+                        <RequestBlockNumber
+                            repeat={1000}
+                            onBlockNumber={this.onBlockNumber}
+                            onError={this.onError} />
+                    </Grid>
                 </div>
             );
         }
         return (
             <div>
-                <div>Current Block Number: {bestBlockNumber}</div>
-                {_.map(_.reverse(_.range(0, bestBlockNumber + 1)), n => {
-                    return (
-                        <div key={`home-block-num-${n}`}>
-                            <hr />
-                            <h3><Link to={`/block/${n}`}>Block {n}</Link></h3>
-                            {blocksByNumber[n]
-                                ? (
-                                    <div>
-                                        <div>Hash: {blocksByNumber[n].hash.value}</div>
-                                        <div>Author: {blocksByNumber[n].author.value}</div>
-                                        <div>Total {blocksByNumber[n].parcels.length} Parcels</div>
-                                    </div>
-                                )
-                                : <RequestBlock id={n} onBlock={this.onBlock} onError={this.onError} />
-                            }
-                        </div>
-                    );
-                })}
-                <hr />
-                <PendingParcelList />
+                <Grid>
+                    <div>Current Block Number: {bestBlockNumber}</div>
+                    {_.map(_.reverse(_.range(0, bestBlockNumber + 1)), n => {
+                        return (
+                            <div key={`home-block-num-${n}`}>
+                                <hr />
+                                <h3><Link to={`/block/${n}`}>Block {n}</Link></h3>
+                                {blocksByNumber[n]
+                                    ? (
+                                        <div>
+                                            <div>Hash: {blocksByNumber[n].hash.value}</div>
+                                            <div>Author: {blocksByNumber[n].author.value}</div>
+                                            <div>Total {blocksByNumber[n].parcels.length} Parcels</div>
+                                        </div>
+                                    )
+                                    : <RequestBlock id={n} onBlock={this.onBlock} onError={this.onError} />
+                                }
+                            </div>
+                        );
+                    })}
+                    <hr />
+                    <PendingParcelList />
+                </Grid>
             </div>
         );
     }
