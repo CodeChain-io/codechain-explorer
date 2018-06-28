@@ -6,17 +6,7 @@ export class ElasticSearchAgent {
     private client: Client;
     constructor(host: string) {
         this.client = new Client({
-            host: host
-        });
-    }
-
-    private search(body: any): Promise<void | SearchResponse<any>> {
-        return this.client.search({
-            index: "block",
-            type: "_doc",
-            body: body
-        }).catch((err) => {
-            console.error('Elastic search error %s', err);
+            host
         });
     }
 
@@ -42,7 +32,7 @@ export class ElasticSearchAgent {
                 }
             }
         }).then((response: SearchResponse<any>) => {
-            if (response.hits.total == 0) {
+            if (response.hits.total === 0) {
                 return -1;
             }
             return response.hits.hits[0]._source.number;
@@ -76,7 +66,7 @@ export class ElasticSearchAgent {
                 }
             }
         }).then((response: SearchResponse<any>) => {
-            if (response.hits.total == 0) {
+            if (response.hits.total === 0) {
                 return null;
             }
             const parcelData = _.filter(response.hits.hits[0]._source.parcels, (data) => {
@@ -119,5 +109,15 @@ export class ElasticSearchAgent {
     public getAssetScheme = async (txHash: H256): Promise<any> => {
         // TODO
         return null;
+    }
+
+    private search(body: any): Promise<void | SearchResponse<any>> {
+        return this.client.search({
+            index: "block",
+            type: "_doc",
+            body
+        }).catch((err) => {
+            console.error('Elastic search error %s', err);
+        });
     }
 }

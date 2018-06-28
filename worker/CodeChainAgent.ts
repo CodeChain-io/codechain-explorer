@@ -11,7 +11,7 @@ export class CodeChainAgent {
     }
 
     public getBlock = async (blockNumber): Promise<Block> => {
-        let blockHash = await this.sdk.getBlockHash(blockNumber);
+        const blockHash = await this.sdk.getBlockHash(blockNumber);
         return this.sdk.getBlock(blockHash);
     }
 }

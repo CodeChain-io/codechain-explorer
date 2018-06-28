@@ -1,13 +1,9 @@
 import { ServerConfig } from "./";
-import { ElasticSearchAgent } from "./db";
+import { ElasticSearchAgent } from "./ElasticSearchAgent";
 import { SDK } from "codechain-sdk";
 
 export class ServerContext {
-    options: ServerConfig;
-    db: ElasticSearchAgent;
-    codechainSdk: SDK;
-
-    static async newInstance(options: ServerConfig) {
+    public static async newInstance(options: ServerConfig) {
         const context = new ServerContext(options);
 
         process.on("SIGINT", async () => {
@@ -18,6 +14,9 @@ export class ServerContext {
 
         return context;
     }
+    public options: ServerConfig;
+    public db: ElasticSearchAgent;
+    public codechainSdk: SDK;
 
     private constructor(options: ServerConfig) {
         this.options = options;
@@ -25,7 +24,7 @@ export class ServerContext {
         this.db = new ElasticSearchAgent(options.elasticSearch.host);
     }
 
-    destroy = async () => {
+    public destroy = async () => {
         // Do nothing
     }
 }

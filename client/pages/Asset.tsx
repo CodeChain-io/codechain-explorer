@@ -50,7 +50,7 @@ class Asset extends React.Component<Props, State> {
             <div>
                 {assetScheme
                     ? <div><AssetScheme assetScheme={assetScheme} /></div>
-                    : <div><RequestAssetScheme txhash={type} onAssetScheme={this.onAssetScheme} onNotFound={this.onAssetSchemeNotFound} onError={this.onError}/></div>}
+                    : <div><RequestAssetScheme txhash={type} onAssetScheme={this.onAssetScheme} onNotFound={this.onAssetSchemeNotFound} onError={this.onError} /></div>}
                 <hr />
                 <div>{/* FIXME: RequestAssetTransactions */}</div>
             </div>

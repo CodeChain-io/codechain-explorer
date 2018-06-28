@@ -24,9 +24,9 @@ export default class AssetTransferInputListEditor extends React.Component<Props,
             {_.range(0, n).map(i => (
                 <div key={`asset-transfer-input-list-${i}`}>
                     Input {i} <button onClick={this.onClickRemove(i)}>Remove</button>
-                    <br/>
-                    <AssetTransferInputEditor onChange={this.onChangeInput(i)}/>
-                    <br/>
+                    <br />
+                    <AssetTransferInputEditor onChange={this.onChangeInput(i)} />
+                    <br />
                 </div>
             ))}
         </div>

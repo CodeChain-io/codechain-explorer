@@ -3,7 +3,7 @@ import * as express from 'express';
 
 import { H256, H160, SignedParcel } from "codechain-sdk";
 
-import { ServerContext } from './context';
+import { ServerContext } from './ServerContext';
 
 const corsOptions = {
     origin: true,

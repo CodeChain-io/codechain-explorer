@@ -1,6 +1,8 @@
 {
     "compilerOptions": {
-        "lib": ["es2015"],
+        "lib": [
+            "es2015"
+        ],
         "rootDir": "server"
     }
 }

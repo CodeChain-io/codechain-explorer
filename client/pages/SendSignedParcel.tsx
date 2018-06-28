@@ -43,10 +43,10 @@ export default class SendSignedParcel extends React.Component<{}, State> {
             }),
         };
     }
-    
+
     public render() {
         const { transactionType, nonce, fee, networkId,
-            secret, status, transaction, sentHash, errorMessage} = this.state;
+            secret, status, transaction, sentHash, errorMessage } = this.state;
 
         if (status === "sent" && sentHash) {
             return <div>
@@ -75,17 +75,17 @@ export default class SendSignedParcel extends React.Component<{}, State> {
             <h4>Send Signed Parcel</h4>
             <span>Nonce</span>
             <input onChange={this.onChangeNonce} value={nonce} />
-            <br/>
+            <br />
             <span>Fee</span>
             <input onChange={this.onChangeFee} value={fee} />
-            <br/>
+            <br />
             <span>Network Id</span>
             <input onChange={this.onChangeNetworkId} value={networkId} />
-            <br/>
+            <br />
             <span>Secret</span>
             <input onChange={this.onChangeSecret} value={secret} />
 
-            <hr/>
+            <hr />
             <select onChange={this.onChangeTransactionType}>
                 <option value="assetMint">Asset Mint</option>
                 <option value="assetTransfer">(Not implemented)Asset Transfer</option>
@@ -94,7 +94,7 @@ export default class SendSignedParcel extends React.Component<{}, State> {
                 type={transactionType}
                 nonce={nonce + 1}
                 onChangeTransaction={this.onChangeTransaction} />
-            <hr/>
+            <hr />
             <button onClick={this.onClickSend}>Send</button>
         </div>
     }

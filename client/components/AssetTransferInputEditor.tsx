@@ -34,22 +34,22 @@ export default class AssetTransferInputEditor extends React.Component<Props, Sta
             <div>
                 <span>Transaction Hash</span>
                 <input onChange={this.onChangeTxhash} value={txhash} />
-                <br/>
+                <br />
                 <span>Transaction Index</span>
                 <input onChange={this.onChangeTxIndex} value={txIndex} />
-                <br/>
+                <br />
                 <span>Asset Type</span>
                 <input onChange={this.onChangeAssetType} value={assetType} />
-                <br/>
+                <br />
                 <span>Amount</span>
                 <input onChange={this.onChangeAmount} value={amount} />
             </div>
             <span>Lock Script</span>
             <input onChange={this.onChangeLockScript} value={lockScript} />
-            <br/>
+            <br />
             <span>Unlock Script</span>
             <input onChange={this.onChangeUnlockScript} value={unlockScript} />
-            <br/>
+            <br />
         </div>
     }
 
