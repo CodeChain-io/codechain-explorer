@@ -10,7 +10,7 @@ import 'bootstrap/dist/css/bootstrap-theme.css';
 import { store } from "./redux/store";
 import RegisterServiceWorker from './register_service_worker';
 import Block from './pages/Block';
-import Header from './components/header/header';
+import Header from './components/header/Header';
 import Home from './pages/Home';
 import Parcel from './pages/Parcel';
 import Account from './pages/Account';

@@ -1,0 +1,11 @@
+.navbar li a,
+.navbar-header span {
+  line-height: 40px;
+}
+
+@media (max-width: 768px) {
+  .navbar li a,
+  .navbar-header span {
+    line-height: 1.2em;
+  }
+}
