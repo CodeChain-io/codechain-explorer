@@ -36,7 +36,7 @@ class Home extends React.Component<{}, State> {
         return (
             <div>
                 <div>Current Block Number: {bestBlockNumber}</div>
-                {_.map(_.reverse(_.range(1, bestBlockNumber + 1)), n => {
+                {_.map(_.reverse(_.range(0, bestBlockNumber + 1)), n => {
                     return (
                         <div key={`home-block-num-${n}`}>
                             <hr />
