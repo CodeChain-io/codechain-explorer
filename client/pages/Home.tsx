@@ -29,7 +29,7 @@ class Home extends React.Component<{}, State> {
                     <RequestBlockNumber
                         repeat={1000}
                         onBlockNumber={this.onBlockNumber}
-                        onError={this.onError}/>
+                        onError={this.onError} />
                 </div>
             );
         }
@@ -75,7 +75,7 @@ class Home extends React.Component<{}, State> {
         this.setState({ ...this.state, bestBlockNumber: n });
     }
 
-    private onError = () => ({/* Not implemented */})
+    private onError = () => ({/* Not implemented */ })
 }
 
 export default Home;

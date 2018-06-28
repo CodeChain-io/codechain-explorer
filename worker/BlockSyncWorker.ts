@@ -44,7 +44,7 @@ export class BlockSyncWorker {
         await this.elasticSearchAgent.checkIndexOrCreate();
         let latestSyncBlockNumber: number = await this.elasticSearchAgent.getLastBlockNumber();
         const latestCodechainBlockNumber: number = await this.codeChainAgent.getLastBlockNumber();
-        if (latestSyncBlockNumber == -1) {
+        if (latestSyncBlockNumber === -1) {
             console.log("There is no synchronized block");
         } else {
             console.log("lastSyncBlockNumber : %d", latestSyncBlockNumber);

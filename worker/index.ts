@@ -29,10 +29,11 @@ process.on("SIGINT", () => {
 });
 
 const app = () => {
-    process.env["NODE_CONFIG_DIR"] = process.env["NODE_CONFIG_DIR"] || (`${__dirname}/config/`);
+    const nodeConfigDir = "NODE_CONFIG_DIR";
+    process.env[nodeConfigDir] = process.env[nodeConfigDir] || (`${__dirname}/config/`);
     const config = require("config") as WorkerConfig;
-    let elasticSearchAgent = new ElasticSearchAgent(config.elasticSearch.host);
-    let codeChainAgent = new CodeChainAgent(config.codeChain.host);
+    const elasticSearchAgent = new ElasticSearchAgent(config.elasticSearch.host);
+    const codeChainAgent = new CodeChainAgent(config.codeChain.host);
     worker = new BlockSyncWorker(config, codeChainAgent, elasticSearchAgent);
     worker.start();
 };

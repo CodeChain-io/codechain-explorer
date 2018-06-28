@@ -20,7 +20,7 @@ class PendingParcelList extends React.Component<{}, State> {
         if (pendingParcels === undefined) {
             return <div>
                 Loading pending parcels...
-                <RequestPendingParcels onPendingParcels={this.onParcels} onError={this.onError}/>
+                <RequestPendingParcels onPendingParcels={this.onParcels} onError={this.onError} />
             </div>
         } else if (pendingParcels.length === 0) {
             return <div>No pending parcels</div>;

@@ -6,7 +6,7 @@ import * as express from "express";
 
 import { ServerConfig } from "./";
 import { createApiRouter } from "./api";
-import { ServerContext } from "./context";
+import { ServerContext } from "./ServerContext";
 
 export async function run(options: ServerConfig) {
     const context = await ServerContext.newInstance(options);

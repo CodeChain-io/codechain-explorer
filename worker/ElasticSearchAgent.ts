@@ -5,51 +5,13 @@ export class ElasticSearchAgent {
     private client: Client;
     constructor(host: string) {
         this.client = new Client({
-            host: host
-        });
-    }
-
-    private search(body: any): Promise<void | SearchResponse<any>> {
-        return this.client.search({
-            index: "block",
-            type: "_doc",
-            body: body
-        }).catch((err) => {
-            console.error('Elastic search error %s', err);
-        });
-    }
-
-    private index(block: Block): Promise<any> {
-        let blockDoc: any = block.toJSON();
-        blockDoc.isRetracted = false;
-        return this.client.index({
-            index: "block",
-            type: "_doc",
-            id: block.hash.value,
-            body: blockDoc,
-            refresh: "wait_for"
-        }).catch((err) => {
-            console.error('Elastic search index error %s', err);
-        });
-    }
-
-    private update(hash: H256, partial: any): Promise<any> {
-        return this.client.update({
-            index: "block",
-            type: "_doc",
-            id: hash.value,
-            refresh: "wait_for",
-            body: {
-                doc: partial
-            }
-        }).catch((err) => {
-            console.error('Elastic search update error %s', err);
+            host
         });
     }
 
     public checkIndexOrCreate = async (): Promise<void> => {
-        let mappingJson = require("./elasticsearch/mapping.json");
-        let isIndexExisted = await this.client.indices.exists({ index: "block" });
+        const mappingJson = require("./elasticsearch/mapping.json");
+        const isIndexExisted = await this.client.indices.exists({ index: "block" });
         if (!isIndexExisted) {
             await this.client.indices.create({
                 index: "block"
@@ -78,7 +40,7 @@ export class ElasticSearchAgent {
                 }
             }
         }).then((response: SearchResponse<any>) => {
-            if (response.hits.total == 0) {
+            if (response.hits.total === 0) {
                 return -1;
             }
             return response.hits.hits[0]._source.number;
@@ -109,6 +71,44 @@ export class ElasticSearchAgent {
     public retractBlock = async (blockHash: H256): Promise<void> => {
         return this.update(blockHash, { "isRetracted": true }).then(() => {
             console.log("%s block is retracted", blockHash.value);
+        });
+    }
+
+    private search(body: any): Promise<void | SearchResponse<any>> {
+        return this.client.search({
+            index: "block",
+            type: "_doc",
+            body
+        }).catch((err) => {
+            console.error('Elastic search error %s', err);
+        });
+    }
+
+    private index(block: Block): Promise<any> {
+        const blockDoc: any = block.toJSON();
+        blockDoc.isRetracted = false;
+        return this.client.index({
+            index: "block",
+            type: "_doc",
+            id: block.hash.value,
+            body: blockDoc,
+            refresh: "wait_for"
+        }).catch((err) => {
+            console.error('Elastic search index error %s', err);
+        });
+    }
+
+    private update(hash: H256, partial: any): Promise<any> {
+        return this.client.update({
+            index: "block",
+            type: "_doc",
+            id: hash.value,
+            refresh: "wait_for",
+            body: {
+                doc: partial
+            }
+        }).catch((err) => {
+            console.error('Elastic search update error %s', err);
         });
     }
 }

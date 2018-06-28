@@ -6,7 +6,7 @@ import { BrowserRouter as Router, Link, Route } from "react-router-dom";
 import './index.css';
 
 import { store } from "./redux/store";
-import registerServiceWorker from './registerServiceWorker';
+import RegisterServiceWorker from './register_service_worker';
 import Block from './pages/Block';
 import HealthChecker from './components/HealthChecker';
 import Home from './pages/Home';
@@ -26,7 +26,7 @@ ReactDOM.render(
           <li><Link to="/node_info">Node Info</Link></li>
         </ul>
         <HealthChecker />
-        <hr/>
+        <hr />
         <Route exact={true} path="/" component={Home} />
         <Route path="/send_signed_parcel" component={SendSignedParcel} />
         <Route path="/node_info" component={NodeInfo} />
@@ -39,4 +39,4 @@ ReactDOM.render(
   </Provider>,
   document.getElementById('root') as HTMLElement
 );
-registerServiceWorker();
+RegisterServiceWorker();

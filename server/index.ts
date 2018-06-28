@@ -13,7 +13,8 @@ export interface ServerConfig {
 }
 
 const main = () => {
-    process.env["NODE_CONFIG_DIR"] = process.env["NODE_CONFIG_DIR"] || (`${__dirname}/config/`);
+    const configDir = "NODE_CONFIG_DIR";
+    process.env[configDir] = process.env[configDir] || (`${__dirname}/config/`);
     const config = require("config") as ServerConfig;
 
     const _ = yargs.command({

@@ -27,10 +27,10 @@ export default class AssetTransferTransactionEditor extends React.Component<Prop
         return <div>
             <span>Nonce</span>
             <input onChange={this.onChangeNonce} value={nonce} />
-            <br/>
+            <br />
             <span>Network ID</span>
             <input onChange={this.onChangeNetworkId} value={networkId} />
-            <br/>
+            <br />
             <span>Inputs</span>
             <AssetTransferInputListEditor onChange={this.onChangeInputs} />
         </div>

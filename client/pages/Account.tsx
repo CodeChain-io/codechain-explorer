@@ -35,7 +35,7 @@ class Account extends React.Component<Props, State> {
         const { account } = this.state;
 
         if (!account) {
-            return <div>Loading ... <RequestAccount address={address} onAccount={this.onAccount} onError={this.onError}/></div>
+            return <div>Loading ... <RequestAccount address={address} onAccount={this.onAccount} onError={this.onError} /></div>
         }
         return (
             <div>

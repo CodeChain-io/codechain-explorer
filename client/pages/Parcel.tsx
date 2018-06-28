@@ -39,7 +39,7 @@ class Parcel extends React.Component<Props, State> {
                         <RequestParcel hash={hash}
                             onParcel={this.onParcel}
                             onParcelNotExist={this.onParcelNotExist}
-                            onError={this.onError}/>
+                            onError={this.onError} />
                     </div>}
                 <hr />
                 {/* Show Parcel Invoices here */}
@@ -55,7 +55,7 @@ class Parcel extends React.Component<Props, State> {
         console.log("parcel not exist");
     }
 
-    private onError = () => ({/* Not implemented */});
+    private onError = () => ({/* Not implemented */ });
 }
 
 export default Parcel;
