@@ -1,9 +1,13 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import { Provider } from "react-redux";
-import { BrowserRouter as Router, Link, Route } from "react-router-dom";
+import { BrowserRouter as Router, Route } from "react-router-dom";
+import { Navbar, Nav, NavItem } from 'react-bootstrap';
+import { IndexLinkContainer } from 'react-router-bootstrap';
 
 import './index.css';
+import 'bootstrap/dist/css/bootstrap.css';
+import 'bootstrap/dist/css/bootstrap-theme.css';
 
 import { store } from "./redux/store";
 import RegisterServiceWorker from './register_service_worker';
@@ -20,11 +24,32 @@ ReactDOM.render(
   <Provider store={store}>
     <Router>
       <div>
-        <ul>
-          <li><Link to="/">Home</Link></li>
-          <li><Link to="/send_signed_parcel">Send Parcel</Link></li>
-          <li><Link to="/node_info">Node Info</Link></li>
-        </ul>
+        <Navbar>
+          <Navbar.Header>
+            <IndexLinkContainer to="/">
+              <Navbar.Brand>
+                CodeChain Explorer
+              </Navbar.Brand>
+            </IndexLinkContainer>
+          </Navbar.Header>
+          <Nav>
+            <IndexLinkContainer to="/">
+              <NavItem eventKey={1}>
+                Home
+              </NavItem>
+            </IndexLinkContainer>
+            <IndexLinkContainer to="/send_signed_parcel">
+              <NavItem eventKey={2}>
+                Send Parcel
+              </NavItem>
+            </IndexLinkContainer>
+            <IndexLinkContainer to="/node_info">
+              <NavItem eventKey={3}>
+                Node Info
+              </NavItem>
+            </IndexLinkContainer>
+          </Nav>
+        </Navbar>
         <HealthChecker />
         <hr />
         <Route exact={true} path="/" component={Home} />
@@ -35,8 +60,8 @@ ReactDOM.render(
         <Route path="/account/:address" component={Account} />
         <Route path="/asset/:type" component={Asset} />
       </div>
-    </Router>
-  </Provider>,
+    </Router >
+  </Provider >,
   document.getElementById('root') as HTMLElement
 );
 RegisterServiceWorker();
