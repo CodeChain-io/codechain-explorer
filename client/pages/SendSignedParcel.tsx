@@ -4,7 +4,7 @@ import { Parcel, U256, H256, Transaction, AssetMintTransaction } from "codechain
 import { RequestSendSignedParcel } from "../request/RequestSendSignedParcel";
 import TransactionEditor from "../components/editor/TransactionEditor";
 import { Link } from "react-router-dom";
-import { Grid } from 'react-bootstrap';
+import { Container } from 'reactstrap';
 
 type Status = "input" | "sending" | "sent" | "error";
 type TransactionType = "assetMint" | "assetTransfer";
@@ -51,9 +51,9 @@ export default class SendSignedParcel extends React.Component<{}, State> {
 
         if (status === "sent" && sentHash) {
             return <div>
-                <Grid>
+                <Container>
                     <Link to={`/parcel/${sentHash.value}`}>{sentHash.value}</Link>
-                </Grid>
+                </Container>
             </div>
         }
 
@@ -75,7 +75,7 @@ export default class SendSignedParcel extends React.Component<{}, State> {
         }
 
         return <div>
-            <Grid>
+            <Container>
                 <h4>Send Signed Parcel</h4>
                 <span>Nonce</span>
                 <input onChange={this.onChangeNonce} value={nonce} />
@@ -100,7 +100,7 @@ export default class SendSignedParcel extends React.Component<{}, State> {
                     onChangeTransaction={this.onChangeTransaction} />
                 <hr />
                 <button onClick={this.onClickSend}>Send</button>
-            </Grid>
+            </Container>
         </div>
     }
 

@@ -1,6 +1,6 @@
 import * as React from "react";
 import { match } from "react-router";
-import { Grid } from 'react-bootstrap';
+import { Container } from 'reactstrap';
 
 import { Block as CoreBlock } from "codechain-sdk";
 
@@ -38,9 +38,9 @@ class Block extends React.Component<Props, State> {
         }
         return (
             <div>
-                <Grid>
+                <Container>
                     <BlockDetails block={block} />
-                </Grid>
+                </Container>
             </div>
         );
     }

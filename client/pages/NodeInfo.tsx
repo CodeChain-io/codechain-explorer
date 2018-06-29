@@ -1,6 +1,6 @@
 import * as React from "react";
 import { connect } from "react-redux";
-import { Grid } from 'react-bootstrap';
+import { Container } from 'reactstrap';
 import { RootState } from "../redux/actions";
 
 interface StateProps {
@@ -13,7 +13,7 @@ class NodeInfoInternal extends React.Component<StateProps> {
         // FIXME: Resolve unplemented
         return (
             <div>
-                <Grid>
+                <Container>
                     <h4>Node Info</h4>
                     <div>CodeChain Version: {version}</div>
                     <div>Server Timestamp: unimplemented</div>
@@ -26,7 +26,7 @@ class NodeInfoInternal extends React.Component<StateProps> {
                     <h4>Blockchain Info</h4>
                     <div>Block Height: unplemented</div>
                     <div>Total Difficulty: unplemented</div>
-                </Grid>
+                </Container>
             </div>
         );
     }

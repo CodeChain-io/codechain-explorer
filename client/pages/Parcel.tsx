@@ -1,6 +1,6 @@
 import * as React from "react";
 import { match } from "react-router";
-import { Grid } from 'react-bootstrap';
+import { Container } from 'reactstrap';
 
 import { SignedParcel } from "codechain-sdk/lib";
 
@@ -34,7 +34,7 @@ class Parcel extends React.Component<Props, State> {
         const { parcel } = this.state;
         return (
             <div>
-                <Grid>
+                <Container>
                     {parcel
                         ? <ParcelDetails parcel={parcel} />
                         : <div>loading tx ...
@@ -45,7 +45,7 @@ class Parcel extends React.Component<Props, State> {
                         </div>}
                     <hr />
                     {/* Show Parcel Invoices here */}
-                </Grid>
+                </Container>
             </div>
         )
     }

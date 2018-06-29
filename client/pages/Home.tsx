@@ -2,7 +2,7 @@ import * as React from 'react';
 import * as _ from "lodash";
 import { RequestBlockNumber, RequestBlock } from '../request';
 import { Link } from 'react-router-dom';
-import { Grid } from 'react-bootstrap';
+import { Container } from 'reactstrap';
 import PendingParcelList from '../components/parcel/PendingParcelList';
 import { Block } from 'codechain-sdk';
 
@@ -26,19 +26,19 @@ class Home extends React.Component<{}, State> {
         if (bestBlockNumber === undefined) {
             return (
                 <div>
-                    <Grid>
+                    <Container>
                         Loading ...
                         <RequestBlockNumber
                             repeat={1000}
                             onBlockNumber={this.onBlockNumber}
                             onError={this.onError} />
-                    </Grid>
+                    </Container>
                 </div>
             );
         }
         return (
             <div>
-                <Grid>
+                <Container>
                     <div>Current Block Number: {bestBlockNumber}</div>
                     {_.map(_.reverse(_.range(0, bestBlockNumber + 1)), n => {
                         return (
@@ -60,7 +60,7 @@ class Home extends React.Component<{}, State> {
                     })}
                     <hr />
                     <PendingParcelList />
-                </Grid>
+                </Container>
             </div>
         );
     }

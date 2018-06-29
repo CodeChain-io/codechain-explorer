@@ -1,5 +1,7 @@
 import * as React from "react";
-import { Form, FormGroup, FormControl, Button } from 'react-bootstrap';
+import { Form, FormGroup, Input, Button } from 'reactstrap';
+
+import './Search.css';
 
 class Search extends React.Component<{}> {
     constructor(props: {}) {
@@ -10,10 +12,10 @@ class Search extends React.Component<{}> {
     public render() {
         return <div>
             <Form inline={true}>
-                <FormGroup controlId="formInlineEmail">
-                    <FormControl type="email" placeholder="Block / Parcel / Tx" />
-                </FormGroup>{' '}
-                <Button type="submit">Search</Button>
+                <FormGroup>
+                    <Input className="search-input" type="text" placeholder="Block / Parcel / Tx" />
+                    <Button type="submit">Search</Button>
+                </FormGroup>
             </Form>
         </div>
     }

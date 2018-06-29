@@ -1,75 +1,102 @@
 import * as React from "react";
-import { Navbar, Nav, NavItem, NavDropdown, MenuItem } from 'react-bootstrap';
+import { Container, Navbar, NavbarBrand, NavbarToggler, Nav, NavItem, NavLink, Collapse, UncontrolledDropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
 import { IndexLinkContainer } from 'react-router-bootstrap';
 import HealthChecker from '../util/HealthChecker';
 import Search from '../search/Search';
 
 import './Header.css';
 
-class Header extends React.Component<{}> {
+interface State {
+    isOpen: boolean;
+}
+
+class Header extends React.Component<{}, State> {
     constructor(props: {}) {
         super(props);
-        this.state = {};
+        this.toggle = this.toggle.bind(this);
+        this.state = {
+            isOpen: false
+        };
     }
 
     public render() {
         return <div>
-            <Navbar collapseOnSelect={true}>
-                <Navbar.Header>
+            <Navbar color="light" light={true} expand="lg">
+                <Container>
                     <IndexLinkContainer to="/">
-                        <Navbar.Brand>
+                        <NavbarBrand>
                             CodeChain Explorer
-                        </Navbar.Brand>
+                        </NavbarBrand>
                     </IndexLinkContainer>
-                    <Navbar.Toggle />
-                </Navbar.Header>
-                <Navbar.Collapse>
-                    <Nav>
-                        <IndexLinkContainer to="/">
-                            <NavItem eventKey={1}>
-                                Home
-                        </NavItem>
-                        </IndexLinkContainer>
-                        <NavDropdown eventKey={2} title="Blockchain" id="basic-nav-dropdown">
-                            <MenuItem eventKey={2.1}>
-                                Latest Blocks
-                        </MenuItem>
-                            <MenuItem eventKey={2.2}>
-                                Latest Transactions
-                        </MenuItem>
-                            <MenuItem eventKey={2.3}>
-                                Latest Parcels
-                        </MenuItem>
-                            <MenuItem divider={true} />
-                            <MenuItem eventKey={2.4}>
-                                Pending Parcels
-                        </MenuItem>
-                        </NavDropdown>
-                        <NavItem eventKey={3}>
-                            Status
-                        </NavItem>
-                        <NavDropdown eventKey={4} title="MISC" id="basic-nav-dropdown">
-                            <IndexLinkContainer to="/send_signed_parcel">
-                                <MenuItem eventKey={4.1}>
-                                    Broadcast Parcel
-                            </MenuItem>
+                    <NavbarToggler onClick={this.toggle} />
+                    <Collapse isOpen={this.state.isOpen} navbar={true}>
+                        <Nav navbar={true} className="mr-auto">
+                            <IndexLinkContainer to="/">
+                                <NavItem>
+                                    <NavLink>Home</NavLink>
+                                </NavItem>
                             </IndexLinkContainer>
-                            <MenuItem eventKey={4.2}>
-                                API
-                        </MenuItem>
-                        </NavDropdown>
-                        <NavItem>
-                            <HealthChecker />
-                        </NavItem>
-                    </Nav>
-                    <Nav pullRight={true}>
-                        <NavItem>
-                            <Search />
-                        </NavItem>
-                    </Nav>
-                </Navbar.Collapse>
+                            <UncontrolledDropdown nav={true} inNavbar={true}>
+                                <DropdownToggle nav={true} caret={true}>
+                                    Blockchain
+                                </DropdownToggle>
+                                <DropdownMenu right={true}>
+                                    <DropdownItem>
+                                        Latest Blocks
+                                    </DropdownItem>
+                                    <DropdownItem>
+                                        Latest Transactions
+                                    </DropdownItem>
+                                    <DropdownItem>
+                                        Latest Parcels
+                                    </DropdownItem>
+                                    <DropdownItem divider={true} />
+                                    <DropdownItem>
+                                        Pending Parcels
+                                    </DropdownItem>
+                                </DropdownMenu>
+                            </UncontrolledDropdown>
+                            <IndexLinkContainer to="/node_info">
+                                <NavItem>
+                                    <NavLink>Status</NavLink>
+                                </NavItem>
+                            </IndexLinkContainer>
+                            <UncontrolledDropdown nav={true} inNavbar={true}>
+                                <DropdownToggle nav={true} caret={true}>
+                                    MISC
+                                </DropdownToggle>
+                                <DropdownMenu right={true}>
+                                    <IndexLinkContainer to="/send_signed_parcel">
+                                        <DropdownItem>
+                                            Broadcast Parcel
+                                        </DropdownItem>
+                                    </IndexLinkContainer>
+                                    <DropdownItem>
+                                        API
+                                    </DropdownItem>
+                                </DropdownMenu>
+                            </UncontrolledDropdown>
+                            <NavItem>
+                                <NavLink>
+                                    <HealthChecker />
+                                </NavLink>
+                            </NavItem>
+                        </Nav>
+                        <Nav>
+                            <NavItem>
+                                <Search />
+                            </NavItem>
+                        </Nav>
+                    </Collapse>
+                </Container>
             </Navbar>
         </div>
+    }
+
+    private toggle() {
+        this.setState({
+            isOpen: !this.state.isOpen
+        });
     }
 }
 
