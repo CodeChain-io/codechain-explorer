@@ -21,9 +21,13 @@ export function createApiRouter(context: ServerContext, useCors = false) {
     }
 
     router.get("/ping", async (req, res, next) => {
-        context.db.ping().then(text => {
-            res.send(JSON.stringify(text));
-        }).catch(next);
+        try {
+            await context.db.ping();
+            const codechainResponse = await context.codechainSdk.ping();
+            res.send(JSON.stringify(codechainResponse));
+        } catch (e) {
+            next(e);
+        }
     });
 
     router.get("/blockNumber", async (req, res, next) => {

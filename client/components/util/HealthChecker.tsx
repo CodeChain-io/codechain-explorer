@@ -15,7 +15,7 @@ class HealthChecker extends React.Component<{}, State> {
     public render() {
         const { isNodeAlive } = this.state;
         if (isNodeAlive === undefined) {
-            return <div>Checking whether node is alive <RequestPing onPong={this.onPong} onError={this.onError} /></div>
+            return <div>Checking node.. <RequestPing onPong={this.onPong} onError={this.onError} /></div>
         } else if (isNodeAlive) {
             return <div className="text-success">Node is available</div>
         } else {
