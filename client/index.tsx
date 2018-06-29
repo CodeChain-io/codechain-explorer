@@ -20,7 +20,7 @@ import SendSignedParcel from './pages/SendSignedParcel';
 ReactDOM.render(
   <Provider store={store}>
     <Router>
-      <div>
+      <div id="page">
         <Header />
         <Route exact={true} path="/" component={Home} />
         <Route path="/send_signed_parcel" component={SendSignedParcel} />
