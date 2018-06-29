@@ -27,3 +27,11 @@ Run codechain-explorer server
 yarn install
 yarn run start-server
 ```
+# Worker
+## Run
+Run codechain-worker for indexing data to elasticsearch
+Use elasticsearch v6.2.4
+```
+yarn install
+yarn run start-worker
+```
