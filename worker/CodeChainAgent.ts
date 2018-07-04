@@ -7,7 +7,7 @@ export class CodeChainAgent {
     }
 
     public getLastBlockNumber = async (): Promise<number> => {
-        return this.sdk.getBlockNumber();
+        return this.sdk.getBestBlockNumber();
     }
 
     public getBlock = async (blockNumber): Promise<Block> => {
