@@ -16,13 +16,13 @@ interface Props {
 
 const LatestBlocks = (props: Props) => {
     const { blocksByNumber } = props;
-    return <div>
+    return <div className="latest-blocks">
         <h3>Latest Blocks</h3>
         <div className="latest-container">
             <Table striped={true}>
                 <thead>
                     <tr>
-                        <th>#</th>
+                        <th>Height</th>
                         <th>Parcels</th>
                         <th>Txs</th>
                         <th>Mined By</th>

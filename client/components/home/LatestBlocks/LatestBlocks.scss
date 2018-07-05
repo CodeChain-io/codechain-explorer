@@ -1,8 +1,9 @@
-.latest-container {
-  border: 1px solid black;
-}
-
-table {
-  table-layout: fixed;
-  word-wrap: break-word;
+.latest-blocks {
+  .latest-container {
+    border: 1px solid black;
+    table {
+      table-layout: auto;
+      word-break: break-all;
+    }
+  }
 }

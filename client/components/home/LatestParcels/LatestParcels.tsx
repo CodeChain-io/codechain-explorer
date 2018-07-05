@@ -16,7 +16,7 @@ interface Props {
 
 const LatestParcels = (props: Props) => {
     const { blocksByNumber } = props;
-    return <div>
+    return <div className="latest-parcels">
         <h3>Latest Parcels</h3>
         <div className="latest-container">
             <Table striped={true}>
