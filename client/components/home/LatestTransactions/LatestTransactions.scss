@@ -4,6 +4,12 @@
     table {
       table-layout: auto;
       word-break: break-all;
+      tr th:nth-child(4) {
+        text-align: center;
+      }
+      tr td:nth-child(4) {
+        text-align: center;
+      }
     }
   }
 }

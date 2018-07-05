@@ -4,6 +4,18 @@
     table {
       table-layout: auto;
       word-break: break-all;
+      tr th:nth-child(1),
+      tr th:nth-child(2),
+      tr th:nth-child(3),
+      tr th:nth-child(5) {
+        text-align: center;
+      }
+      tr td:nth-child(1),
+      tr td:nth-child(2),
+      tr td:nth-child(3),
+      tr td:nth-child(5) {
+        text-align: center;
+      }
     }
   }
 }
