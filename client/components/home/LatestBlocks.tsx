@@ -15,7 +15,7 @@ const LatestBlocks = (props: Props) => {
     return <div>{
         _.map(_.reverse(_.values(blocksByNumber)), block => {
             return (
-                <div key={`home-block-num-${block.hash}`}>
+                <div key={`home-block-num-${block.hash.value}`}>
                     <hr />
                     <h4><Link to={`/block/${block.number}`}>Block {block.number}</Link></h4>
                     <div>
