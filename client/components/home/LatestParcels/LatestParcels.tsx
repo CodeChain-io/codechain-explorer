@@ -36,8 +36,8 @@ const LatestParcels = (props: Props) => {
                             return _.map(block.parcels, (parcel) => {
                                 return (
                                     <tr key={`home-parcel-${parcel.hash().value}`}>
-                                        <th scope="row"><Link to="#">{parcel.hash().value}</Link></th>
-                                        <td>{parcel.getSender().value}</td>
+                                        <th scope="row"><Link to="#">0x{parcel.hash().value.slice(0, 10)}...</Link></th>
+                                        <td>0x{parcel.getSender().value.slice(0, 10)}...</td>
                                         <td>{parcel.blockNumber}</td>
                                         <td>{parcel.unsigned.action.toJSON().action}</td>
                                         <td>{parcel.unsigned.fee.value.toString(10)}</td>

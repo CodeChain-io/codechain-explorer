@@ -37,7 +37,7 @@ const LatestTransactions = (props: Props) => {
                                     return _.map(transactions, (transaction) => {
                                         return (
                                             <tr key={`home-transaction-hash-${transaction.hash().value}`}>
-                                                <th scope="row"><Link to="#">{transaction.hash().value}</Link></th>
+                                                <th scope="row"><Link to="#">0x{transaction.hash().value.slice(0, 30)}...</Link></th>
                                                 <td>{parcel.unsigned.action.toJSON().action}</td>
                                                 {/* TODO : Show Details */}
                                                 <td>{transaction instanceof AssetMintTransaction ? 'Asset mint' : 'Asset transfer'}</td>
