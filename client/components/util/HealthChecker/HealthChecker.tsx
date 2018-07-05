@@ -1,6 +1,6 @@
 import * as React from "react";
 
-import { RequestPing } from "../../request";
+import { RequestPing } from "../../../request";
 
 interface State {
     isNodeAlive?: boolean;

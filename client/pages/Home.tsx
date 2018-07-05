@@ -1,10 +1,11 @@
 import * as React from 'react';
 import * as _ from "lodash";
 import { RequestBlockNumber, RequestBlock } from '../request';
-import { Container } from 'reactstrap';
-import PendingParcelList from '../components/parcel/PendingParcelList';
+import { Container, Row, Col } from 'reactstrap';
 import { Block } from 'codechain-sdk';
-import LatestBlocks from '../components/home/LatestBlocks';
+import LatestBlocks from '../components/home/LatestBlocks/LatestBlocks';
+import LatestParcels from '../components/home/LatestParcels/LatestParcels';
+import LatestTransactions from '../components/home/LatestTransactions/LatestTransactions';
 
 interface State {
     bestBlockNumber?: number;
@@ -39,11 +40,25 @@ class Home extends React.Component<{}, State> {
         return (
             <div>
                 <Container>
-                    <LatestBlocks blocksByNumber={blocksByNumber} />
+                    <Row>
+                        <Col className="mt-3">
+                            <LatestBlocks blocksByNumber={blocksByNumber} />
+                        </Col>
+                    </Row>
+                    <Row>
+                        <Col className="mt-3">
+                            <LatestParcels blocksByNumber={blocksByNumber} />
+                        </Col>
+                    </Row>
+                    <Row>
+                        <Col className="mt-3">
+                            <LatestTransactions blocksByNumber={blocksByNumber} />
+                        </Col>
+                    </Row>
+                    {/* Reqest blocks */}
                     {_.map(_.reverse(_.range(0, bestBlockNumber + 1)), n => {
                         return <RequestBlock key={'request-block-num-' + n} id={n} onBlock={this.onBlock} onError={this.onError} />
                     })}
-                    <PendingParcelList />
                 </Container>
             </div>
         );

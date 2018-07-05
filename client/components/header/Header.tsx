@@ -1,7 +1,7 @@
 import * as React from "react";
 import { Container, Navbar, NavbarBrand, NavbarToggler, Nav, NavItem, NavLink, Collapse, UncontrolledDropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
 import { IndexLinkContainer } from 'react-router-bootstrap';
-import HealthChecker from '../util/HealthChecker';
+import HealthChecker from '../util/HealthChecker/HealthChecker';
 import Search from '../search/Search';
 
 import './Header.css';
