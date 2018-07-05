@@ -19,7 +19,7 @@ const LatestTransactions = (props: Props) => {
     return <div>
         <h3>Latest Transactions</h3>
         <div className="latest-container">
-            <Table>
+            <Table striped={true}>
                 <thead>
                     <th>Hash</th>
                     <th>Type</th>

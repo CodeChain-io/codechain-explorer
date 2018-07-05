@@ -19,7 +19,7 @@ const LatestBlocks = (props: Props) => {
     return <div>
         <h3>Latest Blocks</h3>
         <div className="latest-container">
-            <Table>
+            <Table striped={true}>
                 <thead>
                     <th>#</th>
                     <th>Parcels</th>
