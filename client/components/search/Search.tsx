@@ -1,7 +1,7 @@
 import * as React from "react";
 import { Form, FormGroup, Input, Button } from 'reactstrap';
 
-import './Search.css';
+import './Search.scss';
 
 class Search extends React.Component<{}> {
     constructor(props: {}) {

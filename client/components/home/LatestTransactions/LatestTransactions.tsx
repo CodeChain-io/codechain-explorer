@@ -6,7 +6,7 @@ import { Link } from "react-router-dom";
 
 import { Block, ChangeShardState, AssetMintTransaction } from "codechain-sdk";
 
-import './LatestTransactions.css';
+import './LatestTransactions.scss';
 
 interface Props {
     blocksByNumber: {

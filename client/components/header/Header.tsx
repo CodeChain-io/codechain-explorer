@@ -4,7 +4,7 @@ import { IndexLinkContainer } from 'react-router-bootstrap';
 import HealthChecker from '../util/HealthChecker/HealthChecker';
 import Search from '../search/Search';
 
-import './Header.css';
+import './Header.scss';
 
 interface State {
     isOpen: boolean;

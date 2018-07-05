@@ -6,7 +6,7 @@ import { Link } from "react-router-dom";
 
 import { Block } from "codechain-sdk";
 
-import './LatestParcels.css';
+import './LatestParcels.scss';
 
 interface Props {
     blocksByNumber: {
