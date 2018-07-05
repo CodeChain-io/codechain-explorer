@@ -41,7 +41,7 @@ class Home extends React.Component<{}, State> {
                 <Container>
                     <LatestBlocks blocksByNumber={blocksByNumber} />
                     {_.map(_.reverse(_.range(0, bestBlockNumber + 1)), n => {
-                        return <RequestBlock id={n} onBlock={this.onBlock} onError={this.onError} />
+                        return <RequestBlock key={'request-block-num-' + n} id={n} onBlock={this.onBlock} onError={this.onError} />
                     })}
                     <PendingParcelList />
                 </Container>
