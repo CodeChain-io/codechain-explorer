@@ -21,10 +21,12 @@ const LatestTransactions = (props: Props) => {
         <div className="latest-container">
             <Table striped={true}>
                 <thead>
-                    <th>Hash</th>
-                    <th>Type</th>
-                    <th>Summary</th>
-                    <th>Age</th>
+                    <tr>
+                        <th>Hash</th>
+                        <th>Type</th>
+                        <th>Summary</th>
+                        <th>Age</th>
+                    </tr>
                 </thead>
                 <tbody>
                     {

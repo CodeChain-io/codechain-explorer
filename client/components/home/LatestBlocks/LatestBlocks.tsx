@@ -21,11 +21,13 @@ const LatestBlocks = (props: Props) => {
         <div className="latest-container">
             <Table striped={true}>
                 <thead>
-                    <th>#</th>
-                    <th>Parcels</th>
-                    <th>Txs</th>
-                    <th>Mined By</th>
-                    <th>Age</th>
+                    <tr>
+                        <th>#</th>
+                        <th>Parcels</th>
+                        <th>Txs</th>
+                        <th>Mined By</th>
+                        <th>Age</th>
+                    </tr>
                 </thead>
                 <tbody>
                     {
