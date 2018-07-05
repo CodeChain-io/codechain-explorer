@@ -2,6 +2,7 @@
   .latest-container {
     border: 1px solid black;
     table {
+      margin-bottom: 0;
       table-layout: auto;
       word-break: break-all;
       tr th:nth-child(4) {
