@@ -26,9 +26,8 @@ class RequestBlockNumberInternal extends React.Component<Props, State> {
         if (repeat) {
             const timer = setInterval(() => this.request(), repeat);
             this.setState({ timer });
-        } else {
-            this.request();
         }
+        this.request();
     }
 
     public componentWillReceiveProps(props: Props) {
