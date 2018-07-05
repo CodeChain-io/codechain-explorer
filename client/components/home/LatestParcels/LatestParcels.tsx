@@ -37,7 +37,7 @@ const LatestParcels = (props: Props) => {
                                 return (
                                     <tr key={`home-parcel-${parcel.hash().value}`}>
                                         <th scope="row"><Link to="#">{parcel.hash().value}</Link></th>
-                                        <td>Signer</td>
+                                        <td>{parcel.getSender().value}</td>
                                         <td>{parcel.blockNumber}</td>
                                         <td>{parcel.unsigned.action.toJSON().action}</td>
                                         <td>{parcel.unsigned.fee.value.toString(10)}</td>
