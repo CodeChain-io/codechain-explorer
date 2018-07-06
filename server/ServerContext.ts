@@ -20,7 +20,7 @@ export class ServerContext {
 
     private constructor(options: ServerConfig) {
         this.options = options;
-        this.codechainSdk = new SDK(options.codeChain.host);
+        this.codechainSdk = new SDK({ server: options.codeChain.host });
         this.db = new ElasticSearchAgent(options.elasticSearch.host);
     }
 

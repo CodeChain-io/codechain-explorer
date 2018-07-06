@@ -3,7 +3,7 @@ import { Block, SDK } from "codechain-sdk";
 export class CodeChainAgent {
     private sdk: SDK;
     constructor(host) {
-        this.sdk = new SDK(host);
+        this.sdk = new SDK({ server: host });
     }
 
     public getLastBlockNumber = async (): Promise<number> => {

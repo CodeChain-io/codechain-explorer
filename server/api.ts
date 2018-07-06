@@ -46,7 +46,7 @@ export function createApiRouter(context: ServerContext, useCors = false) {
     router.get("/block/:id", async (req, res, next) => {
         const { id } = req.params;
         try {
-            const block = id.length === 66
+            const block = id.length === 64
                 ? await context.db.getBlockByHash(new H256(id))
                 : await context.db.getBlock(Number.parseInt(id));
             res.send(block === null ? JSON.stringify(null) : block.toJSON());
