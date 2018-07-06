@@ -263,11 +263,11 @@ module.exports = {
                                                     }),
                                                 ],
                                             },
+                                        }, {
+                                            loader: require.resolve('sass-loader'),
+                                            options: {}
                                         },
-                                    ],
-                                }, {
-                                    loader: require.resolve('sass-loader'),
-                                    options: {}
+                                    ]
                                 },
                                 extractTextPluginOptions
                             )
