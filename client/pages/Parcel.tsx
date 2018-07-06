@@ -37,7 +37,7 @@ class Parcel extends React.Component<Props, State> {
                 <Container>
                     {parcel
                         ? <ParcelDetails parcel={parcel} />
-                        : <div>loading tx ...
+                        : <div>loading parcel ...
                         <RequestParcel hash={hash}
                                 onParcel={this.onParcel}
                                 onParcelNotExist={this.onParcelNotExist}
