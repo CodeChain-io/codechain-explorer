@@ -27,7 +27,7 @@ const BlockHeaderTable = (props: Props) => {
                 </tr>
                 <tr>
                     <td>Author</td>
-                    <td><Link to={`/account/${author.value}`}>0x{author.value}</Link></td>
+                    <td>0x{author.value}</td>
                 </tr>
                 <tr>
                     <td>Parcels Root</td>

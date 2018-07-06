@@ -16,6 +16,7 @@ import Account from './pages/Account';
 import Asset from "./pages/Asset";
 import NodeInfo from "./pages/NodeInfo";
 import SendSignedParcel from './pages/SendSignedParcel';
+import Transaction from './pages/Transaction';
 
 ReactDOM.render(
   <Provider store={store}>
@@ -29,6 +30,7 @@ ReactDOM.render(
         <Route path="/parcel/:hash" component={Parcel} />
         <Route path="/account/:address" component={Account} />
         <Route path="/asset/:type" component={Asset} />
+        <Route path="/tx/:hash" component={Transaction} />
       </div>
     </Router >
   </Provider >,

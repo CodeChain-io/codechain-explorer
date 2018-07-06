@@ -5,7 +5,7 @@ import { Container } from 'reactstrap';
 import { SignedParcel } from "codechain-sdk/lib";
 
 import { RequestParcel } from "../request";
-import ParcelDetails from "../components/parcel/ParcelDetails";
+import ParcelDetails from "../components/parcel/ParcelDetails/ParcelDetails";
 
 interface Props {
     match: match<{ hash: string }>;
@@ -43,7 +43,6 @@ class Parcel extends React.Component<Props, State> {
                                 onParcelNotExist={this.onParcelNotExist}
                                 onError={this.onError} />
                         </div>}
-                    <hr />
                     {/* Show Parcel Invoices here */}
                 </Container>
             </div>

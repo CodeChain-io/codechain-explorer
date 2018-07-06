@@ -7,6 +7,7 @@ import RequestAssetScheme from "./RequestAssetScheme";
 import RequestAccount from "./RequestAccount";
 import RequestPendingParcels from "./RequestPendingParcels";
 import RequestTransactionInvoice from "./RequestTransactionInvoice";
+import RequestTransaction from "./RequestTransaction";
 
 export { RequestPing };
 export { RequestParcel };
@@ -17,3 +18,4 @@ export { RequestAssetScheme };
 export { RequestAccount };
 export { RequestPendingParcels };
 export { RequestTransactionInvoice };
+export { RequestTransaction };

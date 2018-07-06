@@ -1,5 +1,5 @@
 import { Client, SearchResponse } from "elasticsearch";
-import { Block, Parcel, H256, H160 } from "codechain-sdk";
+import { Block, SignedParcel, H256, H160, Transaction, SDK, ChangeShardState } from "codechain-sdk";
 import * as _ from "lodash";
 
 export class ElasticSearchAgent {
@@ -54,9 +54,8 @@ export class ElasticSearchAgent {
         });
     }
 
-    public getParcel = async (hash: H256): Promise<Parcel> => {
+    public getParcel = async (hash: H256): Promise<SignedParcel> => {
         return this.search({
-            _source: "parcels.*",
             query: {
                 "bool": {
                     "must": [
@@ -69,10 +68,40 @@ export class ElasticSearchAgent {
             if (response.hits.total === 0) {
                 return null;
             }
-            const parcelData = _.filter(response.hits.hits[0]._source.parcels, (data) => {
-                return data.hash === hash.value;
+            const findBlock = Block.fromJSON(response.hits.hits[0]._source);
+            const parcelData = _.filter(findBlock.parcels, (parcel) => {
+                return parcel.hash().value === hash.value;
             });
-            return Parcel.fromJSON(parcelData[0]);
+            return parcelData[0];
+        });
+    }
+
+    public getTransaction = async (hash: H256): Promise<Transaction> => {
+        return this.search({
+            query: {
+                "bool": {
+                    "must": [
+                        { "match": { "parcels.action.transactions.data.hash": hash.value } },
+                        { "match": { "isRetracted": false } }
+                    ]
+                }
+            }
+        }).then((response: SearchResponse<any>) => {
+            if (response.hits.total === 0) {
+                return null;
+            }
+            const findBlock = Block.fromJSON(response.hits.hits[0]._source);
+            let transactionData: Transaction;
+            _.each(findBlock.parcels, (parcel) => {
+                if (parcel.unsigned.action instanceof ChangeShardState) {
+                    _.each(parcel.unsigned.action.transactions, (transaction: Transaction) => {
+                        if (transaction.hash().value === hash.value) {
+                            transactionData = transaction;
+                        }
+                    });
+                }
+            })
+            return transactionData;
         });
     }
 

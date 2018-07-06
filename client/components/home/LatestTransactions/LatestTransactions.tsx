@@ -39,7 +39,7 @@ const LatestTransactions = (props: Props) => {
                                     return _.map(transactions, (transaction) => {
                                         return (
                                             <tr key={`home-transaction-hash-${transaction.hash().value}`}>
-                                                <th scope="row"><Link to="#">0x{transaction.hash().value.slice(0, 10)}...</Link></th>
+                                                <th scope="row"><Link to={`/tx/${transaction.hash().value}`}>0x{transaction.hash().value.slice(0, 10)}...</Link></th>
                                                 <td><Link to={`/parcel/${parcel.hash().value}`}>0x{parcel.hash().value.slice(0, 10)}...</Link></td>
                                                 <td>{transaction.toJSON().type}</td>
                                                 <td>{transaction instanceof AssetMintTransaction ? "0x" + transaction.getAssetSchemeAddress().value.slice(0, 10) + '...' : (transaction instanceof AssetTransferTransaction ? _.reduce(transaction.toJSON().data.inputs, (memo, input) => ("0x" + input.prevOut.assetType.slice(0, 10) + "..." + " " + memo), "") : "")}</td>

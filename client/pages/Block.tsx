@@ -5,7 +5,7 @@ import { Container } from 'reactstrap';
 import { Block as CoreBlock } from "codechain-sdk";
 
 import { RequestBlock } from "../request";
-import BlockDetails from "../components/block/BlockDetails";
+import BlockDetails from "../components/block/BlockDetails/BlockDetails";
 
 interface State {
     block?: CoreBlock;

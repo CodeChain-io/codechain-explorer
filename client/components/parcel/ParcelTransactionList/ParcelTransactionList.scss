@@ -1,0 +1,15 @@
+.parcel-transaction-list-container {
+  padding: 16px;
+  background-color: #f1f1f1;
+  border-radius: 10px;
+  table {
+    width: 100%;
+    table-layout: fixed;
+    word-break: break-all;
+    tr {
+      td:first-child {
+        width: 20%;
+      }
+    }
+  }
+}

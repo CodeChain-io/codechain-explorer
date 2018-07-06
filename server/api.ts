@@ -68,6 +68,13 @@ export function createApiRouter(context: ServerContext, useCors = false) {
         }).catch(next);
     });
 
+    router.get("/tx/:hash", async (req, res, next) => {
+        const { hash } = req.params;
+        context.db.getTransaction(new H256(hash)).then(transaction => {
+            res.send(transaction === null ? JSON.stringify(null) : transaction.toJSON());
+        }).catch(next);
+    })
+
     router.post("/parcel/signed", async (req, res, next) => {
         const parcel = SignedParcel.fromJSON(req.body);
         context.codechainSdk.sendSignedParcel(parcel).then(hash => {

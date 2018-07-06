@@ -1,4 +1,4 @@
-import { Block, AssetScheme, SignedParcel } from "codechain-sdk";
+import { Block, AssetScheme, SignedParcel, Transaction } from "codechain-sdk";
 
 export interface RootState {
     bestBlockNumber?: number;
@@ -11,6 +11,9 @@ export interface RootState {
     parcelByHash: {
         [hash: string]: SignedParcel;
     };
+    transactionByHash: {
+        [hash: string]: Transaction;
+    }
     assetSchemeByTxhash: {
         [txhash: string]: AssetScheme;
     };
@@ -22,6 +25,7 @@ const initialState: RootState = {
     blocksByHash: {},
     parcelByHash: {},
     assetSchemeByTxhash: {},
+    transactionByHash: {}
 };
 
 interface BestBlockNumberAction {
@@ -37,6 +41,11 @@ interface CacheBlockAction {
 interface CacheParcelAction {
     type: "CACHE_PARCEL";
     data: SignedParcel;
+};
+
+interface CacheTransactionAction {
+    type: "CACHE_TRANSACTION";
+    data: Transaction;
 }
 
 interface CacheAssetSchemeAction {
@@ -47,7 +56,7 @@ interface CacheAssetSchemeAction {
     };
 }
 
-type Action = BestBlockNumberAction | CacheAssetSchemeAction | CacheBlockAction | CacheParcelAction;
+type Action = BestBlockNumberAction | CacheAssetSchemeAction | CacheBlockAction | CacheParcelAction | CacheTransactionAction;
 
 export const rootReducer = (state = initialState, action: Action) => {
     if (action.type === "BEST_BLOCK_NUMBER_ACTION") {
@@ -61,6 +70,10 @@ export const rootReducer = (state = initialState, action: Action) => {
         const parcel = action.data as SignedParcel;
         const parcelByHash = { ...state.parcelByHash, [parcel.hash().value]: parcel };
         return { ...state, parcelByHash };
+    } else if (action.type === "CACHE_TRANSACTION") {
+        const transaction = action.data as Transaction;
+        const transactionByHash = { ...state.transactionByHash, [transaction.hash().value]: transaction };
+        return { ...state, transactionByHash };
     } else if (action.type === "CACHE_ASSET_SCHEME") {
         const { txhash, assetScheme } = (action as CacheAssetSchemeAction).data;
         const assetSchemeByTxhash = { ...state.assetSchemeByTxhash, [txhash]: assetScheme };
