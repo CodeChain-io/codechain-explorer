@@ -23,9 +23,9 @@ const LatestParcels = (props: Props) => {
                 <thead>
                     <tr>
                         <th>Hash</th>
-                        <th>Signer</th>
-                        <th>Block Number</th>
                         <th>Action</th>
+                        <th>Block Number</th>
+                        <th>Signer</th>
                         <th>Fee</th>
                         <th>Age</th>
                     </tr>
@@ -37,9 +37,9 @@ const LatestParcels = (props: Props) => {
                                 return (
                                     <tr key={`home-parcel-${parcel.hash().value}`}>
                                         <th scope="row"><Link to="#">0x{parcel.hash().value.slice(0, 10)}...</Link></th>
-                                        <td>0x{parcel.getSender().value.slice(0, 10)}...</td>
-                                        <td>{parcel.blockNumber}</td>
                                         <td>{parcel.unsigned.action.toJSON().action}</td>
+                                        <td>{parcel.blockNumber}</td>
+                                        <td>0x{parcel.getSender().value.slice(0, 10)}...</td>
                                         <td>{parcel.unsigned.fee.value.toString(10)}</td>
                                         <td>{moment.unix(block.timestamp).fromNow()}</td>
                                     </tr>

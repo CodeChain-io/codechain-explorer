@@ -25,7 +25,7 @@ const LatestBlocks = (props: Props) => {
                         <th>Height</th>
                         <th>Parcels</th>
                         <th>Txs</th>
-                        <th>Mined By</th>
+                        <th>Author</th>
                         <th>Age</th>
                     </tr>
                 </thead>
