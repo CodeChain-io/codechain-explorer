@@ -60,7 +60,7 @@ export class ElasticSearchAgent {
             query: {
                 "bool": {
                     "must": [
-                        { "match": { "parcel.hash": hash.value } },
+                        { "match": { "parcels.hash": hash.value } },
                         { "match": { "isRetracted": false } }
                     ]
                 }
