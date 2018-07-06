@@ -41,17 +41,17 @@ class Home extends React.Component<{}, State> {
             <div>
                 <Container>
                     <Row>
-                        <Col className="mt-5">
+                        <Col className="mt-3">
                             <LatestBlocks blocksByNumber={blocksByNumber} />
                         </Col>
                     </Row>
                     <Row>
-                        <Col className="mt-5">
+                        <Col className="mt-3">
                             <LatestParcels blocksByNumber={blocksByNumber} />
                         </Col>
                     </Row>
-                    <Row className="mb-5">
-                        <Col className="mt-5">
+                    <Row className="mb-3">
+                        <Col className="mt-3">
                             <LatestTransactions blocksByNumber={blocksByNumber} />
                         </Col>
                     </Row>
