@@ -14,9 +14,9 @@ class BlockDetails extends React.Component<OwnProps> {
         const { block } = this.props;
         return (
             <div>
-                <h3> className="mt-3">Block #{block.number}</h3>
+                <h3 className="mt-3">Block #{block.number}</h3>
                 <h4>{block.hash.value}</h4>
-                <h3> className="mt-3">Summary</h3>
+                <h3 className="mt-3">Summary</h3>
                 <BlockHeaderTable block={block} />
                 <BlockParcelList parcels={block.parcels} />
             </div>
