@@ -5,16 +5,10 @@
       margin-bottom: 0;
       table-layout: auto;
       word-break: break-all;
-      tr th:nth-child(1),
-      tr th:nth-child(2),
-      tr th:nth-child(3),
-      tr th:nth-child(5) {
+      tr th {
         text-align: center;
       }
-      tr td:nth-child(1),
-      tr td:nth-child(2),
-      tr td:nth-child(3),
-      tr td:nth-child(5) {
+      tr td {
         text-align: center;
       }
     }

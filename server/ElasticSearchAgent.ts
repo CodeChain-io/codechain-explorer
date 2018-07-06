@@ -72,7 +72,7 @@ export class ElasticSearchAgent {
             const parcelData = _.filter(response.hits.hits[0]._source.parcels, (data) => {
                 return data.hash === hash.value;
             });
-            return Parcel.fromJSON(parcelData);
+            return Parcel.fromJSON(parcelData[0]);
         });
     }
 

@@ -41,7 +41,7 @@ const LatestBlocks = (props: Props) => {
                                         const txCount = action.transactions ? action.transactions.length : 0;
                                         return memo + txCount;
                                     }, 0)}</td>
-                                    <td>0x{block.author.value}</td>
+                                    <td>0x{block.author.value.slice(0, 10)}...</td>
                                     <td>{moment.unix(block.timestamp).fromNow()}</td>
                                 </tr>
                             );
