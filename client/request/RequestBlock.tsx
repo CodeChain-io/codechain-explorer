@@ -1,7 +1,8 @@
 import * as React from "react";
+import * as _ from "lodash"
 import { connect, Dispatch } from "react-redux";
 
-import { Block } from "codechain-sdk";
+import { Block, ChangeShardState } from "codechain-sdk";
 
 import { apiRequest } from "./ApiRequest";
 import { RootState } from "../redux/actions";
@@ -33,6 +34,21 @@ class RequestBlockInternal extends React.Component<OwnProps & StateProps & Dispa
                 type: "CACHE_BLOCK",
                 data: block
             });
+            _.each(block.parcels, (parcel) => {
+                dispatch({
+                    type: "CACHE_PARCEL",
+                    data: parcel
+                })
+                if (parcel.unsigned.action instanceof ChangeShardState) {
+                    _.each(parcel.unsigned.action.transactions, (transaction) => {
+                        dispatch({
+                            type: "CACHE_TRANSACTION",
+                            data: transaction
+                        })
+                    })
+                }
+            })
+
             onBlock(block);
         }).catch(onError);
     }
