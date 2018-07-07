@@ -51,7 +51,7 @@ const TransactionHeaderTable = (props: Props) => {
                                         <tbody>
                                             <tr>
                                                 <td>AssetType</td>
-                                                <td>{input.prevOut.assetType}</td>
+                                                <td>0x{input.prevOut.assetType}</td>
                                             </tr>
                                             <tr>
                                                 <td>Owner</td>
@@ -94,7 +94,7 @@ const TransactionHeaderTable = (props: Props) => {
                                         <tbody>
                                             <tr>
                                                 <td>AssetType</td>
-                                                <td>{output.assetType}</td>
+                                                <td>0x{output.assetType}</td>
                                             </tr>
                                             <tr>
                                                 <td>Owner</td>
@@ -106,7 +106,7 @@ const TransactionHeaderTable = (props: Props) => {
                                             </tr>
                                             <tr>
                                                 <td>LockScript</td>
-                                                <td>{output.lockScriptHash}</td>
+                                                <td>0x{output.lockScriptHash}</td>
                                             </tr>
                                             <tr>
                                                 <td>Parameters</td>
