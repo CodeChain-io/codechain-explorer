@@ -1,11 +1,61 @@
 import * as React from "react";
 
-import { SignedParcel } from "codechain-sdk";
+import { SignedParcel, Payment, SetRegularKey, ChangeShardState } from "codechain-sdk";
 
 import "./ParcelHeaderTable.scss"
 
 interface Props {
     parcel: SignedParcel;
+}
+
+const getParcelElement = (parcel: SignedParcel) => {
+    if (parcel.unsigned.action instanceof Payment) {
+        return [
+            <tr className="custom-row" key="parcel-header-table-payment-sender">
+                <td>
+                    Sender
+                </td>
+                <td>
+                    0x{parcel.getSender().value}
+                </td>
+            </tr>,
+            <tr className="custom-row" key="parcel-header-table-payment-receiver">
+                <td>
+                    Receiver
+                </td>
+                <td>
+                    0x{parcel.unsigned.action.receiver.value}
+                </td>
+            </tr>,
+            <tr className="custom-row" key="parcel-header-table-payment-amount">
+                <td>
+                    Amount
+                </td>
+                <td>
+                    {parcel.unsigned.action.value.value.toString()}
+                </td>
+            </tr>
+        ];
+    } else if (parcel.unsigned.action instanceof SetRegularKey) {
+        return <tr className="custom-row">
+            <td>
+                Key
+            </td>
+            <td>
+                0x{parcel.unsigned.action.key.value}
+            </td>
+        </tr>;
+    } else if (parcel.unsigned.action instanceof ChangeShardState) {
+        return <tr className="custom-row">
+            <td>
+                Count of transactions
+            </td>
+            <td>
+                {parcel.unsigned.action.transactions.length}
+            </td>
+        </tr>;
+    }
+    return null;
 }
 
 const ParcelHeaderTable = (props: Props) => {
@@ -53,6 +103,9 @@ const ParcelHeaderTable = (props: Props) => {
                     <td>v</td>
                     <td>{parcel.v}</td>
                 </tr>
+                {
+                    getParcelElement(parcel)
+                }
             </tbody>
         </table>
     );
