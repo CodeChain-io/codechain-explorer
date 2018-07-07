@@ -10,6 +10,21 @@ interface Props {
     transaction: Transaction;
 }
 
+interface MetadataFormat {
+    name?: string;
+    description?: string;
+    icon_url?: string;
+}
+
+const getMetadata = (data: string): MetadataFormat => {
+    try {
+        return JSON.parse(data);
+    } catch (e) {
+        // nothing
+    }
+    return {};
+}
+
 const TransactionHeaderTable = (props: Props) => {
     const { transaction } = props;
     if (transaction instanceof AssetTransferTransaction) {
@@ -24,76 +39,83 @@ const TransactionHeaderTable = (props: Props) => {
                         <td>Nonce</td>
                         <td>{transaction.toJSON().data.nonce}</td>
                     </tr>
-                    <tr>
-                        <td rowSpan={2}>Input</td>
+                    <tr className="title-row">
+                        <td colSpan={2}>Input</td>
                     </tr>
                     {
                         _.map(transaction.toJSON().data.inputs, (input, index) => {
-                            return [<td key={`transaction-header-table-input-asset-${index}`}>Asset {index}</td>,
-                            <td key={`transaction-header-table-input-detail-${index}`}>
-                                <table>
-                                    <tr>
-                                        <td>AssetType</td>
-                                        <td>{input.prevOut.assetType}</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Owner</td>
-                                        <td>?</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Amount</td>
-                                        <td>{input.prevOut.amount}</td>
-                                    </tr>
-                                    <tr>
-                                        <td>LockScript</td>
-                                        <td>{input.lockScript.toString()}</td>
-                                    </tr>
-                                    <tr>
-                                        <td>UnlockScript</td>
-                                        <td>{input.unlockScript.toString()}</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Prev Tx</td>
-                                        <td><Link to={`/tx/${input.prevOut.transactionHash}`}>0x{input.prevOut.transactionHash}</Link></td>
-                                    </tr>
-                                    <tr>
-                                        <td>Index</td>
-                                        <td>{input.prevOut.index}</td>
-                                    </tr>
-                                </table>
-                            </td>]
+                            return <tr key={`transaction-header-table-input-${index}`}>
+                                <td>Asset {index}</td>
+                                <td>
+                                    <table className="inner-table">
+                                        <tbody>
+                                            <tr>
+                                                <td>AssetType</td>
+                                                <td>{input.prevOut.assetType}</td>
+                                            </tr>
+                                            <tr>
+                                                <td>Owner</td>
+                                                <td>?</td>
+                                            </tr>
+                                            <tr>
+                                                <td>Amount</td>
+                                                <td>{input.prevOut.amount}</td>
+                                            </tr>
+                                            <tr>
+                                                <td>LockScript</td>
+                                                <td>{input.lockScript.toString()}</td>
+                                            </tr>
+                                            <tr>
+                                                <td>UnlockScript</td>
+                                                <td>{input.unlockScript.toString()}</td>
+                                            </tr>
+                                            <tr>
+                                                <td>Prev Tx</td>
+                                                <td><Link to={`/tx/${input.prevOut.transactionHash}`}>0x{input.prevOut.transactionHash}</Link></td>
+                                            </tr>
+                                            <tr>
+                                                <td>Index</td>
+                                                <td>{input.prevOut.index}</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </td>
+                            </tr>
                         })
                     }
-                    <tr>
-                        <td rowSpan={2}>Output</td>
+                    <tr className="title-row">
+                        <td colSpan={2}>Output</td>
                     </tr>
                     {
                         _.map(transaction.toJSON().data.outputs, (output, index) => {
-                            return [<td key={`transaction-header-table-output-asset-${index}`}>Asset {index}</td>,
-                            <td key={`transaction-header-table-output-detail-${index}`}>
-                                <table>
-                                    <tr>
-                                        <td>AssetType</td>
-                                        <td>{output.assetType}</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Owner</td>
-                                        <td>?</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Amount</td>
-                                        <td>{output.amount}</td>
-                                    </tr>
-                                    <tr>
-                                        <td>LockScript</td>
-                                        <td>{output.lockScriptHash}</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Parameters</td>
-                                        <td>{output.parameters.toString()}</td>
-                                    </tr>
-                                </table>
-                            </td>]
+                            return <tr key={`transaction-header-table-output-${index}`}><td >Asset {index}</td>
+                                <td>
+                                    <table className="inner-table">
+                                        <tbody>
+                                            <tr>
+                                                <td>AssetType</td>
+                                                <td>{output.assetType}</td>
+                                            </tr>
+                                            <tr>
+                                                <td>Owner</td>
+                                                <td>?</td>
+                                            </tr>
+                                            <tr>
+                                                <td>Amount</td>
+                                                <td>{output.amount}</td>
+                                            </tr>
+                                            <tr>
+                                                <td>LockScript</td>
+                                                <td>{output.lockScriptHash}</td>
+                                            </tr>
+                                            <tr>
+                                                <td>Parameters</td>
+                                                <td>{output.parameters.toString()}</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </td>
+                            </tr>
                         })
                     }
                 </tbody>
@@ -106,6 +128,14 @@ const TransactionHeaderTable = (props: Props) => {
                     <tr>
                         <td>Registrar</td>
                         <td>{transaction.toJSON().data.registrar}</td>
+                    </tr>
+                    <tr>
+                        <td>Name</td>
+                        <td>{getMetadata(transaction.toJSON().data.metadata).name ? getMetadata(transaction.toJSON().data.metadata).name : "Not defined"}</td>
+                    </tr>
+                    <tr>
+                        <td>Description</td>
+                        <td>{getMetadata(transaction.toJSON().data.metadata).description ? getMetadata(transaction.toJSON().data.metadata).description : "Not defined"}</td>
                     </tr>
                     <tr>
                         <td>Nonce</td>

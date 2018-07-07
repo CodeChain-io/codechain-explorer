@@ -14,4 +14,20 @@
       width: 20%;
     }
   }
+  .title-row {
+    background-color: #f1f1f1;
+  }
+  .inner-table {
+    width: 100%;
+    tr {
+      border: none;
+      td {
+        padding-top: 4px;
+        padding-bottom: 4px;
+      }
+      td:first-child {
+        width: 15%;
+      }
+    }
+  }
 }

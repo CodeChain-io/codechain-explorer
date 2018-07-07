@@ -1,8 +1,7 @@
 import * as React from "react";
-import { Container, Navbar, NavbarBrand, NavbarToggler, Nav, NavItem, NavLink, Collapse, UncontrolledDropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
+import { Container, Navbar, NavbarBrand, NavbarToggler, Nav, NavItem, NavLink, Collapse } from 'reactstrap';
 import { IndexLinkContainer } from 'react-router-bootstrap';
 import HealthChecker from '../util/HealthChecker/HealthChecker';
-import Search from '../search/Search';
 
 import './Header.scss';
 
@@ -36,6 +35,8 @@ class Header extends React.Component<{}, State> {
                                     <NavLink>Home</NavLink>
                                 </NavItem>
                             </IndexLinkContainer>
+                            {
+                                /*
                             <UncontrolledDropdown nav={true} inNavbar={true}>
                                 <DropdownToggle nav={true} caret={true}>
                                     Blockchain
@@ -76,17 +77,23 @@ class Header extends React.Component<{}, State> {
                                     </DropdownItem>
                                 </DropdownMenu>
                             </UncontrolledDropdown>
+                                */
+                            }
+                        </Nav>
+                        <Nav>
                             <NavItem>
                                 <NavLink>
                                     <HealthChecker />
                                 </NavLink>
                             </NavItem>
                         </Nav>
+                        {/*
                         <Nav>
                             <NavItem>
                                 <Search />
                             </NavItem>
                         </Nav>
+                        */}
                     </Collapse>
                 </Container>
             </Navbar>
