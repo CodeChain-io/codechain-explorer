@@ -64,6 +64,10 @@ const ParcelHeaderTable = (props: Props) => {
         <table className="parcel-header-table">
             <tbody>
                 <tr>
+                    <td>Hash</td>
+                    <td>0x{parcel.hash().value}</td>
+                </tr>
+                <tr>
                     <td>Network ID</td>
                     <td>{parcel.unsigned.networkId.value.toString()}</td>
                 </tr>

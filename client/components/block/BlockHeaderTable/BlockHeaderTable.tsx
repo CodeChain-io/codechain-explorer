@@ -11,12 +11,16 @@ interface Props {
 }
 
 const BlockHeaderTable = (props: Props) => {
-    const { author, extraData, invoicesRoot,
+    const { hash, author, extraData, invoicesRoot,
         stateRoot, parentHash, score, seal, timestamp,
         parcels, parcelsRoot } = props.block;
     return (
         <table className="block-header-table">
             <tbody>
+                <tr>
+                    <td>Hash</td>
+                    <td>0x{hash.value}</td>
+                </tr>
                 <tr>
                     <td>Parent Block Hash</td>
                     <td><Link to={`/block/${parentHash.value}`}>0x{parentHash.value}</Link></td>

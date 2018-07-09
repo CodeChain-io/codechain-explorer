@@ -16,9 +16,7 @@ const ParcelDetails = (props: Props) => {
 
     return <div className="parcel-detail-container mb-3">
         <h3 className="mt-3">Parcel</h3>
-        <h4 className="hash">0x{parcel.hash().value}</h4>
         <h4 className="type">{parcel.unsigned.action.toJSON().action}</h4>
-        <h3 className="mt-3">Summary</h3>
         <ParcelHeaderTable parcel={parcel} />
         {parcel.unsigned.action instanceof ChangeShardState ? <ParcelTransactionList transactions={parcel.unsigned.action.transactions} /> : ""}
     </div>

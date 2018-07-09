@@ -32,6 +32,10 @@ const TransactionHeaderTable = (props: Props) => {
             <table className="transaction-header-table">
                 <tbody>
                     <tr>
+                        <td>Hash</td>
+                        <td>0x{transaction.hash().value}</td>
+                    </tr>
+                    <tr>
                         <td>NetworkID</td>
                         <td>{transaction.toJSON().data.networkId}</td>
                     </tr>
