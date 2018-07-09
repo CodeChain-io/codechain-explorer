@@ -22,6 +22,7 @@ interface State {
 
 class RequestBlockNumberInternal extends React.Component<Props, State> {
     public componentWillMount() {
+        this.setState({});
         const { repeat } = this.props;
         if (repeat) {
             const timer = setInterval(() => this.request(), repeat);
@@ -43,6 +44,13 @@ class RequestBlockNumberInternal extends React.Component<Props, State> {
             this.setState({ timer: newTimer });
         } else {
             this.setState({ timer: undefined });
+        }
+    }
+
+    public componentWillUnmount() {
+        const { timer } = this.state;
+        if (timer) {
+            clearInterval(timer);
         }
     }
 

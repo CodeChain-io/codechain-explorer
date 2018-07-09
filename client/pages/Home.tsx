@@ -30,7 +30,6 @@ class Home extends React.Component<{}, State> {
                     <Container>
                         Loading ...
                         <RequestBlockNumber
-                            repeat={1000}
                             onBlockNumber={this.onBlockNumber}
                             onError={this.onError} />
                     </Container>
@@ -60,6 +59,10 @@ class Home extends React.Component<{}, State> {
                         return <RequestBlock key={'request-block-num-' + n} id={n} onBlock={this.onBlock} onError={this.onError} />
                     })}
                 </Container>
+                <RequestBlockNumber
+                    repeat={1000}
+                    onBlockNumber={this.onBlockNumber}
+                    onError={this.onError} />
             </div>
         );
     }
