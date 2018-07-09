@@ -31,6 +31,10 @@ ReactDOM.render(
         <Route path="/account/:address" component={Account} />
         <Route path="/asset/:type" component={Asset} />
         <Route path="/tx/:hash" component={Transaction} />
+        <div className="text-center">
+          <p>codechain@kodebox.io</p>
+          <p>ⓒ 2018 Kodebox, Inc.</p>
+        </div>
       </div>
     </Router >
   </Provider >,
