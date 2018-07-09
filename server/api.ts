@@ -75,6 +75,13 @@ export function createApiRouter(context: ServerContext, useCors = false) {
         }).catch(next);
     })
 
+    router.get("/mintTx/:assetType", async (req, res, next) => {
+        const { assetType } = req.params;
+        context.db.getAssetMintTransactionByAssetType(new H256(assetType)).then(transaction => {
+            res.send(transaction === null ? JSON.stringify(null) : transaction.toJSON());
+        }).catch(next);
+    })
+
     router.post("/parcel/signed", async (req, res, next) => {
         const parcel = SignedParcel.fromJSON(req.body);
         context.codechainSdk.sendSignedParcel(parcel).then(hash => {

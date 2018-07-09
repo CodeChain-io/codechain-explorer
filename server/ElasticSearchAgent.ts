@@ -1,5 +1,5 @@
 import { Client, SearchResponse } from "elasticsearch";
-import { Block, SignedParcel, H256, H160, Transaction, SDK, ChangeShardState } from "codechain-sdk";
+import { Block, SignedParcel, H256, H160, Transaction, SDK, ChangeShardState, AssetMintTransaction } from "codechain-sdk";
 import * as _ from "lodash";
 
 export class ElasticSearchAgent {
@@ -17,7 +17,7 @@ export class ElasticSearchAgent {
     }
 
     public getLastBlockNumber = async (): Promise<number> => {
-        return this.search({
+        return this.searchBlock({
             sort: [
                 {
                     "number": { order: "desc" }
@@ -40,7 +40,7 @@ export class ElasticSearchAgent {
     }
 
     public getBlockByHash = async (hash: H256): Promise<Block> => {
-        return this.search({
+        return this.searchBlock({
             query: {
                 "bool": {
                     "must": [
@@ -55,7 +55,7 @@ export class ElasticSearchAgent {
     }
 
     public getParcel = async (hash: H256): Promise<SignedParcel> => {
-        return this.search({
+        return this.searchBlock({
             query: {
                 "bool": {
                     "must": [
@@ -77,7 +77,7 @@ export class ElasticSearchAgent {
     }
 
     public getTransaction = async (hash: H256): Promise<Transaction> => {
-        return this.search({
+        return this.searchBlock({
             query: {
                 "bool": {
                     "must": [
@@ -105,8 +105,26 @@ export class ElasticSearchAgent {
         });
     }
 
+    public getAssetMintTransactionByAssetType = async (assetType: H256): Promise<AssetMintTransaction> => {
+        return this.searchAssetMintTransaction({
+            query: {
+                "bool": {
+                    "must": [
+                        { "match": { "_id": assetType.value } },
+                        { "match": { "isRetracted": false } }
+                    ]
+                }
+            }
+        }).then((response: SearchResponse<any>) => {
+            if (response.hits.total === 0) {
+                return null;
+            }
+            return AssetMintTransaction.fromJSON(response.hits.hits[0]._source);
+        });
+    }
+
     public getBlock = async (blockNumber: number): Promise<Block> => {
-        return this.search({
+        return this.searchBlock({
             query: {
                 "bool": {
                     "must": [
@@ -140,9 +158,19 @@ export class ElasticSearchAgent {
         return null;
     }
 
-    private search(body: any): Promise<void | SearchResponse<any>> {
+    private searchBlock(body: any): Promise<void | SearchResponse<any>> {
         return this.client.search({
             index: "block",
+            type: "_doc",
+            body
+        }).catch((err) => {
+            console.error('Elastic search error %s', err);
+        });
+    }
+
+    private searchAssetMintTransaction(body: any): Promise<void | SearchResponse<any>> {
+        return this.client.search({
+            index: "asset_mint_transaction",
             type: "_doc",
             body
         }).catch((err) => {

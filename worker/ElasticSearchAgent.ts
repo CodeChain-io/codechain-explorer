@@ -107,11 +107,13 @@ export class ElasticSearchAgent {
                 _.each(parcel.unsigned.action.transactions, async (transaction) => {
                     if (transaction instanceof AssetMintTransaction) {
                         try {
+                            const transactionDoc: any = transaction.toJSON();
+                            transactionDoc.isRetracted = false;
                             await this.client.index({
                                 index: "asset_mint_transaction",
                                 type: "_doc",
                                 id: transaction.getAssetSchemeAddress().value,
-                                body: transaction.toJSON(),
+                                body: transactionDoc,
                                 refresh: "wait_for"
                             })
                         } catch (e) {
