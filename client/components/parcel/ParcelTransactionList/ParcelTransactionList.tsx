@@ -19,10 +19,6 @@ const TransactionObject = (transaction: Transaction) => {
             <tr key="asset-mint-transaction-amount">
                 <td>Amount</td>
                 <td>{transaction.toJSON().data.amount}</td>
-            </tr>,
-            <tr key="asset-mint-transaction-age">
-                <td>Age</td>
-                <td>?</td>
             </tr>
         ]
     } else if (transaction instanceof AssetTransferTransaction) {
@@ -38,10 +34,6 @@ const TransactionObject = (transaction: Transaction) => {
             <tr key="asset-transfer-transaction-amount">
                 <td>Amount</td>
                 <td>{_.sumBy(transaction.toJSON().data.inputs, (input) => (input.prevOut.amount))}</td>
-            </tr>,
-            <tr key="asset-transfer-transaction-age">
-                <td>Age</td>
-                <td>?</td>
             </tr>
         ]
     }

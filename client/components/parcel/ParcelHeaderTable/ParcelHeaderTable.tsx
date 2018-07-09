@@ -91,22 +91,6 @@ const ParcelHeaderTable = (props: Props) => {
                     <td>Fee</td>
                     <td>{parcel.unsigned.fee.value.toString()}</td>
                 </tr>
-                <tr>
-                    <td>Timestamp</td>
-                    <td>?</td>
-                </tr>
-                <tr>
-                    <td>r</td>
-                    <td>{parcel.r.value.toString()}</td>
-                </tr>
-                <tr>
-                    <td>s</td>
-                    <td>{parcel.s.value.toString()}</td>
-                </tr>
-                <tr>
-                    <td>v</td>
-                    <td>{parcel.v}</td>
-                </tr>
                 {
                     getParcelElement(parcel)
                 }
