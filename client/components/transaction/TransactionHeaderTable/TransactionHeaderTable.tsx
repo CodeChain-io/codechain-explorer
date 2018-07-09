@@ -126,6 +126,7 @@ const TransactionHeaderTable = (props: Props) => {
             </table>
         );
     } else if (transaction instanceof AssetMintTransaction) {
+        const metadata = getMetadata(transaction.toJSON().data.metadata);
         return (
             <table className="transaction-header-table">
                 <tbody>
@@ -134,12 +135,37 @@ const TransactionHeaderTable = (props: Props) => {
                         <td>{transaction.toJSON().data.registrar}</td>
                     </tr>
                     <tr>
-                        <td>Name</td>
-                        <td>{getMetadata(transaction.toJSON().data.metadata).name ? getMetadata(transaction.toJSON().data.metadata).name : "Not defined"}</td>
-                    </tr>
-                    <tr>
-                        <td>Description</td>
-                        <td>{getMetadata(transaction.toJSON().data.metadata).description ? getMetadata(transaction.toJSON().data.metadata).description : "Not defined"}</td>
+                        <td>Metadata</td>
+                        <td>
+                            <table className="inner-table">
+                                <tbody>
+                                    <tr>
+                                        <td>
+                                            Name
+                                        </td>
+                                        <td>
+                                            {metadata.name ? metadata.name : "Not defined"}
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            Description
+                                        </td>
+                                        <td>
+                                            {metadata.description ? metadata.description : "Not defined"}
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            Icon
+                                        </td>
+                                        <td>
+                                            {metadata.icon_url ? <img className="asset-icon" src={metadata.icon_url} /> : "Not defined"}
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </td>
                     </tr>
                     <tr>
                         <td>Nonce</td>

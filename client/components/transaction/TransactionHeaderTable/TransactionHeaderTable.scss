@@ -24,6 +24,11 @@
       td {
         padding-top: 4px;
         padding-bottom: 4px;
+        .asset-icon {
+          width: 30px;
+          height: 30px;
+          border: 1px solid #eee;
+        }
       }
       td:first-child {
         width: 15%;
