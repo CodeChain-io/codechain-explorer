@@ -1,6 +1,6 @@
 import * as _ from "lodash";
 import { Client, SearchResponse } from "elasticsearch";
-import { Block, H256, AssetMintTransaction, ChangeShardState } from "codechain-sdk";
+import { Block, H256, AssetMintTransaction, ChangeShardState, AssetScheme } from "codechain-sdk";
 
 export class ElasticSearchAgent {
     private client: Client;
@@ -12,9 +12,9 @@ export class ElasticSearchAgent {
 
     public checkIndexOrCreate = async (): Promise<void> => {
         const mappingBlockJson = require("./elasticsearch/mapping_block.json");
-        const mappingAssetMintTransactionJson = require("./elasticsearch/mapping_asset_mint_transaction.json");
+        const mappingAssetSchemeJson = require("./elasticsearch/mapping_asset_scheme.json");
         const isMappingBlockExisted = await this.client.indices.exists({ index: "block" });
-        const isMappingAssetMintTransactionExisted = await this.client.indices.exists({ index: "asset_mint_transaction" });
+        const isMappingAssetSchemeExisted = await this.client.indices.exists({ index: "asset_scheme" });
         if (!isMappingBlockExisted) {
             await this.client.indices.create({
                 index: "block"
@@ -25,14 +25,14 @@ export class ElasticSearchAgent {
                 body: mappingBlockJson
             });
         }
-        if (!isMappingAssetMintTransactionExisted) {
+        if (!isMappingAssetSchemeExisted) {
             await this.client.indices.create({
-                index: "asset_mint_transaction"
+                index: "asset_scheme"
             });
             await this.client.indices.putMapping({
-                index: "asset_mint_transaction",
+                index: "asset_scheme",
                 type: "_doc",
-                body: mappingAssetMintTransactionJson
+                body: mappingAssetSchemeJson
             });
         }
     }
@@ -71,6 +71,27 @@ export class ElasticSearchAgent {
                 }
             }
         }).then((response: SearchResponse<any>) => {
+            if (response.hits.total === 0) {
+                return null;
+            }
+            return Block.fromJSON(response.hits.hits[0]._source);
+        });
+    }
+
+    public getBlockByHash = async (blockHash: H256): Promise<Block> => {
+        return this.search({
+            query: {
+                "bool": {
+                    "must": [
+                        { "match": { "_id": blockHash.value } },
+                        { "match": { "isRetracted": false } }
+                    ]
+                }
+            }
+        }).then((response: SearchResponse<any>) => {
+            if (response.hits.total === 0) {
+                return null;
+            }
             return Block.fromJSON(response.hits.hits[0]._source);
         });
     }
@@ -82,7 +103,18 @@ export class ElasticSearchAgent {
     }
 
     public retractBlock = async (blockHash: H256): Promise<void> => {
-        return this.update(blockHash, { "isRetracted": true }).then(() => {
+        const block = await this.getBlockByHash(blockHash);
+        _.each(block.parcels, (parcel) => {
+            if (parcel.unsigned.action instanceof ChangeShardState) {
+                _.each(parcel.unsigned.action.transactions, async (transaction) => {
+                    if (transaction instanceof AssetMintTransaction) {
+                        await this.updateAssetScheme(blockHash, { "isRetracted": true });
+                    }
+                });
+            }
+        });
+
+        return this.updateBlock(blockHash, { "isRetracted": true }).then(() => {
             console.log("%s block is retracted", blockHash.value);
         });
     }
@@ -101,19 +133,23 @@ export class ElasticSearchAgent {
         const blockDoc: any = block.toJSON();
         blockDoc.isRetracted = false;
 
-        // Index asset mint transaction with asset type for searching metadata by assetType
         _.each(block.parcels, (parcel) => {
             if (parcel.unsigned.action instanceof ChangeShardState) {
                 _.each(parcel.unsigned.action.transactions, async (transaction) => {
                     if (transaction instanceof AssetMintTransaction) {
                         try {
-                            const transactionDoc: any = transaction.toJSON();
-                            transactionDoc.isRetracted = false;
+                            const amount = transaction.toJSON().data.amount;
+                            const registrar = transaction.toJSON().data.registrar;
+                            const metadata = transaction.toJSON().data.metadata;
+
+                            const assetScheme = AssetScheme.fromJSON({ amount, registrar, metadata });
+                            const assetSchemeDoc: any = assetScheme.toJSON();
+                            assetSchemeDoc.isRetracted = false;
                             await this.client.index({
-                                index: "asset_mint_transaction",
+                                index: "asset_scheme",
                                 type: "_doc",
                                 id: transaction.getAssetSchemeAddress().value,
-                                body: transactionDoc,
+                                body: assetSchemeDoc,
                                 refresh: "wait_for"
                             })
                         } catch (e) {
@@ -135,11 +171,25 @@ export class ElasticSearchAgent {
         });
     }
 
-    private update(hash: H256, partial: any): Promise<any> {
+    private updateBlock(hash: H256, partial: any): Promise<any> {
         return this.client.update({
             index: "block",
             type: "_doc",
             id: hash.value,
+            refresh: "wait_for",
+            body: {
+                doc: partial
+            }
+        }).catch((err) => {
+            console.error('Elastic search update error %s', err);
+        });
+    }
+
+    private updateAssetScheme(assetType: H256, partial: any): Promise<any> {
+        return this.client.update({
+            index: "asset_type",
+            type: "_doc",
+            id: assetType.value,
             refresh: "wait_for",
             body: {
                 doc: partial

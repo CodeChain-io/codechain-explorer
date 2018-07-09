@@ -1,5 +1,5 @@
 import { Client, SearchResponse } from "elasticsearch";
-import { Block, SignedParcel, H256, H160, Transaction, SDK, ChangeShardState, AssetMintTransaction } from "codechain-sdk";
+import { Block, SignedParcel, H256, H160, Transaction, ChangeShardState, AssetScheme } from "codechain-sdk";
 import * as _ from "lodash";
 
 export class ElasticSearchAgent {
@@ -105,24 +105,6 @@ export class ElasticSearchAgent {
         });
     }
 
-    public getAssetMintTransactionByAssetType = async (assetType: H256): Promise<AssetMintTransaction> => {
-        return this.searchAssetMintTransaction({
-            query: {
-                "bool": {
-                    "must": [
-                        { "match": { "_id": assetType.value } },
-                        { "match": { "isRetracted": false } }
-                    ]
-                }
-            }
-        }).then((response: SearchResponse<any>) => {
-            if (response.hits.total === 0) {
-                return null;
-            }
-            return AssetMintTransaction.fromJSON(response.hits.hits[0]._source);
-        });
-    }
-
     public getBlock = async (blockNumber: number): Promise<Block> => {
         return this.searchBlock({
             query: {
@@ -153,9 +135,22 @@ export class ElasticSearchAgent {
         return null;
     }
 
-    public getAssetScheme = async (txHash: H256): Promise<any> => {
-        // TODO
-        return null;
+    public getAssetScheme = async (assetType: H256): Promise<AssetScheme> => {
+        return this.searchAssetScheme({
+            query: {
+                "bool": {
+                    "must": [
+                        { "match": { "_id": assetType.value } },
+                        { "match": { "isRetracted": false } }
+                    ]
+                }
+            }
+        }).then((response: SearchResponse<any>) => {
+            if (response.hits.total === 0) {
+                return null;
+            }
+            return AssetScheme.fromJSON(response.hits.hits[0]._source);
+        });
     }
 
     private searchBlock(body: any): Promise<void | SearchResponse<any>> {
@@ -168,9 +163,9 @@ export class ElasticSearchAgent {
         });
     }
 
-    private searchAssetMintTransaction(body: any): Promise<void | SearchResponse<any>> {
+    private searchAssetScheme(body: any): Promise<void | SearchResponse<any>> {
         return this.client.search({
-            index: "asset_mint_transaction",
+            index: "asset_scheme",
             type: "_doc",
             body
         }).catch((err) => {

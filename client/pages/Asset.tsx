@@ -45,14 +45,14 @@ class Asset extends React.Component<Props, State> {
         const { match: { params: { type } } } = this.props;
         const { notFound, assetScheme } = this.state;
         if (notFound) {
-            return <div><Container>Asset not exist for txhash: {type}</Container></div>
+            return <div><Container>Asset not exist for type: {type}</Container></div>
         }
         return (
             <div>
                 <Container>
                     {assetScheme
                         ? <div><AssetScheme assetScheme={assetScheme} /></div>
-                        : <div><RequestAssetScheme txhash={type} onAssetScheme={this.onAssetScheme} onNotFound={this.onAssetSchemeNotFound} onError={this.onError} /></div>}
+                        : <div><RequestAssetScheme assetType={type} onAssetScheme={this.onAssetScheme} onNotFound={this.onAssetSchemeNotFound} onError={this.onError} /></div>}
                     <hr />
                     <div>{/* FIXME: RequestAssetTransactions */}</div>
                 </Container>

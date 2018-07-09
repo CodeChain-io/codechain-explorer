@@ -75,13 +75,6 @@ export function createApiRouter(context: ServerContext, useCors = false) {
         }).catch(next);
     })
 
-    router.get("/mintTx/:assetType", async (req, res, next) => {
-        const { assetType } = req.params;
-        context.db.getAssetMintTransactionByAssetType(new H256(assetType)).then(transaction => {
-            res.send(transaction === null ? JSON.stringify(null) : transaction.toJSON());
-        }).catch(next);
-    })
-
     router.post("/parcel/signed", async (req, res, next) => {
         const parcel = SignedParcel.fromJSON(req.body);
         context.codechainSdk.sendSignedParcel(parcel).then(hash => {
@@ -131,11 +124,9 @@ export function createApiRouter(context: ServerContext, useCors = false) {
         }).catch(next);
     });
 
-    // FIXME: Change to use asset type instead of txhash. It requires codechain and
-    // sdk to be changed also
-    router.get("/asset/:txhash", async (req, res, next) => {
-        const { txhash } = req.params;
-        context.db.getAssetScheme(new H256(txhash)).then(assetScheme => {
+    router.get("/asset/:assetType", async (req, res, next) => {
+        const { assetType } = req.params;
+        context.db.getAssetScheme(new H256(assetType)).then(assetScheme => {
             res.send(assetScheme === null ? JSON.stringify(null) : assetScheme.toJSON());
         }).catch(next);
     });
