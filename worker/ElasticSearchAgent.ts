@@ -1,5 +1,6 @@
+import * as _ from "lodash";
 import { Client, SearchResponse } from "elasticsearch";
-import { Block, H256 } from "codechain-sdk";
+import { Block, H256, AssetMintTransaction, ChangeShardState } from "codechain-sdk";
 
 export class ElasticSearchAgent {
     private client: Client;
@@ -10,16 +11,28 @@ export class ElasticSearchAgent {
     }
 
     public checkIndexOrCreate = async (): Promise<void> => {
-        const mappingJson = require("./elasticsearch/mapping.json");
-        const isIndexExisted = await this.client.indices.exists({ index: "block" });
-        if (!isIndexExisted) {
+        const mappingBlockJson = require("./elasticsearch/mapping_block.json");
+        const mappingAssetMintTransactionJson = require("./elasticsearch/mapping_asset_mint_transaction.json");
+        const isMappingBlockExisted = await this.client.indices.exists({ index: "block" });
+        const isMappingAssetMintTransactionExisted = await this.client.indices.exists({ index: "asset_mint_transaction" });
+        if (!isMappingBlockExisted) {
             await this.client.indices.create({
                 index: "block"
             });
             await this.client.indices.putMapping({
                 index: "block",
                 type: "_doc",
-                body: mappingJson
+                body: mappingBlockJson
+            });
+        }
+        if (!isMappingAssetMintTransactionExisted) {
+            await this.client.indices.create({
+                index: "asset_mint_transaction"
+            });
+            await this.client.indices.putMapping({
+                index: "asset_mint_transaction",
+                type: "_doc",
+                body: mappingAssetMintTransactionJson
             });
         }
     }
@@ -84,9 +97,31 @@ export class ElasticSearchAgent {
         });
     }
 
-    private index(block: Block): Promise<any> {
+    private index = async (block: Block): Promise<any> => {
         const blockDoc: any = block.toJSON();
         blockDoc.isRetracted = false;
+
+        // Index asset mint transaction with asset type for searching metadata by assetType
+        _.each(block.parcels, (parcel) => {
+            if (parcel.unsigned.action instanceof ChangeShardState) {
+                _.each(parcel.unsigned.action.transactions, async (transaction) => {
+                    if (transaction instanceof AssetMintTransaction) {
+                        try {
+                            await this.client.index({
+                                index: "asset_mint_transaction",
+                                type: "_doc",
+                                id: transaction.getAssetSchemeAddress().value,
+                                body: transaction.toJSON(),
+                                refresh: "wait_for"
+                            })
+                        } catch (e) {
+                            console.error('Elastic search index error %s', e);
+                        }
+                    }
+                });
+            }
+        });
+
         return this.client.index({
             index: "block",
             type: "_doc",
