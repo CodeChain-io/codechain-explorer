@@ -14,8 +14,8 @@ export interface RootState {
     transactionByHash: {
         [hash: string]: Transaction;
     }
-    assetSchemeByTxhash: {
-        [txhash: string]: AssetScheme;
+    assetSchemeByAssetType: {
+        [assetType: string]: AssetScheme;
     };
 }
 
@@ -24,7 +24,7 @@ const initialState: RootState = {
     blocksByNumber: {},
     blocksByHash: {},
     parcelByHash: {},
-    assetSchemeByTxhash: {},
+    assetSchemeByAssetType: {},
     transactionByHash: {}
 };
 
@@ -51,7 +51,7 @@ interface CacheTransactionAction {
 interface CacheAssetSchemeAction {
     type: "CACHE_ASSET_SCHEME";
     data: {
-        txhash: string;
+        assetType: string;
         assetScheme: AssetScheme;
     };
 }
@@ -75,9 +75,9 @@ export const rootReducer = (state = initialState, action: Action) => {
         const transactionByHash = { ...state.transactionByHash, [transaction.hash().value]: transaction };
         return { ...state, transactionByHash };
     } else if (action.type === "CACHE_ASSET_SCHEME") {
-        const { txhash, assetScheme } = (action as CacheAssetSchemeAction).data;
-        const assetSchemeByTxhash = { ...state.assetSchemeByTxhash, [txhash]: assetScheme };
-        return { ...state, assetSchemeByTxhash };
+        const { assetType, assetScheme } = (action as CacheAssetSchemeAction).data;
+        const assetSchemeByAssetType = { ...state.assetSchemeByAssetType, [assetType]: assetScheme };
+        return { ...state, assetSchemeByAssetType };
     } else {
         return state;
     }

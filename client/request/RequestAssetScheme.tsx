@@ -7,7 +7,7 @@ import { apiRequest, ApiError } from "./ApiRequest";
 import { RootState } from "../redux/actions";
 
 interface OwnProps {
-    txhash: string;
+    assetType: string;
     onAssetScheme: (s: AssetScheme) => void;
     onNotFound: () => void;
     onError: (e: ApiError) => void;
@@ -25,12 +25,12 @@ type Props = OwnProps & StateProps & DispatchProps;
 
 class RequestAssetSchemeInternal extends React.Component<Props> {
     public componentWillMount() {
-        const { cached, dispatch, txhash, onAssetScheme, onNotFound, onError } = this.props;
+        const { cached, dispatch, assetType, onAssetScheme, onNotFound, onError } = this.props;
         if (cached) {
             setTimeout(() => onAssetScheme(cached));
             return
         }
-        apiRequest({ path: `asset/${txhash}` }).then((response: object) => {
+        apiRequest({ path: `asset/${assetType}` }).then((response: object) => {
             if (response === null) {
                 return onNotFound();
             }
@@ -38,7 +38,7 @@ class RequestAssetSchemeInternal extends React.Component<Props> {
             dispatch({
                 type: "CACHE_ASSET_SCHEME",
                 data: {
-                    txhash,
+                    assetType,
                     assetScheme
                 }
             });
@@ -53,7 +53,7 @@ class RequestAssetSchemeInternal extends React.Component<Props> {
 
 const RequestAssetScheme = connect((state: RootState, props: OwnProps) => {
     return {
-        cached: state.assetSchemeByTxhash[props.txhash]
+        cached: state.assetSchemeByAssetType[props.assetType]
     };
 })(RequestAssetSchemeInternal);
 
