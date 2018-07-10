@@ -3,6 +3,7 @@ import * as React from "react";
 import { SignedParcel, Payment, SetRegularKey, ChangeShardState } from "codechain-sdk";
 
 import "./ParcelHeaderTable.scss"
+import HexString from "../../util/HexString/HexString";
 
 interface Props {
     parcel: SignedParcel;
@@ -16,7 +17,7 @@ const getParcelElement = (parcel: SignedParcel) => {
                     Sender
                 </td>
                 <td>
-                    0x{parcel.getSender().value}
+                    <HexString text={parcel.getSender().value} />
                 </td>
             </tr>,
             <tr className="custom-row" key="parcel-header-table-payment-receiver">
@@ -24,7 +25,7 @@ const getParcelElement = (parcel: SignedParcel) => {
                     Receiver
                 </td>
                 <td>
-                    0x{parcel.unsigned.action.receiver.value}
+                    <HexString text={parcel.unsigned.action.receiver.value} />
                 </td>
             </tr>,
             <tr className="custom-row" key="parcel-header-table-payment-amount">
@@ -42,7 +43,7 @@ const getParcelElement = (parcel: SignedParcel) => {
                 Key
             </td>
             <td>
-                0x{parcel.unsigned.action.key.value}
+                <HexString text={parcel.unsigned.action.key.value} />
             </td>
         </tr>;
     } else if (parcel.unsigned.action instanceof ChangeShardState) {
@@ -65,7 +66,7 @@ const ParcelHeaderTable = (props: Props) => {
             <tbody>
                 <tr>
                     <td>Hash</td>
-                    <td>0x{parcel.hash().value}</td>
+                    <td><HexString text={parcel.hash().value} /></td>
                 </tr>
                 <tr>
                     <td>Network ID</td>
@@ -85,7 +86,7 @@ const ParcelHeaderTable = (props: Props) => {
                 </tr>
                 <tr>
                     <td>Signer</td>
-                    <td>0x{parcel.getSender().value}</td>
+                    <td><HexString text={parcel.getSender().value} /></td>
                 </tr>
                 <tr>
                     <td>Fee</td>

@@ -2,7 +2,7 @@ import * as React from "react";
 import * as _ from "lodash"
 import { connect, Dispatch } from "react-redux";
 
-import { Block, ChangeShardState } from "codechain-sdk";
+import { Block, ChangeShardState, H256 } from "codechain-sdk";
 
 import { apiRequest } from "./ApiRequest";
 import { RootState } from "../redux/actions";
@@ -58,12 +58,29 @@ class RequestBlockInternal extends React.Component<OwnProps & StateProps & Dispa
     }
 }
 
+function isString(x: number | string): x is string {
+    return typeof x === "string";
+}
+
 const RequestBlock = connect((state: RootState, props: OwnProps) => {
     const { blocksByHash, blocksByNumber } = state;
     const { id } = props;
-    return {
-        cached: blocksByNumber[id] || blocksByHash[id]
-    };
+    if (isString(id)) {
+        if (id.length === 66 || id.length === 64) {
+            return {
+                cached: blocksByHash[new H256(id).value]
+            };
+        } else {
+            return {
+                cached: blocksByNumber[id] || blocksByHash[id]
+            };
+        }
+    } else {
+        return {
+            cached: blocksByNumber[id] || blocksByHash[id]
+        };
+    }
+
 })(RequestBlockInternal);
 
 export default RequestBlock;

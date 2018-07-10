@@ -2,11 +2,11 @@ import * as React from "react";
 import * as _ from "lodash";
 import * as moment from "moment";
 import { Table } from 'reactstrap';
-import { Link } from "react-router-dom";
 
 import { Block, ChangeShardState, AssetMintTransaction, AssetTransferTransaction } from "codechain-sdk";
 
 import './LatestTransactions.scss';
+import HexString from "../../util/HexString/HexString";
 
 interface Props {
     blocksByNumber: {
@@ -39,10 +39,10 @@ const LatestTransactions = (props: Props) => {
                                     return _.map(transactions, (transaction) => {
                                         return (
                                             <tr key={`home-transaction-hash-${transaction.hash().value}`}>
-                                                <th scope="row"><Link to={`/tx/${transaction.hash().value}`}>0x{transaction.hash().value.slice(0, 10)}...</Link></th>
-                                                <td><Link to={`/parcel/${parcel.hash().value}`}>0x{parcel.hash().value.slice(0, 10)}...</Link></td>
+                                                <th scope="row"><HexString link={`/tx/0x${transaction.hash().value}`} length={10} text={transaction.hash().value} /></th>
+                                                <td><HexString link={`/parcel/${parcel.hash().value}`} text={parcel.hash().value} length={10} /></td>
                                                 <td>{transaction.toJSON().type}</td>
-                                                <td>{transaction instanceof AssetMintTransaction ? "0x" + transaction.getAssetSchemeAddress().value.slice(0, 10) + '...' : (transaction instanceof AssetTransferTransaction ? _.reduce(transaction.toJSON().data.inputs, (memo, input) => ("0x" + input.prevOut.assetType.slice(0, 10) + "..." + " " + memo), "") : "")}</td>
+                                                <td>{transaction instanceof AssetMintTransaction ? <HexString text={transaction.getAssetSchemeAddress().value} length={10} /> : (transaction instanceof AssetTransferTransaction ? _.reduce(transaction.toJSON().data.inputs, (memo, input) => (<HexString text={input.prevOut.assetType} length={10} /> + " " + memo), "") : "")}</td>
                                                 <td>{transaction instanceof AssetMintTransaction ? transaction.toJSON().data.amount : (transaction instanceof AssetTransferTransaction ? _.sumBy(transaction.toJSON().data.inputs, (input) => input.prevOut.amount) : "")}</td>
                                                 <td>{moment.unix(block.timestamp).fromNow()}</td>
                                             </tr>

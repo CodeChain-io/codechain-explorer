@@ -1,10 +1,10 @@
 import * as React from "react";
 import * as _ from "lodash";
-import { Link } from "react-router-dom";
 
 import { Transaction, AssetTransferTransaction, AssetMintTransaction } from "codechain-sdk";
 
 import "./TransactionHeaderTable.scss"
+import HexString from "../../util/HexString/HexString";
 
 interface Props {
     transaction: Transaction;
@@ -33,7 +33,7 @@ const TransactionHeaderTable = (props: Props) => {
                 <tbody>
                     <tr>
                         <td>Hash</td>
-                        <td>0x{transaction.hash().value}</td>
+                        <td><HexString text={transaction.hash().value} /></td>
                     </tr>
                     <tr>
                         <td>NetworkID</td>
@@ -55,7 +55,7 @@ const TransactionHeaderTable = (props: Props) => {
                                         <tbody>
                                             <tr>
                                                 <td>AssetType</td>
-                                                <td>0x{input.prevOut.assetType}</td>
+                                                <td><HexString text={input.prevOut.assetType} /></td>
                                             </tr>
                                             <tr>
                                                 <td>Owner</td>
@@ -75,7 +75,7 @@ const TransactionHeaderTable = (props: Props) => {
                                             </tr>
                                             <tr>
                                                 <td>Prev Tx</td>
-                                                <td><Link to={`/tx/${input.prevOut.transactionHash}`}>0x{input.prevOut.transactionHash}</Link></td>
+                                                <td><HexString link={`/tx/0x${input.prevOut.transactionHash}`} text={input.prevOut.transactionHash} /></td>
                                             </tr>
                                             <tr>
                                                 <td>Index</td>
@@ -98,7 +98,7 @@ const TransactionHeaderTable = (props: Props) => {
                                         <tbody>
                                             <tr>
                                                 <td>AssetType</td>
-                                                <td>0x{output.assetType}</td>
+                                                <td><HexString text={output.assetType} /></td>
                                             </tr>
                                             <tr>
                                                 <td>Owner</td>
@@ -110,7 +110,7 @@ const TransactionHeaderTable = (props: Props) => {
                                             </tr>
                                             <tr>
                                                 <td>LockScript</td>
-                                                <td>0x{output.lockScriptHash}</td>
+                                                <td><HexString text={output.lockScriptHash} /></td>
                                             </tr>
                                             <tr>
                                                 <td>Parameters</td>
@@ -173,7 +173,7 @@ const TransactionHeaderTable = (props: Props) => {
                     </tr>
                     <tr>
                         <td>AssetType</td>
-                        <td>0x{transaction.getAssetSchemeAddress().value}</td>
+                        <td><HexString text={transaction.getAssetSchemeAddress().value} /></td>
                     </tr>
                     <tr>
                         <td>Amount</td>
@@ -181,7 +181,7 @@ const TransactionHeaderTable = (props: Props) => {
                     </tr>
                     <tr>
                         <td>LockScriptHash</td>
-                        <td>0x{transaction.toJSON().data.lockScriptHash}</td>
+                        <td><HexString text={transaction.toJSON().data.lockScriptHash} /></td>
                     </tr>
                     <tr>
                         <td>Parameters</td>

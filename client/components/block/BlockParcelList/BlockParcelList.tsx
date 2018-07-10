@@ -1,9 +1,9 @@
 import * as React from "react";
-import { Link } from "react-router-dom";
 
 import { SignedParcel, ChangeShardState, Payment, SetRegularKey } from "codechain-sdk";
 
 import "./BlockParcelList.scss"
+import HexString from "../../util/HexString/HexString";
 
 interface Props {
     parcels: SignedParcel[];
@@ -13,7 +13,7 @@ const ParcelObject = (parcel: SignedParcel) => {
     if (parcel.unsigned.action instanceof Payment) {
         return [<tr key="first">
             <td>Receiver</td>
-            <td>0x{parcel.unsigned.action.receiver.value}</td>
+            <td><HexString text={parcel.unsigned.action.receiver.value} /></td>
         </tr>, <tr key="second">
             <td>Amount</td>
             <td>{parcel.unsigned.action.value.value.toString()}</td>
@@ -27,7 +27,7 @@ const ParcelObject = (parcel: SignedParcel) => {
     } else if (parcel.unsigned.action instanceof SetRegularKey) {
         return <tr>
             <td>Key</td>
-            <td>0x{parcel.unsigned.action.key.value}</td>
+            <td><HexString text={parcel.unsigned.action.key.value} /></td>
         </tr>
     }
     return null;
@@ -43,7 +43,7 @@ const BlockParcelList = (props: Props) => {
                 <tbody>
                     <tr>
                         <td>Hash</td>
-                        <td><Link to={`/parcel/${hash}`}>0x{hash}</Link></td>
+                        <td><HexString link={`/parcel/0x${hash}`} text={hash} /></td>
                     </tr>
                     <tr>
                         <td>Type</td>
@@ -55,7 +55,7 @@ const BlockParcelList = (props: Props) => {
                     </tr>
                     <tr>
                         <td>Signer</td>
-                        <td>0x{parcel.getSender().value}</td>
+                        <td><HexString link={`/address/0x${parcel.getSender().value}`} text={parcel.getSender().value} /></td>
                     </tr>
                     {ParcelObject(parcel)}
                 </tbody>

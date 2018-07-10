@@ -1,10 +1,10 @@
 import * as React from "react";
 import * as _ from "lodash";
-import { Link } from "react-router-dom";
 
 import { Block, ChangeShardState } from "codechain-sdk";
 
 import "./BlockHeaderTable.scss"
+import HexString from "../../util/HexString/HexString";
 
 interface Props {
     block: Block;
@@ -19,11 +19,11 @@ const BlockHeaderTable = (props: Props) => {
             <tbody>
                 <tr>
                     <td>Hash</td>
-                    <td>0x{hash.value}</td>
+                    <td><HexString text={hash.value} /></td>
                 </tr>
                 <tr>
                     <td>Parent Block Hash</td>
-                    <td><Link to={`/block/${parentHash.value}`}>0x{parentHash.value}</Link></td>
+                    <td><HexString link={`/block/0x${parentHash.value}`} text={parentHash.value} /></td>
                 </tr>
                 <tr>
                     <td>Timestamp</td>
@@ -31,19 +31,19 @@ const BlockHeaderTable = (props: Props) => {
                 </tr>
                 <tr>
                     <td>Author</td>
-                    <td>0x{author.value}</td>
+                    <td><HexString link={`/address/0x${author.value}`} text={author.value} /></td>
                 </tr>
                 <tr>
                     <td>Parcels Root</td>
-                    <td>0x{parcelsRoot.value}</td>
+                    <td><HexString text={parcelsRoot.value} /></td>
                 </tr>
                 <tr>
                     <td>Invoices Root</td>
-                    <td>0x{invoicesRoot.value}</td>
+                    <td><HexString text={invoicesRoot.value} /></td>
                 </tr>
                 <tr>
                     <td>State Root</td>
-                    <td>0x{stateRoot.value}</td>
+                    <td><HexString text={stateRoot.value} /></td>
                 </tr>
                 <tr>
                     <td>Extra Data</td>

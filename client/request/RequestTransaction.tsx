@@ -1,6 +1,6 @@
 import * as React from "react";
 import { connect, Dispatch } from "react-redux";
-import { Transaction, SDK } from "codechain-sdk";
+import { Transaction, SDK, H256 } from "codechain-sdk";
 
 import { RootState } from "../redux/actions";
 import { ApiError, apiRequest } from "./ApiRequest";
@@ -48,6 +48,9 @@ class RequestTransactionInternal extends React.Component<Props> {
 }
 
 const RequestTransaction = connect((state: RootState, props: OwnProps) => {
+    if (props.hash.length === 66 || props.hash.length === 64) {
+        return { cached: state.transactionByHash[new H256(props.hash).value] };
+    }
     return { cached: state.transactionByHash[props.hash] };
 }, (dispatch: Dispatch) => ({ dispatch }))(RequestTransactionInternal);
 

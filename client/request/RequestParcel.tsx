@@ -1,6 +1,6 @@
 import * as React from "react";
 import { connect, Dispatch } from "react-redux";
-import { SignedParcel } from "codechain-sdk";
+import { SignedParcel, H256 } from "codechain-sdk";
 
 import { RootState } from "../redux/actions";
 import { ApiError, apiRequest } from "./ApiRequest";
@@ -48,6 +48,9 @@ class RequestParcelInternal extends React.Component<Props> {
 }
 
 const RequestParcel = connect((state: RootState, props: OwnProps) => {
+    if (props.hash.length === 66 || props.hash.length === 64) {
+        return { cached: state.parcelByHash[new H256(props.hash).value] };
+    }
     return { cached: state.parcelByHash[props.hash] };
 }, (dispatch: Dispatch) => ({ dispatch }))(RequestParcelInternal);
 

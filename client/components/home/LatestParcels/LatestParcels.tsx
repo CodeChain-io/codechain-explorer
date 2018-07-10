@@ -7,6 +7,7 @@ import { Link } from "react-router-dom";
 import { Block } from "codechain-sdk";
 
 import './LatestParcels.scss';
+import HexString from "../../util/HexString/HexString";
 
 interface Props {
     blocksByNumber: {
@@ -36,10 +37,10 @@ const LatestParcels = (props: Props) => {
                             return _.map(block.parcels, (parcel) => {
                                 return (
                                     <tr key={`home-parcel-${parcel.hash().value}`}>
-                                        <th scope="row"><Link to={`/parcel/${parcel.hash().value}`}>0x{parcel.hash().value.slice(0, 10)}...</Link></th>
+                                        <th scope="row"><HexString link={`/parcel/0x${parcel.hash().value}`} text={parcel.hash().value} length={10} /></th>
                                         <td><Link to={`/block/${parcel.blockNumber}`}>{parcel.blockNumber}</Link></td>
                                         <td>{parcel.unsigned.action.toJSON().action}</td>
-                                        <td>0x{parcel.getSender().value.slice(0, 10)}...</td>
+                                        <td><HexString text={parcel.getSender().value} length={10} /></td>
                                         <td>{parcel.unsigned.fee.value.toString(10)}</td>
                                         <td>{moment.unix(block.timestamp).fromNow()}</td>
                                     </tr>

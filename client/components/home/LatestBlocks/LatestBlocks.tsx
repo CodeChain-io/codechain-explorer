@@ -7,6 +7,7 @@ import { Link } from "react-router-dom";
 import { Block } from "codechain-sdk";
 
 import './LatestBlocks.scss';
+import HexString from "../../util/HexString/HexString";
 
 interface Props {
     blocksByNumber: {
@@ -41,7 +42,7 @@ const LatestBlocks = (props: Props) => {
                                         const txCount = action.transactions ? action.transactions.length : 0;
                                         return memo + txCount;
                                     }, 0)}</td>
-                                    <td>0x{block.author.value.slice(0, 10)}...</td>
+                                    <td><HexString text={block.author.value} length={10} /></td>
                                     <td>{moment.unix(block.timestamp).fromNow()}</td>
                                 </tr>
                             );

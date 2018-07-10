@@ -1,10 +1,10 @@
 import * as React from "react";
 import * as _ from "lodash";
-import { Link } from "react-router-dom";
 
 import { Transaction, AssetMintTransaction, AssetTransferTransaction } from "codechain-sdk";
 
 import "./ParcelTransactionList.scss"
+import HexString from "../../util/HexString/HexString";
 
 interface Props {
     transactions: Transaction[];
@@ -50,7 +50,7 @@ const ParcelTransactionList = (props: Props) => {
                 <tbody>
                     <tr>
                         <td>Hash</td>
-                        <td><Link to={`/tx/${hash}`}>0x{hash}</Link></td>
+                        <td><HexString link={`/tx/0x${hash}`} text={hash} /></td>
                     </tr>
                     <tr>
                         <td>Type</td>
