@@ -2,7 +2,7 @@ import * as React from "react";
 import { match } from "react-router";
 import { Container } from 'reactstrap';
 
-import { Transaction as TransactionType } from "codechain-sdk/lib";
+import { Transaction as TransactionType } from "codechain-sdk/lib/core/classes";
 
 import { RequestTransaction } from "../request";
 import TransactionDetails from "../components/transaction/TransactionDetails/TransactionDetails";

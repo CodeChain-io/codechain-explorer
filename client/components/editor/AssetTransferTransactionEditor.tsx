@@ -1,6 +1,6 @@
 import * as React from "react";
 
-import { AssetTransferTransaction } from "codechain-sdk/lib";
+import { AssetTransferTransaction } from "codechain-sdk/lib/core/classes";
 
 import AssetTransferInputListEditor from "./AssetTransferInputListEditor";
 

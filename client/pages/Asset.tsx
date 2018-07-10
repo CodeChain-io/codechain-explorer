@@ -3,7 +3,7 @@ import { match } from "react-router";
 import { Container } from 'reactstrap';
 
 import { RequestAssetScheme } from "../request";
-import { AssetScheme as CoreAssetScheme } from "codechain-sdk";
+import { AssetScheme as CoreAssetScheme } from "codechain-sdk/lib/core/classes";
 
 interface Props {
     match: match<{ type: string }>;

@@ -1,7 +1,7 @@
 import * as React from "react";
 import * as _ from "lodash";
 
-import { Transaction, AssetTransferTransaction, AssetMintTransaction } from "codechain-sdk";
+import { Transaction, AssetTransferTransaction, AssetMintTransaction } from "codechain-sdk/lib/core/classes";
 
 import "./TransactionHeaderTable.scss"
 import HexString from "../../util/HexString/HexString";

@@ -1,4 +1,5 @@
-import { Block, SDK } from "codechain-sdk";
+import { Block } from "codechain-sdk/lib/core/classes";
+import { SDK } from "codechain-sdk";
 
 export class CodeChainAgent {
     private sdk: SDK;
@@ -7,11 +8,11 @@ export class CodeChainAgent {
     }
 
     public getLastBlockNumber = async (): Promise<number> => {
-        return this.sdk.getBestBlockNumber();
+        return this.sdk.rpc.chain.getBestBlockNumber();
     }
 
     public getBlock = async (blockNumber): Promise<Block> => {
-        const blockHash = await this.sdk.getBlockHash(blockNumber);
-        return this.sdk.getBlock(blockHash);
+        const blockHash = await this.sdk.rpc.chain.getBlockHash(blockNumber);
+        return this.sdk.rpc.chain.getBlock(blockHash);
     }
 }

@@ -1,6 +1,6 @@
 import * as React from "react";
 
-import { SignedParcel, Payment, SetRegularKey, ChangeShardState } from "codechain-sdk";
+import { SignedParcel, Payment, SetRegularKey, ChangeShardState } from "codechain-sdk/lib/core/classes";
 
 import "./ParcelHeaderTable.scss"
 import HexString from "../../util/HexString/HexString";
@@ -33,7 +33,7 @@ const getParcelElement = (parcel: SignedParcel) => {
                     Amount
                 </td>
                 <td>
-                    {parcel.unsigned.action.value.value.toString()}
+                    {parcel.unsigned.action.amount.value.toString()}
                 </td>
             </tr>
         ];

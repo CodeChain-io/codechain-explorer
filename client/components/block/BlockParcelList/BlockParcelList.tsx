@@ -1,6 +1,6 @@
 import * as React from "react";
 
-import { SignedParcel, ChangeShardState, Payment, SetRegularKey } from "codechain-sdk";
+import { SignedParcel, ChangeShardState, Payment, SetRegularKey } from "codechain-sdk/lib/core/classes";
 
 import "./BlockParcelList.scss"
 import HexString from "../../util/HexString/HexString";
@@ -16,7 +16,7 @@ const ParcelObject = (parcel: SignedParcel) => {
             <td><HexString text={parcel.unsigned.action.receiver.value} /></td>
         </tr>, <tr key="second">
             <td>Amount</td>
-            <td>{parcel.unsigned.action.value.value.toString()}</td>
+            <td>{parcel.unsigned.action.amount.value.toString()}</td>
         </tr>
         ]
     } else if (parcel.unsigned.action instanceof ChangeShardState) {

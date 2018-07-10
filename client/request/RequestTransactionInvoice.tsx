@@ -1,6 +1,6 @@
 import * as React from "react";
 
-import { Invoice } from "codechain-sdk";
+import { Invoice } from "codechain-sdk/lib/core/classes";
 
 import { apiRequest, ApiError } from "./ApiRequest";
 

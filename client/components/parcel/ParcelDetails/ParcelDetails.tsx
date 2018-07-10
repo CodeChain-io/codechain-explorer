@@ -1,6 +1,6 @@
 import * as React from "react";
 
-import { SignedParcel, ChangeShardState } from "codechain-sdk";
+import { SignedParcel, ChangeShardState } from "codechain-sdk/lib/core/classes";
 
 import ParcelHeaderTable from "../ParcelHeaderTable/ParcelHeaderTable";
 import ParcelTransactionList from "../ParcelTransactionList/ParcelTransactionList";

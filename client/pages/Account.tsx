@@ -2,7 +2,7 @@ import * as React from "react";
 import { match } from "react-router";
 import { Container } from 'reactstrap';
 
-import { U256 } from "codechain-sdk/lib"
+import { U256 } from "codechain-sdk/lib/core/classes"
 
 import { RequestAccount } from "../request";
 

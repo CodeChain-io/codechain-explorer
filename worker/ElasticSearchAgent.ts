@@ -1,6 +1,6 @@
 import * as _ from "lodash";
 import { Client, SearchResponse } from "elasticsearch";
-import { Block, H256, AssetMintTransaction, ChangeShardState, AssetScheme } from "codechain-sdk";
+import { Block, H256, AssetMintTransaction, ChangeShardState, AssetScheme } from "codechain-sdk/lib/core/classes";
 
 export class ElasticSearchAgent {
     private client: Client;

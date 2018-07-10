@@ -1,6 +1,6 @@
 import * as React from "react";
 import { connect, Dispatch } from "react-redux";
-import { SignedParcel, H256 } from "codechain-sdk";
+import { SignedParcel, H256 } from "codechain-sdk/lib/core/classes";
 
 import { RootState } from "../redux/actions";
 import { ApiError, apiRequest } from "./ApiRequest";

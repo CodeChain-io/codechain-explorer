@@ -1,7 +1,7 @@
 import * as cors from 'cors';
 import * as express from 'express';
 
-import { H256, H160, SignedParcel } from "codechain-sdk";
+import { H256, H160, SignedParcel } from "codechain-sdk/lib/core/classes";
 
 import { ServerContext } from './ServerContext';
 
@@ -23,7 +23,7 @@ export function createApiRouter(context: ServerContext, useCors = false) {
     router.get("/ping", async (req, res, next) => {
         try {
             await context.db.ping();
-            const codechainResponse = await context.codechainSdk.ping();
+            const codechainResponse = await context.codechainSdk.rpc.node.ping();
             res.send(JSON.stringify(codechainResponse));
         } catch (e) {
             next(e);
@@ -56,7 +56,7 @@ export function createApiRouter(context: ServerContext, useCors = false) {
     });
 
     router.get("/parcel/pending", async (req, res, next) => {
-        context.codechainSdk.getPendingParcels().then(parcels => {
+        context.codechainSdk.rpc.chain.getPendingParcels().then(parcels => {
             res.send(parcels.map(p => p.toJSON()));
         }).catch(next);
     });
@@ -77,7 +77,7 @@ export function createApiRouter(context: ServerContext, useCors = false) {
 
     router.post("/parcel/signed", async (req, res, next) => {
         const parcel = SignedParcel.fromJSON(req.body);
-        context.codechainSdk.sendSignedParcel(parcel).then(hash => {
+        context.codechainSdk.rpc.chain.sendSignedParcel(parcel).then(hash => {
             res.send(JSON.stringify(hash.value));
         }).catch(e => {
             const { code, message } = e;

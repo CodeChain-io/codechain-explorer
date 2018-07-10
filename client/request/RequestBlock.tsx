@@ -2,7 +2,7 @@ import * as React from "react";
 import * as _ from "lodash"
 import { connect, Dispatch } from "react-redux";
 
-import { Block, ChangeShardState, H256 } from "codechain-sdk";
+import { Block, ChangeShardState, H256 } from "codechain-sdk/lib/core/classes";
 
 import { apiRequest } from "./ApiRequest";
 import { RootState } from "../redux/actions";

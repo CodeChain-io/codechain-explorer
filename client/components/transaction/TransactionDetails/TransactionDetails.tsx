@@ -1,6 +1,6 @@
 import * as React from "react";
 
-import { Transaction } from "codechain-sdk";
+import { Transaction } from "codechain-sdk/lib/core/classes";
 
 import TransactionHeaderTable from "../TransactionHeaderTable/TransactionHeaderTable";
 

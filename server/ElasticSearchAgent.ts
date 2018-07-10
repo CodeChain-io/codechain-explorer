@@ -1,5 +1,5 @@
 import { Client, SearchResponse } from "elasticsearch";
-import { Block, SignedParcel, H256, H160, Transaction, ChangeShardState, AssetScheme } from "codechain-sdk";
+import { Block, SignedParcel, H256, H160, Transaction, ChangeShardState, AssetScheme } from "codechain-sdk/lib/core/classes";
 import * as _ from "lodash";
 
 export class ElasticSearchAgent {

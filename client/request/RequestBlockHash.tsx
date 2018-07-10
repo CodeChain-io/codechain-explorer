@@ -1,6 +1,6 @@
 import * as React from "react";
 
-import { H256 } from "codechain-sdk";
+import { H256 } from "codechain-sdk/lib/core/classes";
 
 import { ApiError, apiRequest } from "./ApiRequest";
 

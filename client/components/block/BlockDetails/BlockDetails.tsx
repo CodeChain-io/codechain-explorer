@@ -1,6 +1,6 @@
 import * as React from "react";
 
-import { Block } from "codechain-sdk";
+import { Block } from "codechain-sdk/lib/core/classes";
 
 import BlockParcelList from "../BlockParcelList/BlockParcelList";
 import BlockHeaderTable from "../BlockHeaderTable/BlockHeaderTable";

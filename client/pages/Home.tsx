@@ -2,7 +2,7 @@ import * as React from 'react';
 import * as _ from "lodash";
 import { RequestBlockNumber, RequestBlock } from '../request';
 import { Container, Row, Col } from 'reactstrap';
-import { Block } from 'codechain-sdk';
+import { Block } from "codechain-sdk/lib/core/classes";
 import LatestBlocks from '../components/home/LatestBlocks/LatestBlocks';
 import LatestParcels from '../components/home/LatestParcels/LatestParcels';
 import LatestTransactions from '../components/home/LatestTransactions/LatestTransactions';

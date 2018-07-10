@@ -1,6 +1,6 @@
 import * as React from "react";
 
-import { Transaction } from "codechain-sdk/lib";
+import { Transaction } from "codechain-sdk/lib/core/classes";
 import AssetMintTransactionEditor from "./AssetMintTransactionEditor";
 import AssetTransferTransactionEditor from "./AssetTransferTransactionEditor";
 

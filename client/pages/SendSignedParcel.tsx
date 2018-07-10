@@ -1,6 +1,6 @@
 import * as React from "react";
 
-import { Parcel, U256, H256, Transaction, AssetMintTransaction } from "codechain-sdk"
+import { Parcel, U256, H256, Transaction, AssetMintTransaction } from "codechain-sdk/lib/core/classes"
 import { RequestSendSignedParcel } from "../request/RequestSendSignedParcel";
 import TransactionEditor from "../components/editor/TransactionEditor";
 import { Link } from "react-router-dom";

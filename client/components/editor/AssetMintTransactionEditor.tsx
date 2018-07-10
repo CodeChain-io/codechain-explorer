@@ -1,6 +1,6 @@
 import * as React from "react";
 
-import { H160, H256, AssetMintTransaction } from "codechain-sdk";
+import { H160, H256, AssetMintTransaction } from "codechain-sdk/lib/core/classes";
 
 interface Props {
     onChange: (t: AssetMintTransaction) => void;

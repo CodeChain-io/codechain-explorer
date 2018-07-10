@@ -4,7 +4,7 @@ import * as moment from "moment";
 import { Table } from 'reactstrap';
 import { Link } from "react-router-dom";
 
-import { Block } from "codechain-sdk";
+import { Block } from "codechain-sdk/lib/core/classes";
 
 import './LatestBlocks.scss';
 import HexString from "../../util/HexString/HexString";

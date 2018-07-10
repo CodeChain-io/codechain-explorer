@@ -2,7 +2,7 @@ import * as React from "react";
 import { match } from "react-router";
 import { Container } from 'reactstrap';
 
-import { SignedParcel } from "codechain-sdk/lib";
+import { SignedParcel } from "codechain-sdk/lib/core/classes";
 
 import { RequestParcel } from "../request";
 import ParcelDetails from "../components/parcel/ParcelDetails/ParcelDetails";

@@ -3,7 +3,7 @@ import * as _ from "lodash";
 import * as moment from "moment";
 import { Table } from 'reactstrap';
 
-import { Block, ChangeShardState, AssetMintTransaction, AssetTransferTransaction } from "codechain-sdk";
+import { Block, ChangeShardState, AssetMintTransaction, AssetTransferTransaction } from "codechain-sdk/lib/core/classes";
 
 import './LatestTransactions.scss';
 import HexString from "../../util/HexString/HexString";
@@ -42,7 +42,7 @@ const LatestTransactions = (props: Props) => {
                                                 <th scope="row"><HexString link={`/tx/0x${transaction.hash().value}`} length={10} text={transaction.hash().value} /></th>
                                                 <td><HexString link={`/parcel/${parcel.hash().value}`} text={parcel.hash().value} length={10} /></td>
                                                 <td>{transaction.toJSON().type}</td>
-                                                <td>{transaction instanceof AssetMintTransaction ? <HexString text={transaction.getAssetSchemeAddress().value} length={10} /> : (transaction instanceof AssetTransferTransaction ? _.reduce(transaction.toJSON().data.inputs, (memo, input) => (<HexString text={input.prevOut.assetType} length={10} /> + " " + memo), "") : "")}</td>
+                                                <td>{transaction instanceof AssetMintTransaction ? <HexString text={transaction.getAssetSchemeAddress().value} length={10} /> : (transaction instanceof AssetTransferTransaction ? <div>{_.map(transaction.toJSON().data.inputs, (input) => (<HexString text={input.prevOut.assetType} length={10} />))}</div> : "")}</td>
                                                 <td>{transaction instanceof AssetMintTransaction ? transaction.toJSON().data.amount : (transaction instanceof AssetTransferTransaction ? _.sumBy(transaction.toJSON().data.inputs, (input) => input.prevOut.amount) : "")}</td>
                                                 <td>{moment.unix(block.timestamp).fromNow()}</td>
                                             </tr>

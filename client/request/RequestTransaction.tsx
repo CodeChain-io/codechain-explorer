@@ -1,6 +1,7 @@
 import * as React from "react";
 import { connect, Dispatch } from "react-redux";
-import { Transaction, SDK, H256 } from "codechain-sdk";
+import { Transaction, H256 } from "codechain-sdk/lib/core/classes";
+import { getTransactionFromJSON } from "codechain-sdk/lib/core/transaction/Transaction";
 
 import { RootState } from "../redux/actions";
 import { ApiError, apiRequest } from "./ApiRequest";
@@ -33,7 +34,8 @@ class RequestTransactionInternal extends React.Component<Props> {
             if (response === null) {
                 return onTransactionNotExist();
             }
-            const transaction = SDK.getTransactionFromJSON(response);
+            // FIXME: Modify to using static sdk function without sdk object.
+            const transaction = getTransactionFromJSON(response);
             dispatch({
                 type: "CACHE_TRANSACTION",
                 data: transaction

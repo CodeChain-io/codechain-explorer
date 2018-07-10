@@ -1,4 +1,4 @@
-import { Block, AssetScheme, SignedParcel, Transaction } from "codechain-sdk";
+import { Block, AssetScheme, SignedParcel, Transaction } from "codechain-sdk/lib/core/classes";
 
 export interface RootState {
     bestBlockNumber?: number;

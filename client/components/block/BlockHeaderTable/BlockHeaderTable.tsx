@@ -1,7 +1,7 @@
 import * as React from "react";
 import * as _ from "lodash";
 
-import { Block, ChangeShardState } from "codechain-sdk";
+import { Block, ChangeShardState } from "codechain-sdk/lib/core/classes";
 
 import "./BlockHeaderTable.scss"
 import HexString from "../../util/HexString/HexString";
