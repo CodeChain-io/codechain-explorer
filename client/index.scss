@@ -32,6 +32,14 @@ h6 {
 }
 
 #page {
+  min-height: 100vh;
+  #content {
+    min-height: calc(100vh - 154px);
+    overflow: auto;
+  }
+}
+
+#page {
   font-size: 1em;
   /* equivalent to 16px */
   line-height: 1.25;

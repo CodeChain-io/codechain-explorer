@@ -17,24 +17,24 @@ import Asset from "./pages/Asset";
 import NodeInfo from "./pages/NodeInfo";
 import SendSignedParcel from './pages/SendSignedParcel';
 import Transaction from './pages/Transaction';
+import Footer from './components/footer/Footer';
 
 ReactDOM.render(
   <Provider store={store}>
     <Router>
       <div id="page">
         <Header />
-        <Route exact={true} path="/" component={Home} />
-        <Route path="/send_signed_parcel" component={SendSignedParcel} />
-        <Route path="/node_info" component={NodeInfo} />
-        <Route path="/block/:id" component={Block} />
-        <Route path="/parcel/:hash" component={Parcel} />
-        <Route path="/account/:address" component={Account} />
-        <Route path="/asset/:type" component={Asset} />
-        <Route path="/tx/:hash" component={Transaction} />
-        <div className="text-center">
-          <p>codechain@kodebox.io</p>
-          <p>ⓒ 2018 Kodebox, Inc.</p>
+        <div id="content">
+          <Route exact={true} path="/" component={Home} />
+          <Route path="/send_signed_parcel" component={SendSignedParcel} />
+          <Route path="/node_info" component={NodeInfo} />
+          <Route path="/block/:id" component={Block} />
+          <Route path="/parcel/:hash" component={Parcel} />
+          <Route path="/account/:address" component={Account} />
+          <Route path="/asset/:type" component={Asset} />
+          <Route path="/tx/:hash" component={Transaction} />
         </div>
+        <Footer />
       </div>
     </Router >
   </Provider >,
