@@ -3,11 +3,11 @@
 CodeChain explorer is simple, easy to use, open source visualization tool for viewing activity on the underlying blockchain network
 
 ## Table of Contents
-* [instll](https://github.com/CodeChain-io/codechain-explorer#Instll)
-* [running for development](https://github.com/CodeChain-io/codechain-explorer#Running-for-development)
-* [build for production](https://github.com/CodeChain-io/codechain-explorer#Running-for-production)
+* [Install](https://github.com/CodeChain-io/codechain-explorer#install)
+* [Running for development](https://github.com/CodeChain-io/codechain-explorer#running-for-development)
+* [Build for production](https://github.com/CodeChain-io/codechain-explorer#running-for-production)
 
-## Instll
+## Install
 ### Requirements
 Following are the software dependencies required to install and run CodeChain-explorer
 * Latest version of [CodeChain](https://github.com/CodeChain-io/codechain)
