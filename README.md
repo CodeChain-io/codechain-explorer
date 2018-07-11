@@ -1,6 +1,6 @@
 # CodeChain Explorer [![Gitter](https://badges.gitter.im/CodeChain-io/codechain-explorer.svg)](https://gitter.im/CodeChain-io/codechain-explorer?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
 
-CodeChain explorer is a simple, easy to use, open-source visualization tool for viewing activity on the underlying blockchain network
+CodeChain explorer is a simple, easy to use, open-source visualization tool for viewing activity on the underlying blockchain network.
 
 ## Table of Contents
 * [Install](https://github.com/CodeChain-io/codechain-explorer#install)
@@ -9,25 +9,25 @@ CodeChain explorer is a simple, easy to use, open-source visualization tool for 
 
 ## Install
 ### Requirements
-Following are the software dependencies required to install and run CodeChain-explorer
+The following are the software dependencies required to install and run CodeChain-explorer:
 * Latest version of [CodeChain](https://github.com/CodeChain-io/codechain)
 * Nodejs v10.4.1
 * ElasticSearch v6.2.4
 ### Download
-Download CodeChain-explorer code at GitHub repository
+Download CodeChain-explorer code from the GitHub repository
 ```
 # git clone git@github.com:kodebox-io/codechain-explorer.git
 # cd codechain-explorer
 ```
 ### Install package
-Use yarn package manager for install packages
+Use yarn package manager to install packages
 ```
 # yarn install
 ```
 ## Running for development
 ### Before start
-* Get ready CodeChain with CodeChain RPC server
-* Get ready ElasticSearch database for indexing block data
+* Get CodeChain ready with CodeChain RPC server
+* Get ElasticSearch database ready for indexing block data
 ### Running order
 1. Worker
 - Data synchronizing tool between CodeChain and ElasticSearch
