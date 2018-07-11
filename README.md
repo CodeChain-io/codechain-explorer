@@ -1,6 +1,6 @@
 # CodeChain Explorer [![Gitter](https://badges.gitter.im/CodeChain-io/codechain-explorer.svg)](https://gitter.im/CodeChain-io/codechain-explorer?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
 
-CodeChain explorer is simple, easy to use, open source visualization tool for viewing activity on the underlying blockchain network
+CodeChain explorer is a simple, easy to use, open-source visualization tool for viewing activity on the underlying blockchain network
 
 ## Table of Contents
 * [Install](https://github.com/CodeChain-io/codechain-explorer#install)
@@ -14,7 +14,7 @@ Following are the software dependencies required to install and run CodeChain-ex
 * Nodejs v10.4.1
 * ElasticSearch v6.2.4
 ### Download
-Download CodeChain-explorer code at github repository
+Download CodeChain-explorer code at GitHub repository
 ```
 # git clone git@github.com:kodebox-io/codechain-explorer.git
 # cd codechain-explorer
@@ -32,18 +32,18 @@ Use yarn package manager for install packages
 1. Worker
 - Data synchronizing tool between CodeChain and ElasticSearch
 2. Server
-- Restful api server for getting data from db
+- Restful API server for getting data from DB
 3. Client
 - Client developed by react framework
 ### Worker
-Run CodeChain-worker for indexing data to elasticsearch
-* You can change ElasticSearch and CodeChain host url in "/worker/config/default.json"
+Run CodeChain-worker for indexing data to ElasticSearch
+* You can change ElasticSearch and CodeChain host URL in "/worker/config/default.json"
 ```
 # yarn run start-worker
 ```
 ### Server
 Run CodeChain-explorer server
-* You can change ElasticSearch and CodeChain host url in "/server/config/default.json"
+* You can change ElasticSearch and CodeChain host URL in "/server/config/default.json"
 ```
 # yarn run start-server
 ```
