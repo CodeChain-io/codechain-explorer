@@ -1,6 +1,7 @@
 import * as React from "react";
+import * as _ from "lodash";
 import { connect, Dispatch } from "react-redux";
-import { SignedParcel, H256 } from "codechain-sdk/lib/core/classes";
+import { SignedParcel, H256, ChangeShardState, AssetMintTransaction } from "codechain-sdk/lib/core/classes";
 
 import { RootState } from "../redux/actions";
 import { ApiError, apiRequest } from "./ApiRequest";
@@ -38,6 +39,24 @@ class RequestParcelInternal extends React.Component<Props> {
                 type: "CACHE_PARCEL",
                 data: parcel
             });
+            if (parcel.unsigned.action instanceof ChangeShardState) {
+                _.each(parcel.unsigned.action.transactions, (transaction) => {
+                    dispatch({
+                        type: "CACHE_TRANSACTION",
+                        data: transaction
+                    })
+
+                    if (transaction instanceof AssetMintTransaction) {
+                        dispatch({
+                            type: "CACHE_ASSET_SCHEME",
+                            data: {
+                                assetType: transaction.getAssetSchemeAddress().value,
+                                assetScheme: transaction.getAssetScheme()
+                            }
+                        })
+                    }
+                })
+            }
             onParcel(parcel);
         }).catch(onError);
     }

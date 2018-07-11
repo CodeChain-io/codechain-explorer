@@ -17,6 +17,9 @@ export interface RootState {
     assetSchemeByAssetType: {
         [assetType: string]: AssetScheme;
     };
+    transactionListByAssetType: {
+        [assetType: string]: Transaction[];
+    }
 }
 
 const initialState: RootState = {
@@ -25,7 +28,8 @@ const initialState: RootState = {
     blocksByHash: {},
     parcelByHash: {},
     assetSchemeByAssetType: {},
-    transactionByHash: {}
+    transactionByHash: {},
+    transactionListByAssetType: {}
 };
 
 interface BestBlockNumberAction {
@@ -56,7 +60,16 @@ interface CacheAssetSchemeAction {
     };
 }
 
-type Action = BestBlockNumberAction | CacheAssetSchemeAction | CacheBlockAction | CacheParcelAction | CacheTransactionAction;
+interface CacheAssetTransactionListAction {
+    type: "CACHE_ASSET_TRANSACTION_LIST";
+    data: {
+        assetType: string;
+        transactionList: Transaction[];
+    };
+}
+
+
+type Action = BestBlockNumberAction | CacheAssetSchemeAction | CacheBlockAction | CacheParcelAction | CacheTransactionAction | CacheAssetTransactionListAction;
 
 export const rootReducer = (state = initialState, action: Action) => {
     if (action.type === "BEST_BLOCK_NUMBER_ACTION") {
@@ -78,6 +91,10 @@ export const rootReducer = (state = initialState, action: Action) => {
         const { assetType, assetScheme } = (action as CacheAssetSchemeAction).data;
         const assetSchemeByAssetType = { ...state.assetSchemeByAssetType, [assetType]: assetScheme };
         return { ...state, assetSchemeByAssetType };
+    } else if (action.type === "CACHE_ASSET_TRANSACTION_LIST") {
+        const { assetType, transactionList } = (action as CacheAssetTransactionListAction).data;
+        const transactionListByAssetType = { ...state.transactionListByAssetType, [assetType]: transactionList };
+        return { ...state, transactionListByAssetType };
     } else {
         return state;
     }

@@ -1,7 +1,8 @@
 import * as cors from 'cors';
 import * as express from 'express';
+import * as _ from 'lodash';
 
-import { H256, H160, SignedParcel } from "codechain-sdk/lib/core/classes";
+import { H256, H160, SignedParcel, Transaction } from "codechain-sdk/lib/core/classes";
 
 import { ServerContext } from './ServerContext';
 
@@ -92,9 +93,21 @@ export function createApiRouter(context: ServerContext, useCors = false) {
 
     router.get("/tx/:hash/invoice", async (req, res, next) => {
         const { hash } = req.params;
-        context.db.getTransactionInvoice(new H256(hash)).then(invoice => {
+        context.codechainSdk.rpc.chain.getTransactionInvoice(new H256(hash)).then(invoice => {
             res.send(invoice === null ? JSON.stringify(null) : invoice.toJSON());
         }).catch(next);
+    });
+
+    router.get("/asset-tx/:assetType", async (req, res, next) => {
+        const { assetType } = req.params;
+        // TODO: Add limit to query.
+        try {
+            const txs: Transaction[] = await context.db.getAssetTransferTransactions(new H256(assetType));
+            const mintTx: Transaction = await context.db.getAssetMintTransaction(new H256(assetType));
+            res.send(_.map(_.concat(txs, mintTx), tx => tx.toJSON()));
+        } catch (e) {
+            next(e);
+        }
     });
 
     router.get("/account/:address", async (req, res, next) => {

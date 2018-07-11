@@ -1,5 +1,5 @@
 import { Client, SearchResponse } from "elasticsearch";
-import { Block, SignedParcel, H256, H160, Transaction, ChangeShardState, AssetScheme } from "codechain-sdk/lib/core/classes";
+import { Block, SignedParcel, H256, H160, Transaction, ChangeShardState, AssetScheme, AssetTransferTransaction, AssetMintTransaction } from "codechain-sdk/lib/core/classes";
 import * as _ from "lodash";
 
 export class ElasticSearchAgent {
@@ -26,9 +26,11 @@ export class ElasticSearchAgent {
             size: 1,
             query: {
                 "bool": {
-                    "must": [
-                        { "match": { "isRetracted": false } }
-                    ]
+                    "filter": {
+                        "term": {
+                            "isRetracted": false
+                        }
+                    }
                 }
             }
         }).then((response: SearchResponse<any>) => {
@@ -44,9 +46,13 @@ export class ElasticSearchAgent {
             query: {
                 "bool": {
                     "must": [
-                        { "match": { "hash": hash.value } },
-                        { "match": { "isRetracted": false } }
-                    ]
+                        { "term": { "hash": hash.value } }
+                    ],
+                    "filter": {
+                        "term": {
+                            "isRetracted": false
+                        }
+                    }
                 }
             }
         }).then((response: SearchResponse<any>) => {
@@ -59,9 +65,13 @@ export class ElasticSearchAgent {
             query: {
                 "bool": {
                     "must": [
-                        { "match": { "parcels.hash": hash.value } },
-                        { "match": { "isRetracted": false } }
-                    ]
+                        { "term": { "parcels.hash": hash.value } }
+                    ],
+                    "filter": {
+                        "term": {
+                            "isRetracted": false
+                        }
+                    }
                 }
             }
         }).then((response: SearchResponse<any>) => {
@@ -81,9 +91,13 @@ export class ElasticSearchAgent {
             query: {
                 "bool": {
                     "must": [
-                        { "match": { "parcels.action.transactions.data.hash": hash.value } },
-                        { "match": { "isRetracted": false } }
-                    ]
+                        { "term": { "parcels.action.transactions.data.hash": hash.value } }
+                    ],
+                    "filter": {
+                        "term": {
+                            "isRetracted": false
+                        }
+                    }
                 }
             }
         }).then((response: SearchResponse<any>) => {
@@ -110,13 +124,75 @@ export class ElasticSearchAgent {
             query: {
                 "bool": {
                     "must": [
-                        { "match": { "number": blockNumber } },
+                        { "term": { "number": blockNumber } }
+                    ],
+                    "filter": {
+                        "term": {
+                            "isRetracted": false
+                        }
+                    }
+                }
+            }
+        }).then((response: SearchResponse<any>) => {
+            return Block.fromJSON(response.hits.hits[0]._source);
+        });
+    }
+
+    public getAssetTransferTransactions = async (assetType: H256): Promise<Transaction[]> => {
+        return this.searchBlock({
+            query: {
+                "bool": {
+                    "must": [
+                        { "term": { "parcels.action.transactions.data.outputs.assetType": assetType.value } }
+                    ],
+                    "filter": {
+                        "term": {
+                            "isRetracted": false
+                        }
+                    }
+                }
+            }
+        }).then((response: SearchResponse<any>) => {
+            if (response.hits.total === 0) {
+                return [];
+            }
+
+            const resultTransactions = [];
+            _.each(response.hits.hits, hit => {
+                const findBlock = Block.fromJSON(hit._source);
+                _.each(findBlock.parcels, (parcel) => {
+                    if (parcel.unsigned.action instanceof ChangeShardState) {
+                        _.each(parcel.unsigned.action.transactions, (transaction: Transaction) => {
+                            if (transaction instanceof AssetTransferTransaction) {
+                                if (_.findIndex(transaction.toJSON().data.outputs, output => {
+                                    return output.assetType === assetType.value;
+                                }) !== -1) {
+                                    resultTransactions.push(transaction);
+                                }
+                            }
+                        });
+                    }
+                })
+            })
+            return resultTransactions;
+        });
+    }
+
+    public getAssetMintTransaction = async (assetType: H256): Promise<Transaction> => {
+        return this.searchAssetMintTransaction({
+            query: {
+                "bool": {
+                    "must": [
+                        { "match": { "_id": assetType.value } },
                         { "match": { "isRetracted": false } }
                     ]
                 }
             }
         }).then((response: SearchResponse<any>) => {
-            return Block.fromJSON(response.hits.hits[0]._source);
+            if (response.hits.total === 0) {
+                return null;
+            }
+            return AssetMintTransaction.fromJSON(response.hits.hits[0]._source);
         });
     }
 
@@ -136,7 +212,7 @@ export class ElasticSearchAgent {
     }
 
     public getAssetScheme = async (assetType: H256): Promise<AssetScheme> => {
-        return this.searchAssetScheme({
+        return this.searchAssetMintTransaction({
             query: {
                 "bool": {
                     "must": [
@@ -149,7 +225,7 @@ export class ElasticSearchAgent {
             if (response.hits.total === 0) {
                 return null;
             }
-            return AssetScheme.fromJSON(response.hits.hits[0]._source);
+            return AssetMintTransaction.fromJSON(response.hits.hits[0]._source).getAssetScheme();
         });
     }
 
@@ -163,9 +239,9 @@ export class ElasticSearchAgent {
         });
     }
 
-    private searchAssetScheme(body: any): Promise<void | SearchResponse<any>> {
+    private searchAssetMintTransaction(body: any): Promise<void | SearchResponse<any>> {
         return this.client.search({
-            index: "asset_scheme",
+            index: "asset_mint_transaction",
             type: "_doc",
             body
         }).catch((err) => {

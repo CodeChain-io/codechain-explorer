@@ -1,6 +1,6 @@
 import * as _ from "lodash";
 import { Client, SearchResponse } from "elasticsearch";
-import { Block, H256, AssetMintTransaction, ChangeShardState, AssetScheme } from "codechain-sdk/lib/core/classes";
+import { Block, H256, AssetMintTransaction, ChangeShardState } from "codechain-sdk/lib/core/classes";
 
 export class ElasticSearchAgent {
     private client: Client;
@@ -12,9 +12,9 @@ export class ElasticSearchAgent {
 
     public checkIndexOrCreate = async (): Promise<void> => {
         const mappingBlockJson = require("./elasticsearch/mapping_block.json");
-        const mappingAssetSchemeJson = require("./elasticsearch/mapping_asset_scheme.json");
+        const mappingAssetMintTransactionJson = require("./elasticsearch/mapping_asset_mint_transaction.json");
         const isMappingBlockExisted = await this.client.indices.exists({ index: "block" });
-        const isMappingAssetSchemeExisted = await this.client.indices.exists({ index: "asset_scheme" });
+        const isMappingAssetMintTransactionExisted = await this.client.indices.exists({ index: "asset_mint_transaction" });
         if (!isMappingBlockExisted) {
             await this.client.indices.create({
                 index: "block"
@@ -25,14 +25,14 @@ export class ElasticSearchAgent {
                 body: mappingBlockJson
             });
         }
-        if (!isMappingAssetSchemeExisted) {
+        if (!isMappingAssetMintTransactionExisted) {
             await this.client.indices.create({
-                index: "asset_scheme"
+                index: "asset_mint_transaction"
             });
             await this.client.indices.putMapping({
-                index: "asset_scheme",
+                index: "asset_mint_transaction",
                 type: "_doc",
-                body: mappingAssetSchemeJson
+                body: mappingAssetMintTransactionJson
             });
         }
     }
@@ -97,9 +97,7 @@ export class ElasticSearchAgent {
     }
 
     public addBlock = async (block: Block): Promise<void> => {
-        return this.index(block).then((doc: any) => {
-            console.log("%s block is indexed", doc._id);
-        });
+        return this.index(block);
     }
 
     public retractBlock = async (blockHash: H256): Promise<void> => {
@@ -132,24 +130,18 @@ export class ElasticSearchAgent {
     private index = async (block: Block): Promise<any> => {
         const blockDoc: any = block.toJSON();
         blockDoc.isRetracted = false;
-
         _.each(block.parcels, (parcel) => {
             if (parcel.unsigned.action instanceof ChangeShardState) {
                 _.each(parcel.unsigned.action.transactions, async (transaction) => {
                     if (transaction instanceof AssetMintTransaction) {
                         try {
-                            const amount = transaction.toJSON().data.amount;
-                            const registrar = transaction.toJSON().data.registrar;
-                            const metadata = transaction.toJSON().data.metadata;
-
-                            const assetScheme = AssetScheme.fromJSON({ amount, registrar, metadata });
-                            const assetSchemeDoc: any = assetScheme.toJSON();
-                            assetSchemeDoc.isRetracted = false;
+                            const transactionDoc: any = transaction.toJSON();
+                            transactionDoc.isRetracted = false;
                             await this.client.index({
-                                index: "asset_scheme",
+                                index: "asset_mint_transaction",
                                 type: "_doc",
                                 id: transaction.getAssetSchemeAddress().value,
-                                body: assetSchemeDoc,
+                                body: transactionDoc,
                                 refresh: "wait_for"
                             })
                         } catch (e) {
@@ -187,7 +179,7 @@ export class ElasticSearchAgent {
 
     private updateAssetScheme(assetType: H256, partial: any): Promise<any> {
         return this.client.update({
-            index: "asset_type",
+            index: "asset_mint_transaction",
             type: "_doc",
             id: assetType.value,
             refresh: "wait_for",

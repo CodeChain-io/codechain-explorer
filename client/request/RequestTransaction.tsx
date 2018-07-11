@@ -1,6 +1,6 @@
 import * as React from "react";
 import { connect, Dispatch } from "react-redux";
-import { Transaction, H256 } from "codechain-sdk/lib/core/classes";
+import { Transaction, H256, AssetMintTransaction } from "codechain-sdk/lib/core/classes";
 import { getTransactionFromJSON } from "codechain-sdk/lib/core/transaction/Transaction";
 
 import { RootState } from "../redux/actions";
@@ -40,6 +40,16 @@ class RequestTransactionInternal extends React.Component<Props> {
                 type: "CACHE_TRANSACTION",
                 data: transaction
             });
+
+            if (transaction instanceof AssetMintTransaction) {
+                dispatch({
+                    type: "CACHE_ASSET_SCHEME",
+                    data: {
+                        assetType: transaction.getAssetSchemeAddress().value,
+                        assetScheme: transaction.getAssetScheme()
+                    }
+                })
+            }
             onTransaction(transaction);
         }).catch(onError);
     }

@@ -55,7 +55,7 @@ const TransactionHeaderTable = (props: Props) => {
                                         <tbody>
                                             <tr>
                                                 <td>AssetType</td>
-                                                <td><HexString text={input.prevOut.assetType} /></td>
+                                                <td><HexString link={`/asset/0x${input.prevOut.assetType}`} text={input.prevOut.assetType} /></td>
                                             </tr>
                                             <tr>
                                                 <td>Owner</td>
@@ -98,7 +98,7 @@ const TransactionHeaderTable = (props: Props) => {
                                         <tbody>
                                             <tr>
                                                 <td>AssetType</td>
-                                                <td><HexString text={output.assetType} /></td>
+                                                <td><HexString link={`/asset/0x${output.assetType}`} text={output.assetType} /></td>
                                             </tr>
                                             <tr>
                                                 <td>Owner</td>

@@ -14,7 +14,7 @@ const TransactionObject = (transaction: Transaction) => {
         return [
             <tr key="asset-mint-transaction-asset-type">
                 <td>AssetType</td>
-                <td>{transaction.getAssetSchemeAddress().value}</td>
+                <td><HexString link={`/asset/0x${transaction.getAssetSchemeAddress().value}`} text={transaction.getAssetSchemeAddress().value} /></td>
             </tr>,
             <tr key="asset-mint-transaction-amount">
                 <td>Amount</td>
@@ -25,11 +25,11 @@ const TransactionObject = (transaction: Transaction) => {
         return [
             <tr key="asset-transfer-transaction-type">
                 <td>AssetType</td>
-                {
+                <td>{
                     _.map(transaction.toJSON().data.inputs, (input, index) => {
-                        return <td key={`asset-transfer-transaction-${index}`}>{input.prevOut.assetType}</td>
+                        return <div key={`asset-transfer-transaction-${index}`}><HexString link={`/asset/0x${input.prevOut.assetType}`} text={input.prevOut.assetType} /></div>
                     })
-                }
+                }</td>
             </tr>,
             <tr key="asset-transfer-transaction-amount">
                 <td>Amount</td>

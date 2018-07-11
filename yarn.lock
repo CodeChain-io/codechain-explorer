@@ -1677,9 +1677,9 @@ code-point-at@^1.0.0:
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/code-point-at/-/code-point-at-1.1.0.tgz#0d070b4d043a5bea33a2f1a40e2edb3d9a4ccf77"
 
-codechain-sdk@^0.1.0-alpha.12:
+"codechain-sdk@https://github.com/CodeChain-io/codechain-sdk-js#f846633b1c6f7433db23b78ca233eeba7eedf928":
   version "0.1.0-alpha.12"
-  resolved "https://registry.yarnpkg.com/codechain-sdk/-/codechain-sdk-0.1.0-alpha.12.tgz#f1bd280888d5b7d062a557a0c0ed7c1f6f0b5290"
+  resolved "https://github.com/CodeChain-io/codechain-sdk-js#f846633b1c6f7433db23b78ca233eeba7eedf928"
   dependencies:
     bignumber.js "^6.0.0"
     blakejs "^1.1.0"

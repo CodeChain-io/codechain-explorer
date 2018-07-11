@@ -1,0 +1,65 @@
+{
+    "properties": {
+        "data": {
+            "properties": {
+                "amount": {
+                    "type": "long"
+                },
+                "hash": {
+                    "type": "text",
+                    "fields": {
+                        "keyword": {
+                            "type": "keyword",
+                            "ignore_above": 256
+                        }
+                    }
+                },
+                "lockScriptHash": {
+                    "type": "text",
+                    "fields": {
+                        "keyword": {
+                            "type": "keyword",
+                            "ignore_above": 256
+                        }
+                    }
+                },
+                "metadata": {
+                    "type": "text",
+                    "fields": {
+                        "keyword": {
+                            "type": "keyword",
+                            "ignore_above": 5000
+                        }
+                    }
+                },
+                "networkId": {
+                    "type": "long"
+                },
+                "nonce": {
+                    "type": "long"
+                },
+                "registrar": {
+                    "type": "text",
+                    "fields": {
+                        "keyword": {
+                            "type": "keyword",
+                            "ignore_above": 256
+                        }
+                    }
+                }
+            }
+        },
+        "type": {
+            "type": "text",
+            "fields": {
+                "keyword": {
+                    "type": "keyword",
+                    "ignore_above": 256
+                }
+            }
+        },
+        "isRetracted": {
+            "type": "boolean"
+        }
+    }
+}

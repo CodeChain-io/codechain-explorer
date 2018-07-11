@@ -42,7 +42,7 @@ const LatestTransactions = (props: Props) => {
                                                 <th scope="row"><HexString link={`/tx/0x${transaction.hash().value}`} length={10} text={transaction.hash().value} /></th>
                                                 <td><HexString link={`/parcel/${parcel.hash().value}`} text={parcel.hash().value} length={10} /></td>
                                                 <td>{transaction.toJSON().type}</td>
-                                                <td>{transaction instanceof AssetMintTransaction ? <HexString text={transaction.getAssetSchemeAddress().value} length={10} /> : (transaction instanceof AssetTransferTransaction ? <div>{_.map(transaction.toJSON().data.inputs, (input) => (<HexString text={input.prevOut.assetType} length={10} />))}</div> : "")}</td>
+                                                <td>{transaction instanceof AssetMintTransaction ? <HexString link={`/asset/${transaction.getAssetSchemeAddress().value}`} text={transaction.getAssetSchemeAddress().value} length={10} /> : (transaction instanceof AssetTransferTransaction ? <div>{_.map(transaction.toJSON().data.inputs, (input, index) => (<div key={`latest-transaction-assetType-${index}`}><HexString link={`/asset/0x${input.prevOut.assetType}`} text={input.prevOut.assetType} length={10} /></div>))}</div> : "")}</td>
                                                 <td>{transaction instanceof AssetMintTransaction ? transaction.toJSON().data.amount : (transaction instanceof AssetTransferTransaction ? _.sumBy(transaction.toJSON().data.inputs, (input) => input.prevOut.amount) : "")}</td>
                                                 <td>{moment.unix(block.timestamp).fromNow()}</td>
                                             </tr>

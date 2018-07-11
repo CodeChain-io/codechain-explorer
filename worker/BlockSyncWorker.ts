@@ -40,7 +40,7 @@ export class BlockSyncWorker {
     }
 
     private async sync() {
-        console.log("sync start");
+        console.log("================ sync start ==================");
         await this.elasticSearchAgent.checkIndexOrCreate();
         let latestSyncBlockNumber: number = await this.elasticSearchAgent.getLastBlockNumber();
         const latestCodechainBlockNumber: number = await this.codeChainAgent.getLastBlockNumber();
@@ -53,12 +53,8 @@ export class BlockSyncWorker {
         while (latestSyncBlockNumber < latestCodechainBlockNumber) {
             const nextBlockIndex: number = latestSyncBlockNumber + 1;
             const nextBlock: Block = await this.codeChainAgent.getBlock(nextBlockIndex);
-
             if (latestSyncBlockNumber > 0) {
-                console.log("checking indexed block : %d", latestSyncBlockNumber);
                 const lastSyncBlock: Block = await this.elasticSearchAgent.getBlock(latestSyncBlockNumber);
-                console.log("indexed block hash : %s", lastSyncBlock.hash.value);
-                console.log("codechain block hash : %s", nextBlock.parentHash.value);
                 if (nextBlock.parentHash.value !== lastSyncBlock.hash.value) {
                     latestSyncBlockNumber = await this.checkRetractAndReturnSyncNumber(latestSyncBlockNumber);
                     continue;
@@ -69,7 +65,7 @@ export class BlockSyncWorker {
             console.log("%d block is synchronized", nextBlockIndex);
             latestSyncBlockNumber = nextBlockIndex;
         }
-        console.log("sync done");
+        console.log("================ sync done ===================\n");
     }
 
     private checkRetractAndReturnSyncNumber = async (currentBlockNumber): Promise<number> => {

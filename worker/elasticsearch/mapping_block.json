@@ -290,7 +290,7 @@
                 "parcelIndex": {
                     "type": "long"
                 },
-                "r": {
+                "sig": {
                     "type": "text",
                     "fields": {
                         "keyword": {
@@ -298,18 +298,6 @@
                             "ignore_above": 256
                         }
                     }
-                },
-                "s": {
-                    "type": "text",
-                    "fields": {
-                        "keyword": {
-                            "type": "keyword",
-                            "ignore_above": 256
-                        }
-                    }
-                },
-                "v": {
-                    "type": "long"
                 }
             }
         }
