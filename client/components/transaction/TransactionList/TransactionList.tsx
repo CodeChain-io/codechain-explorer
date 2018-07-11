@@ -3,18 +3,19 @@ import * as _ from "lodash";
 
 import { Transaction, AssetMintTransaction, AssetTransferTransaction } from "codechain-sdk/lib/core/classes";
 
-import "./ParcelTransactionList.scss"
+import "./TransactionList.scss"
 import HexString from "../../util/HexString/HexString";
 
 interface Props {
     transactions: Transaction[];
+    searchByAssetType: boolean;
 }
-const TransactionObject = (transaction: Transaction) => {
+const TransactionObject = (transaction: Transaction, searchByAssetType: boolean) => {
     if (transaction instanceof AssetMintTransaction) {
         return [
             <tr key="asset-mint-transaction-asset-type">
                 <td>AssetType</td>
-                <td><HexString link={`/asset/0x${transaction.getAssetSchemeAddress().value}`} text={transaction.getAssetSchemeAddress().value} /></td>
+                <td>{searchByAssetType ? transaction.getAssetSchemeAddress().value : <HexString link={`/asset/0x${transaction.getAssetSchemeAddress().value}`} text={transaction.getAssetSchemeAddress().value} />}</td>
             </tr>,
             <tr key="asset-mint-transaction-amount">
                 <td>Amount</td>
@@ -27,7 +28,7 @@ const TransactionObject = (transaction: Transaction) => {
                 <td>AssetType</td>
                 <td>{
                     _.map(transaction.toJSON().data.inputs, (input, index) => {
-                        return <div key={`asset-transfer-transaction-${index}`}><HexString link={`/asset/0x${input.prevOut.assetType}`} text={input.prevOut.assetType} /></div>
+                        return <div key={`asset-transfer-transaction-${index}`}>{searchByAssetType ? input.prevOut.assetType : <HexString link={`/asset/0x${input.prevOut.assetType}`} text={input.prevOut.assetType} />}</div>
                     })
                 }</td>
             </tr>,
@@ -40,12 +41,12 @@ const TransactionObject = (transaction: Transaction) => {
     return null;
 }
 
-const ParcelTransactionList = (props: Props) => {
-    const { transactions } = props;
+const TransactionList = (props: Props) => {
+    const { transactions, searchByAssetType } = props;
     return <div className="mb-3">{transactions.map((transaction, i: number) => {
         const hash = transaction.hash().value;
         return <div key={`parcel-transaction-${hash}`} className="parcel-transaction-list-container mt-3">
-            <b>Transaction {i}</b>
+            <b>Transaction</b>
             <table>
                 <tbody>
                     <tr>
@@ -56,11 +57,11 @@ const ParcelTransactionList = (props: Props) => {
                         <td>Type</td>
                         <td>{transaction.toJSON().type}</td>
                     </tr>
-                    {TransactionObject(transaction)}
+                    {TransactionObject(transaction, searchByAssetType)}
                 </tbody>
             </table>
         </div>
     })}</div>
 };
 
-export default ParcelTransactionList;
+export default TransactionList;

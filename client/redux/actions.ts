@@ -17,7 +17,7 @@ export interface RootState {
     assetSchemeByAssetType: {
         [assetType: string]: AssetScheme;
     };
-    transactionListByAssetType: {
+    transactionsByAssetType: {
         [assetType: string]: Transaction[];
     }
 }
@@ -29,7 +29,7 @@ const initialState: RootState = {
     parcelByHash: {},
     assetSchemeByAssetType: {},
     transactionByHash: {},
-    transactionListByAssetType: {}
+    transactionsByAssetType: {}
 };
 
 interface BestBlockNumberAction {
@@ -60,16 +60,16 @@ interface CacheAssetSchemeAction {
     };
 }
 
-interface CacheAssetTransactionListAction {
-    type: "CACHE_ASSET_TRANSACTION_LIST";
+interface CacheAssetTransactionsAction {
+    type: "CACHE_ASSET_TRANSACTIONS";
     data: {
         assetType: string;
-        transactionList: Transaction[];
+        transactions: Transaction[];
     };
 }
 
 
-type Action = BestBlockNumberAction | CacheAssetSchemeAction | CacheBlockAction | CacheParcelAction | CacheTransactionAction | CacheAssetTransactionListAction;
+type Action = BestBlockNumberAction | CacheAssetSchemeAction | CacheBlockAction | CacheParcelAction | CacheTransactionAction | CacheAssetTransactionsAction;
 
 export const rootReducer = (state = initialState, action: Action) => {
     if (action.type === "BEST_BLOCK_NUMBER_ACTION") {
@@ -91,10 +91,10 @@ export const rootReducer = (state = initialState, action: Action) => {
         const { assetType, assetScheme } = (action as CacheAssetSchemeAction).data;
         const assetSchemeByAssetType = { ...state.assetSchemeByAssetType, [assetType]: assetScheme };
         return { ...state, assetSchemeByAssetType };
-    } else if (action.type === "CACHE_ASSET_TRANSACTION_LIST") {
-        const { assetType, transactionList } = (action as CacheAssetTransactionListAction).data;
-        const transactionListByAssetType = { ...state.transactionListByAssetType, [assetType]: transactionList };
-        return { ...state, transactionListByAssetType };
+    } else if (action.type === "CACHE_ASSET_TRANSACTIONS") {
+        const { assetType, transactions } = (action as CacheAssetTransactionsAction).data;
+        const transactionsByAssetType = { ...state.transactionsByAssetType, [assetType]: transactions };
+        return { ...state, transactionsByAssetType };
     } else {
         return state;
     }

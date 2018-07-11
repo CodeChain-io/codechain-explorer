@@ -5,15 +5,15 @@ import { Container } from 'reactstrap';
 import { RequestAssetScheme } from "../request";
 import { AssetScheme as CoreAssetScheme, Transaction } from "codechain-sdk/lib/core/classes";
 import AssetDetails from "../components/asset/AssetDetails/AssetDetails";
-import RequestAssetTransactionList from "../request/RequestAssetTransactionList";
-import ParcelTransactionList from "../components/parcel/ParcelTransactionList/ParcelTransactionList";
+import RequestAssetTransactions from "../request/RequestAssetTransactions";
+import TransactionList from "../components/transaction/TransactionList/TransactionList";
 
 interface Props {
     match: match<{ type: string }>;
 }
 
 interface State {
-    transactionList: Transaction[];
+    transactions: Transaction[];
     assetScheme?: CoreAssetScheme;
     notFound: boolean;
 }
@@ -21,20 +21,20 @@ interface State {
 class Asset extends React.Component<Props, State> {
     constructor(props: Props) {
         super(props);
-        this.state = { notFound: false, transactionList: [] };
+        this.state = { notFound: false, transactions: [] };
     }
 
     public componentWillReceiveProps(props: Props) {
         const { match: { params: { type } } } = this.props;
         const { match: { params: { type: nextType } } } = props;
         if (nextType !== type) {
-            this.setState({ ...this.state, assetScheme: undefined, transactionList: [] });
+            this.setState({ ...this.state, assetScheme: undefined, transactions: [] });
         }
     }
 
     public render() {
         const { match: { params: { type } } } = this.props;
-        const { notFound, assetScheme, transactionList } = this.state;
+        const { notFound, assetScheme, transactions } = this.state;
         if (notFound) {
             return <div><Container>Asset not exist for type: {type}</Container></div>
         }
@@ -46,7 +46,7 @@ class Asset extends React.Component<Props, State> {
                         : <div><RequestAssetScheme assetType={type} onAssetScheme={this.onAssetScheme} onNotFound={this.onAssetSchemeNotFound} onError={this.onError} /></div>}
                     <div>{/* FIXME: Modify name of ParcelTransactionList */}</div>
                     {
-                        transactionList.length !== 0 ? <div><ParcelTransactionList transactions={transactionList} /></div> : <RequestAssetTransactionList assetType={type} onTransactionList={this.onTransactionList} onError={this.onError} />
+                        transactions.length !== 0 ? <div><TransactionList searchByAssetType={true} transactions={transactions} /></div> : <RequestAssetTransactions assetType={type} onTransactions={this.onTransactionList} onError={this.onError} />
                     }
                 </Container>
             </div>
@@ -57,8 +57,8 @@ class Asset extends React.Component<Props, State> {
         this.setState({ assetScheme });
     }
 
-    private onTransactionList = (transactionList: Transaction[]) => {
-        this.setState({ transactionList })
+    private onTransactionList = (transactions: Transaction[]) => {
+        this.setState({ transactions })
     }
 
     private onAssetSchemeNotFound = () => console.error("AssetScheme not found");

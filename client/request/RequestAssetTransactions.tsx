@@ -10,7 +10,7 @@ import { RootState } from "../redux/actions";
 
 interface OwnProps {
     assetType: string;
-    onTransactionList: (s: Transaction[]) => void;
+    onTransactions: (s: Transaction[]) => void;
     onError: (e: ApiError) => void;
 }
 
@@ -24,24 +24,24 @@ interface DispatchProps {
 
 type Props = OwnProps & StateProps & DispatchProps;
 
-class RequestAssetTransactionListInternal extends React.Component<Props> {
+class RequestAssetTransactionsInternal extends React.Component<Props> {
     public componentWillMount() {
-        const { cached, dispatch, assetType, onTransactionList, onError } = this.props;
+        const { cached, dispatch, assetType, onTransactions, onError } = this.props;
         if (cached) {
-            setTimeout(() => onTransactionList(cached));
+            setTimeout(() => onTransactions(cached));
             return
         }
         apiRequest({ path: `asset-tx/${assetType}` }).then((response: any) => {
-            const transactionList: Transaction[] = _.map(response, (r) => getTransactionFromJSON(r));
+            const transactions: Transaction[] = _.map(response, (r) => getTransactionFromJSON(r));
             const cacheKey = new H256(assetType).value;
             dispatch({
-                type: "CACHE_ASSET_TRANSACTION_LIST",
+                type: "CACHE_ASSET_TRANSACTIONS",
                 data: {
                     assetType: cacheKey,
-                    transactionList
+                    transactions
                 }
             });
-            onTransactionList(transactionList);
+            onTransactions(transactions);
         }).catch(onError);
     }
 
@@ -50,15 +50,15 @@ class RequestAssetTransactionListInternal extends React.Component<Props> {
     }
 }
 
-const RequestAssetTransactionList = connect((state: RootState, props: OwnProps) => {
+const RequestAssetTransactions = connect((state: RootState, props: OwnProps) => {
     if (props.assetType.length === 64 || props.assetType.length === 66) {
         return {
-            cached: state.transactionListByAssetType[new H256(props.assetType).value]
+            cached: state.transactionsByAssetType[new H256(props.assetType).value]
         };
     }
     return {
-        cached: state.transactionListByAssetType[props.assetType]
+        cached: state.transactionsByAssetType[props.assetType]
     };
-})(RequestAssetTransactionListInternal);
+})(RequestAssetTransactionsInternal);
 
-export default RequestAssetTransactionList;
+export default RequestAssetTransactions;

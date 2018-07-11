@@ -3,7 +3,7 @@ import * as React from "react";
 import { SignedParcel, ChangeShardState } from "codechain-sdk/lib/core/classes";
 
 import ParcelHeaderTable from "../ParcelHeaderTable/ParcelHeaderTable";
-import ParcelTransactionList from "../ParcelTransactionList/ParcelTransactionList";
+import TransactionList from "../../transaction/TransactionList/TransactionList";
 
 import "./ParcelDetails.scss"
 
@@ -18,7 +18,7 @@ const ParcelDetails = (props: Props) => {
         <h3 className="mt-3">Parcel</h3>
         <h4 className="type">{parcel.unsigned.action.toJSON().action}</h4>
         <ParcelHeaderTable parcel={parcel} />
-        {parcel.unsigned.action instanceof ChangeShardState ? <ParcelTransactionList transactions={parcel.unsigned.action.transactions} /> : ""}
+        {parcel.unsigned.action instanceof ChangeShardState ? <TransactionList searchByAssetType={false} transactions={parcel.unsigned.action.transactions} /> : ""}
     </div>
 };
 

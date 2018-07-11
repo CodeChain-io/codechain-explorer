@@ -54,7 +54,7 @@
         "sw-precache-webpack-plugin": "0.11.4",
         "ts-jest": "22.0.1",
         "ts-loader": "^2.3.7",
-        "ts-node": "^6.0.5",
+        "ts-node": "6.1.2",
         "tsconfig-paths-webpack-plugin": "^2.0.0",
         "tslint": "^5.7.0",
         "tslint-config-prettier": "^1.10.0",
@@ -92,7 +92,7 @@
         "@types/reactstrap": "^6.0.0",
         "@types/redux": "^3.6.0",
         "@types/yargs": "^11.0.0",
-        "typescript": "^2.8.3"
+        "typescript": "2.9.2"
     },
     "jest": {
         "collectCoverageFrom": [
