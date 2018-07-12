@@ -12,6 +12,7 @@ interface State {
     metadata: string;
     lockScriptHash: string;
     parameters: string[];
+    networkId: number;
     // FIXME: U64
     amount: number;
     registrar: string;
@@ -25,6 +26,7 @@ export default class AssetMintTransactionEditor extends React.Component<Props, S
             metadata: "",
             lockScriptHash: "0000000000000000000000000000000000000000000000000000000000000000",
             parameters: [],
+            networkId: 1,
             amount: 100,
             registrar: "",
         }
@@ -97,6 +99,7 @@ export default class AssetMintTransactionEditor extends React.Component<Props, S
             lockScriptHash: new H256(lockScriptHash),
             // FIXME:
             parameters: [],
+            networkId: 1,
             // FIXME: U256
             amount,
             registrar: registrar.length === 40 ? new H160(registrar) : null,

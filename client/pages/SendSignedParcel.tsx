@@ -39,6 +39,7 @@ export default class SendSignedParcel extends React.Component<{}, State> {
                 metadata: "mint meta data",
                 lockScriptHash: new H256("563d207a7b1d91f9b4440536bc4818e90263ada0707b41d119e667ed35524b68"),
                 parameters: [],
+                networkId: 1,
                 amount: 10,
                 registrar: null,
             }),
