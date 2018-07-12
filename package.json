@@ -18,6 +18,7 @@
         "case-sensitive-paths-webpack-plugin": "2.1.1",
         "chalk": "1.1.3",
         "codechain-sdk": "https://github.com/CodeChain-io/codechain-sdk-js#9661d87fd3bf78ecaa6f94efa902bba41bdc2638",
+        "concurrently": "^3.6.0",
         "config": "^1.30.0",
         "cors": "^2.8.4",
         "css-loader": "0.28.7",
@@ -68,7 +69,8 @@
         "yargs": "^11.0.0"
     },
     "scripts": {
-        "start": "node scripts/start.js",
+        "start": "concurrently --kill-others \"yarn start-worker\" \"yarn start-server\" \"yarn start-client\"",
+        "start-client": "node scripts/start.js",
         "start-server": "ts-node --project tsconfig.server.json server/index.ts",
         "start-worker": "ts-node --project tsconfig.worker.json worker/index.ts",
         "build": "node scripts/build.js",

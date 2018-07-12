@@ -50,6 +50,10 @@ Run CodeChain-explorer server
 ### Client
 Run CodeChain-explorer client in development mode
 ```
+# yarn run start-client
+```
+### Running worker, server, client at once
+```
 # yarn run start
 ```
 ## Running for production
