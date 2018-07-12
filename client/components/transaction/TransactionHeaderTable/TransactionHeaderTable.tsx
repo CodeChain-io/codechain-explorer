@@ -131,6 +131,10 @@ const TransactionHeaderTable = (props: Props) => {
             <table className="transaction-header-table">
                 <tbody>
                     <tr>
+                        <td>Hash</td>
+                        <td><HexString text={transaction.hash().value} /></td>
+                    </tr>
+                    <tr>
                         <td>Registrar</td>
                         <td>{transaction.toJSON().data.registrar}</td>
                     </tr>
