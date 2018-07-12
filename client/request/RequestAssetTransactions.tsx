@@ -31,7 +31,7 @@ class RequestAssetTransactionsInternal extends React.Component<Props> {
             setTimeout(() => onTransactions(cached));
             return
         }
-        apiRequest({ path: `asset-tx/${assetType}` }).then((response: any) => {
+        apiRequest({ path: `asset-txs/${assetType}` }).then((response: any) => {
             const transactions: Transaction[] = _.map(response, (r) => getTransactionFromJSON(r));
             const cacheKey = new H256(assetType).value;
             dispatch({

@@ -1,7 +1,7 @@
 import * as React from "react";
 import * as _ from "lodash";
 
-import { Transaction, AssetTransferTransaction, AssetMintTransaction } from "codechain-sdk/lib/core/classes";
+import { Transaction, AssetTransferTransaction, AssetMintTransaction, Script } from "codechain-sdk/lib/core/classes";
 
 import "./TransactionHeaderTable.scss"
 import HexString from "../../util/HexString/HexString";
@@ -58,20 +58,16 @@ const TransactionHeaderTable = (props: Props) => {
                                                 <td><HexString link={`/asset/0x${input.prevOut.assetType}`} text={input.prevOut.assetType} /></td>
                                             </tr>
                                             <tr>
-                                                <td>Owner</td>
-                                                <td>?</td>
-                                            </tr>
-                                            <tr>
                                                 <td>Amount</td>
                                                 <td>{input.prevOut.amount}</td>
                                             </tr>
                                             <tr>
                                                 <td>LockScript</td>
-                                                <td>{input.lockScript.toString()}</td>
+                                                <td>{_.map(new Script(input.lockScript).toTokens(), (token) => token.length > 10 ? token.slice(0, 10) + "..." : token).join(" ")}</td>
                                             </tr>
                                             <tr>
                                                 <td>UnlockScript</td>
-                                                <td>{input.unlockScript.toString()}</td>
+                                                <td>{_.map(new Script(input.unlockScript).toTokens(), (token) => token.length > 10 ? token.slice(0, 10) + "..." : token).join(" ")}</td>
                                             </tr>
                                             <tr>
                                                 <td>Prev Tx</td>
@@ -102,19 +98,23 @@ const TransactionHeaderTable = (props: Props) => {
                                             </tr>
                                             <tr>
                                                 <td>Owner</td>
-                                                <td>?</td>
+                                                <td>{
+                                                    output.lockScriptHash === "f42a65ea518ba236c08b261c34af0521fa3cd1aa505e1c18980919cb8945f8f3" ? <HexString link={`/addr-asset/0x${output.parameters[0].toString("hex")}`} text={output.parameters[0].toString("hex")} /> : "Unknown"
+                                                }</td>
                                             </tr>
                                             <tr>
                                                 <td>Amount</td>
                                                 <td>{output.amount}</td>
                                             </tr>
                                             <tr>
-                                                <td>LockScript</td>
+                                                <td>LockScriptHash</td>
                                                 <td><HexString text={output.lockScriptHash} /></td>
                                             </tr>
                                             <tr>
                                                 <td>Parameters</td>
-                                                <td>{output.parameters.toString()}</td>
+                                                <td>{_.map(output.parameters, (parameter) => {
+                                                    return <div><HexString text={parameter.toString("hex")} /></div>
+                                                })}</td>
                                             </tr>
                                         </tbody>
                                     </table>
@@ -176,6 +176,12 @@ const TransactionHeaderTable = (props: Props) => {
                         <td>{transaction.toJSON().data.nonce}</td>
                     </tr>
                     <tr>
+                        <td>Owner</td>
+                        <td>{
+                            transaction.toJSON().data.lockScriptHash === "f42a65ea518ba236c08b261c34af0521fa3cd1aa505e1c18980919cb8945f8f3" ? <HexString link={`/addr-asset/0x${transaction.toJSON().data.parameters[0].toString("hex")}`} text={transaction.toJSON().data.parameters[0].toString("hex")} /> : "Unknown"
+                        }</td>
+                    </tr>
+                    <tr>
                         <td>AssetType</td>
                         <td><HexString text={transaction.getAssetSchemeAddress().value} /></td>
                     </tr>
@@ -189,7 +195,9 @@ const TransactionHeaderTable = (props: Props) => {
                     </tr>
                     <tr>
                         <td>Parameters</td>
-                        <td>{transaction.toJSON().data.parameters}</td>
+                        <td>{_.map(transaction.toJSON().data.parameters, (parameter) => {
+                            return <div><HexString text={parameter.toString("hex")} /></div>
+                        })}</td>
                     </tr>
                 </tbody>
             </table>

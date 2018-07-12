@@ -1,6 +1,7 @@
-import * as _ from "lodash";
 import { Client, SearchResponse } from "elasticsearch";
-import { Block, H256, AssetMintTransaction, ChangeShardState } from "codechain-sdk/lib/core/classes";
+import { Block, H256, Transaction, ChangeShardState } from "codechain-sdk/lib/core/classes";
+import { BlockDoc, Converter } from "../type/DocType";
+import * as _ from "lodash";
 
 export class ElasticSearchAgent {
     private client: Client;
@@ -12,9 +13,7 @@ export class ElasticSearchAgent {
 
     public checkIndexOrCreate = async (): Promise<void> => {
         const mappingBlockJson = require("./elasticsearch/mapping_block.json");
-        const mappingAssetMintTransactionJson = require("./elasticsearch/mapping_asset_mint_transaction.json");
         const isMappingBlockExisted = await this.client.indices.exists({ index: "block" });
-        const isMappingAssetMintTransactionExisted = await this.client.indices.exists({ index: "asset_mint_transaction" });
         if (!isMappingBlockExisted) {
             await this.client.indices.create({
                 index: "block"
@@ -23,16 +22,6 @@ export class ElasticSearchAgent {
                 index: "block",
                 type: "_doc",
                 body: mappingBlockJson
-            });
-        }
-        if (!isMappingAssetMintTransactionExisted) {
-            await this.client.indices.create({
-                index: "asset_mint_transaction"
-            });
-            await this.client.indices.putMapping({
-                index: "asset_mint_transaction",
-                type: "_doc",
-                body: mappingAssetMintTransactionJson
             });
         }
     }
@@ -52,7 +41,7 @@ export class ElasticSearchAgent {
                     ]
                 }
             }
-        }).then((response: SearchResponse<any>) => {
+        }).then((response: SearchResponse<BlockDoc>) => {
             if (response.hits.total === 0) {
                 return -1;
             }
@@ -70,7 +59,7 @@ export class ElasticSearchAgent {
                     ]
                 }
             }
-        }).then((response: SearchResponse<any>) => {
+        }).then((response: SearchResponse<BlockDoc>) => {
             if (response.hits.total === 0) {
                 return null;
             }
@@ -88,7 +77,7 @@ export class ElasticSearchAgent {
                     ]
                 }
             }
-        }).then((response: SearchResponse<any>) => {
+        }).then((response: SearchResponse<BlockDoc>) => {
             if (response.hits.total === 0) {
                 return null;
             }
@@ -101,19 +90,41 @@ export class ElasticSearchAgent {
     }
 
     public retractBlock = async (blockHash: H256): Promise<void> => {
-        const block = await this.getBlockByHash(blockHash);
-        _.each(block.parcels, (parcel) => {
-            if (parcel.unsigned.action instanceof ChangeShardState) {
-                _.each(parcel.unsigned.action.transactions, async (transaction) => {
-                    if (transaction instanceof AssetMintTransaction) {
-                        await this.updateAssetScheme(blockHash, { "isRetracted": true });
-                    }
-                });
-            }
-        });
-
         return this.updateBlock(blockHash, { "isRetracted": true }).then(() => {
             console.log("%s block is retracted", blockHash.value);
+        });
+    }
+
+    public getTransaction = async (hash: H256): Promise<Transaction> => {
+        return this.searchBlock({
+            query: {
+                "bool": {
+                    "must": [
+                        { "term": { "parcels.action.transactions.data.hash": hash.value } }
+                    ],
+                    "filter": {
+                        "term": {
+                            "isRetracted": false
+                        }
+                    }
+                }
+            }
+        }).then((response: SearchResponse<BlockDoc>) => {
+            if (response.hits.total === 0) {
+                return null;
+            }
+            const findBlock = Block.fromJSON(response.hits.hits[0]._source);
+            let transactionData: Transaction;
+            _.each(findBlock.parcels, (parcel) => {
+                if (parcel.unsigned.action instanceof ChangeShardState) {
+                    _.each(parcel.unsigned.action.transactions, (transaction: Transaction) => {
+                        if (transaction.hash().value === hash.value) {
+                            transactionData = transaction;
+                        }
+                    });
+                }
+            })
+            return transactionData;
         });
     }
 
@@ -128,30 +139,7 @@ export class ElasticSearchAgent {
     }
 
     private index = async (block: Block): Promise<any> => {
-        const blockDoc: any = block.toJSON();
-        blockDoc.isRetracted = false;
-        _.each(block.parcels, (parcel) => {
-            if (parcel.unsigned.action instanceof ChangeShardState) {
-                _.each(parcel.unsigned.action.transactions, async (transaction) => {
-                    if (transaction instanceof AssetMintTransaction) {
-                        try {
-                            const transactionDoc: any = transaction.toJSON();
-                            transactionDoc.isRetracted = false;
-                            await this.client.index({
-                                index: "asset_mint_transaction",
-                                type: "_doc",
-                                id: transaction.getAssetSchemeAddress().value,
-                                body: transactionDoc,
-                                refresh: "wait_for"
-                            })
-                        } catch (e) {
-                            console.error('Elastic search index error %s', e);
-                        }
-                    }
-                });
-            }
-        });
-
+        const blockDoc: BlockDoc = await Converter.fromBlock(block, this);
         return this.client.index({
             index: "block",
             type: "_doc",
@@ -177,17 +165,13 @@ export class ElasticSearchAgent {
         });
     }
 
-    private updateAssetScheme(assetType: H256, partial: any): Promise<any> {
-        return this.client.update({
-            index: "asset_mint_transaction",
+    private searchBlock(body: any): Promise<void | SearchResponse<any>> {
+        return this.client.search({
+            index: "block",
             type: "_doc",
-            id: assetType.value,
-            refresh: "wait_for",
-            body: {
-                doc: partial
-            }
+            body
         }).catch((err) => {
-            console.error('Elastic search update error %s', err);
+            console.error('Elastic search error %s', err);
         });
     }
 }

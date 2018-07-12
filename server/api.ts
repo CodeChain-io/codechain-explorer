@@ -98,7 +98,7 @@ export function createApiRouter(context: ServerContext, useCors = false) {
         }).catch(next);
     });
 
-    router.get("/asset-tx/:assetType", async (req, res, next) => {
+    router.get("/asset-txs/:assetType", async (req, res, next) => {
         const { assetType } = req.params;
         // TODO: Add limit to query.
         try {
@@ -130,11 +130,56 @@ export function createApiRouter(context: ServerContext, useCors = false) {
         }).catch(next);
     });
 
-    router.get("/account/:address/balance", async (req, res, next) => {
+    router.get("/addr-platform-account/:address", async (req, res, next) => {
         const { address } = req.params;
+        try {
+            const balance = await context.codechainSdk.rpc.chain.getBalance(new H160(address));
+            const nonce = await context.codechainSdk.rpc.chain.getNonce(new H160(address));
+            const account = {
+                balance: balance.value,
+                nonce: nonce.value
+            }
+            res.send(account);
+        } catch (e) {
+            next(e);
+        }
         context.db.getBalance(new H160(address)).then(balance => {
             res.send(balance.value.toString());
         }).catch(next);
+    });
+
+    router.get("/addr-asset-utxo/:address", async (req, res, next) => {
+        const { address } = req.params;
+        try {
+            const assets = await context.db.getAssetByAddress(new H256(address));
+            const utxoPromise = _.map(assets, asset => {
+                const assetJson = asset.toJSON();
+                return context.codechainSdk.rpc.chain.getAsset(new H256(assetJson.transactionHash), assetJson.transactionOutputIndex)
+            });
+            const utxoResult = await Promise.all(utxoPromise);
+            const utxoList = _.compact(utxoResult);
+            const utxoResponsePromise = _.map(utxoList, async (utxo) => {
+                return {
+                    asset: utxo,
+                    assetScheme: await context.db.getAssetScheme(utxo.assetType)
+                }
+            })
+            const utxoPresponse = await Promise.all(utxoResponsePromise);
+            res.send(utxoPresponse);
+        } catch (e) {
+            next(e);
+        }
+    });
+
+    router.get("/addr-asset-txs/:address", async (req, res, next) => {
+        const { address } = req.params;
+        try {
+            const transactions: Transaction[] = await context.db.getTransactionsByAddress(new H256(address));
+            const JSONTransactions = _.map(transactions, tx => tx.toJSON());
+            res.send(JSONTransactions);
+        } catch (e) {
+            next(e);
+        }
     });
 
     router.get("/asset/:assetType", async (req, res, next) => {

@@ -1,6 +1,8 @@
 import { Client, SearchResponse } from "elasticsearch";
-import { Block, SignedParcel, H256, H160, Transaction, ChangeShardState, AssetScheme, AssetTransferTransaction, AssetMintTransaction } from "codechain-sdk/lib/core/classes";
+import { Block, SignedParcel, H256, H160, Transaction, ChangeShardState, Asset, AssetScheme, AssetTransferTransaction, AssetMintTransaction } from "codechain-sdk/lib/core/classes";
+import { getTransactionFromJSON } from "codechain-sdk/lib/core/transaction/Transaction";
 import * as _ from "lodash";
+import { BlockDoc, ParcelDoc, Type, ChangeShardStateDoc, AssetTransferTransactionDoc, AssetMintTransactionDoc } from "../type/DocType";
 
 export class ElasticSearchAgent {
     private client: Client;
@@ -33,7 +35,7 @@ export class ElasticSearchAgent {
                     }
                 }
             }
-        }).then((response: SearchResponse<any>) => {
+        }).then((response: SearchResponse<BlockDoc>) => {
             if (response.hits.total === 0) {
                 return -1;
             }
@@ -55,7 +57,7 @@ export class ElasticSearchAgent {
                     }
                 }
             }
-        }).then((response: SearchResponse<any>) => {
+        }).then((response: SearchResponse<BlockDoc>) => {
             return Block.fromJSON(response.hits.hits[0]._source);
         });
     }
@@ -74,7 +76,7 @@ export class ElasticSearchAgent {
                     }
                 }
             }
-        }).then((response: SearchResponse<any>) => {
+        }).then((response: SearchResponse<BlockDoc>) => {
             if (response.hits.total === 0) {
                 return null;
             }
@@ -100,7 +102,7 @@ export class ElasticSearchAgent {
                     }
                 }
             }
-        }).then((response: SearchResponse<any>) => {
+        }).then((response: SearchResponse<BlockDoc>) => {
             if (response.hits.total === 0) {
                 return null;
             }
@@ -133,7 +135,7 @@ export class ElasticSearchAgent {
                     }
                 }
             }
-        }).then((response: SearchResponse<any>) => {
+        }).then((response: SearchResponse<BlockDoc>) => {
             return Block.fromJSON(response.hits.hits[0]._source);
         });
     }
@@ -152,7 +154,7 @@ export class ElasticSearchAgent {
                     }
                 }
             }
-        }).then((response: SearchResponse<any>) => {
+        }).then((response: SearchResponse<BlockDoc>) => {
             if (response.hits.total === 0) {
                 return [];
             }
@@ -178,21 +180,128 @@ export class ElasticSearchAgent {
         });
     }
 
-    public getAssetMintTransaction = async (assetType: H256): Promise<Transaction> => {
-        return this.searchAssetMintTransaction({
+    public getAssetMintTransaction = async (assetType: H256): Promise<AssetMintTransaction> => {
+        return this.searchBlock({
             query: {
                 "bool": {
                     "must": [
-                        { "match": { "_id": assetType.value } },
-                        { "match": { "isRetracted": false } }
-                    ]
+                        { "term": { "parcels.action.transactions.data.assetType": assetType.value } }
+                    ],
+                    "filter": {
+                        "term": {
+                            "isRetracted": false
+                        }
+                    }
                 }
             }
-        }).then((response: SearchResponse<any>) => {
+        }).then((response: SearchResponse<BlockDoc>) => {
             if (response.hits.total === 0) {
                 return null;
             }
-            return AssetMintTransaction.fromJSON(response.hits.hits[0]._source);
+            return _.chain(response.hits.hits).flatMap(hit => Block.fromJSON(hit._source).parcels)
+                .filter((parcel: SignedParcel) => parcel.unsigned.action instanceof ChangeShardState)
+                .flatMap((parcel: SignedParcel) => (parcel.unsigned.action as ChangeShardState).transactions)
+                .find((transaction: Transaction) => transaction instanceof AssetMintTransaction && transaction.getAssetSchemeAddress().value === assetType.value)
+                .value() as AssetMintTransaction;
+        });
+    }
+
+    public getTransactionsByAddress = async (address: H256): Promise<Transaction[]> => {
+        return this.searchBlock({
+            query: {
+                "bool": {
+                    "must": {
+                        "bool": {
+                            "should": [
+                                { "term": { "parcels.action.transactions.data.outputs.owner": address.value } },
+                                { "term": { "parcels.action.transactions.data.inputs.owner": address.value } },
+                                { "term": { "parcels.action.transactions.data.owner": address.value } }
+                            ]
+                        }
+                    },
+                    "filter": {
+                        "term": {
+                            "isRetracted": false
+                        }
+                    }
+                }
+            }
+        }).then((response: SearchResponse<BlockDoc>) => {
+            if (response.hits.total === 0) {
+                return [];
+            }
+            return _.chain(response.hits.hits).flatMap(hit => hit._source.parcels)
+                .filter((parcel: ParcelDoc) => Type.isChangeShardStateDoc(parcel.action))
+                .flatMap((parcel: ParcelDoc) => (parcel.action as ChangeShardStateDoc).transactions)
+                .filter(transaction => {
+                    if (Type.isAssetTransferTransactionDoc(transaction)) {
+                        const transactionDoc = (transaction as AssetTransferTransactionDoc);
+                        return _.findIndex(transactionDoc.data.outputs, (output) => output.owner === address.value) !== -1;
+                    } else if (Type.isAssetMintTransactionDoc(transaction)) {
+                        const transactionDoc = (transaction as AssetMintTransactionDoc);
+                        return transactionDoc.data.owner === address.value;
+                    }
+                    throw new Error("Unexpected transaction")
+                })
+                .map(transactionDoc => getTransactionFromJSON(transactionDoc))
+                .value();
+        });
+    }
+
+    public getAssetByAddress = async (address: H256): Promise<Asset[]> => {
+        return this.searchBlock({
+            query: {
+                "bool": {
+                    "must": {
+                        "bool": {
+                            "should": [
+                                { "term": { "parcels.action.transactions.data.outputs.owner": address.value } },
+                                { "term": { "parcels.action.transactions.data.owner": address.value } }
+                            ],
+                        }
+                    },
+                    "filter": {
+                        "term": {
+                            "isRetracted": false
+                        }
+                    }
+                }
+            }
+        }).then((response: SearchResponse<BlockDoc>) => {
+            if (response.hits.total === 0) {
+                return [];
+            }
+            return _.chain(response.hits.hits).flatMap(hit => hit._source.parcels)
+                .filter((parcel: ParcelDoc) => Type.isChangeShardStateDoc(parcel.action))
+                .flatMap((parcel: ParcelDoc) => (parcel.action as ChangeShardStateDoc).transactions)
+                .flatMap(transaction => {
+                    if (Type.isAssetTransferTransactionDoc(transaction)) {
+                        return _.chain((transaction as AssetTransferTransactionDoc).data.outputs)
+                            .filter(output => output.owner === address.value)
+                            .map((output, index) => Asset.fromJSON({
+                                asset_type: output.assetType,
+                                lock_script_hash: output.lockScriptHash,
+                                parameters: output.parameters,
+                                amount: output.amount,
+                                transactionHash: transaction.data.hash,
+                                transactionOutputIndex: index
+                            })).value();
+                    } else if (Type.isAssetMintTransactionDoc(transaction)) {
+                        const transactionDoc = (transaction as AssetMintTransactionDoc);
+                        if (transactionDoc.data.owner === address.value) {
+                            return Asset.fromJSON({
+                                asset_type: transactionDoc.data.assetType,
+                                lock_script_hash: transactionDoc.data.lockScriptHash,
+                                parameters: transactionDoc.data.parameters,
+                                amount: transactionDoc.data.amount,
+                                transactionHash: transactionDoc.data.hash,
+                                transactionOutputIndex: 0
+                            });
+                        }
+                        return [];
+                    }
+                    throw new Error("Unexpected transaction")
+                }).value();
         });
     }
 
@@ -212,36 +321,35 @@ export class ElasticSearchAgent {
     }
 
     public getAssetScheme = async (assetType: H256): Promise<AssetScheme> => {
-        return this.searchAssetMintTransaction({
+        return this.searchBlock({
             query: {
                 "bool": {
                     "must": [
-                        { "match": { "_id": assetType.value } },
-                        { "match": { "isRetracted": false } }
-                    ]
+                        { "term": { "parcels.action.transactions.data.assetType": assetType.value } }
+                    ],
+                    "filter": {
+                        "term": {
+                            "isRetracted": false
+                        }
+                    }
                 }
             }
-        }).then((response: SearchResponse<any>) => {
+        }).then((response: SearchResponse<BlockDoc>) => {
             if (response.hits.total === 0) {
                 return null;
             }
-            return AssetMintTransaction.fromJSON(response.hits.hits[0]._source).getAssetScheme();
+            const assetMintTransaction = _.chain(response.hits.hits).flatMap(hit => Block.fromJSON(hit._source).parcels)
+                .filter((parcel: SignedParcel) => parcel.unsigned.action instanceof ChangeShardState)
+                .flatMap((parcel: SignedParcel) => (parcel.unsigned.action as ChangeShardState).transactions)
+                .find((transaction: Transaction) => transaction instanceof AssetMintTransaction && transaction.getAssetSchemeAddress().value === assetType.value)
+                .value() as AssetMintTransaction;
+            return assetMintTransaction.getAssetScheme();
         });
     }
 
     private searchBlock(body: any): Promise<void | SearchResponse<any>> {
         return this.client.search({
             index: "block",
-            type: "_doc",
-            body
-        }).catch((err) => {
-            console.error('Elastic search error %s', err);
-        });
-    }
-
-    private searchAssetMintTransaction(body: any): Promise<void | SearchResponse<any>> {
-        return this.client.search({
-            index: "asset_mint_transaction",
             type: "_doc",
             body
         }).catch((err) => {

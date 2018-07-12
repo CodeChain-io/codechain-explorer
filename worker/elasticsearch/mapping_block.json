@@ -116,6 +116,15 @@
                             "properties": {
                                 "data": {
                                     "properties": {
+                                        "owner": {
+                                            "type": "text",
+                                            "fields": {
+                                                "keyword": {
+                                                    "type": "keyword",
+                                                    "ignore_above": 256
+                                                }
+                                            }
+                                        },
                                         "amount": {
                                             "type": "long"
                                         },
@@ -128,10 +137,48 @@
                                                 }
                                             }
                                         },
+                                        "assetType": {
+                                            "type": "text",
+                                            "fields": {
+                                                "keyword": {
+                                                    "type": "keyword",
+                                                    "ignore_above": 256
+                                                }
+                                            }
+                                        },
                                         "inputs": {
                                             "properties": {
+                                                "unlockScript": {
+                                                    "properties": {
+                                                        "data": {
+                                                            "type": "long"
+                                                        },
+                                                        "type": {
+                                                            "type": "text",
+                                                            "fields": {
+                                                                "keyword": {
+                                                                    "type": "keyword",
+                                                                    "ignore_above": 256
+                                                                }
+                                                            }
+                                                        }
+                                                    }
+                                                },
                                                 "lockScript": {
-                                                    "type": "long"
+                                                    "properties": {
+                                                        "data": {
+                                                            "type": "long"
+                                                        },
+                                                        "type": {
+                                                            "type": "text",
+                                                            "fields": {
+                                                                "keyword": {
+                                                                    "type": "keyword",
+                                                                    "ignore_above": 256
+                                                                }
+                                                            }
+                                                        }
+                                                    }
                                                 },
                                                 "prevOut": {
                                                     "properties": {
@@ -149,6 +196,15 @@
                                                         },
                                                         "index": {
                                                             "type": "long"
+                                                        },
+                                                        "owner": {
+                                                            "type": "text",
+                                                            "fields": {
+                                                                "keyword": {
+                                                                    "type": "keyword",
+                                                                    "ignore_above": 256
+                                                                }
+                                                            }
                                                         },
                                                         "transactionHash": {
                                                             "type": "text",
@@ -172,12 +228,28 @@
                                                 }
                                             }
                                         },
+                                        "parameters": {
+                                            "properties": {
+                                                "data": {
+                                                    "type": "long"
+                                                },
+                                                "type": {
+                                                    "type": "text",
+                                                    "fields": {
+                                                        "keyword": {
+                                                            "type": "keyword",
+                                                            "ignore_above": 256
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        },
                                         "metadata": {
                                             "type": "text",
                                             "fields": {
                                                 "keyword": {
                                                     "type": "keyword",
-                                                    "ignore_above": 5000
+                                                    "ignore_above": 1000
                                                 }
                                             }
                                         },
@@ -207,6 +279,22 @@
                                                         "keyword": {
                                                             "type": "keyword",
                                                             "ignore_above": 256
+                                                        }
+                                                    }
+                                                },
+                                                "parameters": {
+                                                    "properties": {
+                                                        "data": {
+                                                            "type": "long"
+                                                        },
+                                                        "type": {
+                                                            "type": "text",
+                                                            "fields": {
+                                                                "keyword": {
+                                                                    "type": "keyword",
+                                                                    "ignore_above": 256
+                                                                }
+                                                            }
                                                         }
                                                     }
                                                 }

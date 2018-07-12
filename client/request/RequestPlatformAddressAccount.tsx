@@ -10,10 +10,10 @@ interface OwnProps {
     onError: (e: ApiError) => void;
 }
 
-class RequestAccount extends React.Component<OwnProps> {
+class RequestPlatformAddressAccount extends React.Component<OwnProps> {
     public componentWillMount() {
         const { address, onAccount, onError } = this.props;
-        apiRequest({ path: `account/${address}` }).then((response: any) => {
+        apiRequest({ path: `addr-platform-account/${address}` }).then((response: any) => {
             const { nonce, balance } = response;
             onAccount({
                 nonce: new U256(nonce),
@@ -27,4 +27,4 @@ class RequestAccount extends React.Component<OwnProps> {
     }
 }
 
-export default RequestAccount;
+export default RequestPlatformAddressAccount;

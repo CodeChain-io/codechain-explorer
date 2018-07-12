@@ -12,12 +12,13 @@ import Block from './pages/Block';
 import Header from './components/header/Header';
 import Home from './pages/Home';
 import Parcel from './pages/Parcel';
-import Account from './pages/Account';
 import Asset from "./pages/Asset";
 import NodeInfo from "./pages/NodeInfo";
 import SendSignedParcel from './pages/SendSignedParcel';
 import Transaction from './pages/Transaction';
 import Footer from './components/footer/Footer';
+import PlatformAddress from './pages/PlatformAddress';
+import AssetTransferAddress from './pages/AssetTransferAddress';
 
 ReactDOM.render(
   <Provider store={store}>
@@ -30,9 +31,10 @@ ReactDOM.render(
           <Route path="/node_info" component={NodeInfo} />
           <Route path="/block/:id" component={Block} />
           <Route path="/parcel/:hash" component={Parcel} />
-          <Route path="/account/:address" component={Account} />
           <Route path="/asset/:type" component={Asset} />
           <Route path="/tx/:hash" component={Transaction} />
+          <Route path="/addr-platform/:address" component={PlatformAddress} />
+          <Route path="/addr-asset/:address" component={AssetTransferAddress} />
         </div>
         <Footer />
       </div>

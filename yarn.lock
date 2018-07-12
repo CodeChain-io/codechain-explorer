@@ -1401,6 +1401,13 @@ buffer@^4.3.0:
     ieee754 "^1.1.4"
     isarray "^1.0.0"
 
+buffer@^5.1.0:
+  version "5.1.0"
+  resolved "https://registry.yarnpkg.com/buffer/-/buffer-5.1.0.tgz#c913e43678c7cb7c8bd16afbcddb6c5505e8f9fe"
+  dependencies:
+    base64-js "^1.0.2"
+    ieee754 "^1.1.4"
+
 builtin-modules@^1.0.0, builtin-modules@^1.1.1:
   version "1.1.1"
   resolved "https://registry.yarnpkg.com/builtin-modules/-/builtin-modules-1.1.1.tgz#270f076c5a72c02f5b65a47df94c5fe3a278892f"
@@ -1681,12 +1688,27 @@ code-point-at@^1.0.0:
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/code-point-at/-/code-point-at-1.1.0.tgz#0d070b4d043a5bea33a2f1a40e2edb3d9a4ccf77"
 
-"codechain-sdk@https://github.com/CodeChain-io/codechain-sdk-js#9661d87fd3bf78ecaa6f94efa902bba41bdc2638":
+"codechain-sdk@https://github.com/CodeChain-io/codechain-sdk-js#185a3d9fd7593a06fff3274f93c555643e04255c":
   version "0.1.0-alpha.12"
-  resolved "https://github.com/CodeChain-io/codechain-sdk-js#9661d87fd3bf78ecaa6f94efa902bba41bdc2638"
+  resolved "https://github.com/CodeChain-io/codechain-sdk-js#185a3d9fd7593a06fff3274f93c555643e04255c"
   dependencies:
     bignumber.js "^6.0.0"
     blakejs "^1.1.0"
+    buffer "^5.1.0"
+    elliptic "^6.4.0"
+    jayson "^2.0.6"
+    lodash "^4.17.10"
+    node-fetch "^2.1.2"
+    ripemd160 "^2.0.2"
+    rlp "^2.0.0"
+
+"codechain-sdk@https://github.com/CodeChain-io/codechain-sdk-js#7a4184a1845b0f50e4de31f5eea0bd2168fec81c":
+  version "0.1.0-alpha.12"
+  resolved "https://github.com/CodeChain-io/codechain-sdk-js#7a4184a1845b0f50e4de31f5eea0bd2168fec81c"
+  dependencies:
+    bignumber.js "^6.0.0"
+    blakejs "^1.1.0"
+    buffer "^5.1.0"
     elliptic "^6.4.0"
     jayson "^2.0.6"
     lodash "^4.17.10"

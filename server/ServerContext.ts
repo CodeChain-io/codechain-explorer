@@ -1,4 +1,4 @@
-import { ServerConfig } from "./";
+import { ServerConfig } from ".";
 import { ElasticSearchAgent } from "./ElasticSearchAgent";
 import { SDK } from "codechain-sdk";
 

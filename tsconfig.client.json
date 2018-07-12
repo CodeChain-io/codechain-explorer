@@ -29,6 +29,7 @@
         "webpack",
         "jest",
         "server",
-        "worker"
+        "worker",
+        "type"
     ]
 }
