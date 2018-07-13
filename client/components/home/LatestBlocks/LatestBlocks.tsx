@@ -42,7 +42,7 @@ const LatestBlocks = (props: Props) => {
                                         const txCount = action.transactions ? action.transactions.length : 0;
                                         return memo + txCount;
                                     }, 0)}</td>
-                                    <td><HexString text={block.author.value} length={10} /></td>
+                                    <td><HexString link={`/addr-platform/0x${block.author.value}`} text={block.author.value} length={10} /></td>
                                     <td>{moment.unix(block.timestamp).fromNow()}</td>
                                 </tr>
                             );

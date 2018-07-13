@@ -25,6 +25,7 @@ export interface ParcelDoc {
     nonce: string;
     fee: string;
     networkId: number;
+    sender: string;
     sig: string;
     hash: string;
     action: ActionDoc;
@@ -228,6 +229,7 @@ export const fromParcel = async (block: Block, parcel: SignedParcel, elasticSear
         nonce: parcelJson.nonce,
         fee: parcelJson.fee,
         networkId: parcelJson.networkId,
+        sender: parcel.getSender().value,
         sig: parcelJson.sig,
         hash: parcelJson.hash,
         action

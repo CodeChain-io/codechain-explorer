@@ -17,7 +17,7 @@ const getParcelElement = (parcel: SignedParcel) => {
                     Sender
                 </td>
                 <td>
-                    <HexString text={parcel.getSender().value} />
+                    <HexString link={`/addr-platform/0x${parcel.getSender().value}`} text={parcel.getSender().value} />
                 </td>
             </tr>,
             <tr className="custom-row" key="parcel-header-table-payment-receiver">
@@ -25,7 +25,7 @@ const getParcelElement = (parcel: SignedParcel) => {
                     Receiver
                 </td>
                 <td>
-                    <HexString text={parcel.unsigned.action.receiver.value} />
+                    <HexString link={`/addr-platform/0x${parcel.unsigned.action.receiver.value}`} text={parcel.unsigned.action.receiver.value} />
                 </td>
             </tr>,
             <tr className="custom-row" key="parcel-header-table-payment-amount">

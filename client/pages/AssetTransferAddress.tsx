@@ -4,8 +4,9 @@ import { Container } from 'reactstrap';
 
 import { Transaction, Asset, AssetScheme } from "codechain-sdk/lib/core/classes"
 import { RequestAssetTransferAddressUTXO, RequestAssetTransferAddressTransactions } from "../request";
-import UTXOList from "../components/address/UTXOList/UTXOList";
+import UTXOList from "../components/assetTransferAddress/UTXOList/UTXOList";
 import TransactionList from "../components/transaction/TransactionList/TransactionList";
+import HexString from "../components/util/HexString/HexString";
 
 interface Props {
     match: match<{ address: string }>;
@@ -42,7 +43,7 @@ class AssetTransferAddress extends React.Component<Props, State> {
             <div>
                 <Container>
                     <h3 className="mt-3">Asset Transfer Address</h3>
-                    <p>{address}</p>
+                    <p><HexString text={address} /></p>
                     <h4>UTXO</h4>
                     <UTXOList utxo={utxo} />
                     <h4>History</h4>

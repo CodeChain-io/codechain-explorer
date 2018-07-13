@@ -112,8 +112,8 @@ const TransactionHeaderTable = (props: Props) => {
                                             </tr>
                                             <tr>
                                                 <td>Parameters</td>
-                                                <td>{_.map(output.parameters, (parameter) => {
-                                                    return <div><HexString text={parameter.toString("hex")} /></div>
+                                                <td>{_.map(output.parameters, (parameter, i) => {
+                                                    return <div key={`transaction-paramter-${i}`}><HexString text={parameter.toString("hex")} /></div>
                                                 })}</td>
                                             </tr>
                                         </tbody>
@@ -136,7 +136,7 @@ const TransactionHeaderTable = (props: Props) => {
                     </tr>
                     <tr>
                         <td>Registrar</td>
-                        <td>{transaction.toJSON().data.registrar}</td>
+                        <td>{transaction.toJSON().data.registrar ? <HexString link={`/addr-platform/0x${transaction.toJSON().data.registrar}`} text={(transaction.toJSON().data.registrar as string)} /> : "Not existed"}</td>
                     </tr>
                     <tr>
                         <td>Metadata</td>
@@ -148,7 +148,7 @@ const TransactionHeaderTable = (props: Props) => {
                                             Name
                                         </td>
                                         <td>
-                                            {metadata.name ? metadata.name : "Not defined"}
+                                            {metadata.name ? metadata.name : "Unknown"}
                                         </td>
                                     </tr>
                                     <tr>
@@ -156,7 +156,7 @@ const TransactionHeaderTable = (props: Props) => {
                                             Description
                                         </td>
                                         <td>
-                                            {metadata.description ? metadata.description : "Not defined"}
+                                            {metadata.description ? metadata.description : "Unknown"}
                                         </td>
                                     </tr>
                                     <tr>
@@ -164,7 +164,7 @@ const TransactionHeaderTable = (props: Props) => {
                                             Icon
                                         </td>
                                         <td>
-                                            {metadata.icon_url ? <img className="asset-icon" src={metadata.icon_url} /> : "Not defined"}
+                                            {metadata.icon_url ? <img className="asset-icon" src={metadata.icon_url} /> : "Unknown"}
                                         </td>
                                     </tr>
                                 </tbody>
@@ -195,8 +195,8 @@ const TransactionHeaderTable = (props: Props) => {
                     </tr>
                     <tr>
                         <td>Parameters</td>
-                        <td>{_.map(transaction.toJSON().data.parameters, (parameter) => {
-                            return <div><HexString text={parameter.toString("hex")} /></div>
+                        <td>{_.map(transaction.toJSON().data.parameters, (parameter, i) => {
+                            return <div key={`transaction-heder-param-${i}`}><HexString text={parameter.toString("hex")} /></div>
                         })}</td>
                     </tr>
                 </tbody>

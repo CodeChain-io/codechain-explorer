@@ -55,7 +55,7 @@ const UTXOList = (prop: OwnProps) => {
                                         </tr>
                                         <tr>
                                             <td>Icon</td>
-                                            <td><img className="asset-icon" src={metadata.icon_url} /></td>
+                                            <td>{metadata.icon_url ? <img className="asset-icon" src={metadata.icon_url} /> : "Unknown"}</td>
                                         </tr>
                                     </tbody>
                                 </table>

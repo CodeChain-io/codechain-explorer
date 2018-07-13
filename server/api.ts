@@ -143,15 +143,49 @@ export function createApiRouter(context: ServerContext, useCors = false) {
         } catch (e) {
             next(e);
         }
-        context.db.getBalance(new H160(address)).then(balance => {
-            res.send(balance.value.toString());
-        }).catch(next);
+    });
+
+    router.get("/addr-platform-blocks/:address", async (req, res, next) => {
+        const { address } = req.params;
+        try {
+            const blocks = await context.db.getBlocksByPlatformAddress(new H160(address));
+            res.send(blocks);
+        } catch (e) {
+            next(e);
+        }
+    });
+
+    router.get("/addr-platform-parcels/:address", async (req, res, next) => {
+        const { address } = req.params;
+        try {
+            const parcels = await context.db.getParcelsByPlatformAddress(new H160(address));
+            res.send(parcels);
+        } catch (e) {
+            next(e);
+        }
+    });
+
+    router.get("/addr-platform-assets/:address", async (req, res, next) => {
+        const { address } = req.params;
+        try {
+            const assets = await context.db.getAssetsByPlatformAddress(new H160(address));
+            const assetBundleResponsePromise = _.map(assets, async asset => {
+                return {
+                    asset,
+                    assetScheme: await context.db.getAssetScheme(asset.assetType)
+                }
+            })
+            const assetBundleResponse = await Promise.all(assetBundleResponsePromise);
+            res.send(assetBundleResponse);
+        } catch (e) {
+            next(e);
+        }
     });
 
     router.get("/addr-asset-utxo/:address", async (req, res, next) => {
         const { address } = req.params;
         try {
-            const assets = await context.db.getAssetByAddress(new H256(address));
+            const assets = await context.db.getAssetsByAssetAddress(new H256(address));
             const utxoPromise = _.map(assets, asset => {
                 const assetJson = asset.toJSON();
                 return context.codechainSdk.rpc.chain.getAsset(new H256(assetJson.transactionHash), assetJson.transactionOutputIndex)

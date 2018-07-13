@@ -2,6 +2,7 @@ import * as React from "react";
 
 import "./AssetHeaderTable.scss"
 import { AssetScheme } from "codechain-sdk/lib/core/classes";
+import HexString from "../../util/HexString/HexString";
 
 interface OwnProps {
     assetScheme: AssetScheme;
@@ -32,15 +33,15 @@ const AssetHeaderTable = (prop: OwnProps) => {
             </tr>
             <tr>
                 <td>Icon</td>
-                <td><img src={metadata.icon_url} /></td>
+                <td>{metadata.icon_url ? <img className="asset-icon" src={metadata.icon_url} /> : "Unknown"}</td>
             </tr>
             <tr>
-                <td>Total mint</td>
+                <td>Total</td>
                 <td>{prop.assetScheme.amount}</td>
             </tr>
             <tr>
                 <td>Registrar</td>
-                <td>{prop.assetScheme.registrar}</td>
+                <td>{prop.assetScheme.registrar ? (prop.assetScheme.registrar.value ? <HexString link={`/addr-platform/0x${prop.assetScheme.registrar.value}`} text={(prop.assetScheme.registrar.value as string)} /> : "Not existed") : "Not existed"}</td>
             </tr>
             <tr>
                 <td>Description</td>

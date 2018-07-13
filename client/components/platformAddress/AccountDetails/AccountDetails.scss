@@ -1,0 +1,19 @@
+.account-detail-container {
+  .account-detail-table {
+    width: 100%;
+    margin-bottom: 0;
+    table-layout: auto;
+    word-break: break-all;
+    padding: 16px;
+    tr {
+      border-top: 1px solid #ccc;
+      td {
+        padding-top: 8px;
+        padding-bottom: 8px;
+      }
+      td:first-child {
+        width: 20%;
+      }
+    }
+  }
+}

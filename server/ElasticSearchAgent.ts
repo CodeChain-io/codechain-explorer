@@ -2,7 +2,7 @@ import { Client, SearchResponse } from "elasticsearch";
 import { Block, SignedParcel, H256, H160, Transaction, ChangeShardState, Asset, AssetScheme, AssetTransferTransaction, AssetMintTransaction } from "codechain-sdk/lib/core/classes";
 import { getTransactionFromJSON } from "codechain-sdk/lib/core/transaction/Transaction";
 import * as _ from "lodash";
-import { BlockDoc, ParcelDoc, Type, ChangeShardStateDoc, AssetTransferTransactionDoc, AssetMintTransactionDoc } from "../type/DocType";
+import { BlockDoc, ParcelDoc, Type, ChangeShardStateDoc, AssetTransferTransactionDoc, AssetMintTransactionDoc, PaymentDoc } from "../type/DocType";
 
 export class ElasticSearchAgent {
     private client: Client;
@@ -45,6 +45,11 @@ export class ElasticSearchAgent {
 
     public getBlockByHash = async (hash: H256): Promise<Block> => {
         return this.searchBlock({
+            sort: [
+                {
+                    "number": { order: "desc" }
+                }
+            ],
             query: {
                 "bool": {
                     "must": [
@@ -64,6 +69,11 @@ export class ElasticSearchAgent {
 
     public getParcel = async (hash: H256): Promise<SignedParcel> => {
         return this.searchBlock({
+            sort: [
+                {
+                    "number": { order: "desc" }
+                }
+            ],
             query: {
                 "bool": {
                     "must": [
@@ -90,6 +100,11 @@ export class ElasticSearchAgent {
 
     public getTransaction = async (hash: H256): Promise<Transaction> => {
         return this.searchBlock({
+            sort: [
+                {
+                    "number": { order: "desc" }
+                }
+            ],
             query: {
                 "bool": {
                     "must": [
@@ -123,6 +138,11 @@ export class ElasticSearchAgent {
 
     public getBlock = async (blockNumber: number): Promise<Block> => {
         return this.searchBlock({
+            sort: [
+                {
+                    "number": { order: "desc" }
+                }
+            ],
             query: {
                 "bool": {
                     "must": [
@@ -142,6 +162,11 @@ export class ElasticSearchAgent {
 
     public getAssetTransferTransactions = async (assetType: H256): Promise<Transaction[]> => {
         return this.searchBlock({
+            sort: [
+                {
+                    "number": { order: "desc" }
+                }
+            ],
             query: {
                 "bool": {
                     "must": [
@@ -182,6 +207,11 @@ export class ElasticSearchAgent {
 
     public getAssetMintTransaction = async (assetType: H256): Promise<AssetMintTransaction> => {
         return this.searchBlock({
+            sort: [
+                {
+                    "number": { order: "desc" }
+                }
+            ],
             query: {
                 "bool": {
                     "must": [
@@ -206,8 +236,114 @@ export class ElasticSearchAgent {
         });
     }
 
+    public getBlocksByPlatformAddress = async (address: H160): Promise<Block[]> => {
+        return this.searchBlock({
+            sort: [
+                {
+                    "number": { order: "desc" }
+                }
+            ],
+            query: {
+                "bool": {
+                    "must": {
+                        "term": { "author": address.value }
+                    },
+                    "filter": {
+                        "term": {
+                            "isRetracted": false
+                        }
+                    }
+                }
+            }
+        }).then((response: SearchResponse<BlockDoc>) => {
+            if (response.hits.total === 0) {
+                return [];
+            }
+            return _.map(response.hits.hits, hit => Block.fromJSON(hit._source));
+        });
+    }
+
+    public getParcelsByPlatformAddress = async (address: H160): Promise<SignedParcel[]> => {
+        return this.searchBlock({
+            sort: [
+                {
+                    "number": { order: "desc" }
+                }
+            ],
+            query: {
+                "bool": {
+                    "must": {
+                        "bool": {
+                            "should": [
+                                { "term": { "parcels.action.receiver": address.value } },
+                                { "term": { "parcels.sender": address.value } }
+                            ]
+                        }
+                    },
+                    "filter": {
+                        "term": {
+                            "isRetracted": false
+                        }
+                    }
+                }
+            }
+        }).then((response: SearchResponse<BlockDoc>) => {
+            if (response.hits.total === 0) {
+                return [];
+            }
+            return _.chain(response.hits.hits).flatMap(hit => hit._source.parcels)
+                .filter((parcelDoc: ParcelDoc) => {
+                    return (Type.isPaymentDoc(parcelDoc.action) && (parcelDoc.action as PaymentDoc).receiver === address.value) || parcelDoc.sender === address.value;
+                }).map(parcelDoc => SignedParcel.fromJSON(parcelDoc)).value();
+        });
+    }
+
+    public getAssetsByPlatformAddress = async (address: H160): Promise<Asset[]> => {
+        return this.searchBlock({
+            sort: [
+                {
+                    "number": { order: "desc" }
+                }
+            ],
+            query: {
+                "bool": {
+                    "must": {
+                        "term": { "parcels.action.transactions.data.registrar": address.value }
+                    },
+                    "filter": {
+                        "term": {
+                            "isRetracted": false
+                        }
+                    }
+                }
+            }
+        }).then((response: SearchResponse<BlockDoc>) => {
+            if (response.hits.total === 0) {
+                return [];
+            }
+            return _.chain(response.hits.hits).flatMap(hit => hit._source.parcels)
+                .flatMap((parcel: ParcelDoc) => (parcel.action as ChangeShardStateDoc).transactions)
+                .filter(transaction => {
+                    return Type.isAssetMintTransactionDoc(transaction) && (transaction as AssetMintTransactionDoc).data.registrar === address.value;
+                })
+                .map((transactionDoc: AssetMintTransactionDoc) => Asset.fromJSON({
+                    asset_type: transactionDoc.data.assetType,
+                    lock_script_hash: transactionDoc.data.lockScriptHash,
+                    parameters: transactionDoc.data.parameters,
+                    amount: transactionDoc.data.amount,
+                    transactionHash: transactionDoc.data.hash,
+                    transactionOutputIndex: 0
+                })).value();
+        });
+    }
+
     public getTransactionsByAddress = async (address: H256): Promise<Transaction[]> => {
         return this.searchBlock({
+            sort: [
+                {
+                    "number": { order: "desc" }
+                }
+            ],
             query: {
                 "bool": {
                     "must": {
@@ -248,8 +384,13 @@ export class ElasticSearchAgent {
         });
     }
 
-    public getAssetByAddress = async (address: H256): Promise<Asset[]> => {
+    public getAssetsByAssetAddress = async (address: H160): Promise<Asset[]> => {
         return this.searchBlock({
+            sort: [
+                {
+                    "number": { order: "desc" }
+                }
+            ],
             query: {
                 "bool": {
                     "must": {
@@ -322,6 +463,11 @@ export class ElasticSearchAgent {
 
     public getAssetScheme = async (assetType: H256): Promise<AssetScheme> => {
         return this.searchBlock({
+            sort: [
+                {
+                    "number": { order: "desc" }
+                }
+            ],
             query: {
                 "bool": {
                     "must": [

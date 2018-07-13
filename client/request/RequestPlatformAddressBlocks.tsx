@@ -1,4 +1,5 @@
 import * as React from "react";
+import * as _ from "lodash";
 
 import { Block } from "codechain-sdk/lib/core/classes";
 
@@ -13,8 +14,8 @@ interface OwnProps {
 class RequestPlatformAddressBlocks extends React.Component<OwnProps> {
     public componentWillMount() {
         const { address, onBlocks, onError } = this.props;
-        apiRequest({ path: `addr-platform-blocks/${address}` }).then(() => {
-            onBlocks([]);
+        apiRequest({ path: `addr-platform-blocks/${address}` }).then((response) => {
+            onBlocks(_.map(response, res => Block.fromJSON(res)));
         }).catch(onError);
     }
 

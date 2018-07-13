@@ -1,0 +1,37 @@
+.asset-list-container {
+  .asset-list-table {
+    width: 100%;
+    margin-bottom: 0;
+    table-layout: fixed;
+    word-break: break-all;
+    padding: 16px;
+    tr {
+      border-top: 1px solid #ccc;
+      td {
+        padding-top: 8px;
+        padding-bottom: 8px;
+      }
+      td:first-child {
+        width: 20%;
+      }
+    }
+    .inner-table {
+      width: 100%;
+      tr {
+        border: none;
+        td {
+          padding-top: 4px;
+          padding-bottom: 4px;
+          .asset-icon {
+            width: 30px;
+            height: 30px;
+            border: 1px solid #eee;
+          }
+        }
+        td:first-child {
+          width: 15%;
+        }
+      }
+    }
+  }
+}
