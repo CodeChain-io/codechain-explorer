@@ -108,7 +108,7 @@ const TransactionHeaderTable = (props: Props) => {
                                             </tr>
                                             <tr>
                                                 <td>LockScriptHash</td>
-                                                <td><HexString text={output.lockScriptHash} /></td>
+                                                <td>{output.lockScriptHash === "f42a65ea518ba236c08b261c34af0521fa3cd1aa505e1c18980919cb8945f8f3" ? "P2PKH" : <HexString text={output.lockScriptHash} />}</td>
                                             </tr>
                                             <tr>
                                                 <td>Parameters</td>
@@ -191,7 +191,7 @@ const TransactionHeaderTable = (props: Props) => {
                     </tr>
                     <tr>
                         <td>LockScriptHash</td>
-                        <td><HexString text={transaction.toJSON().data.lockScriptHash} /></td>
+                        <td>{transaction.toJSON().data.lockScriptHash === "f42a65ea518ba236c08b261c34af0521fa3cd1aa505e1c18980919cb8945f8f3" ? "P2PKH" : <HexString text={transaction.toJSON().data.lockScriptHash} />}</td>
                     </tr>
                     <tr>
                         <td>Parameters</td>
