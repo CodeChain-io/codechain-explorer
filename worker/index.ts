@@ -1,6 +1,6 @@
 import { BlockSyncWorker } from "./BlockSyncWorker";
 import { CodeChainAgent } from "./CodeChainAgent";
-import { ElasticSearchAgent } from "./ElasticSearchAgent";
+import { ElasticSearchAgent } from "../db/ElasticSearchAgent";
 
 export interface WorkerConfig {
     elasticSearch: {

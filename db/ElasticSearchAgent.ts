@@ -2,7 +2,7 @@ import { Client, SearchResponse } from "elasticsearch";
 import { Block, SignedParcel, H256, H160, Transaction, ChangeShardState, Asset, AssetScheme, AssetTransferTransaction, AssetMintTransaction } from "codechain-sdk/lib/core/classes";
 import { getTransactionFromJSON } from "codechain-sdk/lib/core/transaction/Transaction";
 import * as _ from "lodash";
-import { BlockDoc, ParcelDoc, Type, ChangeShardStateDoc, AssetTransferTransactionDoc, AssetMintTransactionDoc, PaymentDoc } from "../type/DocType";
+import { BlockDoc, ParcelDoc, Type, ChangeShardStateDoc, AssetTransferTransactionDoc, AssetMintTransactionDoc, PaymentDoc, Converter } from "../db/DocType";
 
 export class ElasticSearchAgent {
     private client: Client;
@@ -493,6 +493,31 @@ export class ElasticSearchAgent {
         });
     }
 
+    public checkIndexOrCreate = async (): Promise<void> => {
+        const mappingBlockJson = require("./mapping_block.json");
+        const isMappingBlockExisted = await this.client.indices.exists({ index: "block" });
+        if (!isMappingBlockExisted) {
+            await this.client.indices.create({
+                index: "block"
+            });
+            await this.client.indices.putMapping({
+                index: "block",
+                type: "_doc",
+                body: mappingBlockJson
+            });
+        }
+    }
+
+    public addBlock = async (block: Block): Promise<void> => {
+        return this.indexBlock(block);
+    }
+
+    public retractBlock = async (blockHash: H256): Promise<void> => {
+        return this.updateBlock(blockHash, { "isRetracted": true }).then(() => {
+            console.log("%s block is retracted", blockHash.value);
+        });
+    }
+
     private searchBlock(body: any): Promise<void | SearchResponse<any>> {
         return this.client.search({
             index: "block",
@@ -500,6 +525,33 @@ export class ElasticSearchAgent {
             body
         }).catch((err) => {
             console.error('Elastic search error %s', err);
+        });
+    }
+
+    private indexBlock = async (block: Block): Promise<any> => {
+        const blockDoc: BlockDoc = await Converter.fromBlock(block, this);
+        return this.client.index({
+            index: "block",
+            type: "_doc",
+            id: block.hash.value,
+            body: blockDoc,
+            refresh: "wait_for"
+        }).catch((err) => {
+            console.error('Elastic search index error %s', err);
+        });
+    }
+
+    private updateBlock(hash: H256, partial: any): Promise<any> {
+        return this.client.update({
+            index: "block",
+            type: "_doc",
+            id: hash.value,
+            refresh: "wait_for",
+            body: {
+                doc: partial
+            }
+        }).catch((err) => {
+            console.error('Elastic search update error %s', err);
         });
     }
 }

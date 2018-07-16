@@ -1,5 +1,5 @@
 import { ServerConfig } from ".";
-import { ElasticSearchAgent } from "./ElasticSearchAgent";
+import { ElasticSearchAgent } from "../db/ElasticSearchAgent";
 import { SDK } from "codechain-sdk";
 
 export class ServerContext {

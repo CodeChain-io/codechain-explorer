@@ -261,6 +261,15 @@
                                         },
                                         "outputs": {
                                             "properties": {
+                                                "owner": {
+                                                    "type": "text",
+                                                    "fields": {
+                                                        "keyword": {
+                                                            "type": "keyword",
+                                                            "ignore_above": 256
+                                                        }
+                                                    }
+                                                },
                                                 "amount": {
                                                     "type": "long"
                                                 },

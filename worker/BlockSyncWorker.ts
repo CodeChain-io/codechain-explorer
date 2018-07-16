@@ -1,7 +1,7 @@
 import { scheduleJob, Job } from "node-schedule";
 import { WorkerConfig } from "./";
 import { CodeChainAgent } from "./CodeChainAgent";
-import { ElasticSearchAgent } from "./ElasticSearchAgent";
+import { ElasticSearchAgent } from "../db/ElasticSearchAgent";
 import { Block } from "codechain-sdk/lib/core/classes";
 
 export class BlockSyncWorker {

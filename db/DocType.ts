@@ -1,6 +1,6 @@
 import { Block, Transaction, SignedParcel, Action, ChangeShardState, SetRegularKey, CreateShard, Payment, AssetTransferTransaction, AssetMintTransaction, AssetTransferInput, AssetTransferOutput, H256 } from "codechain-sdk/lib/core/classes";
 import * as _ from "lodash";
-import { ElasticSearchAgent } from "../worker/ElasticSearchAgent";
+import { ElasticSearchAgent } from "./ElasticSearchAgent";
 
 export interface BlockDoc {
     parentHash: string;
