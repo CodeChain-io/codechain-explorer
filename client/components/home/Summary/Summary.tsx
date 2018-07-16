@@ -8,10 +8,10 @@ const Summary = () => {
         <h1>Summary</h1>
         <Row>
             <Col md="6">
-                <div className="chart-container">Summary Chart</div>
+                <div className="chart-container text-center">Summary Chart</div>
             </Col>
             <Col md="6">
-                <div className="chart-container">Transaction History Chart</div>
+                <div className="chart-container text-center">Transaction History Chart</div>
             </Col>
         </Row>
     </div>

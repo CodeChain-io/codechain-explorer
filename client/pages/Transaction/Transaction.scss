@@ -1,0 +1,24 @@
+.transaction {
+  padding-top: 80px;
+  padding-bottom: 108px;
+  .title-container {
+    display: flex;
+    align-items: center;
+    h1 {
+      margin-bottom: 0;
+    }
+    .transaction-type {
+      border-radius: 10px;
+      padding-right: 20px;
+      padding-left: 20px;
+      color: white;
+      margin-left: 10px;
+    }
+    .asset-mint-type {
+      background-color: #00DBB4;
+    }
+    .asset-transfer-type {
+      background-color: #5300DB;
+    }
+  }
+}

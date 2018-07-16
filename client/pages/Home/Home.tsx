@@ -29,14 +29,9 @@ class Home extends React.Component<{}, State> {
         const { bestBlockNumber, blocksByNumber } = this.state;
         if (bestBlockNumber === undefined) {
             return (
-                <div>
-                    <Container>
-                        Loading ...
-                        <RequestBlockNumber
-                            onBlockNumber={this.onBlockNumber}
-                            onError={this.onError} />
-                    </Container>
-                </div>
+                <RequestBlockNumber
+                    onBlockNumber={this.onBlockNumber}
+                    onError={this.onError} />
             );
         }
         return (

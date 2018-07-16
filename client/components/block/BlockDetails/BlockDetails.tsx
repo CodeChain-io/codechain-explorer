@@ -68,7 +68,7 @@ class BlockDetails extends React.Component<OwnProps> {
                         Author
                     </Col>
                     <Col md="10">
-                        <HexString link={`/address/0x${block.author.value}`} text={block.author.value} />
+                        <HexString link={`/addr-platform/0x${block.author.value}`} text={block.author.value} />
                     </Col>
                 </Row>
                 <Row>

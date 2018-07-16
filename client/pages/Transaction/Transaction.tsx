@@ -4,8 +4,10 @@ import { Container } from 'reactstrap';
 
 import { Transaction as TransactionType } from "codechain-sdk/lib/core/classes";
 
-import { RequestTransaction } from "../request";
-import TransactionDetails from "../components/transaction/TransactionDetails/TransactionDetails";
+import { RequestTransaction } from "../../request";
+import TransactionDetails from "../../components/transaction/TransactionDetails/TransactionDetails";
+
+import "./Transaction.scss";
 
 interface Props {
     match: match<{ hash: string }>;
@@ -32,20 +34,22 @@ class Transaction extends React.Component<Props, State> {
     public render() {
         const { match: { params: { hash } } } = this.props;
         const { transaction } = this.state;
+        if (!transaction) {
+            return <RequestTransaction hash={hash}
+                onTransaction={this.onTransaction}
+                onTransactionNotExist={this.onTransactionNotExist}
+                onError={this.onError} />
+        }
         return (
-            <div>
-                <Container>
-                    {transaction
-                        ? <TransactionDetails transaction={transaction} />
-                        : <div>loading transaction ...
-                        <RequestTransaction hash={hash}
-                                onTransaction={this.onTransaction}
-                                onTransactionNotExist={this.onTransactionNotExist}
-                                onError={this.onError} />
-                        </div>}
-                    {/* Show Parcel Invoices here */}
-                </Container>
-            </div>
+            <Container className="transaction">
+                <div className="title-container mb-2">
+                    <h1 className="d-inline-block">Transaction Information</h1>
+                    <div className={`d-inline-block transaction-type ${transaction.toJSON().type === "assetTransfer" ? "asset-transfer-type" : "asset-mint-type"}`}>
+                        <span>{transaction.toJSON().type}</span>
+                    </div>
+                </div>
+                <TransactionDetails transaction={transaction} />
+            </Container>
         )
     }
 
