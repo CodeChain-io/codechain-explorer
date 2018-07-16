@@ -54,7 +54,8 @@ const getTransactionInfoByType = (transaction: Transaction) => {
                         {transaction.toJSON().data.nonce}
                     </Col>
                 </Row>
-                <Row className="border-top">
+                <div className="line" />
+                <Row>
                     <Col>
                         <h3>Input</h3>
                     </Col>
@@ -98,7 +99,8 @@ const getTransactionInfoByType = (transaction: Transaction) => {
                         </Row>
                     })
                 }
-                <Row className="border-top">
+                <div className="line" />
+                <Row>
                     <Col>
                         <h3>Output</h3>
                     </Col>
@@ -182,7 +184,8 @@ const getTransactionInfoByType = (transaction: Transaction) => {
                         }
                     </Col>
                 </Row>
-                <Row className="border-top">
+                <div className="line" />
+                <Row>
                     <Col md="2">
                         AssetType
                     </Col>

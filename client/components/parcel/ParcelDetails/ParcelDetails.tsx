@@ -13,7 +13,8 @@ interface Props {
 const getElementByType = (parcel: SignedParcel) => {
     if (parcel.unsigned.action instanceof Payment) {
         return [
-            <Row key="parcel-header-table-payment-sender" className="first-row-in-custom">
+            <div key="parcel-header-table-payment-line" className="line" />,
+            <Row key="parcel-header-table-payment-sender">
                 <Col md="2">
                     Sender
                 </Col>
@@ -40,14 +41,18 @@ const getElementByType = (parcel: SignedParcel) => {
             </Row>
         ];
     } else if (parcel.unsigned.action instanceof SetRegularKey) {
-        return <Row className="first-row-in-custom">
-            <Col md="2">
-                Key
-            </Col>
-            <Col md="10">
-                <HexString text={parcel.unsigned.action.key.value} />
-            </Col>
-        </Row>;
+        return (
+            [
+                <div key="parcel-header-table-regular-key-line" className="line" />,
+                <Row key="parcel-header-table-regular-key">
+                    <Col md="2">
+                        Key
+                    </Col>
+                    <Col md="10">
+                        <HexString text={parcel.unsigned.action.key.value} />
+                    </Col>
+                </Row >
+            ]);
     }
     return null;
 }

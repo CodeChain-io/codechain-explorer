@@ -1,6 +1,7 @@
 .transaction-details {
+  background-color: #F8F8F8;
+  border-radius: 13px;
   .row {
-    background-color: #F8F8F8;
     .inner-table {
       width: 100%;
       td:first-child {
@@ -12,16 +13,25 @@
       }
     }
   }
+  .row>div:first-child {
+    padding-left: 27px;
+  }
+  .row>div:last-child {
+    padding-right: 27px;
+  }
   .asset-icon {
     width: 30px;
     height: 30px;
   }
   .asset-item {
     background-color: #F2F2F2;
-    margin: 15px;
+    margin-left: 30px;
+    margin-right: 30px;
+    margin-bottom: 15px;
   }
-  .border-top {
-    border-top: 1px solid #BDBDBD;
+  .line {
+    background-color: #BDBDBD;
+    height: 1px;
   }
   .row>div {
     padding-top: 8px;

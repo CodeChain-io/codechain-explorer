@@ -1,9 +1,15 @@
 .parcel-details {
-  .row {
-    background-color: #F8F8F8;
+  background-color: #F8F8F8;
+  border-radius: 13px;
+  .row>div:first-child {
+    padding-left: 27px;
   }
-  .first-row-in-custom {
-    border-top: 1px solid #BDBDBD;
+  .row>div:last-child {
+    padding-right: 27px;
+  }
+  .line {
+    background-color: #BDBDBD;
+    height: 1px;
   }
   .row>div {
     padding-top: 8px;

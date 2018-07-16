@@ -8,6 +8,7 @@ import { RequestTransaction } from "../../request";
 import TransactionDetails from "../../components/transaction/TransactionDetails/TransactionDetails";
 
 import "./Transaction.scss";
+import TransactionSummary from "../../components/transaction/TransactionSummary/TransactionSummary";
 
 interface Props {
     match: match<{ hash: string }>;
@@ -47,6 +48,9 @@ class Transaction extends React.Component<Props, State> {
                     <div className={`d-inline-block transaction-type ${transaction.toJSON().type === "assetTransfer" ? "asset-transfer-type" : "asset-mint-type"}`}>
                         <span>{transaction.toJSON().type}</span>
                     </div>
+                </div>
+                <div className="mb-3">
+                    <TransactionSummary transaction={transaction} />
                 </div>
                 <TransactionDetails transaction={transaction} />
             </Container>
