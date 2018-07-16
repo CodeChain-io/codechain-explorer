@@ -18,14 +18,14 @@ interface Props {
 const LatestBlocks = (props: Props) => {
     const { blocksByNumber } = props;
     return <div className="latest-blocks">
-        <h3>Latest Blocks</h3>
+        <h1>Latest Blocks</h1>
         <div className="latest-container">
             <Table striped={true}>
                 <thead>
                     <tr>
-                        <th>Height</th>
+                        <th>No.</th>
                         <th>Parcels</th>
-                        <th>Txs</th>
+                        <th>Reward</th>
                         <th>Author</th>
                         <th>Age</th>
                     </tr>
@@ -35,13 +35,9 @@ const LatestBlocks = (props: Props) => {
                         _.map(_.reverse(_.values(blocksByNumber)), block => {
                             return (
                                 <tr key={`home-block-num-${block.hash.value}`}>
-                                    <th scope="row"><Link to={`/block/${block.number}`}>{block.number}</Link></th>
+                                    <td scope="row"><Link to={`/block/${block.number}`}>{block.number}</Link></td>
                                     <td>{block.parcels.length}</td>
-                                    <td>{_.reduce(block.parcels, (memo, parcel) => {
-                                        const action: any = parcel.unsigned.action.toJSON();
-                                        const txCount = action.transactions ? action.transactions.length : 0;
-                                        return memo + txCount;
-                                    }, 0)}</td>
+                                    <td>Block Reward</td>
                                     <td><HexString link={`/addr-platform/0x${block.author.value}`} text={block.author.value} length={10} /></td>
                                     <td>{moment.unix(block.timestamp).fromNow()}</td>
                                 </tr>
@@ -50,6 +46,11 @@ const LatestBlocks = (props: Props) => {
                     }
                 </tbody>
             </Table>
+            <div className="mt-3">
+                <div className="view-all-btn text-center mx-auto">
+                    <span>View All</span>
+                </div>
+            </div>
         </div>
     </div>
 };

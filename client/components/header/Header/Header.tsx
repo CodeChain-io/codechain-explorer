@@ -1,7 +1,8 @@
 import * as React from "react";
 import { Container, Navbar, NavbarBrand, NavbarToggler, Nav, NavItem, NavLink, Collapse } from 'reactstrap';
 import { IndexLinkContainer } from 'react-router-bootstrap';
-import HealthChecker from '../util/HealthChecker/HealthChecker';
+import HealthChecker from '../../util/HealthChecker/HealthChecker';
+import Search from "../Search/Search";
 
 import './Header.scss';
 
@@ -19,8 +20,8 @@ class Header extends React.Component<{}, State> {
     }
 
     public render() {
-        return <div>
-            <Navbar color="light" light={true} expand="lg">
+        return <div className="header">
+            <Navbar className="header-container" dark={true} expand="lg">
                 <Container>
                     <IndexLinkContainer to="/">
                         <NavbarBrand>
@@ -97,6 +98,9 @@ class Header extends React.Component<{}, State> {
                     </Collapse>
                 </Container>
             </Navbar>
+            <Container className="searchbar-container d-flex">
+                <Search className="ml-auto" />
+            </Container>
         </div>
     }
 

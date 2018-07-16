@@ -1,9 +1,13 @@
-@import url('https://fonts.googleapis.com/css?family=Lato');
+@import url('https://fonts.googleapis.com/css?family=Roboto:400,500,700');
 body {
   margin: 0;
   padding: 0;
   font-size: 100%;
-  font-family: 'Lato', sans-serif;
+  font-family: 'Roboto', sans-serif;
+}
+
+a {
+  color: #2F80ED;
 }
 
 a:hover {
@@ -34,9 +38,20 @@ h6 {
 #page {
   min-height: 100vh;
   #content {
-    min-height: calc(100vh - 154px);
+    padding-top: 104px;
+    min-height: calc(100vh - 204px);
     overflow: auto;
   }
+}
+
+.table-striped>tbody>tr:nth-child(odd)>td,
+.table-striped>tbody>tr:nth-child(odd)>th {
+  background-color: white; // Choose your own color here
+}
+
+.table-striped>tbody>tr:nth-child(even)>td,
+.table-striped>tbody>tr:nth-child(even)>th {
+  background-color: #F2F2F2; // Choose your own color here
 }
 
 #page {
@@ -56,85 +71,68 @@ h6 {
 }
 
 h1 {
-  font-size: 2em;
+  font-size: 2.25em;
   /* 2x body copy size = 32px */
-  line-height: 1.25;
+  /* line-height: 1.25;*/
   /* 45px / 36px */
 }
 
 @media (min-width: 43.75em) {
   h1 {
-    font-size: 2.5em;
+    font-size: 2.25em;
     /* 2.5x body copy size = 40px */
-    line-height: 1.125;
+    /* line-height: 1.125;*/
   }
 }
 
 @media (min-width: 56.25em) {
   h1 {
-    font-size: 3em;
+    font-size: 2.25em;
     /* 3x body copy size = 48px */
-    line-height: 1.05;
+    /* line-height: 1.05; */
     /* keep to a multiple of the 20px line height and something more appropriate for display headings */
   }
 }
 
 h2 {
-  font-size: 1.625em;
-  /* 1.625x body copy size = 26px */
-  line-height: 1.15384615;
-  /* 30px / 26px */
+  font-size: 1.5em
 }
 
 @media (min-width: 43.75em) {
   h2 {
-    font-size: 2em;
-    /* 2x body copy size = 32px */
-    line-height: 1.25;
+    font-size: 1.5em
   }
 }
 
 @media (min-width: 56.25em) {
   h2 {
-    font-size: 2.25em;
-    /* 2.25x body copy size = 36px */
-    line-height: 1.25;
+    font-size: 1.5em
   }
 }
 
 h3 {
-  font-size: 1.375em;
-  /* 1.375x body copy size = 22px */
-  line-height: 1.13636364;
-  /* 25px / 22px */
+  font-size: 1.25em;
 }
 
 @media (min-width: 43.75em) {
   h3 {
-    font-size: 1.5em;
-    /* 1.5x body copy size = 24px */
-    line-height: 1.25;
+    font-size: 1.25em;
   }
 }
 
 @media (min-width: 56.25em) {
   h3 {
-    font-size: 1.75em;
-    /* 1.75x body copy size = 28px */
-    line-height: 1.25;
+    font-size: 1.25em;
   }
 }
 
 h4 {
   font-size: 1.125em;
-  /* 1.125x body copy size = 18px */
-  line-height: 1.11111111;
 }
 
 @media (min-width: 43.75em) {
   h4 {
-    line-height: 1.22222222;
-    /* (22px / 18px */
+    font-size: 1.125em;
   }
 }
 

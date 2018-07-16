@@ -17,15 +17,14 @@ interface Props {
 const LatestTransactions = (props: Props) => {
     const { blocksByNumber } = props;
     return <div className="latest-transactions">
-        <h3>Latest Transactions</h3>
+        <h1>Latest Transactions</h1>
         <div className="latest-container">
             <Table striped={true}>
                 <thead>
                     <tr>
-                        <th>Hash</th>
-                        <th>Parcel Hash</th>
                         <th>Type</th>
-                        <th>AssetType</th>
+                        <th>Hash</th>
+                        <th>Assets</th>
                         <th>Amount</th>
                         <th>Age</th>
                     </tr>
@@ -37,11 +36,11 @@ const LatestTransactions = (props: Props) => {
                                 if (parcel.unsigned.action instanceof ChangeShardState) {
                                     const transactions = parcel.unsigned.action.transactions;
                                     return _.map(transactions, (transaction) => {
+                                        const transactionType = transaction.toJSON().type;
                                         return (
                                             <tr key={`home-transaction-hash-${transaction.hash().value}`}>
-                                                <th scope="row"><HexString link={`/tx/0x${transaction.hash().value}`} length={10} text={transaction.hash().value} /></th>
-                                                <td><HexString link={`/parcel/${parcel.hash().value}`} text={parcel.hash().value} length={10} /></td>
-                                                <td>{transaction.toJSON().type}</td>
+                                                <td><div className={`transaction-type text-center ${transactionType === "assetMint" ? "asset-mint-type" : "asset-transfer-type"}`}>{transactionType}</div></td>
+                                                <td scope="row"><HexString link={`/tx/0x${transaction.hash().value}`} length={10} text={transaction.hash().value} /></td>
                                                 <td>{transaction instanceof AssetMintTransaction ? <HexString link={`/asset/${transaction.getAssetSchemeAddress().value}`} text={transaction.getAssetSchemeAddress().value} length={10} /> : (transaction instanceof AssetTransferTransaction ? <div>{_.map(transaction.toJSON().data.inputs, (input, index) => (<div key={`latest-transaction-assetType-${index}`}><HexString link={`/asset/0x${input.prevOut.assetType}`} text={input.prevOut.assetType} length={10} /></div>))}</div> : "")}</td>
                                                 <td>{transaction instanceof AssetMintTransaction ? transaction.toJSON().data.amount : (transaction instanceof AssetTransferTransaction ? _.sumBy(transaction.toJSON().data.inputs, (input) => input.prevOut.amount) : "")}</td>
                                                 <td>{moment.unix(block.timestamp).fromNow()}</td>
@@ -55,6 +54,11 @@ const LatestTransactions = (props: Props) => {
                     }
                 </tbody>
             </Table>
+            <div className="mt-3">
+                <div className="view-all-btn text-center mx-auto">
+                    <span>View All</span>
+                </div>
+            </div>
         </div>
     </div>
 };

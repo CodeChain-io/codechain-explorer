@@ -1,16 +1,43 @@
 .latest-transactions {
   .latest-container {
-    border: 2px solid #eee;
     table {
       margin-bottom: 0;
-      table-layout: auto;
+      table-layout: fixed;
       word-break: break-all;
-      tr th {
-        text-align: center;
+      border-color: white;
+      th,
+      td {
+        border-top: none;
+        padding-top: 8px;
+        padding-bottom: 8px;
       }
-      tr td {
-        text-align: center;
+      thead {
+        th {
+          border-bottom: 1px solid black;
+        }
       }
+    }
+    .view-all-btn {
+      border: 1px solid #3A3FAB;
+      color: #3A3FAB;
+      border-radius: 17px;
+      width: 160px;
+      height: 33px;
+      cursor: pointer;
+      span {
+        line-height: 33px;
+      }
+    }
+    .transaction-type {
+      color: white;
+      width: 160px;
+      border-radius: 11px;
+    }
+    .asset-transfer-type {
+      background-color: #5300DB;
+    }
+    .asset-mint-type {
+      background-color: #00DBB4;
     }
   }
 }

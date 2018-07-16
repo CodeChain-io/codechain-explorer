@@ -1,11 +1,14 @@
 import * as React from 'react';
 import * as _ from "lodash";
-import { RequestBlockNumber, RequestBlock } from '../request';
-import { Container, Row, Col } from 'reactstrap';
+import { RequestBlockNumber, RequestBlock } from '../../request';
+import { Container } from 'reactstrap';
 import { Block } from "codechain-sdk/lib/core/classes";
-import LatestBlocks from '../components/home/LatestBlocks/LatestBlocks';
-import LatestParcels from '../components/home/LatestParcels/LatestParcels';
-import LatestTransactions from '../components/home/LatestTransactions/LatestTransactions';
+import LatestBlocks from '../../components/home/LatestBlocks/LatestBlocks';
+import LatestParcels from '../../components/home/LatestParcels/LatestParcels';
+import LatestTransactions from '../../components/home/LatestTransactions/LatestTransactions';
+
+import "./Home.scss"
+import Summary from '../../components/home/Summary/Summary';
 
 interface State {
     bestBlockNumber?: number;
@@ -37,23 +40,20 @@ class Home extends React.Component<{}, State> {
             );
         }
         return (
-            <div>
+            <div className="home">
                 <Container>
-                    <Row>
-                        <Col className="mt-3">
-                            <LatestBlocks blocksByNumber={blocksByNumber} />
-                        </Col>
-                    </Row>
-                    <Row>
-                        <Col className="mt-3">
-                            <LatestParcels blocksByNumber={blocksByNumber} />
-                        </Col>
-                    </Row>
-                    <Row className="mb-3">
-                        <Col className="mt-3">
-                            <LatestTransactions blocksByNumber={blocksByNumber} />
-                        </Col>
-                    </Row>
+                    <div className="home-element-container">
+                        <Summary />
+                    </div>
+                    <div className="home-element-container">
+                        <LatestBlocks blocksByNumber={blocksByNumber} />
+                    </div>
+                    <div className="home-element-container">
+                        <LatestParcels blocksByNumber={blocksByNumber} />
+                    </div>
+                    <div className="home-element-container">
+                        <LatestTransactions blocksByNumber={blocksByNumber} />
+                    </div>
                     {/* Reqest blocks */}
                     {_.map(_.reverse(_.range(0, bestBlockNumber + 1)), n => {
                         return <RequestBlock key={'request-block-num-' + n} id={n} onBlock={this.onBlock} onError={this.onError} />
