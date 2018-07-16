@@ -8,7 +8,7 @@ import './index.scss';
 
 import { store } from "./redux/store";
 import RegisterServiceWorker from './register_service_worker';
-import Block from './pages/Block';
+import Block from './pages/Block/Block';
 import Header from './components/header/Header/Header';
 import Home from './pages/Home/Home';
 import Parcel from './pages/Parcel';

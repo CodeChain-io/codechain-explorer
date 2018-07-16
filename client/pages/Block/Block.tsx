@@ -4,8 +4,11 @@ import { Container } from 'reactstrap';
 
 import { Block as CoreBlock } from "codechain-sdk/lib/core/classes";
 
-import { RequestBlock } from "../request";
-import BlockDetails from "../components/block/BlockDetails/BlockDetails";
+import { RequestBlock } from "../../request";
+import BlockDetails from "../../components/block/BlockDetails/BlockDetails";
+import BlockParcelList from "../../components/block/BlockParcelList/BlockParcelList";
+
+import "./Block.scss";
 
 interface State {
     block?: CoreBlock;
@@ -37,11 +40,14 @@ class Block extends React.Component<Props, State> {
             return <RequestBlock id={id} onBlock={this.onBlock} onError={this.onError} />;
         }
         return (
-            <div>
-                <Container>
-                    <BlockDetails block={block} />
-                </Container>
-            </div>
+            <Container className="block">
+                <h1 className="title">#{block.number} Block Infomation</h1>
+                <BlockDetails block={block} />
+                <div className="parcel-count-label">
+                    <span className="blue-color">{block.parcels.length} Parcels</span> in this Block
+                </div>
+                <BlockParcelList parcels={block.parcels} />
+            </Container>
         );
     }
 
