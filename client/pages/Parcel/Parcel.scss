@@ -1,0 +1,33 @@
+.parcel {
+  padding-top: 80px;
+  padding-bottom: 108px;
+  .title-container {
+    display: flex;
+    align-items: center;
+    h1 {
+      margin-bottom: 0;
+    }
+    .parcel-type {
+      border-radius: 10px;
+      padding-right: 20px;
+      padding-left: 20px;
+      color: white;
+      margin-left: 10px;
+    }
+    .set-regular-key-type {
+      background-color: #3A4EB7;
+    }
+    .change-shard-state-type {
+      background-color: #00B8D4;
+    }
+    .payment-type {
+      background-color: #03A9F4;
+    }
+  }
+  .transaction-count-label {
+    margin-top: 16px;
+    .blue-color {
+      color: #328AF2;
+    }
+  }
+}

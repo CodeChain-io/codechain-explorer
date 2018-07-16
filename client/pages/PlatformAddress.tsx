@@ -6,7 +6,6 @@ import { U256, Block, AssetScheme, Asset, SignedParcel } from "codechain-sdk/lib
 import { RequestPlatformAddressAccount, RequestPlatformAddressParcels, RequestPlatformAddressAssets } from "../request";
 import RequestPlatformAddressBlocks from "../request/RequestPlatformAddressBlocks";
 import AccountDetails from "../components/platformAddress/AccountDetails/AccountDetails";
-import HexString from "../components/util/HexString/HexString";
 import BlockList from "../components/block/BlockList/BlockList";
 import AssetList from "../components/asset/AssetList/AssetList";
 import BlockParcelList from "../components/block/BlockParcelList/BlockParcelList";
@@ -51,7 +50,7 @@ class Address extends React.Component<Props, State> {
             <div>
                 <Container>
                     <h3>Platform Address</h3>
-                    <p><HexString text={address} /></p>
+                    <p>{address}</p>
                     {
                         account ?
                             <div>

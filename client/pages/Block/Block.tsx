@@ -41,7 +41,7 @@ class Block extends React.Component<Props, State> {
         }
         return (
             <Container className="block">
-                <h1 className="title">#{block.number} Block Infomation</h1>
+                <h1>#{block.number} Block Infomation</h1>
                 <BlockDetails block={block} />
                 <div className="parcel-count-label">
                     <span className="blue-color">{block.parcels.length} Parcels</span> in this Block
