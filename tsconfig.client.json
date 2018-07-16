@@ -30,6 +30,6 @@
         "jest",
         "server",
         "worker",
-        "type"
+        "db"
     ]
 }
