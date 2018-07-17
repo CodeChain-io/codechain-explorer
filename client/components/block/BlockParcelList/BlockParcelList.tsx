@@ -5,6 +5,7 @@ import { SignedParcel, ChangeShardState, Payment, SetRegularKey } from "codechai
 import "./BlockParcelList.scss"
 import HexString from "../../util/HexString/HexString";
 import { Row, Col } from "reactstrap";
+import * as arrow from "./img/arrow.png";
 
 interface Props {
     parcels: SignedParcel[];
@@ -36,7 +37,7 @@ const ParcelObjectByType = (parcel: SignedParcel) => {
                                 </Row>
                             </Col>
                             <Col md="2" className="text-center">
-                                >
+                                <img src={arrow} alt="arrow" />
                             </Col>
                             <Col md="5" className="background-highlight">
                                 <Row>

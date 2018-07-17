@@ -7,6 +7,8 @@ import { Transaction, AssetMintTransaction, AssetTransferTransaction } from "cod
 import "./ParcelTransactionList.scss"
 import HexString from "../../util/HexString/HexString";
 
+import * as arrow from "./img/arrow.png";
+
 interface Props {
     transactions: Transaction[];
 }
@@ -96,7 +98,7 @@ const TransactionObjectByType = (transaction: Transaction) => {
                                 }
                             </Col>
                             <Col md="2" className="text-center">
-                                >
+                                <img src={arrow} alt="Arrow" className="mt-5" />
                             </Col>
                             <Col md="5">
                                 {
