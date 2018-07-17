@@ -6,9 +6,9 @@ import { SignedParcel, ChangeShardState, Payment } from "codechain-sdk/lib/core/
 
 import { RequestParcel } from "../../request";
 import ParcelDetails from "../../components/parcel/ParcelDetails/ParcelDetails";
-import TransactionList from "../../components/transaction/TransactionList/TransactionList";
 
 import "./Parcel.scss";
+import ParcelTransactionList from "../../components/parcel/ParcelTransactionList/ParcelTransactionList";
 
 interface Props {
     match: match<{ hash: string }>;
@@ -58,10 +58,12 @@ class Parcel extends React.Component<Props, State> {
         if (parcel.unsigned.action instanceof ChangeShardState) {
             return (
                 [
-                    <div key="1" className="transaction-count-label">
+                    <div key="transaction-label" className="transaction-count-label">
                         <span className="blue-color">{parcel.unsigned.action.transactions.length} Transactions</span> in this Block
                     </div>,
-                    <TransactionList key="2" searchByAssetType={false} transactions={parcel.unsigned.action.transactions} />
+                    <div key="parcel-transaction" className="mt-3">
+                        <ParcelTransactionList transactions={parcel.unsigned.action.transactions} />
+                    </div>
                 ]
             )
         }
