@@ -1,15 +1,25 @@
-.block-parcel-list-container {
-  padding: 16px;
-  background-color: #f1f1f1;
-  border-radius: 10px;
-  table {
-    width: 100%;
-    table-layout: fixed;
-    word-break: break-all;
-    tr {
-      td:first-child {
-        width: 20%;
-      }
-    }
+.block-parcel-list {
+  background: #F8F8F8;
+  border-radius: 13px;
+  .parcel-item>.row>div:first-child {
+    padding-left: 27px;
+  }
+  .parcel-item>.row>div:last-child {
+    padding-right: 27px;
+  }
+  .parcel-item>.row>div {
+    padding-top: 8px;
+    padding-bottom: 8px;
+  }
+  .background-highlight {
+    border-radius: 10px;
+    background-color: #F1F1F1;
+  }
+  .inner-row {
+    margin: 0px;
+  }
+  .inner-row>div {
+    padding-top: 8px;
+    padding-bottom: 8px;
   }
 }

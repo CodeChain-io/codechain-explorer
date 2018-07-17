@@ -4,64 +4,122 @@ import { SignedParcel, ChangeShardState, Payment, SetRegularKey } from "codechai
 
 import "./BlockParcelList.scss"
 import HexString from "../../util/HexString/HexString";
+import { Row, Col } from "reactstrap";
 
 interface Props {
     parcels: SignedParcel[];
 }
 
-const ParcelObject = (parcel: SignedParcel) => {
+const ParcelObjectByType = (parcel: SignedParcel) => {
     if (parcel.unsigned.action instanceof Payment) {
-        return [<tr key="first">
-            <td>Receiver</td>
-            <td><HexString text={parcel.unsigned.action.receiver.value} /></td>
-        </tr>, <tr key="second">
-            <td>Amount</td>
-            <td>{parcel.unsigned.action.amount.value.toString()}</td>
-        </tr>
-        ]
+        return ([
+            <Row key="payment-amount">
+                <Col md="2">
+                    Amount
+            </Col>
+                <Col md="10">
+                    {parcel.unsigned.action.amount.value.toString()}
+                </Col>
+            </Row>,
+            <Row key="payment-sender-receiver">
+                <Col>
+                    <div>
+                        <Row className="inner-row">
+                            <Col md="5" className="background-highlight">
+                                <Row>
+                                    <Col md="5">
+                                        Sender
+                                    </Col>
+                                    <Col md="7">
+                                        <HexString link={`/addr-platform/0x${parcel.getSender().value}`} text={parcel.getSender().value} length={15} />
+                                    </Col>
+                                </Row>
+                            </Col>
+                            <Col md="2" className="text-center">
+                                >
+                            </Col>
+                            <Col md="5" className="background-highlight">
+                                <Row>
+                                    <Col md="5">
+                                        Receiver
+                                    </Col>
+                                    <Col md="7">
+                                        <HexString link={`/addr-platform/0x${parcel.unsigned.action.receiver.value}`} text={parcel.unsigned.action.receiver.value} length={15} />
+                                    </Col>
+                                </Row>
+                            </Col>
+                        </Row>
+                    </div>
+                </Col>
+            </Row>])
     } else if (parcel.unsigned.action instanceof ChangeShardState) {
-        return <tr>
-            <td>Count of Transactions</td>
-            <td>{parcel.unsigned.action.transactions.length}</td>
-        </tr>
+        return <Row>
+            <Col>
+                <div className="background-highlight">
+                    <Row className="inner-row">
+                        <Col md="2">
+                            Count of Txs
+                        </Col>
+                        <Col md="10">
+                            {parcel.unsigned.action.transactions.length}
+                        </Col>
+                    </Row>
+                </div>
+            </Col>
+        </Row>
     } else if (parcel.unsigned.action instanceof SetRegularKey) {
-        return <tr>
-            <td>Key</td>
-            <td><HexString text={parcel.unsigned.action.key.value} /></td>
-        </tr>
+        return <Row>
+            <Col md="2">
+                Key
+            </Col>
+            <Col md="10">
+                <HexString text={parcel.unsigned.action.key.value} />
+            </Col>
+        </Row>
     }
     return null;
 }
 
 const BlockParcelList = (props: Props) => {
     const { parcels } = props;
-    return <div className="mb-3">{parcels.map((parcel, i: number) => {
+    return <div className="block-parcel-list">{parcels.map((parcel, i: number) => {
         const hash = parcel.hash().value;
-        return <div key={`block-parcel-${hash}`} className="block-parcel-list-container mt-3">
-            <b>Parcel {i}</b>
-            <table>
-                <tbody>
-                    <tr>
-                        <td>Hash</td>
-                        <td><HexString link={`/parcel/0x${hash}`} text={hash} /></td>
-                    </tr>
-                    <tr>
-                        <td>Type</td>
-                        <td>{parcel.unsigned.action.toJSON().action}</td>
-                    </tr>
-                    <tr>
-                        <td>Fee</td>
-                        <td>{parcel.unsigned.fee.value.toString()}</td>
-                    </tr>
-                    <tr>
-                        <td>Signer</td>
-                        <td><HexString link={`/address/0x${parcel.getSender().value}`} text={parcel.getSender().value} /></td>
-                    </tr>
-                    {ParcelObject(parcel)}
-                </tbody>
-            </table>
+        return <div key={`block-parcel-${hash}`} className="parcel-item">
+            <Row>
+                <Col md="2">
+                    Parcel
+                </Col>
+                <Col md="10">
+                    <HexString link={`/parcel/0x${hash}`} text={hash} /> (Index {i})
+                </Col>
+            </Row>
+            <Row>
+                <Col md="2">
+                    Signer
+                </Col>
+                <Col md="10">
+                    <HexString link={`/address/0x${parcel.getSender().value}`} text={parcel.getSender().value} />
+                </Col>
+            </Row>
+            <Row>
+                <Col md="2">
+                    Fee
+                </Col>
+                <Col md="10">
+                    <td>{parcel.unsigned.fee.value.toString()}</td>
+                </Col>
+            </Row>
+            <Row>
+                <Col md="2">
+                    Timestamp
+                </Col>
+                <Col md="10">
+                    <td>timestamp</td>
+                </Col>
+            </Row>
+            {ParcelObjectByType(parcel)}
         </div>
-    })}</div>
+    })}</div >
 };
 
 export default BlockParcelList;

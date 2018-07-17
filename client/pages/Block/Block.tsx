@@ -46,7 +46,9 @@ class Block extends React.Component<Props, State> {
                 <div className="parcel-count-label">
                     <span className="blue-color">{block.parcels.length} Parcels</span> in this Block
                 </div>
-                <BlockParcelList parcels={block.parcels} />
+                <div className="mt-3">
+                    <BlockParcelList parcels={block.parcels} />
+                </div>
             </Container>
         );
     }
