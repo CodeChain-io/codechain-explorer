@@ -15,6 +15,7 @@ export interface BlockDoc {
     seal: Buffer[];
     hash: string;
     parcels: ParcelDoc[];
+    /* custom field for indexing */
     isRetracted: boolean;
 }
 
@@ -25,10 +26,11 @@ export interface ParcelDoc {
     nonce: string;
     fee: string;
     networkId: number;
-    sender: string;
     sig: string;
     hash: string;
     action: ActionDoc;
+    /* custom field for indexing */
+    sender: string;
 }
 
 export type ActionDoc = ChangeShardStateDoc | PaymentDoc | SetRegularKeyDoc | CreateShardDoc
@@ -67,6 +69,7 @@ export interface AssetMintTransactionDoc {
         nonce: number;
         hash: string;
         assetType: string;
+        /* custom field for indexing */
         owner: string;
     };
 }
@@ -89,6 +92,7 @@ export interface AssetTransferInputDoc {
         index: number;
         assetType: string;
         amount: number;
+        /* custom field for indexing */
         owner: string;
     };
     lockScript: Buffer;
@@ -100,6 +104,7 @@ export interface AssetTransferOutputDoc {
     parameters: Buffer[];
     assetType: string;
     amount: number;
+    /* custom field for indexing */
     owner: string;
 }
 

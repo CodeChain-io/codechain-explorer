@@ -91,8 +91,10 @@
             "type": "long"
         },
         "parcels": {
+            "type": "nested",
             "properties": {
                 "action": {
+                    "type": "nested",
                     "properties": {
                         "action": {
                             "type": "text",
@@ -113,6 +115,7 @@
                             }
                         },
                         "transactions": {
+                            "type": "nested",
                             "properties": {
                                 "data": {
                                     "properties": {
@@ -147,6 +150,7 @@
                                             }
                                         },
                                         "inputs": {
+                                            "type": "nested",
                                             "properties": {
                                                 "unlockScript": {
                                                     "properties": {
@@ -260,6 +264,7 @@
                                             "type": "long"
                                         },
                                         "outputs": {
+                                            "type": "nested",
                                             "properties": {
                                                 "owner": {
                                                     "type": "text",

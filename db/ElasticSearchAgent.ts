@@ -1,8 +1,8 @@
 import { Client, SearchResponse } from "elasticsearch";
-import { Block, SignedParcel, H256, H160, Transaction, ChangeShardState, Asset, AssetScheme, AssetTransferTransaction, AssetMintTransaction } from "codechain-sdk/lib/core/classes";
+import { Block, SignedParcel, H256, H160, Transaction, Asset, AssetScheme, AssetMintTransaction } from "codechain-sdk/lib/core/classes";
 import { getTransactionFromJSON } from "codechain-sdk/lib/core/transaction/Transaction";
 import * as _ from "lodash";
-import { BlockDoc, ParcelDoc, Type, ChangeShardStateDoc, AssetTransferTransactionDoc, AssetMintTransactionDoc, PaymentDoc, Converter } from "../db/DocType";
+import { BlockDoc, ParcelDoc, Type, AssetTransferTransactionDoc, AssetMintTransactionDoc, Converter, TransactionDoc } from "../db/DocType";
 
 export class ElasticSearchAgent {
     private client: Client;
@@ -19,16 +19,16 @@ export class ElasticSearchAgent {
     }
 
     public getLastBlockNumber = async (): Promise<number> => {
-        return this.searchBlock({
-            sort: [
+        return this.search({
+            "sort": [
                 {
-                    "number": { order: "desc" }
+                    "number": { "order": "desc" }
                 }
             ],
-            size: 1,
-            query: {
+            "size": 1,
+            "query": {
                 "bool": {
-                    "filter": {
+                    "must": {
                         "term": {
                             "isRetracted": false
                         }
@@ -43,101 +43,8 @@ export class ElasticSearchAgent {
         });
     }
 
-    public getBlockByHash = async (hash: H256): Promise<Block> => {
-        return this.searchBlock({
-            sort: [
-                {
-                    "number": { order: "desc" }
-                }
-            ],
-            query: {
-                "bool": {
-                    "must": [
-                        { "term": { "hash": hash.value } }
-                    ],
-                    "filter": {
-                        "term": {
-                            "isRetracted": false
-                        }
-                    }
-                }
-            }
-        }).then((response: SearchResponse<BlockDoc>) => {
-            return Block.fromJSON(response.hits.hits[0]._source);
-        });
-    }
-
-    public getParcel = async (hash: H256): Promise<SignedParcel> => {
-        return this.searchBlock({
-            sort: [
-                {
-                    "number": { order: "desc" }
-                }
-            ],
-            query: {
-                "bool": {
-                    "must": [
-                        { "term": { "parcels.hash": hash.value } }
-                    ],
-                    "filter": {
-                        "term": {
-                            "isRetracted": false
-                        }
-                    }
-                }
-            }
-        }).then((response: SearchResponse<BlockDoc>) => {
-            if (response.hits.total === 0) {
-                return null;
-            }
-            const findBlock = Block.fromJSON(response.hits.hits[0]._source);
-            const parcelData = _.filter(findBlock.parcels, (parcel) => {
-                return parcel.hash().value === hash.value;
-            });
-            return parcelData[0];
-        });
-    }
-
-    public getTransaction = async (hash: H256): Promise<Transaction> => {
-        return this.searchBlock({
-            sort: [
-                {
-                    "number": { order: "desc" }
-                }
-            ],
-            query: {
-                "bool": {
-                    "must": [
-                        { "term": { "parcels.action.transactions.data.hash": hash.value } }
-                    ],
-                    "filter": {
-                        "term": {
-                            "isRetracted": false
-                        }
-                    }
-                }
-            }
-        }).then((response: SearchResponse<BlockDoc>) => {
-            if (response.hits.total === 0) {
-                return null;
-            }
-            const findBlock = Block.fromJSON(response.hits.hits[0]._source);
-            let transactionData: Transaction;
-            _.each(findBlock.parcels, (parcel) => {
-                if (parcel.unsigned.action instanceof ChangeShardState) {
-                    _.each(parcel.unsigned.action.transactions, (transaction: Transaction) => {
-                        if (transaction.hash().value === hash.value) {
-                            transactionData = transaction;
-                        }
-                    });
-                }
-            })
-            return transactionData;
-        });
-    }
-
     public getBlock = async (blockNumber: number): Promise<Block> => {
-        return this.searchBlock({
+        return this.search({
             sort: [
                 {
                     "number": { order: "desc" }
@@ -146,13 +53,9 @@ export class ElasticSearchAgent {
             query: {
                 "bool": {
                     "must": [
-                        { "term": { "number": blockNumber } }
-                    ],
-                    "filter": {
-                        "term": {
-                            "isRetracted": false
-                        }
-                    }
+                        { "term": { "number": blockNumber } },
+                        { "term": { "isRetracted": false } }
+                    ]
                 }
             }
         }).then((response: SearchResponse<BlockDoc>) => {
@@ -160,99 +63,39 @@ export class ElasticSearchAgent {
         });
     }
 
-    public getAssetTransferTransactions = async (assetType: H256): Promise<Transaction[]> => {
-        return this.searchBlock({
-            sort: [
+    public getBlockByHash = async (hash: H256): Promise<Block> => {
+        return this.search({
+            "sort": [
                 {
-                    "number": { order: "desc" }
+                    "number": { "order": "desc" }
                 }
             ],
-            query: {
+            "query": {
                 "bool": {
                     "must": [
-                        { "term": { "parcels.action.transactions.data.outputs.assetType": assetType.value } }
-                    ],
-                    "filter": {
-                        "term": {
-                            "isRetracted": false
-                        }
-                    }
+                        { "term": { "hash": hash.value } },
+                        { "term": { "isRetracted": false } }
+                    ]
                 }
             }
         }).then((response: SearchResponse<BlockDoc>) => {
-            if (response.hits.total === 0) {
-                return [];
-            }
-
-            const resultTransactions = [];
-            _.each(response.hits.hits, hit => {
-                const findBlock = Block.fromJSON(hit._source);
-                _.each(findBlock.parcels, (parcel) => {
-                    if (parcel.unsigned.action instanceof ChangeShardState) {
-                        _.each(parcel.unsigned.action.transactions, (transaction: Transaction) => {
-                            if (transaction instanceof AssetTransferTransaction) {
-                                if (_.findIndex(transaction.toJSON().data.outputs, output => {
-                                    return output.assetType === assetType.value;
-                                }) !== -1) {
-                                    resultTransactions.push(transaction);
-                                }
-                            }
-                        });
-                    }
-                })
-            })
-            return resultTransactions;
-        });
-    }
-
-    public getAssetMintTransaction = async (assetType: H256): Promise<AssetMintTransaction> => {
-        return this.searchBlock({
-            sort: [
-                {
-                    "number": { order: "desc" }
-                }
-            ],
-            query: {
-                "bool": {
-                    "must": [
-                        { "term": { "parcels.action.transactions.data.assetType": assetType.value } }
-                    ],
-                    "filter": {
-                        "term": {
-                            "isRetracted": false
-                        }
-                    }
-                }
-            }
-        }).then((response: SearchResponse<BlockDoc>) => {
-            if (response.hits.total === 0) {
-                return null;
-            }
-            return _.chain(response.hits.hits).flatMap(hit => Block.fromJSON(hit._source).parcels)
-                .filter((parcel: SignedParcel) => parcel.unsigned.action instanceof ChangeShardState)
-                .flatMap((parcel: SignedParcel) => (parcel.unsigned.action as ChangeShardState).transactions)
-                .find((transaction: Transaction) => transaction instanceof AssetMintTransaction && transaction.getAssetSchemeAddress().value === assetType.value)
-                .value() as AssetMintTransaction;
+            return Block.fromJSON(response.hits.hits[0]._source);
         });
     }
 
     public getBlocksByPlatformAddress = async (address: H160): Promise<Block[]> => {
-        return this.searchBlock({
-            sort: [
+        return this.search({
+            "sort": [
                 {
-                    "number": { order: "desc" }
+                    "number": { "order": "desc" }
                 }
             ],
-            query: {
+            "query": {
                 "bool": {
-                    "must": {
-                        "term": { "author": address.value }
-                    },
-                    "filter": {
-                        "term": {
-                            "isRetracted": false
-                        }
-                    }
+                    "must": [
+                        { "term": { "author": address.value } },
+                        { "term": { "isRetracted": false } }
+                    ]
                 }
             }
         }).then((response: SearchResponse<BlockDoc>) => {
@@ -263,186 +106,204 @@ export class ElasticSearchAgent {
         });
     }
 
+    public getParcel = async (hash: H256): Promise<SignedParcel> => {
+        const parcels = await this.searchParcels({
+            "bool": {
+                "must": [
+                    { "term": { "parcels.hash": hash.value } }
+                ]
+            }
+        });
+        if (parcels.length === 0) {
+            return null;
+        }
+        return SignedParcel.fromJSON(parcels[0]);
+    }
+
+    public getTransaction = async (hash: H256): Promise<Transaction> => {
+        const transactions = await this.searchTransactions({
+            "bool": {
+                "must": [
+                    { "term": { "parcels.action.transactions.data.hash": hash.value } }
+                ]
+            }
+        });
+
+        if (transactions.length === 0) {
+            return null;
+        }
+        return getTransactionFromJSON(transactions[0]);
+    }
+
+    public getAssetTransferTransactions = async (assetType: H256): Promise<Transaction[]> => {
+        const transactions = await this.searchTransactions({
+            "nested": {
+                "path": "parcels.action.transactions.data.outputs",
+                "query": {
+                    "bool": {
+                        "must": [
+                            { "term": { "parcels.action.transactions.data.outputs.assetType": assetType.value } }
+                        ]
+                    }
+                }, "inner_hits": {}
+            }
+        });
+        return _.map(transactions, (tr) => getTransactionFromJSON(tr));
+    }
+
+    public getAssetMintTransaction = async (assetType: H256): Promise<AssetMintTransaction> => {
+        const transactions = await this.searchTransactions({
+            "bool": {
+                "must": [
+                    { "term": { "parcels.action.transactions.data.assetType": assetType.value } }
+                ]
+            }
+        })
+        if (transactions.length === 0) {
+            return null;
+        }
+        return AssetMintTransaction.fromJSON(transactions[0]);
+    }
+
     public getParcelsByPlatformAddress = async (address: H160): Promise<SignedParcel[]> => {
-        return this.searchBlock({
-            sort: [
-                {
-                    "number": { order: "desc" }
-                }
-            ],
-            query: {
-                "bool": {
-                    "must": {
-                        "bool": {
-                            "should": [
-                                { "term": { "parcels.action.receiver": address.value } },
-                                { "term": { "parcels.sender": address.value } }
-                            ]
-                        }
-                    },
-                    "filter": {
-                        "term": {
-                            "isRetracted": false
+        const parcels = await this.searchParcels({
+            "bool": {
+                "should": [
+                    { "term": { "parcels.sender": address.value } },
+                    {
+                        "nested": {
+                            "path": "parcels.action",
+                            "query": {
+                                "bool": {
+                                    "must": [
+                                        { "term": { "parcels.action.receiver": address.value } }
+                                    ]
+                                }
+                            },
+                            "inner_hits": {}
                         }
                     }
-                }
+                ]
             }
-        }).then((response: SearchResponse<BlockDoc>) => {
-            if (response.hits.total === 0) {
-                return [];
-            }
-            return _.chain(response.hits.hits).flatMap(hit => hit._source.parcels)
-                .filter((parcelDoc: ParcelDoc) => {
-                    return (Type.isPaymentDoc(parcelDoc.action) && (parcelDoc.action as PaymentDoc).receiver === address.value) || parcelDoc.sender === address.value;
-                }).map(parcelDoc => SignedParcel.fromJSON(parcelDoc)).value();
         });
+        if (parcels.length === 0) {
+            return [];
+        }
+        return _.map(parcels, parcel => SignedParcel.fromJSON(parcel));
     }
 
     public getAssetsByPlatformAddress = async (address: H160): Promise<Asset[]> => {
-        return this.searchBlock({
-            sort: [
-                {
-                    "number": { order: "desc" }
-                }
-            ],
-            query: {
-                "bool": {
-                    "must": {
-                        "term": { "parcels.action.transactions.data.registrar": address.value }
-                    },
-                    "filter": {
-                        "term": {
-                            "isRetracted": false
-                        }
-                    }
-                }
+        const transactions = await this.searchTransactions({
+            "bool": {
+                "must": [
+                    { "term": { "parcels.action.transactions.data.registrar": address.value } }
+                ]
             }
-        }).then((response: SearchResponse<BlockDoc>) => {
-            if (response.hits.total === 0) {
-                return [];
-            }
-            return _.chain(response.hits.hits).flatMap(hit => hit._source.parcels)
-                .flatMap((parcel: ParcelDoc) => (parcel.action as ChangeShardStateDoc).transactions)
-                .filter(transaction => {
-                    return Type.isAssetMintTransactionDoc(transaction) && (transaction as AssetMintTransactionDoc).data.registrar === address.value;
-                })
-                .map((transactionDoc: AssetMintTransactionDoc) => Asset.fromJSON({
-                    asset_type: transactionDoc.data.assetType,
-                    lock_script_hash: transactionDoc.data.lockScriptHash,
-                    parameters: transactionDoc.data.parameters,
-                    amount: transactionDoc.data.amount,
-                    transactionHash: transactionDoc.data.hash,
-                    transactionOutputIndex: 0
-                })).value();
+        });
+
+        if (transactions.length === 0) {
+            return [];
+        }
+        return _.map(transactions, (tx: AssetMintTransactionDoc) => {
+            return Asset.fromJSON({
+                asset_type: tx.data.assetType,
+                lock_script_hash: tx.data.lockScriptHash,
+                parameters: tx.data.parameters,
+                amount: tx.data.amount,
+                transactionHash: tx.data.hash,
+                transactionOutputIndex: 0
+            })
         });
     }
 
     public getTransactionsByAddress = async (address: H256): Promise<Transaction[]> => {
-        return this.searchBlock({
-            sort: [
-                {
-                    "number": { order: "desc" }
-                }
-            ],
-            query: {
-                "bool": {
-                    "must": {
-                        "bool": {
-                            "should": [
-                                { "term": { "parcels.action.transactions.data.outputs.owner": address.value } },
-                                { "term": { "parcels.action.transactions.data.inputs.owner": address.value } },
-                                { "term": { "parcels.action.transactions.data.owner": address.value } }
-                            ]
+        const transactions = await this.searchTransactions({
+            "bool": {
+                "should": [
+                    {
+                        "nested": {
+                            "path": "parcels.action.transactions.data.outputs",
+                            "query": {
+                                "bool": {
+                                    "must": [
+                                        { "term": { "parcels.action.transactions.data.outputs.owner": address.value } }
+                                    ]
+                                }
+                            }, "inner_hits": {}
                         }
                     },
-                    "filter": {
-                        "term": {
-                            "isRetracted": false
+                    {
+                        "nested": {
+                            "path": "parcels.action.transactions.data.inputs",
+                            "query": {
+                                "bool": {
+                                    "must": [
+                                        { "term": { "parcels.action.transactions.data.inputs.owner": address.value } }
+                                    ]
+                                }
+                            }, "inner_hits": {}
                         }
-                    }
-                }
+                    },
+                    { "term": { "parcels.action.transactions.data.owner": address.value } }
+                ]
             }
-        }).then((response: SearchResponse<BlockDoc>) => {
-            if (response.hits.total === 0) {
-                return [];
-            }
-            return _.chain(response.hits.hits).flatMap(hit => hit._source.parcels)
-                .filter((parcel: ParcelDoc) => Type.isChangeShardStateDoc(parcel.action))
-                .flatMap((parcel: ParcelDoc) => (parcel.action as ChangeShardStateDoc).transactions)
-                .filter(transaction => {
-                    if (Type.isAssetTransferTransactionDoc(transaction)) {
-                        const transactionDoc = (transaction as AssetTransferTransactionDoc);
-                        return _.findIndex(transactionDoc.data.outputs, (output) => output.owner === address.value) !== -1;
-                    } else if (Type.isAssetMintTransactionDoc(transaction)) {
-                        const transactionDoc = (transaction as AssetMintTransactionDoc);
-                        return transactionDoc.data.owner === address.value;
-                    }
-                    throw new Error("Unexpected transaction")
-                })
-                .map(transactionDoc => getTransactionFromJSON(transactionDoc))
-                .value();
         });
+
+        if (transactions.length === 0) {
+            return [];
+        }
+        return _.map(transactions, tx => getTransactionFromJSON(tx));
     }
 
     public getAssetsByAssetAddress = async (address: H160): Promise<Asset[]> => {
-        return this.searchBlock({
-            sort: [
-                {
-                    "number": { order: "desc" }
-                }
-            ],
-            query: {
-                "bool": {
-                    "must": {
-                        "bool": {
-                            "should": [
-                                { "term": { "parcels.action.transactions.data.outputs.owner": address.value } },
-                                { "term": { "parcels.action.transactions.data.owner": address.value } }
-                            ],
+        const transactions = await this.searchTransactions({
+            "bool": {
+                "should": [
+                    {
+                        "nested": {
+                            "path": "parcels.action.transactions.data.outputs",
+                            "query": {
+                                "bool": {
+                                    "must": [
+                                        {
+                                            "term": { "parcels.action.transactions.data.outputs.owner": address.value }
+                                        }
+                                    ]
+                                }
+                            }
                         }
                     },
-                    "filter": {
-                        "term": {
-                            "isRetracted": false
-                        }
-                    }
-                }
+                    { "term": { "parcels.action.transactions.data.owner": address.value } }
+                ]
             }
-        }).then((response: SearchResponse<BlockDoc>) => {
-            if (response.hits.total === 0) {
+        });
+        return _.flatMap(transactions, transaction => {
+            if (Type.isAssetTransferTransactionDoc(transaction)) {
+                return _.chain((transaction as AssetTransferTransactionDoc).data.outputs)
+                    .filter(output => output.owner === address.value)
+                    .map((output, index) => Asset.fromJSON({
+                        asset_type: output.assetType,
+                        lock_script_hash: output.lockScriptHash,
+                        parameters: output.parameters,
+                        amount: output.amount,
+                        transactionHash: transaction.data.hash,
+                        transactionOutputIndex: index
+                    })).value();
+            } else if (Type.isAssetMintTransactionDoc(transaction)) {
+                const transactionDoc = (transaction as AssetMintTransactionDoc);
+                if (transactionDoc.data.owner === address.value) {
+                    return Asset.fromJSON({
+                        asset_type: transactionDoc.data.assetType,
+                        lock_script_hash: transactionDoc.data.lockScriptHash,
+                        parameters: transactionDoc.data.parameters,
+                        amount: transactionDoc.data.amount,
+                        transactionHash: transactionDoc.data.hash,
+                        transactionOutputIndex: 0
+                    });
+                }
                 return [];
             }
-            return _.chain(response.hits.hits).flatMap(hit => hit._source.parcels)
-                .filter((parcel: ParcelDoc) => Type.isChangeShardStateDoc(parcel.action))
-                .flatMap((parcel: ParcelDoc) => (parcel.action as ChangeShardStateDoc).transactions)
-                .flatMap(transaction => {
-                    if (Type.isAssetTransferTransactionDoc(transaction)) {
-                        return _.chain((transaction as AssetTransferTransactionDoc).data.outputs)
-                            .filter(output => output.owner === address.value)
-                            .map((output, index) => Asset.fromJSON({
-                                asset_type: output.assetType,
-                                lock_script_hash: output.lockScriptHash,
-                                parameters: output.parameters,
-                                amount: output.amount,
-                                transactionHash: transaction.data.hash,
-                                transactionOutputIndex: index
-                            })).value();
-                    } else if (Type.isAssetMintTransactionDoc(transaction)) {
-                        const transactionDoc = (transaction as AssetMintTransactionDoc);
-                        if (transactionDoc.data.owner === address.value) {
-                            return Asset.fromJSON({
-                                asset_type: transactionDoc.data.assetType,
-                                lock_script_hash: transactionDoc.data.lockScriptHash,
-                                parameters: transactionDoc.data.parameters,
-                                amount: transactionDoc.data.amount,
-                                transactionHash: transactionDoc.data.hash,
-                                transactionOutputIndex: 0
-                            });
-                        }
-                        return [];
-                    }
-                    throw new Error("Unexpected transaction")
-                }).value();
+            throw new Error("Unexpected transaction")
         });
     }
 
@@ -462,35 +323,17 @@ export class ElasticSearchAgent {
     }
 
     public getAssetScheme = async (assetType: H256): Promise<AssetScheme> => {
-        return this.searchBlock({
-            sort: [
-                {
-                    "number": { order: "desc" }
-                }
-            ],
-            query: {
-                "bool": {
-                    "must": [
-                        { "term": { "parcels.action.transactions.data.assetType": assetType.value } }
-                    ],
-                    "filter": {
-                        "term": {
-                            "isRetracted": false
-                        }
-                    }
-                }
+        const transactions = await this.searchTransactions({
+            "bool": {
+                "must": [
+                    { "term": { "parcels.action.transactions.data.assetType": assetType.value } }
+                ]
             }
-        }).then((response: SearchResponse<BlockDoc>) => {
-            if (response.hits.total === 0) {
-                return null;
-            }
-            const assetMintTransaction = _.chain(response.hits.hits).flatMap(hit => Block.fromJSON(hit._source).parcels)
-                .filter((parcel: SignedParcel) => parcel.unsigned.action instanceof ChangeShardState)
-                .flatMap((parcel: SignedParcel) => (parcel.unsigned.action as ChangeShardState).transactions)
-                .find((transaction: Transaction) => transaction instanceof AssetMintTransaction && transaction.getAssetSchemeAddress().value === assetType.value)
-                .value() as AssetMintTransaction;
-            return assetMintTransaction.getAssetScheme();
         });
+        if (transactions.length === 0) {
+            return null;
+        }
+        return AssetMintTransaction.fromJSON(transactions[0]).getAssetScheme();
     }
 
     public checkIndexOrCreate = async (): Promise<void> => {
@@ -518,13 +361,95 @@ export class ElasticSearchAgent {
         });
     }
 
-    private searchBlock(body: any): Promise<void | SearchResponse<any>> {
+    private searchParcels = async (query: any): Promise<ParcelDoc[]> => {
+        const response = await this.search({
+            "sort": [
+                {
+                    "number": { "order": "desc" }
+                }
+            ],
+            "_source": false,
+            "query": {
+                "bool": {
+                    "must": [
+                        {
+                            "term": {
+                                "isRetracted": false
+                            }
+                        },
+                        {
+                            "nested": {
+                                "path": "parcels",
+                                "query": query,
+                                "inner_hits": {}
+                            }
+                        }
+                    ]
+                }
+            }
+        })
+        if (response.hits.total === 0) {
+            return [];
+        }
+        return _.chain(response.hits.hits).flatMap(hit => hit.inner_hits.parcels.hits.hits)
+            .map(hit => (hit._source as ParcelDoc))
+            .value();
+    }
+
+    private searchTransactions = async (query: any): Promise<TransactionDoc[]> => {
+        const response = await this.search({
+            "sort": [
+                {
+                    "number": { "order": "desc" }
+                }
+            ],
+            "_source": false,
+            "query": {
+                "bool": {
+                    "must": [
+                        {
+                            "term": {
+                                "isRetracted": false
+                            }
+                        },
+                        {
+                            "nested": {
+                                "path": "parcels",
+                                "query": {
+                                    "nested": {
+                                        "path": "parcels.action",
+                                        "query": {
+                                            "nested": {
+                                                "path": "parcels.action.transactions",
+                                                "query": query,
+                                                "inner_hits": {}
+                                            }
+                                        },
+                                        "inner_hits": { "_source": false }
+                                    }
+                                },
+                                "inner_hits": { "_source": false }
+                            }
+                        }
+                    ]
+                }
+            }
+        })
+        if (response.hits.total === 0) {
+            return [];
+        }
+        return _.chain(response.hits.hits).flatMap(hit => hit.inner_hits.parcels.hits.hits)
+            .flatMap(hit => hit.inner_hits["parcels.action"].hits.hits)
+            .flatMap(hit => hit.inner_hits["parcels.action.transactions"].hits.hits)
+            .map(hit => (hit._source as TransactionDoc))
+            .value();
+    }
+
+    private search = async (body: any): Promise<SearchResponse<any>> => {
         return this.client.search({
             index: "block",
             type: "_doc",
             body
-        }).catch((err) => {
-            console.error('Elastic search error %s', err);
         });
     }
 
@@ -536,8 +461,6 @@ export class ElasticSearchAgent {
             id: block.hash.value,
             body: blockDoc,
             refresh: "wait_for"
-        }).catch((err) => {
-            console.error('Elastic search index error %s', err);
         });
     }
 
@@ -550,8 +473,6 @@ export class ElasticSearchAgent {
             body: {
                 doc: partial
             }
-        }).catch((err) => {
-            console.error('Elastic search update error %s', err);
         });
     }
 }
