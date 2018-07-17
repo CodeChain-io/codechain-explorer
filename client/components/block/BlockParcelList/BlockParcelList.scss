@@ -1,6 +1,25 @@
 .block-parcel-list {
   background: #F8F8F8;
+  position: relative;
   border-radius: 13px;
+  .type {
+    position: absolute;
+    right: 15px;
+    top: 8px;
+    color: white;
+    padding-left: 10px;
+    padding-right: 10px;
+    border-radius: 13px;
+  }
+  .change-shard-state-type {
+    background-color: #00B8D4;
+  }
+  .payment-type {
+    background-color: #03A9F4;
+  }
+  .set-regular-key-type {
+    background-color: #3A4EB7;
+  }
   .parcel-item>.row>div:first-child {
     padding-left: 27px;
   }

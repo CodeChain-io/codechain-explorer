@@ -80,11 +80,25 @@ const ParcelObjectByType = (parcel: SignedParcel) => {
     return null;
 }
 
+const getClassNameByType = (type: string) => {
+    if (type === "payment") {
+        return "payment-type";
+    } else if (type === "changeShardState") {
+        return "change-shard-state-type";
+    } else if (type === "setRegularKey") {
+        return "set-regular-key";
+    }
+    return null;
+}
+
 const BlockParcelList = (props: Props) => {
     const { parcels } = props;
     return <div className="block-parcel-list">{parcels.map((parcel, i: number) => {
         const hash = parcel.hash().value;
         return <div key={`block-parcel-${hash}`} className="parcel-item">
+            <div className={`type ${getClassNameByType(parcel.unsigned.action.toJSON().action)}`}>
+                {parcel.unsigned.action.toJSON().action}
+            </div>
             <Row>
                 <Col md="2">
                     Parcel
