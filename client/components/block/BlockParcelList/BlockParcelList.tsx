@@ -120,7 +120,7 @@ const BlockParcelList = (props: Props) => {
                     Fee
                 </Col>
                 <Col md="10">
-                    <td>{parcel.unsigned.fee.value.toString()}</td>
+                    {parcel.unsigned.fee.value.toString()}
                 </Col>
             </Row>
             <Row>
@@ -128,7 +128,7 @@ const BlockParcelList = (props: Props) => {
                     Timestamp
                 </Col>
                 <Col md="10">
-                    <td>timestamp</td>
+                    timestamp
                 </Col>
             </Row>
             {ParcelObjectByType(parcel)}
