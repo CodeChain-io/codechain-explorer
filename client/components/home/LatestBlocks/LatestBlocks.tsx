@@ -36,7 +36,7 @@ const LatestBlocks = (props: Props) => {
                                 <tr key={`home-block-num-${block.hash}`}>
                                     <td scope="row"><Link to={`/block/${block.number}`}>{block.number}</Link></td>
                                     <td>{block.parcels.length}</td>
-                                    <td>Block Reward</td>
+                                    <td>{10000}</td>
                                     <td><HexString link={`/addr-platform/0x${block.author}`} text={block.author} length={10} /></td>
                                     <td>{moment.unix(block.timestamp).fromNow()}</td>
                                 </tr>
