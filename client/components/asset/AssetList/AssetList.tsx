@@ -3,32 +3,17 @@ import * as _ from "lodash";
 
 import "./AssetList.scss";
 import HexString from "../../util/HexString/HexString";
-import { AssetBundleDoc } from "../../../db/DocType";
+import { AssetBundleDoc, Type } from "../../../db/DocType";
 
 interface OwnProps {
     assetBundles: AssetBundleDoc[]
-}
-
-interface MetadataFormat {
-    name?: string;
-    description?: string;
-    icon_url?: string;
-}
-
-const getMetadata = (data: string): MetadataFormat => {
-    try {
-        return JSON.parse(data);
-    } catch (e) {
-        // nothing
-    }
-    return {};
 }
 
 const AssetList = (prop: OwnProps) => {
     return <div className="asset-list-container mb-3">
         {
             _.map(prop.assetBundles, (assetBundle, index) => {
-                const metadata = getMetadata(assetBundle.assetScheme.metadata);
+                const metadata = Type.getMetadata(assetBundle.assetScheme.metadata);
                 return <table key={`asset-list-${index}`} className="asset-list-table">
                     <tbody>
                         <tr>

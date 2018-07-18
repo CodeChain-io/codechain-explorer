@@ -2,29 +2,14 @@ import * as React from "react";
 
 import "./AssetHeaderTable.scss"
 import HexString from "../../util/HexString/HexString";
-import { AssetSchemeDoc } from "../../../db/DocType";
+import { AssetSchemeDoc, Type } from "../../../db/DocType";
 
 interface OwnProps {
     assetScheme: AssetSchemeDoc;
 }
 
-interface MetadataFormat {
-    name?: string;
-    description?: string;
-    icon_url?: string;
-}
-
-const getMetadata = (data: string): MetadataFormat => {
-    try {
-        return JSON.parse(data);
-    } catch (e) {
-        // nothing
-    }
-    return {};
-}
-
 const AssetHeaderTable = (prop: OwnProps) => {
-    const metadata = getMetadata(prop.assetScheme.metadata);
+    const metadata = Type.getMetadata(prop.assetScheme.metadata);
     return <table className="asset-header-table">
         <tbody>
             <tr>

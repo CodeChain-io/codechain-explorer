@@ -24,7 +24,7 @@ const TransactionObjectByType = (transaction: TransactionDoc) => {
                                 AssetType
                             </Col>
                             <Col md="10">
-                                <HexString link={`/asset/0x${transactionDoc.data.assetType}`} text={transactionDoc.data.assetType} />
+                                <img src={Type.getMetadata(transactionDoc.data.metadata).icon_url} className="icon mr-2" /> <HexString link={`/asset/0x${transactionDoc.data.assetType}`} text={transactionDoc.data.assetType} />
                             </Col>
                         </Row>
                         <Row className="inner-row">
@@ -76,14 +76,17 @@ const TransactionObjectByType = (transaction: TransactionDoc) => {
                                         return (
                                             <div key={`input-${i}`} className="background-highlight mb-3">
                                                 <Row className="inner-row">
-                                                    <Col><HexString link={`/asset/0x${input.prevOut.assetType}`} text={input.prevOut.assetType} length={40} /></Col>
+                                                    <Col><img src={Type.getMetadata(input.prevOut.assetScheme.metadata).icon_url} className="icon mr-2" /> <HexString link={`/asset/0x${input.prevOut.assetType}`} text={input.prevOut.assetType} length={30} /></Col>
                                                 </Row>
                                                 <Row className="inner-row">
                                                     <Col md="4">
                                                         Owner
                                                     </Col>
-                                                    <Col md="8">
-                                                        {input.prevOut.owner}
+                                                    <Col md="8">{
+                                                        input.prevOut.owner ?
+                                                            <HexString link={`/addr-asset/0x${input.prevOut.owner}`} text={input.prevOut.owner} length={10} />
+                                                            : "Unknown"
+                                                    }
                                                     </Col>
                                                 </Row>
                                                 <Row className="inner-row">
@@ -108,7 +111,7 @@ const TransactionObjectByType = (transaction: TransactionDoc) => {
                                         return (
                                             <div key={`output-${i}`} className="background-highlight mb-3">
                                                 <Row className="inner-row">
-                                                    <Col><HexString link={`/asset/0x${output.assetType}`} text={output.assetType} length={40} /></Col>
+                                                    <Col><img src={Type.getMetadata(output.assetScheme.metadata).icon_url} className="icon mr-2" /> <HexString link={`/asset/0x${output.assetType}`} text={output.assetType} length={30} /></Col>
                                                 </Row>
                                                 <Row className="inner-row">
                                                     <Col md="4">

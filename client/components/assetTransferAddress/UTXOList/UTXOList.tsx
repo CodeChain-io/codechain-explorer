@@ -3,25 +3,10 @@ import * as _ from "lodash";
 
 import "./UTXOList.scss";
 import HexString from "../../util/HexString/HexString";
-import { AssetBundleDoc } from "../../../db/DocType";
+import { AssetBundleDoc, Type } from "../../../db/DocType";
 
 interface OwnProps {
     utxo: AssetBundleDoc[];
-}
-
-interface MetadataFormat {
-    name?: string;
-    description?: string;
-    icon_url?: string;
-}
-
-const getMetadata = (data: string): MetadataFormat => {
-    try {
-        return JSON.parse(data);
-    } catch (e) {
-        // nothing
-    }
-    return {};
 }
 
 const UTXOList = (prop: OwnProps) => {
@@ -30,7 +15,7 @@ const UTXOList = (prop: OwnProps) => {
             <tbody>
                 {
                     _.map(prop.utxo, (utxo, index) => {
-                        const metadata = getMetadata(utxo.assetScheme.metadata);
+                        const metadata = Type.getMetadata(utxo.assetScheme.metadata);
                         return <tr key={`asset-transfer-utxo-${index}`}>
                             <td>
                                 Asset

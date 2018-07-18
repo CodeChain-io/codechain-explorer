@@ -13,21 +13,6 @@ interface Props {
     transaction: TransactionDoc;
 }
 
-interface MetadataFormat {
-    name?: string;
-    description?: string;
-    icon_url?: string;
-}
-
-const getMetadata = (data: string): MetadataFormat => {
-    try {
-        return JSON.parse(data);
-    } catch (e) {
-        // nothing
-    }
-    return {};
-}
-
 const getTransactionInfoByType = (transaction: TransactionDoc) => {
     if (Type.isAssetTransferTransactionDoc(transaction)) {
         const transactionDoc = transaction as AssetTransferTransactionDoc;
@@ -73,7 +58,7 @@ const getTransactionInfoByType = (transaction: TransactionDoc) => {
                                         <tbody>
                                             <tr>
                                                 <td>AssetType</td>
-                                                <td><HexString link={`/asset/0x${input.prevOut.assetType}`} text={input.prevOut.assetType} /></td>
+                                                <td><img src={Type.getMetadata(input.prevOut.assetScheme.metadata).icon_url} className="icon mr-2" /><HexString link={`/asset/0x${input.prevOut.assetType}`} text={input.prevOut.assetType} /></td>
                                             </tr>
                                             <tr>
                                                 <td>Amount</td>
@@ -89,11 +74,7 @@ const getTransactionInfoByType = (transaction: TransactionDoc) => {
                                             </tr>
                                             <tr>
                                                 <td>Prev Tx</td>
-                                                <td><HexString link={`/tx/0x${input.prevOut.transactionHash}`} text={input.prevOut.transactionHash} /></td>
-                                            </tr>
-                                            <tr>
-                                                <td>Index</td>
-                                                <td>{input.prevOut.index}</td>
+                                                <td><HexString link={`/tx/0x${input.prevOut.transactionHash}`} text={input.prevOut.transactionHash} /> (Index {input.prevOut.index})</td>
                                             </tr>
                                         </tbody>
                                     </table>
@@ -118,7 +99,7 @@ const getTransactionInfoByType = (transaction: TransactionDoc) => {
                                         <tbody>
                                             <tr>
                                                 <td>AssetType</td>
-                                                <td><HexString link={`/asset/0x${output.assetType}`} text={output.assetType} /></td>
+                                                <td><img src={Type.getMetadata(output.assetScheme.metadata).icon_url} className="icon mr-2" /><HexString link={`/asset/0x${output.assetType}`} text={output.assetType} /></td>
                                             </tr>
                                             <tr>
                                                 <td>Owner</td>
@@ -151,7 +132,7 @@ const getTransactionInfoByType = (transaction: TransactionDoc) => {
         );
     } else if (Type.isAssetMintTransactionDoc(transaction)) {
         const transactionDoc = transaction as AssetMintTransactionDoc;
-        const metadata = getMetadata(transactionDoc.data.metadata);
+        const metadata = Type.getMetadata(transactionDoc.data.metadata);
         return (
             <div>
                 <Row>
@@ -194,7 +175,7 @@ const getTransactionInfoByType = (transaction: TransactionDoc) => {
                         AssetType
                     </Col>
                     <Col md="10">
-                        <HexString link={`/asset/0x${transactionDoc.data.assetType}`} text={transactionDoc.data.assetType} />
+                        <img src={Type.getMetadata(transactionDoc.data.metadata).icon_url} className="icon mr-2" /> <HexString link={`/asset/0x${transactionDoc.data.assetType}`} text={transactionDoc.data.assetType} />
                     </Col>
                 </Row>
                 <Row>
@@ -233,7 +214,7 @@ const getTransactionInfoByType = (transaction: TransactionDoc) => {
                                 <tr>
                                     <td>
                                         Name
-                                        </td>
+                                    </td>
                                     <td>
                                         {metadata.name ? metadata.name : "Unknown"}
                                     </td>
@@ -241,7 +222,7 @@ const getTransactionInfoByType = (transaction: TransactionDoc) => {
                                 <tr>
                                     <td>
                                         Description
-                                        </td>
+                                    </td>
                                     <td>
                                         {metadata.description ? metadata.description : "Unknown"}
                                     </td>
@@ -249,9 +230,9 @@ const getTransactionInfoByType = (transaction: TransactionDoc) => {
                                 <tr>
                                     <td>
                                         Icon
-                                        </td>
+                                    </td>
                                     <td>
-                                        {metadata.icon_url ? <img className="asset-icon" src={metadata.icon_url} /> : "Unknown"}
+                                        {metadata.icon_url ? metadata.icon_url.slice(0, 40) + "..." : "Unknown"}
                                     </td>
                                 </tr>
                             </tbody>

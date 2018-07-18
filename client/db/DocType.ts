@@ -355,6 +355,21 @@ function getAssetSchemeDoc(transaction: AssetMintTransactionDoc): AssetSchemeDoc
     }
 }
 
+export interface MetadataFormat {
+    name?: string;
+    description?: string;
+    icon_url?: string;
+}
+
+const getMetadata = (data: string): MetadataFormat => {
+    try {
+        return JSON.parse(data);
+    } catch (e) {
+        // nothing
+    }
+    return {};
+}
+
 export let Type = {
     isChangeShardStateDoc,
     isPaymentDoc,
@@ -362,7 +377,8 @@ export let Type = {
     isCreateShardDoc,
     isAssetTransferTransactionDoc,
     isAssetMintTransactionDoc,
-    getAssetSchemeDoc
+    getAssetSchemeDoc,
+    getMetadata
 }
 
 export let Converter = {
