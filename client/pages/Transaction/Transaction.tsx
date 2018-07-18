@@ -6,7 +6,7 @@ import { RequestTransaction } from "../../request";
 import TransactionDetails from "../../components/transaction/TransactionDetails/TransactionDetails";
 
 import "./Transaction.scss";
-import TransactionSummary from "../../components/transaction/TransactionSummary/TransactionSummary";
+// import TransactionSummary from "../../components/transaction/TransactionSummary/TransactionSummary";
 import { TransactionDoc } from "../../db/DocType";
 
 interface Props {
@@ -48,9 +48,13 @@ class Transaction extends React.Component<Props, State> {
                         <span>{transaction.type}</span>
                     </div>
                 </div>
-                <div className="mb-3">
-                    <TransactionSummary transaction={transaction} />
-                </div>
+                {
+                    /*
+                        <div className="mb-3">
+                            {<TransactionSummary transaction={transaction} />}
+                        </div>
+                    */
+                }
                 <TransactionDetails transaction={transaction} />
             </Container>
         )
