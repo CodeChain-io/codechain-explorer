@@ -198,6 +198,34 @@
                                                                 }
                                                             }
                                                         },
+                                                        "assetScheme": {
+                                                            "properties": {
+                                                                "metadata": {
+                                                                    "type": "text",
+                                                                    "fields": {
+                                                                        "keyword": {
+                                                                            "type": "keyword",
+                                                                            "ignore_above": 1000
+                                                                        }
+                                                                    }
+                                                                },
+                                                                "registrar": {
+                                                                    "type": "text",
+                                                                    "fields": {
+                                                                        "keyword": {
+                                                                            "type": "keyword",
+                                                                            "ignore_above": 256
+                                                                        }
+                                                                    }
+                                                                },
+                                                                "amount": {
+                                                                    "type": "long"
+                                                                },
+                                                                "networkId": {
+                                                                    "type": "long"
+                                                                }
+                                                            }
+                                                        },
                                                         "index": {
                                                             "type": "long"
                                                         },
@@ -284,6 +312,34 @@
                                                         "keyword": {
                                                             "type": "keyword",
                                                             "ignore_above": 256
+                                                        }
+                                                    }
+                                                },
+                                                "assetScheme": {
+                                                    "properties": {
+                                                        "metadata": {
+                                                            "type": "text",
+                                                            "fields": {
+                                                                "keyword": {
+                                                                    "type": "keyword",
+                                                                    "ignore_above": 1000
+                                                                }
+                                                            }
+                                                        },
+                                                        "registrar": {
+                                                            "type": "text",
+                                                            "fields": {
+                                                                "keyword": {
+                                                                    "type": "keyword",
+                                                                    "ignore_above": 256
+                                                                }
+                                                            }
+                                                        },
+                                                        "amount": {
+                                                            "type": "long"
+                                                        },
+                                                        "networkId": {
+                                                            "type": "long"
                                                         }
                                                     }
                                                 },

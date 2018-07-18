@@ -2,7 +2,8 @@ import { scheduleJob, Job } from "node-schedule";
 import { WorkerConfig } from "./";
 import { CodeChainAgent } from "./CodeChainAgent";
 import { ElasticSearchAgent } from "../db/ElasticSearchAgent";
-import { Block } from "codechain-sdk/lib/core/classes";
+import { Block, H256 } from "codechain-sdk/lib/core/classes";
+import { BlockDoc } from "../db/DocType";
 
 export class BlockSyncWorker {
     private watchJob: Job;
@@ -54,8 +55,8 @@ export class BlockSyncWorker {
             const nextBlockIndex: number = latestSyncBlockNumber + 1;
             const nextBlock: Block = await this.codeChainAgent.getBlock(nextBlockIndex);
             if (latestSyncBlockNumber > 0) {
-                const lastSyncBlock: Block = await this.elasticSearchAgent.getBlock(latestSyncBlockNumber);
-                if (nextBlock.parentHash.value !== lastSyncBlock.hash.value) {
+                const lastSyncBlock: BlockDoc = await this.elasticSearchAgent.getBlock(latestSyncBlockNumber);
+                if (nextBlock.parentHash.value !== lastSyncBlock.hash) {
                     latestSyncBlockNumber = await this.checkRetractAndReturnSyncNumber(latestSyncBlockNumber);
                     continue;
                 }
@@ -70,15 +71,15 @@ export class BlockSyncWorker {
 
     private checkRetractAndReturnSyncNumber = async (currentBlockNumber): Promise<number> => {
         while (currentBlockNumber > -1) {
-            const lastSynchronizedBlock: Block = await this.elasticSearchAgent.getBlock(currentBlockNumber);
+            const lastSynchronizedBlock: BlockDoc = await this.elasticSearchAgent.getBlock(currentBlockNumber);
             const codechainBlock: Block = await this.codeChainAgent.getBlock(currentBlockNumber);
 
-            if (codechainBlock.hash.value === lastSynchronizedBlock.hash.value) {
+            if (codechainBlock.hash.value === lastSynchronizedBlock.hash) {
                 break;
             }
 
             console.log("%d block is retracted", currentBlockNumber);
-            await this.elasticSearchAgent.retractBlock(lastSynchronizedBlock.hash);
+            await this.elasticSearchAgent.retractBlock(new H256(lastSynchronizedBlock.hash));
             currentBlockNumber--;
         }
         return currentBlockNumber;

@@ -1,6 +1,7 @@
-import { Block, Transaction, SignedParcel, Action, ChangeShardState, SetRegularKey, CreateShard, Payment, AssetTransferTransaction, AssetMintTransaction, AssetTransferInput, AssetTransferOutput, H256 } from "codechain-sdk/lib/core/classes";
+import { Block, Transaction, SignedParcel, Action, ChangeShardState, SetRegularKey, CreateShard, Payment, AssetTransferTransaction, AssetMintTransaction, AssetTransferInput, AssetTransferOutput, H256, Asset, AssetScheme } from "codechain-sdk/lib/core/classes";
 import * as _ from "lodash";
 import { ElasticSearchAgent } from "./ElasticSearchAgent";
+import { getTransactionFromJSON } from "../node_modules/codechain-sdk/lib/core/transaction/Transaction";
 
 export interface BlockDoc {
     parentHash: string;
@@ -57,6 +58,48 @@ export interface CreateShardDoc {
 
 export type TransactionDoc = AssetMintTransactionDoc | AssetTransferTransactionDoc;
 
+export interface AssetSchemeDoc {
+    metadata: string;
+    registrar: string | null;
+    amount: number | null;
+    networkId: number;
+}
+
+export interface AssetBundleDoc {
+    assetScheme: AssetSchemeDoc;
+    asset: AssetDoc;
+}
+
+export interface AssetDoc {
+    assetType: string;
+    lockScriptHash: string;
+    parameters: Buffer[];
+    amount: number;
+    transactionHash: string;
+    transactionOutputIndex: number;
+}
+
+const fromAsset = (asset: Asset): AssetDoc => {
+    return {
+        assetType: asset.assetType.value,
+        lockScriptHash: asset.lockScriptHash.value,
+        parameters: asset.parameters,
+        amount: asset.amount,
+        transactionHash: asset.outPoint.transactionHash.value,
+        transactionOutputIndex: asset.outPoint.index
+    }
+}
+
+const fromAssetScheme = (assetScheme: AssetScheme) => {
+    return {
+        metadata: assetScheme.metadata,
+        registrar: assetScheme.registrar,
+        amount: assetScheme.amount,
+        networkId: assetScheme.networkId
+    }
+}
+
+
 export interface AssetMintTransactionDoc {
     type: string;
     data: {
@@ -91,6 +134,7 @@ export interface AssetTransferInputDoc {
         transactionHash: string;
         index: number;
         assetType: string;
+        assetScheme: AssetSchemeDoc;
         amount: number;
         /* custom field for indexing */
         owner: string;
@@ -103,6 +147,7 @@ export interface AssetTransferOutputDoc {
     lockScriptHash: string;
     parameters: Buffer[];
     assetType: string;
+    assetScheme: AssetSchemeDoc;
     amount: number;
     /* custom field for indexing */
     owner: string;
@@ -115,28 +160,26 @@ const fromAssetTransferInput = async (block: Block, assetTransferInput: AssetTra
         .flatMap(parcel => (parcel.unsigned.action as ChangeShardState).transactions)
         .filter((transaction: Transaction) => transaction.hash().value === assetTransferInputJson.prevOut.transactionHash)
         .value();
-    let foundTransaction: Transaction = null;
+    let owner = "";
+    let foundTransaction;
     if (indexedTransaction) {
         foundTransaction = indexedTransaction;
-    } else if (transactionInCurrentBlock.length > 0) {
-        foundTransaction = transactionInCurrentBlock[0];
     }
-    let owner = "";
-    if (foundTransaction instanceof AssetMintTransaction) {
-        if (foundTransaction.toJSON().data.lockScriptHash === "f42a65ea518ba236c08b261c34af0521fa3cd1aa505e1c18980919cb8945f8f3") {
-            owner = foundTransaction.toJSON().data.parameters[0].toString("hex")
-        }
-    } else if (foundTransaction instanceof AssetTransferTransaction) {
-        const output = foundTransaction.outputs[assetTransferInputJson.prevOut.index].toJSON();
-        if (output.lockScriptHash === "f42a65ea518ba236c08b261c34af0521fa3cd1aa505e1c18980919cb8945f8f3") {
-            owner = output.parameters[0].toString("hex");
-        }
+    if (transactionInCurrentBlock.length > 0) {
+        foundTransaction = fromTransaction(block, transactionInCurrentBlock[0], elasticSearchAgent);
     }
+    if (foundTransaction && isAssetMintTransactionDoc(foundTransaction)) {
+        owner = (foundTransaction as AssetMintTransactionDoc).data.owner;
+    } else if (foundTransaction && isAssetTransferTransactionDoc(foundTransaction)) {
+        owner = (foundTransaction as AssetTransferTransactionDoc).data.outputs[assetTransferInputJson.prevOut.index].owner;
+    }
+    const assetScheme = await getAssetScheme(assetTransferInputJson.prevOut.assetType, block, elasticSearchAgent);
     return {
         prevOut: {
             transactionHash: assetTransferInputJson.prevOut.transactionHash,
             index: assetTransferInputJson.prevOut.index,
             assetType: assetTransferInputJson.prevOut.assetType,
+            assetScheme,
             amount: assetTransferInputJson.prevOut.amount,
             owner
         },
@@ -145,13 +188,31 @@ const fromAssetTransferInput = async (block: Block, assetTransferInput: AssetTra
     }
 }
 
-const fromAssetTransferOutput = async (assetTransferOutput: AssetTransferOutput): Promise<AssetTransferOutputDoc> => {
+const getAssetScheme = async (assetType: string, block: Block, elasticSearchAgent: ElasticSearchAgent): Promise<AssetSchemeDoc> => {
+    const indexedAssetScheme = await elasticSearchAgent.getAssetScheme(new H256(assetType));
+    if (indexedAssetScheme) {
+        return indexedAssetScheme
+    }
+    const transactionInCurrentBlock = _.chain(block.parcels).filter((parcel: SignedParcel) => parcel.unsigned.action instanceof ChangeShardState)
+        .flatMap(parcel => (parcel.unsigned.action as ChangeShardState).transactions)
+        .filter((transaction: Transaction) => transaction instanceof AssetMintTransaction)
+        .find((transaction: AssetMintTransaction) => transaction.getAssetSchemeAddress().value === assetType)
+        .value()
+    if (transactionInCurrentBlock) {
+        return (transactionInCurrentBlock as AssetMintTransaction).getAssetScheme().toJSON()
+    }
+    return null;
+}
+
+const fromAssetTransferOutput = async (block: Block, assetTransferOutput: AssetTransferOutput, elasticSearchAgent: ElasticSearchAgent): Promise<AssetTransferOutputDoc> => {
     const assetTransferOutputJson = assetTransferOutput.toJSON();
+    const assetScheme = await getAssetScheme(assetTransferOutputJson.assetType, block, elasticSearchAgent)
     return {
         lockScriptHash: assetTransferOutputJson.lockScriptHash,
         owner: assetTransferOutputJson.lockScriptHash === "f42a65ea518ba236c08b261c34af0521fa3cd1aa505e1c18980919cb8945f8f3" ? assetTransferOutputJson.parameters[0].toString("hex") : "",
         parameters: assetTransferOutputJson.parameters,
         assetType: assetTransferOutputJson.assetType,
+        assetScheme,
         amount: assetTransferOutputJson.amount
     }
 }
@@ -178,7 +239,7 @@ const fromTransaction = async (block: Block, transaction: Transaction, elasticSe
         const transactionJson = transaction.toJSON();
         const burns = await Promise.all(_.map(transaction.burns, burn => fromAssetTransferInput(block, burn, elasticSearchAgent)));
         const inputs = await Promise.all(_.map(transaction.inputs, input => fromAssetTransferInput(block, input, elasticSearchAgent)));
-        const outputs = await Promise.all(_.map(transaction.outputs, output => fromAssetTransferOutput(output)));
+        const outputs = await Promise.all(_.map(transaction.outputs, output => fromAssetTransferOutput(block, output, elasticSearchAgent)));
         return {
             type: transactionJson.type,
             data: {
@@ -286,15 +347,27 @@ function isAssetMintTransactionDoc(transaction: TransactionDoc) {
     return transaction.type === "assetMint";
 }
 
+function getAssetSchemeDoc(transaction: AssetMintTransactionDoc): AssetSchemeDoc {
+    return {
+        metadata: transaction.data.metadata,
+        registrar: transaction.data.registrar,
+        amount: transaction.data.amount,
+        networkId: transaction.data.networkId
+    }
+}
+
 export let Type = {
     isChangeShardStateDoc,
     isPaymentDoc,
     isSetRegularKeyDoc,
     isCreateShardDoc,
     isAssetTransferTransactionDoc,
-    isAssetMintTransactionDoc
+    isAssetMintTransactionDoc,
+    getAssetSchemeDoc
 }
 
 export let Converter = {
-    fromBlock
+    fromBlock,
+    fromAsset,
+    fromAssetScheme,
 }

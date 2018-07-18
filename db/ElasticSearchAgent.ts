@@ -2,7 +2,7 @@ import { Client, SearchResponse } from "elasticsearch";
 import { Block, SignedParcel, H256, H160, Transaction, Asset, AssetScheme, AssetMintTransaction } from "codechain-sdk/lib/core/classes";
 import { getTransactionFromJSON } from "codechain-sdk/lib/core/transaction/Transaction";
 import * as _ from "lodash";
-import { BlockDoc, ParcelDoc, Type, AssetTransferTransactionDoc, AssetMintTransactionDoc, Converter, TransactionDoc } from "../db/DocType";
+import { BlockDoc, ParcelDoc, Type, AssetTransferTransactionDoc, AssetMintTransactionDoc, Converter, TransactionDoc, AssetDoc, AssetSchemeDoc, AssetBundleDoc } from "../db/DocType";
 
 export class ElasticSearchAgent {
     private client: Client;
@@ -43,7 +43,7 @@ export class ElasticSearchAgent {
         });
     }
 
-    public getBlock = async (blockNumber: number): Promise<Block> => {
+    public getBlock = async (blockNumber: number): Promise<BlockDoc> => {
         return this.search({
             sort: [
                 {
@@ -59,11 +59,11 @@ export class ElasticSearchAgent {
                 }
             }
         }).then((response: SearchResponse<BlockDoc>) => {
-            return Block.fromJSON(response.hits.hits[0]._source);
+            return response.hits.hits[0]._source;
         });
     }
 
-    public getBlockByHash = async (hash: H256): Promise<Block> => {
+    public getBlockByHash = async (hash: H256): Promise<BlockDoc> => {
         return this.search({
             "sort": [
                 {
@@ -79,11 +79,11 @@ export class ElasticSearchAgent {
                 }
             }
         }).then((response: SearchResponse<BlockDoc>) => {
-            return Block.fromJSON(response.hits.hits[0]._source);
+            return response.hits.hits[0]._source;
         });
     }
 
-    public getBlocksByPlatformAddress = async (address: H160): Promise<Block[]> => {
+    public getBlocksByPlatformAddress = async (address: H160): Promise<BlockDoc[]> => {
         return this.search({
             "sort": [
                 {
@@ -102,11 +102,11 @@ export class ElasticSearchAgent {
             if (response.hits.total === 0) {
                 return [];
             }
-            return _.map(response.hits.hits, hit => Block.fromJSON(hit._source));
+            return _.map(response.hits.hits, hit => hit._source);
         });
     }
 
-    public getParcel = async (hash: H256): Promise<SignedParcel> => {
+    public getParcel = async (hash: H256): Promise<ParcelDoc> => {
         const parcels = await this.searchParcels({
             "bool": {
                 "must": [
@@ -117,10 +117,10 @@ export class ElasticSearchAgent {
         if (parcels.length === 0) {
             return null;
         }
-        return SignedParcel.fromJSON(parcels[0]);
+        return parcels[0];
     }
 
-    public getTransaction = async (hash: H256): Promise<Transaction> => {
+    public getTransaction = async (hash: H256): Promise<TransactionDoc> => {
         const transactions = await this.searchTransactions({
             "bool": {
                 "must": [
@@ -132,10 +132,10 @@ export class ElasticSearchAgent {
         if (transactions.length === 0) {
             return null;
         }
-        return getTransactionFromJSON(transactions[0]);
+        return transactions[0];
     }
 
-    public getAssetTransferTransactions = async (assetType: H256): Promise<Transaction[]> => {
+    public getAssetTransferTransactions = async (assetType: H256): Promise<AssetTransferTransactionDoc[]> => {
         const transactions = await this.searchTransactions({
             "nested": {
                 "path": "parcels.action.transactions.data.outputs",
@@ -148,10 +148,10 @@ export class ElasticSearchAgent {
                 }, "inner_hits": {}
             }
         });
-        return _.map(transactions, (tr) => getTransactionFromJSON(tr));
+        return _.map(transactions, (tx) => (tx as AssetTransferTransactionDoc));
     }
 
-    public getAssetMintTransaction = async (assetType: H256): Promise<AssetMintTransaction> => {
+    public getAssetMintTransaction = async (assetType: H256): Promise<AssetMintTransactionDoc> => {
         const transactions = await this.searchTransactions({
             "bool": {
                 "must": [
@@ -162,10 +162,10 @@ export class ElasticSearchAgent {
         if (transactions.length === 0) {
             return null;
         }
-        return AssetMintTransaction.fromJSON(transactions[0]);
+        return (transactions[0] as AssetMintTransactionDoc);
     }
 
-    public getParcelsByPlatformAddress = async (address: H160): Promise<SignedParcel[]> => {
+    public getParcelsByPlatformAddress = async (address: H160): Promise<ParcelDoc[]> => {
         const parcels = await this.searchParcels({
             "bool": {
                 "should": [
@@ -189,10 +189,10 @@ export class ElasticSearchAgent {
         if (parcels.length === 0) {
             return [];
         }
-        return _.map(parcels, parcel => SignedParcel.fromJSON(parcel));
+        return parcels;
     }
 
-    public getAssetsByPlatformAddress = async (address: H160): Promise<Asset[]> => {
+    public getAssetBundlesByPlatformAddress = async (address: H160): Promise<AssetBundleDoc[]> => {
         const transactions = await this.searchTransactions({
             "bool": {
                 "must": [
@@ -200,23 +200,26 @@ export class ElasticSearchAgent {
                 ]
             }
         });
-
         if (transactions.length === 0) {
             return [];
         }
         return _.map(transactions, (tx: AssetMintTransactionDoc) => {
-            return Asset.fromJSON({
-                asset_type: tx.data.assetType,
-                lock_script_hash: tx.data.lockScriptHash,
-                parameters: tx.data.parameters,
-                amount: tx.data.amount,
-                transactionHash: tx.data.hash,
-                transactionOutputIndex: 0
-            })
+            const assetScheme = Type.getAssetSchemeDoc(tx);
+            return {
+                assetScheme,
+                asset: {
+                    assetType: tx.data.assetType,
+                    lockScriptHash: tx.data.lockScriptHash,
+                    parameters: tx.data.parameters,
+                    amount: tx.data.amount,
+                    transactionHash: tx.data.hash,
+                    transactionOutputIndex: 0
+                }
+            }
         });
     }
 
-    public getTransactionsByAddress = async (address: H256): Promise<Transaction[]> => {
+    public getTransactionsByAddress = async (address: H256): Promise<TransactionDoc[]> => {
         const transactions = await this.searchTransactions({
             "bool": {
                 "should": [
@@ -248,14 +251,10 @@ export class ElasticSearchAgent {
                 ]
             }
         });
-
-        if (transactions.length === 0) {
-            return [];
-        }
-        return _.map(transactions, tx => getTransactionFromJSON(tx));
+        return transactions;
     }
 
-    public getAssetsByAssetAddress = async (address: H160): Promise<Asset[]> => {
+    public getAssetsByAssetAddress = async (address: H160): Promise<AssetDoc[]> => {
         const transactions = await this.searchTransactions({
             "bool": {
                 "should": [
@@ -281,25 +280,27 @@ export class ElasticSearchAgent {
             if (Type.isAssetTransferTransactionDoc(transaction)) {
                 return _.chain((transaction as AssetTransferTransactionDoc).data.outputs)
                     .filter(output => output.owner === address.value)
-                    .map((output, index) => Asset.fromJSON({
-                        asset_type: output.assetType,
-                        lock_script_hash: output.lockScriptHash,
-                        parameters: output.parameters,
-                        amount: output.amount,
-                        transactionHash: transaction.data.hash,
-                        transactionOutputIndex: index
-                    })).value();
+                    .map((output, index) => {
+                        return {
+                            assetType: output.assetType,
+                            lockScriptHash: output.lockScriptHash,
+                            parameters: output.parameters,
+                            amount: output.amount,
+                            transactionHash: transaction.data.hash,
+                            transactionOutputIndex: index
+                        }
+                    }).value();
             } else if (Type.isAssetMintTransactionDoc(transaction)) {
                 const transactionDoc = (transaction as AssetMintTransactionDoc);
                 if (transactionDoc.data.owner === address.value) {
-                    return Asset.fromJSON({
-                        asset_type: transactionDoc.data.assetType,
-                        lock_script_hash: transactionDoc.data.lockScriptHash,
+                    return {
+                        assetType: transactionDoc.data.assetType,
+                        lockScriptHash: transactionDoc.data.lockScriptHash,
                         parameters: transactionDoc.data.parameters,
                         amount: transactionDoc.data.amount,
                         transactionHash: transactionDoc.data.hash,
                         transactionOutputIndex: 0
-                    });
+                    };
                 }
                 return [];
             }
@@ -322,7 +323,7 @@ export class ElasticSearchAgent {
         return null;
     }
 
-    public getAssetScheme = async (assetType: H256): Promise<AssetScheme> => {
+    public getAssetScheme = async (assetType: H256): Promise<AssetSchemeDoc> => {
         const transactions = await this.searchTransactions({
             "bool": {
                 "must": [
@@ -333,7 +334,7 @@ export class ElasticSearchAgent {
         if (transactions.length === 0) {
             return null;
         }
-        return AssetMintTransaction.fromJSON(transactions[0]).getAssetScheme();
+        return Type.getAssetSchemeDoc(transactions[0] as AssetMintTransactionDoc);
     }
 
     public checkIndexOrCreate = async (): Promise<void> => {

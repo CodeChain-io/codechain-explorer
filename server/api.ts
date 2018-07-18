@@ -5,6 +5,7 @@ import * as _ from 'lodash';
 import { H256, H160, SignedParcel, Transaction } from "codechain-sdk/lib/core/classes";
 
 import { ServerContext } from './ServerContext';
+import { TransactionDoc } from '../db/DocType';
 
 const corsOptions = {
     origin: true,
@@ -50,7 +51,7 @@ export function createApiRouter(context: ServerContext, useCors = false) {
             const block = (id.length === 64 || id.length === 66)
                 ? await context.db.getBlockByHash(new H256(id))
                 : await context.db.getBlock(Number.parseInt(id));
-            res.send(block === null ? JSON.stringify(null) : block.toJSON());
+            res.send(block);
         } catch (e) {
             next(e);
         }
@@ -58,21 +59,21 @@ export function createApiRouter(context: ServerContext, useCors = false) {
 
     router.get("/parcel/pending", async (req, res, next) => {
         context.codechainSdk.rpc.chain.getPendingParcels().then(parcels => {
-            res.send(parcels.map(p => p.toJSON()));
+            res.send(parcels);
         }).catch(next);
     });
 
     router.get("/parcel/:hash", async (req, res, next) => {
         const { hash } = req.params;
         context.db.getParcel(new H256(hash)).then(parcel => {
-            res.send(parcel === null ? JSON.stringify(null) : parcel.toJSON());
+            res.send(parcel);
         }).catch(next);
     });
 
     router.get("/tx/:hash", async (req, res, next) => {
         const { hash } = req.params;
         context.db.getTransaction(new H256(hash)).then(transaction => {
-            res.send(transaction === null ? JSON.stringify(null) : transaction.toJSON());
+            res.send(transaction);
         }).catch(next);
     })
 
@@ -102,9 +103,9 @@ export function createApiRouter(context: ServerContext, useCors = false) {
         const { assetType } = req.params;
         // TODO: Add limit to query.
         try {
-            const txs: Transaction[] = await context.db.getAssetTransferTransactions(new H256(assetType));
-            const mintTx: Transaction = await context.db.getAssetMintTransaction(new H256(assetType));
-            res.send(_.map(_.concat(txs, mintTx), tx => tx.toJSON()));
+            const txs: TransactionDoc[] = await context.db.getAssetTransferTransactions(new H256(assetType));
+            const mintTx: TransactionDoc = await context.db.getAssetMintTransaction(new H256(assetType));
+            res.send(_.map(_.concat(txs, mintTx)));
         } catch (e) {
             next(e);
         }
@@ -168,15 +169,8 @@ export function createApiRouter(context: ServerContext, useCors = false) {
     router.get("/addr-platform-assets/:address", async (req, res, next) => {
         const { address } = req.params;
         try {
-            const assets = await context.db.getAssetsByPlatformAddress(new H160(address));
-            const assetBundleResponsePromise = _.map(assets, async asset => {
-                return {
-                    asset,
-                    assetScheme: await context.db.getAssetScheme(asset.assetType)
-                }
-            })
-            const assetBundleResponse = await Promise.all(assetBundleResponsePromise);
-            res.send(assetBundleResponse);
+            const assetBundles = await context.db.getAssetBundlesByPlatformAddress(new H160(address));
+            res.send(assetBundles);
         } catch (e) {
             next(e);
         }
@@ -187,8 +181,7 @@ export function createApiRouter(context: ServerContext, useCors = false) {
         try {
             const assets = await context.db.getAssetsByAssetAddress(new H256(address));
             const utxoPromise = _.map(assets, asset => {
-                const assetJson = asset.toJSON();
-                return context.codechainSdk.rpc.chain.getAsset(new H256(assetJson.transactionHash), assetJson.transactionOutputIndex)
+                return context.codechainSdk.rpc.chain.getAsset(new H256(asset.transactionHash), asset.transactionOutputIndex)
             });
             const utxoResult = await Promise.all(utxoPromise);
             const utxoList = _.compact(utxoResult);
@@ -208,9 +201,8 @@ export function createApiRouter(context: ServerContext, useCors = false) {
     router.get("/addr-asset-txs/:address", async (req, res, next) => {
         const { address } = req.params;
         try {
-            const transactions: Transaction[] = await context.db.getTransactionsByAddress(new H256(address));
-            const JSONTransactions = _.map(transactions, tx => tx.toJSON());
-            res.send(JSONTransactions);
+            const transactions: TransactionDoc[] = await context.db.getTransactionsByAddress(new H256(address));
+            res.send(transactions);
         } catch (e) {
             next(e);
         }
@@ -219,7 +211,7 @@ export function createApiRouter(context: ServerContext, useCors = false) {
     router.get("/asset/:assetType", async (req, res, next) => {
         const { assetType } = req.params;
         context.db.getAssetScheme(new H256(assetType)).then(assetScheme => {
-            res.send(assetScheme === null ? JSON.stringify(null) : assetScheme.toJSON());
+            res.send(assetScheme);
         }).catch(next);
     });
 
