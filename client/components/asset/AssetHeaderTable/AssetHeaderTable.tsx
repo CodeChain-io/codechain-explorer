@@ -1,11 +1,11 @@
 import * as React from "react";
 
 import "./AssetHeaderTable.scss"
-import { AssetScheme } from "codechain-sdk/lib/core/classes";
 import HexString from "../../util/HexString/HexString";
+import { AssetSchemeDoc } from "../../../db/DocType";
 
 interface OwnProps {
-    assetScheme: AssetScheme;
+    assetScheme: AssetSchemeDoc;
 }
 
 interface MetadataFormat {
@@ -41,7 +41,7 @@ const AssetHeaderTable = (prop: OwnProps) => {
             </tr>
             <tr>
                 <td>Registrar</td>
-                <td>{prop.assetScheme.registrar ? (prop.assetScheme.registrar.value ? <HexString link={`/addr-platform/0x${prop.assetScheme.registrar.value}`} text={(prop.assetScheme.registrar.value as string)} /> : "Not existed") : "Not existed"}</td>
+                <td>{prop.assetScheme.registrar ? <HexString link={`/addr-platform/0x${prop.assetScheme.registrar}`} text={prop.assetScheme.registrar} /> : "Not existed"}</td>
             </tr>
             <tr>
                 <td>Description</td>

@@ -1,11 +1,11 @@
 import * as React from "react";
-import { AssetScheme } from "codechain-sdk/lib/core/classes";
 
 import "./AssetDetails.scss"
 import AssetHeaderTable from "../AssetHeaderTable/AssetHeaderTable";
+import { AssetSchemeDoc } from "../../../db/DocType";
 
 interface OwnProps {
-    assetScheme: AssetScheme;
+    assetScheme: AssetSchemeDoc;
 }
 
 const AssetDetails = (prop: OwnProps) => {

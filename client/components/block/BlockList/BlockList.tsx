@@ -1,12 +1,12 @@
 import * as React from "react";
 import * as _ from "lodash";
-import { Block, ChangeShardState } from "codechain-sdk/lib/core/classes";
 
 import "./BlockList.scss";
 import HexString from "../../util/HexString/HexString";
+import { BlockDoc, Type, ChangeShardStateDoc } from "../../../db/DocType";
 
 interface OwnProps {
-    blocks: Block[]
+    blocks: BlockDoc[]
 }
 
 const BlockList = (prop: OwnProps) => {
@@ -20,7 +20,7 @@ const BlockList = (prop: OwnProps) => {
                                 Block #{block.number}
                             </td>
                             <td>
-                                <HexString text={block.hash.value} />
+                                <HexString text={block.hash} />
                             </td>
                         </tr>
                         <tr>
@@ -33,7 +33,7 @@ const BlockList = (prop: OwnProps) => {
                                         </tr>
                                         <tr>
                                             <td>Count of transactions</td>
-                                            <td>{_.sumBy(block.parcels, (parcel) => (parcel.unsigned.action instanceof ChangeShardState ? parcel.unsigned.action.transactions.length : 0))}</td>
+                                            <td>{_.sumBy(block.parcels, (parcel) => (Type.isChangeShardStateDoc(parcel.action) ? (parcel.action as ChangeShardStateDoc).transactions.length : 0))}</td>
                                         </tr>
                                         <tr>
                                             <td>Timestamp</td>

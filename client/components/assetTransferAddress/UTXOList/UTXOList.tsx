@@ -1,15 +1,12 @@
 import * as React from "react";
 import * as _ from "lodash";
-import { Asset, AssetScheme } from "codechain-sdk/lib/core/classes";
 
 import "./UTXOList.scss";
 import HexString from "../../util/HexString/HexString";
+import { AssetBundleDoc } from "../../../db/DocType";
 
 interface OwnProps {
-    utxo: Array<{
-        asset: Asset,
-        assetScheme: AssetScheme
-    }>;
+    utxo: AssetBundleDoc[];
 }
 
 interface MetadataFormat {
@@ -43,7 +40,7 @@ const UTXOList = (prop: OwnProps) => {
                                     <tbody>
                                         <tr>
                                             <td>AssetType</td>
-                                            <td><HexString link={`/asset/0x${utxo.asset.assetType.value}`} text={utxo.asset.assetType.value} /></td>
+                                            <td><HexString link={`/asset/0x${utxo.asset.assetType}`} text={utxo.asset.assetType} /></td>
                                         </tr>
                                         <tr>
                                             <td>Amount</td>

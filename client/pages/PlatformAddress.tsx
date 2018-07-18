@@ -2,21 +2,17 @@ import * as React from "react";
 import { match } from "react-router";
 import { Container } from 'reactstrap';
 
-import { U256, Block, AssetScheme, Asset, SignedParcel } from "codechain-sdk/lib/core/classes"
+import { U256 } from "codechain-sdk/lib/core/classes"
 import { RequestPlatformAddressAccount, RequestPlatformAddressParcels, RequestPlatformAddressAssets } from "../request";
 import RequestPlatformAddressBlocks from "../request/RequestPlatformAddressBlocks";
 import AccountDetails from "../components/platformAddress/AccountDetails/AccountDetails";
 import BlockList from "../components/block/BlockList/BlockList";
 import AssetList from "../components/asset/AssetList/AssetList";
 import BlockParcelList from "../components/block/BlockParcelList/BlockParcelList";
+import { ParcelDoc, AssetBundleDoc, BlockDoc } from "../db/DocType";
 
 interface Props {
     match: match<{ address: string }>;
-}
-
-interface AssetBundle {
-    asset: Asset,
-    assetScheme: AssetScheme
 }
 
 interface State {
@@ -24,9 +20,9 @@ interface State {
         nonce: U256,
         balance: U256,
     },
-    blocks: Block[],
-    parcels: SignedParcel[],
-    assetBundles: AssetBundle[]
+    blocks: BlockDoc[],
+    parcels: ParcelDoc[],
+    assetBundles: AssetBundleDoc[]
 }
 
 class Address extends React.Component<Props, State> {
@@ -77,13 +73,13 @@ class Address extends React.Component<Props, State> {
             </div>
         )
     }
-    private onParcels = (parcels: SignedParcel[]) => {
+    private onParcels = (parcels: ParcelDoc[]) => {
         this.setState({ parcels });
     }
-    private onAssetBundles = (assetBundles: AssetBundle[]) => {
+    private onAssetBundles = (assetBundles: AssetBundleDoc[]) => {
         this.setState({ assetBundles });
     }
-    private onBlocks = (blocks: Block[]) => {
+    private onBlocks = (blocks: BlockDoc[]) => {
         this.setState({ blocks });
     }
     private onAccount = (account: { nonce: U256, balance: U256 }) => {

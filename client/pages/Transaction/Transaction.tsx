@@ -2,20 +2,19 @@ import * as React from "react";
 import { match } from "react-router";
 import { Container } from 'reactstrap';
 
-import { Transaction as TransactionType } from "codechain-sdk/lib/core/classes";
-
 import { RequestTransaction } from "../../request";
 import TransactionDetails from "../../components/transaction/TransactionDetails/TransactionDetails";
 
 import "./Transaction.scss";
 import TransactionSummary from "../../components/transaction/TransactionSummary/TransactionSummary";
+import { TransactionDoc } from "../../db/DocType";
 
 interface Props {
     match: match<{ hash: string }>;
 }
 
 interface State {
-    transaction?: TransactionType;
+    transaction?: TransactionDoc;
 }
 
 class Transaction extends React.Component<Props, State> {
@@ -45,8 +44,8 @@ class Transaction extends React.Component<Props, State> {
             <Container className="transaction">
                 <div className="title-container mb-2">
                     <h1 className="d-inline-block">Transaction Information</h1>
-                    <div className={`d-inline-block transaction-type ${transaction.toJSON().type === "assetTransfer" ? "asset-transfer-type" : "asset-mint-type"}`}>
-                        <span>{transaction.toJSON().type}</span>
+                    <div className={`d-inline-block transaction-type ${transaction.type === "assetTransfer" ? "asset-transfer-type" : "asset-mint-type"}`}>
+                        <span>{transaction.type}</span>
                     </div>
                 </div>
                 <div className="mb-3">
@@ -57,7 +56,7 @@ class Transaction extends React.Component<Props, State> {
         )
     }
 
-    private onTransaction = (transaction: TransactionType) => {
+    private onTransaction = (transaction: TransactionDoc) => {
         this.setState({ transaction });
     }
 

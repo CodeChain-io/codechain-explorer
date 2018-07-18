@@ -1,20 +1,20 @@
 import * as React from "react";
 import { connect, Dispatch } from "react-redux";
-import { Transaction, H256, AssetMintTransaction } from "codechain-sdk/lib/core/classes";
-import { getTransactionFromJSON } from "codechain-sdk/lib/core/transaction/Transaction";
+import { H256 } from "codechain-sdk/lib/core/classes";
 
 import { RootState } from "../redux/actions";
 import { ApiError, apiRequest } from "./ApiRequest";
+import { TransactionDoc, Type, AssetMintTransactionDoc } from "../db/DocType";
 
 interface OwnProps {
     hash: string;
-    onTransaction: (transaction: Transaction) => void;
+    onTransaction: (transaction: TransactionDoc) => void;
     onTransactionNotExist: () => void;
     onError: (e: ApiError) => void;
 }
 
 interface StateProps {
-    cached?: Transaction;
+    cached?: TransactionDoc;
 }
 
 interface DispatchProps {
@@ -30,23 +30,23 @@ class RequestTransactionInternal extends React.Component<Props> {
             setTimeout(() => onTransaction(cached));
             return;
         }
-        apiRequest({ path: `tx/${hash}` }).then((response: { type: string, data: object }) => {
+        apiRequest({ path: `tx/${hash}` }).then((response: TransactionDoc) => {
             if (response === null) {
                 return onTransactionNotExist();
             }
             // FIXME: Modify to using static sdk function without sdk object.
-            const transaction = getTransactionFromJSON(response);
+            const transaction = response;
             dispatch({
                 type: "CACHE_TRANSACTION",
                 data: transaction
             });
 
-            if (transaction instanceof AssetMintTransaction) {
+            if (Type.isAssetMintTransactionDoc(transaction)) {
                 dispatch({
                     type: "CACHE_ASSET_SCHEME",
                     data: {
-                        assetType: transaction.getAssetSchemeAddress().value,
-                        assetScheme: transaction.getAssetScheme()
+                        assetType: (transaction as AssetMintTransactionDoc).data.assetType,
+                        assetScheme: Type.getAssetSchemeDoc(transaction as AssetMintTransactionDoc)
                     }
                 })
             }

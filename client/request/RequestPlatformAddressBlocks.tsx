@@ -1,21 +1,18 @@
 import * as React from "react";
-import * as _ from "lodash";
-
-import { Block } from "codechain-sdk/lib/core/classes";
-
 import { apiRequest, ApiError } from "./ApiRequest";
+import { BlockDoc } from "../db/DocType";
 
 interface OwnProps {
     address: string;
-    onBlocks: (blocks: Block[]) => void;
+    onBlocks: (blocks: BlockDoc[]) => void;
     onError: (e: ApiError) => void;
 }
 
 class RequestPlatformAddressBlocks extends React.Component<OwnProps> {
     public componentWillMount() {
         const { address, onBlocks, onError } = this.props;
-        apiRequest({ path: `addr-platform-blocks/${address}` }).then((response) => {
-            onBlocks(_.map(response, res => Block.fromJSON(res)));
+        apiRequest({ path: `addr-platform-blocks/${address}` }).then((response: BlockDoc[]) => {
+            onBlocks(response);
         }).catch(onError);
     }
 

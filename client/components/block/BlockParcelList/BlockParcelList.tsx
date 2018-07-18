@@ -1,25 +1,24 @@
 import * as React from "react";
 
-import { SignedParcel, ChangeShardState, Payment, SetRegularKey } from "codechain-sdk/lib/core/classes";
-
 import "./BlockParcelList.scss"
 import HexString from "../../util/HexString/HexString";
 import { Row, Col } from "reactstrap";
 import * as arrow from "./img/arrow.png";
+import { ParcelDoc, Type, PaymentDoc, ChangeShardStateDoc, SetRegularKeyDoc } from "../../../db/DocType";
 
 interface Props {
-    parcels: SignedParcel[];
+    parcels: ParcelDoc[];
 }
 
-const ParcelObjectByType = (parcel: SignedParcel) => {
-    if (parcel.unsigned.action instanceof Payment) {
+const ParcelObjectByType = (parcel: ParcelDoc) => {
+    if (Type.isPaymentDoc(parcel.action)) {
         return ([
             <Row key="payment-amount">
                 <Col md="2">
                     Amount
             </Col>
                 <Col md="10">
-                    {parcel.unsigned.action.amount.value.toString()}
+                    {(parcel.action as PaymentDoc).amount}
                 </Col>
             </Row>,
             <Row key="payment-sender-receiver">
@@ -32,7 +31,7 @@ const ParcelObjectByType = (parcel: SignedParcel) => {
                                         Sender
                                     </Col>
                                     <Col md="7">
-                                        <HexString link={`/addr-platform/0x${parcel.getSender().value}`} text={parcel.getSender().value} length={15} />
+                                        <HexString link={`/addr-platform/0x${parcel.sender}`} text={parcel.sender} length={15} />
                                     </Col>
                                 </Row>
                             </Col>
@@ -45,7 +44,7 @@ const ParcelObjectByType = (parcel: SignedParcel) => {
                                         Receiver
                                     </Col>
                                     <Col md="7">
-                                        <HexString link={`/addr-platform/0x${parcel.unsigned.action.receiver.value}`} text={parcel.unsigned.action.receiver.value} length={15} />
+                                        <HexString link={`/addr-platform/0x${(parcel.action as PaymentDoc).receiver}`} text={(parcel.action as PaymentDoc).receiver} length={15} />
                                     </Col>
                                 </Row>
                             </Col>
@@ -53,7 +52,7 @@ const ParcelObjectByType = (parcel: SignedParcel) => {
                     </div>
                 </Col>
             </Row>])
-    } else if (parcel.unsigned.action instanceof ChangeShardState) {
+    } else if (Type.isChangeShardStateDoc(parcel.action)) {
         return <Row>
             <Col>
                 <div className="background-highlight">
@@ -62,19 +61,19 @@ const ParcelObjectByType = (parcel: SignedParcel) => {
                             Count of Txs
                         </Col>
                         <Col md="10">
-                            {parcel.unsigned.action.transactions.length}
+                            {(parcel.action as ChangeShardStateDoc).transactions.length}
                         </Col>
                     </Row>
                 </div>
             </Col>
         </Row>
-    } else if (parcel.unsigned.action instanceof SetRegularKey) {
+    } else if (Type.isSetRegularKeyDoc(parcel.action)) {
         return <Row>
             <Col md="2">
                 Key
             </Col>
             <Col md="10">
-                <HexString text={parcel.unsigned.action.key.value} />
+                <HexString text={(parcel.action as SetRegularKeyDoc).key} />
             </Col>
         </Row>
     }
@@ -95,10 +94,10 @@ const getClassNameByType = (type: string) => {
 const BlockParcelList = (props: Props) => {
     const { parcels } = props;
     return <div className="block-parcel-list">{parcels.map((parcel, i: number) => {
-        const hash = parcel.hash().value;
+        const hash = parcel.hash;
         return <div key={`block-parcel-${hash}`} className="parcel-item">
-            <div className={`type ${getClassNameByType(parcel.unsigned.action.toJSON().action)}`}>
-                {parcel.unsigned.action.toJSON().action}
+            <div className={`type ${getClassNameByType(parcel.action.action)}`}>
+                {parcel.action.action}
             </div>
             <Row>
                 <Col md="2">
@@ -113,7 +112,7 @@ const BlockParcelList = (props: Props) => {
                     Signer
                 </Col>
                 <Col md="10">
-                    <HexString link={`/address/0x${parcel.getSender().value}`} text={parcel.getSender().value} />
+                    <HexString link={`/address/0x${parcel.sender}`} text={parcel.sender} />
                 </Col>
             </Row>
             <Row>
@@ -121,7 +120,7 @@ const BlockParcelList = (props: Props) => {
                     Fee
                 </Col>
                 <Col md="10">
-                    {parcel.unsigned.fee.value.toString()}
+                    {parcel.fee}
                 </Col>
             </Row>
             {ParcelObjectByType(parcel)}

@@ -1,20 +1,21 @@
 import * as React from "react";
 import { connect, Dispatch } from "react-redux";
 
-import { AssetScheme, H256 } from "codechain-sdk/lib/core/classes";
+import { H256 } from "codechain-sdk/lib/core/classes";
 
 import { apiRequest, ApiError } from "./ApiRequest";
 import { RootState } from "../redux/actions";
+import { AssetSchemeDoc } from "../db/DocType";
 
 interface OwnProps {
     assetType: string;
-    onAssetScheme: (s: AssetScheme) => void;
+    onAssetScheme: (s: AssetSchemeDoc) => void;
     onNotFound: () => void;
     onError: (e: ApiError) => void;
 }
 
 interface StateProps {
-    cached: AssetScheme;
+    cached: AssetSchemeDoc;
 }
 
 interface DispatchProps {
@@ -30,11 +31,11 @@ class RequestAssetSchemeInternal extends React.Component<Props> {
             setTimeout(() => onAssetScheme(cached));
             return
         }
-        apiRequest({ path: `asset/${assetType}` }).then((response: object) => {
+        apiRequest({ path: `asset/${assetType}` }).then((response: AssetSchemeDoc) => {
             if (response === null) {
                 return onNotFound();
             }
-            const assetScheme = AssetScheme.fromJSON(response);
+            const assetScheme = response;
             const cacheKey = new H256(assetType).value;
             dispatch({
                 type: "CACHE_ASSET_SCHEME",

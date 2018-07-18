@@ -2,20 +2,19 @@ import * as React from "react";
 import { match } from "react-router";
 import { Container } from 'reactstrap';
 
-import { SignedParcel, ChangeShardState, Payment } from "codechain-sdk/lib/core/classes";
-
 import { RequestParcel } from "../../request";
 import ParcelDetails from "../../components/parcel/ParcelDetails/ParcelDetails";
 
 import "./Parcel.scss";
 import ParcelTransactionList from "../../components/parcel/ParcelTransactionList/ParcelTransactionList";
+import { ParcelDoc, Type, ChangeShardStateDoc } from "../../db/DocType";
 
 interface Props {
     match: match<{ hash: string }>;
 }
 
 interface State {
-    parcel?: SignedParcel;
+    parcel?: ParcelDoc;
 }
 
 class Parcel extends React.Component<Props, State> {
@@ -44,8 +43,8 @@ class Parcel extends React.Component<Props, State> {
         return (<Container className="parcel">
             <div className="title-container mb-2">
                 <h1 className="d-inline-block">Parcel Information</h1>
-                <div className={`d-inline-block parcel-type ${parcel.unsigned.action instanceof ChangeShardState ? "change-shard-state-type" : (parcel.unsigned.action instanceof Payment ? "payment-type" : "set-regular-key-type")}`}>
-                    <span>{parcel.unsigned.action.toJSON().action}</span>
+                <div className={`d-inline-block parcel-type ${Type.isChangeShardStateDoc(parcel.action) ? "change-shard-state-type" : (Type.isPaymentDoc(parcel.action) ? "payment-type" : "set-regular-key-type")}`}>
+                    <span>{parcel.action.action}</span>
                 </div>
             </div>
             <ParcelDetails parcel={parcel} />
@@ -54,15 +53,15 @@ class Parcel extends React.Component<Props, State> {
         )
     }
 
-    private showTransactionList = (parcel: SignedParcel) => {
-        if (parcel.unsigned.action instanceof ChangeShardState) {
+    private showTransactionList = (parcel: ParcelDoc) => {
+        if (Type.isChangeShardStateDoc(parcel.action)) {
             return (
                 [
                     <div key="transaction-label" className="transaction-count-label">
-                        <span className="blue-color">{parcel.unsigned.action.transactions.length} Transactions</span> in this Block
+                        <span className="blue-color">{(parcel.action as ChangeShardStateDoc).transactions.length} Transactions</span> in this Block
                     </div>,
                     <div key="parcel-transaction" className="mt-3">
-                        <ParcelTransactionList transactions={parcel.unsigned.action.transactions} />
+                        <ParcelTransactionList transactions={(parcel.action as ChangeShardStateDoc).transactions} />
                     </div>
                 ]
             )
@@ -70,7 +69,7 @@ class Parcel extends React.Component<Props, State> {
         return null;
     }
 
-    private onParcel = (parcel: SignedParcel) => {
+    private onParcel = (parcel: ParcelDoc) => {
         this.setState({ parcel });
     }
 

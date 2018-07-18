@@ -2,19 +2,20 @@ import * as React from "react";
 import * as _ from "lodash"
 import { connect, Dispatch } from "react-redux";
 
-import { Block, ChangeShardState, H256, AssetMintTransaction } from "codechain-sdk/lib/core/classes";
+import { H256 } from "codechain-sdk/lib/core/classes";
 
 import { apiRequest } from "./ApiRequest";
 import { RootState } from "../redux/actions";
+import { BlockDoc, Type, ChangeShardStateDoc, AssetMintTransactionDoc } from "../db/DocType";
 
 interface OwnProps {
     id: number | string;
-    onBlock: (b: Block) => void;
+    onBlock: (b: BlockDoc) => void;
     onError: (e: any) => void;
 }
 
 interface StateProps {
-    cached?: Block;
+    cached?: BlockDoc;
 }
 
 interface DispatchProps {
@@ -28,8 +29,8 @@ class RequestBlockInternal extends React.Component<OwnProps & StateProps & Dispa
             setTimeout(() => onBlock(cached));
             return;
         }
-        apiRequest({ path: `block/${id}` }).then(response => {
-            const block = Block.fromJSON(response);
+        apiRequest({ path: `block/${id}` }).then((response: BlockDoc) => {
+            const block = response;
             dispatch({
                 type: "CACHE_BLOCK",
                 data: block
@@ -39,19 +40,19 @@ class RequestBlockInternal extends React.Component<OwnProps & StateProps & Dispa
                     type: "CACHE_PARCEL",
                     data: parcel
                 })
-                if (parcel.unsigned.action instanceof ChangeShardState) {
-                    _.each(parcel.unsigned.action.transactions, (transaction) => {
+                if (Type.isChangeShardStateDoc(parcel.action)) {
+                    _.each((parcel.action as ChangeShardStateDoc).transactions, (transaction) => {
                         dispatch({
                             type: "CACHE_TRANSACTION",
                             data: transaction
                         })
 
-                        if (transaction instanceof AssetMintTransaction) {
+                        if (Type.isAssetMintTransactionDoc(transaction)) {
                             dispatch({
                                 type: "CACHE_ASSET_SCHEME",
                                 data: {
-                                    assetType: transaction.getAssetSchemeAddress().value,
-                                    assetScheme: transaction.getAssetScheme()
+                                    assetType: (transaction as AssetMintTransactionDoc).data.assetType,
+                                    assetScheme: Type.getAssetSchemeDoc(transaction as AssetMintTransactionDoc)
                                 }
                             })
                         }

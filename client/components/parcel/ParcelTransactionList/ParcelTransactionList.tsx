@@ -2,18 +2,19 @@ import * as React from "react";
 import * as _ from "lodash";
 
 import { Row, Col } from "reactstrap";
-import { Transaction, AssetMintTransaction, AssetTransferTransaction } from "codechain-sdk/lib/core/classes";
 
 import "./ParcelTransactionList.scss"
 import HexString from "../../util/HexString/HexString";
 
 import * as arrow from "./img/arrow.png";
+import { TransactionDoc, Type, AssetMintTransactionDoc, AssetTransferTransactionDoc } from "../../../db/DocType";
 
 interface Props {
-    transactions: Transaction[];
+    transactions: TransactionDoc[];
 }
-const TransactionObjectByType = (transaction: Transaction) => {
-    if (transaction instanceof AssetMintTransaction) {
+const TransactionObjectByType = (transaction: TransactionDoc) => {
+    if (Type.isAssetMintTransactionDoc(transaction)) {
+        const transactionDoc = transaction as AssetMintTransactionDoc;
         return (
             <Row>
                 <Col>
@@ -23,7 +24,7 @@ const TransactionObjectByType = (transaction: Transaction) => {
                                 AssetType
                             </Col>
                             <Col md="10">
-                                <HexString link={`/asset/0x${transaction.getAssetSchemeAddress().value}`} text={transaction.getAssetSchemeAddress().value} />
+                                <HexString link={`/asset/0x${transactionDoc.data.assetType}`} text={transactionDoc.data.assetType} />
                             </Col>
                         </Row>
                         <Row className="inner-row">
@@ -32,8 +33,8 @@ const TransactionObjectByType = (transaction: Transaction) => {
                             </Col>
                             <Col md="10">
                                 {
-                                    transaction.toJSON().data.registrar ?
-                                        <HexString link={`/addr-platform/0x${transaction.toJSON().data.registrar}`} text={(transaction.toJSON().data.registrar as string)} />
+                                    transactionDoc.data.registrar ?
+                                        <HexString link={`/addr-platform/0x${transactionDoc.data.registrar}`} text={transactionDoc.data.registrar} />
                                         : "Unknown"
                                 }
                             </Col>
@@ -44,8 +45,8 @@ const TransactionObjectByType = (transaction: Transaction) => {
                             </Col>
                             <Col md="10">
                                 {
-                                    transaction.toJSON().data.lockScriptHash === "f42a65ea518ba236c08b261c34af0521fa3cd1aa505e1c18980919cb8945f8f3" ?
-                                        <HexString link={`/addr-asset/0x${transaction.toJSON().data.parameters[0].toString("hex")}`} text={transaction.toJSON().data.parameters[0].toString("hex")} />
+                                    transactionDoc.data.owner ?
+                                        <HexString link={`/addr-asset/0x${transactionDoc.data.owner}`} text={transactionDoc.data.owner} />
                                         : "Unknown"
                                 }
                             </Col>
@@ -55,14 +56,15 @@ const TransactionObjectByType = (transaction: Transaction) => {
                                 Amount
                             </Col>
                             <Col md="10">
-                                {transaction.toJSON().data.amount}
+                                {transactionDoc.data.amount}
                             </Col>
                         </Row>
                     </div>
                 </Col>
             </Row>
         )
-    } else if (transaction instanceof AssetTransferTransaction) {
+    } else if (Type.isAssetTransferTransactionDoc(transaction)) {
+        const transactionDoc = transaction as AssetTransferTransactionDoc;
         return (
             <Row>
                 <Col>
@@ -70,18 +72,18 @@ const TransactionObjectByType = (transaction: Transaction) => {
                         <Row>
                             <Col md="5">
                                 {
-                                    _.map(transaction.inputs, (input, i) => {
+                                    _.map(transactionDoc.data.inputs, (input, i) => {
                                         return (
                                             <div key={`input-${i}`} className="background-highlight mb-3">
                                                 <Row className="inner-row">
-                                                    <Col><HexString link={`/asset/0x${input.prevOut.assetType.value}`} text={input.prevOut.assetType.value} length={40} /></Col>
+                                                    <Col><HexString link={`/asset/0x${input.prevOut.assetType}`} text={input.prevOut.assetType} length={40} /></Col>
                                                 </Row>
                                                 <Row className="inner-row">
                                                     <Col md="4">
                                                         Owner
                                                     </Col>
                                                     <Col md="8">
-                                                        owner
+                                                        {input.prevOut.owner}
                                                     </Col>
                                                 </Row>
                                                 <Row className="inner-row">
@@ -102,11 +104,11 @@ const TransactionObjectByType = (transaction: Transaction) => {
                             </Col>
                             <Col md="5">
                                 {
-                                    _.map(transaction.outputs, (output, i) => {
+                                    _.map(transactionDoc.data.outputs, (output, i) => {
                                         return (
                                             <div key={`output-${i}`} className="background-highlight mb-3">
                                                 <Row className="inner-row">
-                                                    <Col><HexString link={`/asset/0x${output.toJSON().assetType}`} text={output.toJSON().assetType} length={40} /></Col>
+                                                    <Col><HexString link={`/asset/0x${output.assetType}`} text={output.assetType} length={40} /></Col>
                                                 </Row>
                                                 <Row className="inner-row">
                                                     <Col md="4">
@@ -114,8 +116,8 @@ const TransactionObjectByType = (transaction: Transaction) => {
                                                     </Col>
                                                     <Col md="8">
                                                         {
-                                                            output.toJSON().lockScriptHash === "f42a65ea518ba236c08b261c34af0521fa3cd1aa505e1c18980919cb8945f8f3" ?
-                                                                <HexString link={`/addr-asset/0x${output.toJSON().parameters[0].toString("hex")}`} text={output.toJSON().parameters[0].toString("hex")} length={10} />
+                                                            output.owner ?
+                                                                <HexString link={`/addr-asset/0x${output.owner}`} text={output.owner} length={10} />
                                                                 : "Unknown"
                                                         }
                                                     </Col>
@@ -125,7 +127,7 @@ const TransactionObjectByType = (transaction: Transaction) => {
                                                         Amount
                                                     </Col>
                                                     <Col md="8">
-                                                        {output.toJSON().amount}
+                                                        {output.amount}
                                                     </Col>
                                                 </Row>
                                             </div>
@@ -154,10 +156,10 @@ const getClassNameByType = (type: string) => {
 const ParcelTransactionList = (props: Props) => {
     const { transactions } = props;
     return <div className="parcel-transaction-list">{transactions.map((transaction, i: number) => {
-        const hash = transaction.hash().value;
+        const hash = transaction.data.hash;
         return <div key={`parcel-transaction-${hash}`} className="transaction-item">
-            <div className={`type ${getClassNameByType(transaction.toJSON().type)}`}>
-                {transaction.toJSON().type}
+            <div className={`type ${getClassNameByType(transaction.type)}`}>
+                {transaction.type}
             </div>
             <Row>
                 <Col md="2">

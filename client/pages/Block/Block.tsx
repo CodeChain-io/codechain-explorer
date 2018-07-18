@@ -2,16 +2,15 @@ import * as React from "react";
 import { match } from "react-router";
 import { Container } from 'reactstrap';
 
-import { Block as CoreBlock } from "codechain-sdk/lib/core/classes";
-
 import { RequestBlock } from "../../request";
 import BlockDetails from "../../components/block/BlockDetails/BlockDetails";
 import BlockParcelList from "../../components/block/BlockParcelList/BlockParcelList";
 
 import "./Block.scss";
+import { BlockDoc } from "../../db/DocType";
 
 interface State {
-    block?: CoreBlock;
+    block?: BlockDoc;
 }
 
 interface Props {
@@ -53,7 +52,7 @@ class Block extends React.Component<Props, State> {
         );
     }
 
-    private onBlock = (block: CoreBlock) => {
+    private onBlock = (block: BlockDoc) => {
         this.setState({ block });
     };
 

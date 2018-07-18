@@ -1,17 +1,17 @@
 import * as React from "react";
 
-import { SignedParcel, Payment, SetRegularKey } from "codechain-sdk/lib/core/classes";
 import { Col, Row } from 'reactstrap';
 
 import "./ParcelDetails.scss"
 import HexString from "../../util/HexString/HexString";
+import { ParcelDoc, Type, PaymentDoc, SetRegularKeyDoc } from "../../../db/DocType";
 
 interface Props {
-    parcel: SignedParcel;
+    parcel: ParcelDoc;
 }
 
-const getElementByType = (parcel: SignedParcel) => {
-    if (parcel.unsigned.action instanceof Payment) {
+const getElementByType = (parcel: ParcelDoc) => {
+    if (Type.isPaymentDoc(parcel.action)) {
         return [
             <div key="parcel-header-table-payment-line" className="line" />,
             <Row key="parcel-header-table-payment-sender">
@@ -19,7 +19,7 @@ const getElementByType = (parcel: SignedParcel) => {
                     Sender
                 </Col>
                 <Col md="10">
-                    <HexString link={`/addr-platform/0x${parcel.getSender().value}`} text={parcel.getSender().value} />
+                    <HexString link={`/addr-platform/0x${parcel.sender}`} text={parcel.sender} />
 
                 </Col>
             </Row>,
@@ -28,7 +28,7 @@ const getElementByType = (parcel: SignedParcel) => {
                     Receiver
                 </Col>
                 <Col md="10">
-                    <HexString link={`/addr-platform/0x${parcel.unsigned.action.receiver.value}`} text={parcel.unsigned.action.receiver.value} />
+                    <HexString link={`/addr-platform/0x${(parcel.action as PaymentDoc).receiver}`} text={(parcel.action as PaymentDoc).receiver} />
                 </Col>
             </Row>,
             <Row key="parcel-header-table-payment-amount">
@@ -36,11 +36,11 @@ const getElementByType = (parcel: SignedParcel) => {
                     Amount
                 </Col>
                 <Col md="10">
-                    {parcel.unsigned.action.amount.value.toString()}
+                    {(parcel.action as PaymentDoc).amount}
                 </Col>
             </Row>
         ];
-    } else if (parcel.unsigned.action instanceof SetRegularKey) {
+    } else if (Type.isSetRegularKeyDoc(parcel.action)) {
         return (
             [
                 <div key="parcel-header-table-regular-key-line" className="line" />,
@@ -49,7 +49,7 @@ const getElementByType = (parcel: SignedParcel) => {
                         Key
                     </Col>
                     <Col md="10">
-                        <HexString text={parcel.unsigned.action.key.value} />
+                        <HexString text={(parcel.action as SetRegularKeyDoc).key} />
                     </Col>
                 </Row >
             ]);
@@ -66,7 +66,7 @@ const ParcelDetails = (props: Props) => {
                 Hash
             </Col>
             <Col md="10">
-                <HexString text={parcel.hash().value} />
+                <HexString text={parcel.hash} />
             </Col>
         </Row>
         <Row>
@@ -74,7 +74,7 @@ const ParcelDetails = (props: Props) => {
                 Network ID
             </Col>
             <Col md="10">
-                {parcel.unsigned.networkId.value.toString()}
+                {parcel.networkId}
             </Col>
         </Row>
         <Row>
@@ -98,7 +98,7 @@ const ParcelDetails = (props: Props) => {
                 Nonce
             </Col>
             <Col md="10">
-                {parcel.unsigned.nonce.value.toString()}
+                {parcel.nonce}
             </Col>
         </Row>
         <Row>
@@ -106,7 +106,7 @@ const ParcelDetails = (props: Props) => {
                 Signer
             </Col>
             <Col md="10">
-                <HexString link={`/addr-platform/0x${parcel.getSender().value}`} text={parcel.getSender().value} />
+                <HexString link={`/addr-platform/0x${parcel.sender}`} text={parcel.sender} />
             </Col>
         </Row>
         <Row>
@@ -114,7 +114,7 @@ const ParcelDetails = (props: Props) => {
                 Fee
             </Col>
             <Col md="10">
-                {parcel.unsigned.fee.value.toString()}
+                {parcel.fee}
             </Col>
         </Row>
         {

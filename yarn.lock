@@ -81,9 +81,13 @@
     "@types/events" "*"
     "@types/node" "*"
 
-"@types/node@*", "@types/node@^10.0.4":
+"@types/node@*":
   version "10.0.4"
   resolved "https://registry.yarnpkg.com/@types/node/-/node-10.0.4.tgz#130598ee56e9a1210a53f557d64935571f05390d"
+
+"@types/node@^10.5.2":
+  version "10.5.2"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-10.5.2.tgz#f19f05314d5421fe37e74153254201a7bf00a707"
 
 "@types/react-dom@^16.0.5":
   version "16.0.5"
@@ -1691,20 +1695,6 @@ code-point-at@^1.0.0:
 "codechain-sdk@https://github.com/CodeChain-io/codechain-sdk-js#185a3d9fd7593a06fff3274f93c555643e04255c":
   version "0.1.0-alpha.12"
   resolved "https://github.com/CodeChain-io/codechain-sdk-js#185a3d9fd7593a06fff3274f93c555643e04255c"
-  dependencies:
-    bignumber.js "^6.0.0"
-    blakejs "^1.1.0"
-    buffer "^5.1.0"
-    elliptic "^6.4.0"
-    jayson "^2.0.6"
-    lodash "^4.17.10"
-    node-fetch "^2.1.2"
-    ripemd160 "^2.0.2"
-    rlp "^2.0.0"
-
-"codechain-sdk@https://github.com/CodeChain-io/codechain-sdk-js#7a4184a1845b0f50e4de31f5eea0bd2168fec81c":
-  version "0.1.0-alpha.12"
-  resolved "https://github.com/CodeChain-io/codechain-sdk-js#7a4184a1845b0f50e4de31f5eea0bd2168fec81c"
   dependencies:
     bignumber.js "^6.0.0"
     blakejs "^1.1.0"

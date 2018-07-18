@@ -4,14 +4,13 @@ import * as moment from "moment";
 import { Table } from 'reactstrap';
 import { Link } from "react-router-dom";
 
-import { Block } from "codechain-sdk/lib/core/classes";
-
 import './LatestBlocks.scss';
 import HexString from "../../util/HexString/HexString";
+import { BlockDoc } from "../../../db/DocType";
 
 interface Props {
     blocksByNumber: {
-        [n: number]: Block;
+        [n: number]: BlockDoc;
     }
 }
 
@@ -34,11 +33,11 @@ const LatestBlocks = (props: Props) => {
                     {
                         _.map(_.reverse(_.values(blocksByNumber)), block => {
                             return (
-                                <tr key={`home-block-num-${block.hash.value}`}>
+                                <tr key={`home-block-num-${block.hash}`}>
                                     <td scope="row"><Link to={`/block/${block.number}`}>{block.number}</Link></td>
                                     <td>{block.parcels.length}</td>
                                     <td>Block Reward</td>
-                                    <td><HexString link={`/addr-platform/0x${block.author.value}`} text={block.author.value} length={10} /></td>
+                                    <td><HexString link={`/addr-platform/0x${block.author}`} text={block.author} length={10} /></td>
                                     <td>{moment.unix(block.timestamp).fromNow()}</td>
                                 </tr>
                             );

@@ -1,21 +1,20 @@
 import * as React from "react";
-import * as _ from "lodash";
 import { connect, Dispatch } from "react-redux";
 
-import { H256, Transaction } from "codechain-sdk/lib/core/classes";
-import { getTransactionFromJSON } from "codechain-sdk/lib/core/transaction/Transaction";
+import { H256 } from "codechain-sdk/lib/core/classes";
 
 import { apiRequest, ApiError } from "./ApiRequest";
 import { RootState } from "../redux/actions";
+import { TransactionDoc } from "../db/DocType";
 
 interface OwnProps {
     assetType: string;
-    onTransactions: (s: Transaction[]) => void;
+    onTransactions: (s: TransactionDoc[]) => void;
     onError: (e: ApiError) => void;
 }
 
 interface StateProps {
-    cached: Transaction[];
+    cached: TransactionDoc[];
 }
 
 interface DispatchProps {
@@ -31,8 +30,8 @@ class RequestAssetTransactionsInternal extends React.Component<Props> {
             setTimeout(() => onTransactions(cached));
             return
         }
-        apiRequest({ path: `asset-txs/${assetType}` }).then((response: any) => {
-            const transactions: Transaction[] = _.map(response, (r) => getTransactionFromJSON(r));
+        apiRequest({ path: `asset-txs/${assetType}` }).then((response: TransactionDoc[]) => {
+            const transactions = response;
             const cacheKey = new H256(assetType).value;
             dispatch({
                 type: "CACHE_ASSET_TRANSACTIONS",

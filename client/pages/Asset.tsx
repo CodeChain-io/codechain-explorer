@@ -3,18 +3,18 @@ import { match } from "react-router";
 import { Container } from 'reactstrap';
 
 import { RequestAssetScheme } from "../request";
-import { AssetScheme as CoreAssetScheme, Transaction } from "codechain-sdk/lib/core/classes";
 import AssetDetails from "../components/asset/AssetDetails/AssetDetails";
 import RequestAssetTransactions from "../request/RequestAssetTransactions";
 import TransactionList from "../components/transaction/TransactionList/TransactionList";
+import { TransactionDoc, AssetSchemeDoc } from "../db/DocType";
 
 interface Props {
     match: match<{ type: string }>;
 }
 
 interface State {
-    transactions: Transaction[];
-    assetScheme?: CoreAssetScheme;
+    transactions: TransactionDoc[];
+    assetScheme?: AssetSchemeDoc;
     notFound: boolean;
 }
 
@@ -53,11 +53,11 @@ class Asset extends React.Component<Props, State> {
         )
     }
 
-    private onAssetScheme = (assetScheme: CoreAssetScheme) => {
+    private onAssetScheme = (assetScheme: AssetSchemeDoc) => {
         this.setState({ assetScheme });
     }
 
-    private onTransactionList = (transactions: Transaction[]) => {
+    private onTransactionList = (transactions: TransactionDoc[]) => {
         this.setState({ transactions })
     }
 

@@ -1,24 +1,24 @@
-import { Block, AssetScheme, SignedParcel, Transaction } from "codechain-sdk/lib/core/classes";
+import { BlockDoc, ParcelDoc, TransactionDoc, AssetSchemeDoc } from "../db/DocType";
 
 export interface RootState {
     bestBlockNumber?: number;
     blocksByNumber: {
-        [n: number]: Block;
+        [n: number]: BlockDoc;
     };
     blocksByHash: {
-        [hash: string]: Block;
+        [hash: string]: BlockDoc;
     };
     parcelByHash: {
-        [hash: string]: SignedParcel;
+        [hash: string]: ParcelDoc;
     };
     transactionByHash: {
-        [hash: string]: Transaction;
+        [hash: string]: TransactionDoc;
     }
     assetSchemeByAssetType: {
-        [assetType: string]: AssetScheme;
+        [assetType: string]: AssetSchemeDoc;
     };
     transactionsByAssetType: {
-        [assetType: string]: Transaction[];
+        [assetType: string]: TransactionDoc[];
     }
 }
 
@@ -39,24 +39,24 @@ interface BestBlockNumberAction {
 
 interface CacheBlockAction {
     type: "CACHE_BLOCK";
-    data: Block;
+    data: BlockDoc;
 };
 
 interface CacheParcelAction {
     type: "CACHE_PARCEL";
-    data: SignedParcel;
+    data: ParcelDoc;
 };
 
 interface CacheTransactionAction {
     type: "CACHE_TRANSACTION";
-    data: Transaction;
+    data: TransactionDoc;
 }
 
 interface CacheAssetSchemeAction {
     type: "CACHE_ASSET_SCHEME";
     data: {
         assetType: string;
-        assetScheme: AssetScheme;
+        assetScheme: AssetSchemeDoc;
     };
 }
 
@@ -64,7 +64,7 @@ interface CacheAssetTransactionsAction {
     type: "CACHE_ASSET_TRANSACTIONS";
     data: {
         assetType: string;
-        transactions: Transaction[];
+        transactions: TransactionDoc[];
     };
 }
 
@@ -75,17 +75,17 @@ export const rootReducer = (state = initialState, action: Action) => {
     if (action.type === "BEST_BLOCK_NUMBER_ACTION") {
         return { ...state, bestBlockNumber: action.data }
     } else if (action.type === "CACHE_BLOCK") {
-        const { number: n, hash } = action.data as Block;
+        const { number: n, hash } = action.data as BlockDoc;
         const blocksByNumber = { ...state.blocksByNumber, [n]: action.data };
-        const blocksByHash = { ...state.blocksByHash, [hash.value]: action.data };
+        const blocksByHash = { ...state.blocksByHash, [hash]: action.data };
         return { ...state, blocksByNumber, blocksByHash };
     } else if (action.type === "CACHE_PARCEL") {
-        const parcel = action.data as SignedParcel;
-        const parcelByHash = { ...state.parcelByHash, [parcel.hash().value]: parcel };
+        const parcel = action.data as ParcelDoc;
+        const parcelByHash = { ...state.parcelByHash, [parcel.hash]: parcel };
         return { ...state, parcelByHash };
     } else if (action.type === "CACHE_TRANSACTION") {
-        const transaction = action.data as Transaction;
-        const transactionByHash = { ...state.transactionByHash, [transaction.hash().value]: transaction };
+        const transaction = action.data as TransactionDoc;
+        const transactionByHash = { ...state.transactionByHash, [transaction.data.hash]: transaction };
         return { ...state, transactionByHash };
     } else if (action.type === "CACHE_ASSET_SCHEME") {
         const { assetType, assetScheme } = (action as CacheAssetSchemeAction).data;

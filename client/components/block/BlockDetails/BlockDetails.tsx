@@ -1,13 +1,13 @@
 import * as React from "react";
 
-import { Block } from "codechain-sdk/lib/core/classes";
 import { Col, Row } from 'reactstrap';
 
 import "./BlockDetails.scss"
 import HexString from "../../util/HexString/HexString";
+import { BlockDoc } from "../../../db/DocType";
 
 interface OwnProps {
-    block: Block;
+    block: BlockDoc;
 }
 
 class BlockDetails extends React.Component<OwnProps> {
@@ -20,7 +20,7 @@ class BlockDetails extends React.Component<OwnProps> {
                         Hash
                     </Col>
                     <Col md="10">
-                        <HexString text={block.hash.value} />
+                        <HexString text={block.hash} />
                     </Col>
                 </Row>
                 <Row>
@@ -28,7 +28,7 @@ class BlockDetails extends React.Component<OwnProps> {
                         Parent Block Hash
                     </Col>
                     <Col md="10">
-                        <HexString link={`/block/0x${block.parentHash.value}`} text={block.parentHash.value} />
+                        <HexString link={`/block/0x${block.parentHash}`} text={block.parentHash} />
                     </Col>
                 </Row>
                 <Row>
@@ -36,7 +36,7 @@ class BlockDetails extends React.Component<OwnProps> {
                         Parcels Root
                     </Col>
                     <Col md="10">
-                        <HexString text={block.parcelsRoot.value} />
+                        <HexString text={block.parcelsRoot} />
                     </Col>
                 </Row>
                 <Row>
@@ -44,7 +44,7 @@ class BlockDetails extends React.Component<OwnProps> {
                         Invoices Root
                     </Col>
                     <Col md="10">
-                        <HexString text={block.invoicesRoot.value} />
+                        <HexString text={block.invoicesRoot} />
                     </Col>
                 </Row>
                 <Row>
@@ -52,7 +52,7 @@ class BlockDetails extends React.Component<OwnProps> {
                         State Root
                     </Col>
                     <Col md="10">
-                        <HexString text={block.stateRoot.value} />
+                        <HexString text={block.stateRoot} />
                     </Col>
                 </Row>
                 <Row>
@@ -68,7 +68,7 @@ class BlockDetails extends React.Component<OwnProps> {
                         Author
                     </Col>
                     <Col md="10">
-                        <HexString link={`/addr-platform/0x${block.author.value}`} text={block.author.value} />
+                        <HexString link={`/addr-platform/0x${block.author}`} text={block.author} />
                     </Col>
                 </Row>
                 <Row>
@@ -84,7 +84,7 @@ class BlockDetails extends React.Component<OwnProps> {
                         Score
                     </Col>
                     <Col md="10">
-                        {block.score.value.toString()}
+                        {block.score}
                     </Col>
                 </Row>
                 <Row>

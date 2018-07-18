@@ -2,18 +2,18 @@ import * as React from 'react';
 import * as _ from "lodash";
 import { RequestBlockNumber, RequestBlock } from '../../request';
 import { Container } from 'reactstrap';
-import { Block } from "codechain-sdk/lib/core/classes";
 import LatestBlocks from '../../components/home/LatestBlocks/LatestBlocks';
 import LatestParcels from '../../components/home/LatestParcels/LatestParcels';
 import LatestTransactions from '../../components/home/LatestTransactions/LatestTransactions';
 
 import "./Home.scss"
 import Summary from '../../components/home/Summary/Summary';
+import { BlockDoc } from '../../../db/DocType';
 
 interface State {
     bestBlockNumber?: number;
     blocksByNumber: {
-        [n: number]: Block;
+        [n: number]: BlockDoc;
     }
 }
 
@@ -62,7 +62,7 @@ class Home extends React.Component<{}, State> {
         );
     }
 
-    private onBlock = (block: Block) => {
+    private onBlock = (block: BlockDoc) => {
         const blocksByNumber = {
             ...this.state.blocksByNumber,
             [block.number]: block
@@ -77,7 +77,7 @@ class Home extends React.Component<{}, State> {
         this.setState({ ...this.state, bestBlockNumber: n });
     }
 
-    private onError = () => ({/* Not implemented */ })
+    private onError = (e: any) => (console.log(e))
 }
 
 export default Home;

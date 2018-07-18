@@ -3,14 +3,13 @@ import * as _ from "lodash";
 import * as moment from "moment";
 import { Table } from 'reactstrap';
 
-import { Block } from "codechain-sdk/lib/core/classes";
-
 import './LatestParcels.scss';
 import HexString from "../../util/HexString/HexString";
+import { BlockDoc } from "../../../db/DocType";
 
 interface Props {
     blocksByNumber: {
-        [n: number]: Block;
+        [n: number]: BlockDoc;
     }
 }
 
@@ -33,13 +32,13 @@ const LatestParcels = (props: Props) => {
                     {
                         _.map(_.reverse(_.values(blocksByNumber)), block => {
                             return _.map(block.parcels, (parcel) => {
-                                const actionString = parcel.unsigned.action.toJSON().action;
+                                const actionString = parcel.action.action;
                                 return (
-                                    <tr key={`home-parcel-${parcel.hash().value}`}>
+                                    <tr key={`home-parcel-${parcel.hash}`}>
                                         <td><div className={`parcel-type text-center ${actionString === "changeShardState" ? "change-shard-state-type" : (actionString === "payment" ? "payment-type" : "set-regular-key-type")}`}>{actionString}</div></td>
-                                        <td scope="row"><HexString link={`/parcel/0x${parcel.hash().value}`} text={parcel.hash().value} length={10} /></td>
-                                        <td><HexString link={`/addr-platform/0x${parcel.getSender().value}`} text={parcel.getSender().value} length={10} /></td>
-                                        <td>{parcel.unsigned.fee.value.toString(10)}</td>
+                                        <td scope="row"><HexString link={`/parcel/0x${parcel.hash}`} text={parcel.hash} length={10} /></td>
+                                        <td><HexString link={`/addr-platform/0x${parcel.sender}`} text={parcel.sender} length={10} /></td>
+                                        <td>{parcel.fee}</td>
                                         <td>{moment.unix(block.timestamp).fromNow()}</td>
                                     </tr>
                                 );

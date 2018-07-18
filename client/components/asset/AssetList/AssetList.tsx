@@ -1,17 +1,12 @@
 import * as React from "react";
 import * as _ from "lodash";
-import { Asset, AssetScheme } from "codechain-sdk/lib/core/classes";
 
 import "./AssetList.scss";
 import HexString from "../../util/HexString/HexString";
-
-interface AssetBundle {
-    asset: Asset,
-    assetScheme: AssetScheme
-}
+import { AssetBundleDoc } from "../../../db/DocType";
 
 interface OwnProps {
-    assetBundles: AssetBundle[]
+    assetBundles: AssetBundleDoc[]
 }
 
 interface MetadataFormat {
@@ -41,7 +36,7 @@ const AssetList = (prop: OwnProps) => {
                                 Asset
                             </td>
                             <td>
-                                <HexString text={assetBundle.asset.assetType.value} />
+                                <HexString text={assetBundle.asset.assetType} />
                             </td>
                         </tr>
                         <tr>

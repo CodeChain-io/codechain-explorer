@@ -5,7 +5,7 @@ import { apiRequest, ApiError } from "./ApiRequest";
 
 interface OwnProps {
     onBlockNumber: (n: number) => void;
-    onError: () => void;
+    onError: (e: any) => void;
     repeat?: number;
 }
 
@@ -67,8 +67,8 @@ class RequestBlockNumberInternal extends React.Component<Props, State> {
                 data: num
             });
             onBlockNumber(num);
-        }).catch((_: ApiError) => {
-            onError();
+        }).catch((error: ApiError) => {
+            onError(error);
         });
     }
 }

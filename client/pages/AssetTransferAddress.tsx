@@ -2,23 +2,18 @@ import * as React from "react";
 import { match } from "react-router";
 import { Container } from 'reactstrap';
 
-import { Transaction, Asset, AssetScheme } from "codechain-sdk/lib/core/classes"
 import { RequestAssetTransferAddressUTXO, RequestAssetTransferAddressTransactions } from "../request";
 import UTXOList from "../components/assetTransferAddress/UTXOList/UTXOList";
 import TransactionList from "../components/transaction/TransactionList/TransactionList";
+import { TransactionDoc, AssetBundleDoc } from "../db/DocType";
 
 interface Props {
     match: match<{ address: string }>;
 }
 
-interface UTXO {
-    asset: Asset,
-    assetScheme: AssetScheme
-}
-
 interface State {
-    utxo: UTXO[],
-    transactions: Transaction[]
+    utxo: AssetBundleDoc[],
+    transactions: TransactionDoc[]
 }
 
 class AssetTransferAddress extends React.Component<Props, State> {
@@ -53,10 +48,10 @@ class AssetTransferAddress extends React.Component<Props, State> {
             </div>
         )
     }
-    private onTransactions = (transactions: Transaction[]) => {
+    private onTransactions = (transactions: TransactionDoc[]) => {
         this.setState({ transactions });
     }
-    private onUTXO = (utxo: UTXO[]) => {
+    private onUTXO = (utxo: AssetBundleDoc[]) => {
         this.setState({ utxo });
     }
     private onError = (e: any) => { console.error(e); }
