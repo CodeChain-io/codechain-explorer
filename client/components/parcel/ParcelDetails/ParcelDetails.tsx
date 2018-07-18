@@ -5,6 +5,7 @@ import { Col, Row } from 'reactstrap';
 import "./ParcelDetails.scss"
 import HexString from "../../util/HexString/HexString";
 import { ParcelDoc, Type, PaymentDoc, SetRegularKeyDoc } from "../../../db/DocType";
+import { Link } from "react-router-dom";
 
 interface Props {
     parcel: ParcelDoc;
@@ -82,7 +83,9 @@ const ParcelDetails = (props: Props) => {
                 Block No.
             </Col>
             <Col md="10">
-                {parcel.blockNumber}
+                <Link to={`/block/${parcel.blockNumber}`}>
+                    {parcel.blockNumber}
+                </Link>
             </Col>
         </Row>
         <Row>
