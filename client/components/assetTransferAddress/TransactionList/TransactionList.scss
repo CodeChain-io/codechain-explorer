@@ -1,0 +1,53 @@
+.transaction-list {
+  .transaction-item {
+    background: #F8F8F8;
+    position: relative;
+    border-radius: 13px;
+    .type {
+      position: absolute;
+      right: 15px;
+      top: 8px;
+      color: white;
+      padding-left: 10px;
+      padding-right: 10px;
+      border-radius: 13px;
+    }
+    .asset-mint-type {
+      background-color: #00DBB4;
+    }
+    .asset-transfer-type {
+      background-color: #5300DB;
+    }
+    &>.row>div:first-child {
+      padding-left: 27px;
+    }
+    &>.row>div:last-child {
+      padding-right: 27px;
+    }
+    &>.row>div {
+      padding-top: 8px;
+      padding-bottom: 8px;
+    }
+    .background-highlight {
+      border-radius: 10px;
+      background-color: #F1F1F1;
+    }
+    .input-highlight {
+      background-color: #F9B7A9;
+    }
+    .output-highlight {
+      background-color: #C1EED4;
+    }
+    .icon {
+      width: 30px;
+      height: 30px;
+    }
+    .inner-row {
+      margin: 0px;
+    }
+    .inner-row>div {
+      padding-top: 8px;
+      padding-bottom: 8px;
+    }
+  }
+}

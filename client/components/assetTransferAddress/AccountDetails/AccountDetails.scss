@@ -1,0 +1,26 @@
+.account-details {
+  background-color: #EFEFF8;
+  border-radius: 13px;
+  .icon {
+    width: 100px;
+    height: 100px;
+  }
+  .row>div:first-child {
+    padding-left: 27px;
+  }
+  .row>div:last-child {
+    padding-right: 27px;
+  }
+  .row>div {
+    padding-top: 8px;
+    padding-bottom: 8px;
+  }
+  .line {
+    background-color: #D5D5D5;
+    height: 1px;
+  }
+  .qr {
+    width: 100px;
+    height: 100px;
+  }
+}

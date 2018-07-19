@@ -2,10 +2,14 @@ import * as React from "react";
 import { match } from "react-router";
 import { Container } from 'reactstrap';
 
-import { RequestAssetTransferAddressUTXO, RequestAssetTransferAddressTransactions } from "../request";
-import UTXOList from "../components/assetTransferAddress/UTXOList/UTXOList";
-import TransactionList from "../components/transaction/TransactionList/TransactionList";
-import { TransactionDoc, AssetBundleDoc } from "../db/DocType";
+import { RequestAssetTransferAddressUTXO, RequestAssetTransferAddressTransactions } from "../../request";
+import { TransactionDoc, AssetBundleDoc } from "../../db/DocType";
+
+import "./AssetTransferAddress.scss";
+import AccountDetails from "../../components/assetTransferAddress/AccountDetails/AccountDetails";
+import AssetList from "../../components/assetTransferAddress/AssetList/AssetList";
+import TransactionList from "../../components/assetTransferAddress/TransactionList/TransactionList";
+import { H256 } from "codechain-sdk/lib/core/classes";
 
 interface Props {
     match: match<{ address: string }>;
@@ -33,19 +37,23 @@ class AssetTransferAddress extends React.Component<Props, State> {
     public render() {
         const { match: { params: { address } } } = this.props;
         const { utxo, transactions } = this.state;
+        const account = {
+            assetCount: utxo.length,
+            txCount: transactions.length,
+        }
         return (
-            <div>
-                <Container>
-                    <h3 className="mt-3">Asset Transfer Address</h3>
-                    <p>{address}</p>
-                    <h4>UTXO</h4>
-                    <UTXOList utxo={utxo} />
-                    <h4>History</h4>
-                    <TransactionList searchByAssetType={false} transactions={transactions} />
-                </Container>
+            <Container className="asset-transfer-address">
+                <h1>Asset Transfer Address</h1>
+                <AccountDetails address={address} account={account} />
+                <h2 className="sub-title">Assets</h2>
+                <hr />
+                <AssetList assetBundles={utxo} />
+                <h2 className="sub-title">Transactions</h2>
+                <hr />
+                <TransactionList owner={new H256(address)} transactions={transactions} />
                 <RequestAssetTransferAddressUTXO address={address} onUTXO={this.onUTXO} onError={this.onError} />
                 <RequestAssetTransferAddressTransactions address={address} onTransactions={this.onTransactions} onError={this.onError} />
-            </div>
+            </Container>
         )
     }
     private onTransactions = (transactions: TransactionDoc[]) => {

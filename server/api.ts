@@ -180,15 +180,19 @@ export function createApiRouter(context: ServerContext, useCors = false) {
         const { address } = req.params;
         try {
             const assets = await context.db.getAssetsByAssetAddress(new H256(address));
-            const utxoPromise = _.map(assets, asset => {
-                return context.codechainSdk.rpc.chain.getAsset(new H256(asset.transactionHash), asset.transactionOutputIndex)
+            const utxoPromise = _.map(assets, async (asset) => {
+                const getAssetResult = await context.codechainSdk.rpc.chain.getAsset(new H256(asset.transactionHash), asset.transactionOutputIndex);
+                if (!getAssetResult) {
+                    return null;
+                }
+                return asset;
             });
             const utxoResult = await Promise.all(utxoPromise);
             const utxoList = _.compact(utxoResult);
             const utxoResponsePromise = _.map(utxoList, async (utxo) => {
                 return {
                     asset: utxo,
-                    assetScheme: await context.db.getAssetScheme(utxo.assetType)
+                    assetScheme: await context.db.getAssetScheme(new H256(utxo.assetType))
                 }
             })
             const utxoPresponse = await Promise.all(utxoResponsePromise);

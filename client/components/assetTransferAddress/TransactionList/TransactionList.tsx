@@ -3,16 +3,18 @@ import * as _ from "lodash";
 
 import { Row, Col } from "reactstrap";
 
-import "./AssetTransactionList.scss"
+import "./TransactionList.scss"
 import HexString from "../../util/HexString/HexString";
 
 import * as arrow from "./img/arrow.png";
 import { TransactionDoc, Type, AssetMintTransactionDoc, AssetTransferTransactionDoc } from "../../../db/DocType";
+import { H256 } from "codechain-sdk/lib/core/classes";
 
 interface Props {
+    owner: H256;
     transactions: TransactionDoc[];
 }
-const TransactionObjectByType = (transaction: TransactionDoc) => {
+const TransactionObjectByType = (transaction: TransactionDoc, owner: H256) => {
     if (Type.isAssetMintTransactionDoc(transaction)) {
         const transactionDoc = transaction as AssetMintTransactionDoc;
         return (
@@ -74,7 +76,7 @@ const TransactionObjectByType = (transaction: TransactionDoc) => {
                                 {
                                     _.map(transactionDoc.data.inputs, (input, i) => {
                                         return (
-                                            <div key={`input-${i}`} className="background-highlight mb-3">
+                                            <div key={`input-${i}`} className={`background-highlight mb-3 ${input.prevOut.owner === owner.value ? "input-highlight": ""}`}>
                                                 <Row className="inner-row">
                                                     <Col><img src={Type.getMetadata(input.prevOut.assetScheme.metadata).icon_url} className="icon mr-2" /> <HexString link={`/asset/0x${input.prevOut.assetType}`} text={input.prevOut.assetType} length={30} /></Col>
                                                 </Row>
@@ -109,7 +111,7 @@ const TransactionObjectByType = (transaction: TransactionDoc) => {
                                 {
                                     _.map(transactionDoc.data.outputs, (output, i) => {
                                         return (
-                                            <div key={`output-${i}`} className="background-highlight mb-3">
+                                            <div key={`output-${i}`} className={`background-highlight mb-3 ${output.owner === owner.value ? "output-highlight": ""}`}>
                                                 <Row className="inner-row">
                                                     <Col><img src={Type.getMetadata(output.assetScheme.metadata).icon_url} className="icon mr-2" /> <HexString link={`/asset/0x${output.assetType}`} text={output.assetType} length={30} /></Col>
                                                 </Row>
@@ -156,11 +158,11 @@ const getClassNameByType = (type: string) => {
     return null;
 }
 
-const AssetTransactionList = (props: Props) => {
-    const { transactions } = props;
-    return <div className="asset-transaction-list">{transactions.map((transaction, i: number) => {
+const TransactionList = (props: Props) => {
+    const { transactions, owner } = props;
+    return <div className="transaction-list">{transactions.map((transaction, i: number) => {
         const hash = transaction.data.hash;
-        return <div key={`asset-transaction-${hash}`} className="transaction-item mb-3">
+        return <div key={`transaction-${hash}`} className="transaction-item mb-3">
             <div className={`type ${getClassNameByType(transaction.type)}`}>
                 {transaction.type}
             </div>
@@ -172,9 +174,9 @@ const AssetTransactionList = (props: Props) => {
                     <HexString link={`/tx/0x${hash}`} text={hash} />
                 </Col>
             </Row>
-            {TransactionObjectByType(transaction)}
+            {TransactionObjectByType(transaction, owner)}
         </div>
     })}</div>
 };
 
-export default AssetTransactionList;
+export default TransactionList;
