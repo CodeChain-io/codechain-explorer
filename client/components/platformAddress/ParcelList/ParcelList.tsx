@@ -112,7 +112,7 @@ const ParcelList = (props: Props) => {
                     Signer
                 </Col>
                 <Col md="10">
-                    <HexString link={`/address/0x${parcel.sender}`} text={parcel.sender} />
+                    <HexString text={parcel.sender} />
                 </Col>
             </Row>
             <Row>

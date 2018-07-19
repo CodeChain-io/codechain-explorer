@@ -33,7 +33,7 @@ const BlockList = (prop: OwnProps) => {
                                 Author
                             </Col>
                             <Col md="10">
-                                <HexString link={`/addr-platform/0x${block.author}`} text={block.author} />
+                                <HexString text={block.author} />
                             </Col>
                         </Row>
                         <Row>

@@ -76,7 +76,7 @@ const TransactionObjectByType = (transaction: TransactionDoc, owner: H256) => {
                                 {
                                     _.map(transactionDoc.data.inputs, (input, i) => {
                                         return (
-                                            <div key={`input-${i}`} className={`background-highlight mb-3 ${input.prevOut.owner === owner.value ? "input-highlight": ""}`}>
+                                            <div key={`input-${i}`} className={`background-highlight mb-3 ${input.prevOut.owner === owner.value ? "input-highlight" : ""}`}>
                                                 <Row className="inner-row">
                                                     <Col><img src={Type.getMetadata(input.prevOut.assetScheme.metadata).icon_url} className="icon mr-2" /> <HexString link={`/asset/0x${input.prevOut.assetType}`} text={input.prevOut.assetType} length={30} /></Col>
                                                 </Row>
@@ -111,7 +111,7 @@ const TransactionObjectByType = (transaction: TransactionDoc, owner: H256) => {
                                 {
                                     _.map(transactionDoc.data.outputs, (output, i) => {
                                         return (
-                                            <div key={`output-${i}`} className={`background-highlight mb-3 ${output.owner === owner.value ? "output-highlight": ""}`}>
+                                            <div key={`output-${i}`} className={`background-highlight mb-3 ${output.owner === owner.value ? "output-highlight" : ""}`}>
                                                 <Row className="inner-row">
                                                     <Col><img src={Type.getMetadata(output.assetScheme.metadata).icon_url} className="icon mr-2" /> <HexString link={`/asset/0x${output.assetType}`} text={output.assetType} length={30} /></Col>
                                                 </Row>
