@@ -165,7 +165,7 @@ const getTransactionInfoByType = (transaction: TransactionDoc) => {
                     </Col>
                     <Col md="10">
                         {
-                            transactionDoc.data.owner ? <HexString link={`/addr-asset/0x${transactionDoc.data.owner}`} text={transactionDoc.data.owner} /> : "Unknown"
+                            transactionDoc.data.output.owner ? <HexString link={`/addr-asset/0x${transactionDoc.data.output.owner}`} text={transactionDoc.data.output.owner} /> : "Unknown"
                         }
                     </Col>
                 </Row>
@@ -175,7 +175,7 @@ const getTransactionInfoByType = (transaction: TransactionDoc) => {
                         AssetType
                     </Col>
                     <Col md="10">
-                        <img src={Type.getMetadata(transactionDoc.data.metadata).icon_url} className="icon mr-2" /> <HexString link={`/asset/0x${transactionDoc.data.assetType}`} text={transactionDoc.data.assetType} />
+                        <img src={Type.getMetadata(transactionDoc.data.metadata).icon_url} className="icon mr-2" /> <HexString link={`/asset/0x${transactionDoc.data.output.assetType}`} text={transactionDoc.data.output.assetType} />
                     </Col>
                 </Row>
                 <Row>
@@ -183,7 +183,7 @@ const getTransactionInfoByType = (transaction: TransactionDoc) => {
                         Amount
                     </Col>
                     <Col md="10">
-                        {transactionDoc.data.amount}
+                        {transactionDoc.data.output.amount}
                     </Col>
                 </Row>
                 <Row>
@@ -191,7 +191,7 @@ const getTransactionInfoByType = (transaction: TransactionDoc) => {
                         LockScriptHash
                     </Col>
                     <Col md="10">
-                        {transactionDoc.data.lockScriptHash === "f42a65ea518ba236c08b261c34af0521fa3cd1aa505e1c18980919cb8945f8f3" ? "P2PKH" : <HexString text={transactionDoc.data.lockScriptHash} />}
+                        {transactionDoc.data.output.lockScriptHash === "f42a65ea518ba236c08b261c34af0521fa3cd1aa505e1c18980919cb8945f8f3" ? "P2PKH" : <HexString text={transactionDoc.data.output.lockScriptHash} />}
                     </Col>
                 </Row>
                 <Row>
@@ -199,7 +199,7 @@ const getTransactionInfoByType = (transaction: TransactionDoc) => {
                         Parameters
                     </Col>
                     <Col md="10">
-                        {_.map(transactionDoc.data.parameters, (parameter, i) => {
+                        {_.map(transactionDoc.data.output.parameters, (parameter, i) => {
                             return <div key={`transaction-heder-param-${i}`}><HexString text={Buffer.from(parameter).toString("hex")} /></div>
                         })}
                     </Col>

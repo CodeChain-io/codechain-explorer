@@ -24,26 +24,39 @@ interface State {
     },
     blocks: BlockDoc[],
     parcels: ParcelDoc[],
-    assetBundles: AssetBundleDoc[]
+    assetBundles: AssetBundleDoc[],
+    requested: boolean
 }
 
 class Address extends React.Component<Props, State> {
     constructor(props: Props) {
         super(props);
-        this.state = { blocks: [], parcels: [], assetBundles: [] };
+        this.state = { blocks: [], parcels: [], assetBundles: [], requested: false };
     }
 
     public componentWillReceiveProps(props: Props) {
         const { match: { params: { address } } } = this.props;
         const { match: { params: { address: nextAddress } } } = props;
         if (nextAddress !== address) {
-            this.setState({ account: undefined, blocks: [], parcels: [] });
+            this.setState({ account: undefined, blocks: [], parcels: [], requested: false });
         }
     }
 
     public render() {
         const { match: { params: { address } } } = this.props;
-        const { account, blocks, assetBundles, parcels } = this.state;
+        const { account, blocks, assetBundles, parcels, requested } = this.state;
+        if (!requested) {
+            return (
+                <div>
+                    <RequestPlatformAddressBlocks address={address} onBlocks={this.onBlocks} onError={this.onError} />
+                    <RequestPlatformAddressParcels address={address} onParcels={this.onParcels} onError={this.onError} />
+                    <RequestPlatformAddressAssets address={address} onAssetBundles={this.onAssetBundles} onError={this.onError} />
+                    {
+                        this.setState({ requested: true })
+                    }
+                </div>
+            )
+        }
         return (
             <Container className="platform-address">
                 <h1>Address Information</h1>
@@ -79,9 +92,6 @@ class Address extends React.Component<Props, State> {
                         </div>
                         : null
                 }
-                <RequestPlatformAddressBlocks address={address} onBlocks={this.onBlocks} onError={this.onError} />
-                <RequestPlatformAddressParcels address={address} onParcels={this.onParcels} onError={this.onError} />
-                <RequestPlatformAddressAssets address={address} onAssetBundles={this.onAssetBundles} onError={this.onError} />
             </Container>
         )
     }

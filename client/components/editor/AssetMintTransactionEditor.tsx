@@ -96,12 +96,14 @@ export default class AssetMintTransactionEditor extends React.Component<Props, S
         this.props.onChange(new AssetMintTransaction({
             nonce,
             metadata,
-            lockScriptHash: new H256(lockScriptHash),
+            output: {
+                amount,
+                parameters: [],
+                lockScriptHash: new H256(lockScriptHash),
+            },
             // FIXME:
-            parameters: [],
             networkId: 1,
             // FIXME: U256
-            amount,
             registrar: registrar.length === 40 ? new H160(registrar) : null,
         }))
     }

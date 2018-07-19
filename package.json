@@ -18,7 +18,7 @@
         "buffer": "^5.1.0",
         "case-sensitive-paths-webpack-plugin": "2.1.1",
         "chalk": "1.1.3",
-        "codechain-sdk": "https://github.com/CodeChain-io/codechain-sdk-js#185a3d9fd7593a06fff3274f93c555643e04255c",
+        "codechain-sdk": "https://github.com/CodeChain-io/codechain-sdk-js#e361ad40bc583774bb22849930d837b8520a8918",
         "concurrently": "^3.6.0",
         "config": "^1.30.0",
         "cors": "^2.8.4",

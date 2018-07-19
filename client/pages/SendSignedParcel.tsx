@@ -1,7 +1,6 @@
 import * as React from "react";
 
-import { Parcel, U256, H256, Transaction, AssetMintTransaction } from "codechain-sdk/lib/core/classes"
-import { RequestSendSignedParcel } from "../request/RequestSendSignedParcel";
+import { H256, Transaction, AssetMintTransaction } from "codechain-sdk/lib/core/classes"
 import TransactionEditor from "../components/editor/TransactionEditor";
 import { Link } from "react-router-dom";
 import { Container } from 'reactstrap';
@@ -37,10 +36,12 @@ export default class SendSignedParcel extends React.Component<{}, State> {
             transaction: new AssetMintTransaction({
                 nonce: 1,
                 metadata: "mint meta data",
-                lockScriptHash: new H256("563d207a7b1d91f9b4440536bc4818e90263ada0707b41d119e667ed35524b68"),
-                parameters: [],
+                output: {
+                    amount: 10,
+                    parameters: [],
+                    lockScriptHash: new H256("563d207a7b1d91f9b4440536bc4818e90263ada0707b41d119e667ed35524b68"),
+                },
                 networkId: 1,
-                amount: 10,
                 registrar: null,
             }),
         };
@@ -48,7 +49,7 @@ export default class SendSignedParcel extends React.Component<{}, State> {
 
     public render() {
         const { transactionType, nonce, fee, networkId,
-            secret, status, transaction, sentHash, errorMessage } = this.state;
+            secret, status, sentHash, errorMessage } = this.state;
 
         if (status === "sent" && sentHash) {
             return <div>
@@ -62,9 +63,10 @@ export default class SendSignedParcel extends React.Component<{}, State> {
             return <div>SendSignedParcel Error: {JSON.stringify(errorMessage)}</div>
         }
 
+        /*
         if (status === "sending") {
             const parcel = Parcel.transactions(
-                new U256(nonce),
+                nonce,
                 new U256(fee),
                 networkId,
                 transaction
@@ -73,7 +75,7 @@ export default class SendSignedParcel extends React.Component<{}, State> {
                 parcel={parcel}
                 onSuccess={this.onFinishSend}
                 onError={this.onErrorSend} />;
-        }
+        }*/
 
         return <div>
             <Container>
@@ -153,20 +155,20 @@ export default class SendSignedParcel extends React.Component<{}, State> {
             status: "sending"
         })
     }
-
-    private onFinishSend = (hash: H256) => {
-        this.setState({
-            ...this.state,
-            status: "sent",
-            sentHash: hash,
-        })
-    }
-
-    private onErrorSend = ({ message }: { message: string }) => {
-        this.setState({
-            ...this.state,
-            status: "error",
-            errorMessage: message,
-        })
-    }
+    /*
+        private onFinishSend = (hash: H256) => {
+            this.setState({
+                ...this.state,
+                status: "sent",
+                sentHash: hash,
+            })
+        }
+    
+        private onErrorSend = ({ message }: { message: string }) => {
+            this.setState({
+                ...this.state,
+                status: "error",
+                errorMessage: message,
+            })
+        }*/
 }

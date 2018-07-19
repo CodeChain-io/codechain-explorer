@@ -51,7 +51,7 @@ class RequestBlockInternal extends React.Component<OwnProps & StateProps & Dispa
                             dispatch({
                                 type: "CACHE_ASSET_SCHEME",
                                 data: {
-                                    assetType: (transaction as AssetMintTransactionDoc).data.assetType,
+                                    assetType: (transaction as AssetMintTransactionDoc).data.output.assetType,
                                     assetScheme: Type.getAssetSchemeDoc(transaction as AssetMintTransactionDoc)
                                 }
                             })

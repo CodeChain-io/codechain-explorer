@@ -102,17 +102,19 @@ const fromAssetScheme = (assetScheme: AssetScheme) => {
 export interface AssetMintTransactionDoc {
     type: string;
     data: {
+        output: {
+            lockScriptHash: string;
+            parameters: Buffer[];
+            amount: number | null;
+            /* custom field for indexing */
+            owner: string;
+            assetType: string;
+        }
         networkId: number;
         metadata: string;
-        lockScriptHash: string;
-        parameters: Buffer[];
-        amount: number | null;
         registrar: string | null;
         nonce: number;
         hash: string;
-        assetType: string;
-        /* custom field for indexing */
-        owner: string;
     };
 }
 
@@ -168,7 +170,7 @@ const fromAssetTransferInput = async (block: Block, assetTransferInput: AssetTra
         foundTransaction = await fromTransaction(block, transactionInCurrentBlock[0], elasticSearchAgent);
     }
     if (foundTransaction && isAssetMintTransactionDoc(foundTransaction)) {
-        owner = (foundTransaction as AssetMintTransactionDoc).data.owner;
+        owner = (foundTransaction as AssetMintTransactionDoc).data.output.owner;
     } else if (foundTransaction && isAssetTransferTransactionDoc(foundTransaction)) {
         owner = (foundTransaction as AssetTransferTransactionDoc).data.outputs[assetTransferInputJson.prevOut.index].owner;
     }
@@ -222,16 +224,18 @@ const fromTransaction = async (block: Block, transaction: Transaction, elasticSe
         return {
             type: transactionJson.type,
             data: {
+                output: {
+                    lockScriptHash: transactionJson.data.output.lockScriptHash,
+                    parameters: transactionJson.data.output.parameters,
+                    amount: transactionJson.data.output.amount,
+                    assetType: transaction.getAssetSchemeAddress().value,
+                    owner: transactionJson.data.output.lockScriptHash === "f42a65ea518ba236c08b261c34af0521fa3cd1aa505e1c18980919cb8945f8f3" ? transactionJson.data.output.parameters[0].toString("hex") : ""
+                },
                 networkId: transactionJson.data.networkId,
                 metadata: transactionJson.data.metadata,
-                lockScriptHash: transactionJson.data.lockScriptHash,
-                parameters: transactionJson.data.parameters,
-                amount: transactionJson.data.amount,
                 registrar: transactionJson.data.registrar,
                 nonce: transactionJson.data.nonce,
-                hash: transactionJson.data.hash,
-                assetType: transaction.getAssetSchemeAddress().value,
-                owner: transactionJson.data.lockScriptHash === "f42a65ea518ba236c08b261c34af0521fa3cd1aa505e1c18980919cb8945f8f3" ? transactionJson.data.parameters[0].toString("hex") : ""
+                hash: transactionJson.data.hash
             }
         }
     } else if (transaction instanceof AssetTransferTransaction) {
@@ -350,7 +354,7 @@ function getAssetSchemeDoc(transaction: AssetMintTransactionDoc): AssetSchemeDoc
     return {
         metadata: transaction.data.metadata,
         registrar: transaction.data.registrar,
-        amount: transaction.data.amount,
+        amount: transaction.data.output.amount,
         networkId: transaction.data.networkId
     }
 }

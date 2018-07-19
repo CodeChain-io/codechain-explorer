@@ -119,28 +119,7 @@
                             "properties": {
                                 "data": {
                                     "properties": {
-                                        "owner": {
-                                            "type": "text",
-                                            "fields": {
-                                                "keyword": {
-                                                    "type": "keyword",
-                                                    "ignore_above": 256
-                                                }
-                                            }
-                                        },
-                                        "amount": {
-                                            "type": "long"
-                                        },
                                         "hash": {
-                                            "type": "text",
-                                            "fields": {
-                                                "keyword": {
-                                                    "type": "keyword",
-                                                    "ignore_above": 256
-                                                }
-                                            }
-                                        },
-                                        "assetType": {
                                             "type": "text",
                                             "fields": {
                                                 "keyword": {
@@ -251,31 +230,6 @@
                                                 }
                                             }
                                         },
-                                        "lockScriptHash": {
-                                            "type": "text",
-                                            "fields": {
-                                                "keyword": {
-                                                    "type": "keyword",
-                                                    "ignore_above": 256
-                                                }
-                                            }
-                                        },
-                                        "parameters": {
-                                            "properties": {
-                                                "data": {
-                                                    "type": "long"
-                                                },
-                                                "type": {
-                                                    "type": "text",
-                                                    "fields": {
-                                                        "keyword": {
-                                                            "type": "keyword",
-                                                            "ignore_above": 256
-                                                        }
-                                                    }
-                                                }
-                                            }
-                                        },
                                         "metadata": {
                                             "type": "text",
                                             "fields": {
@@ -290,6 +244,56 @@
                                         },
                                         "nonce": {
                                             "type": "long"
+                                        },
+                                        "output": {
+                                            "properties": {
+                                                "owner": {
+                                                    "type": "text",
+                                                    "fields": {
+                                                        "keyword": {
+                                                            "type": "keyword",
+                                                            "ignore_above": 256
+                                                        }
+                                                    }
+                                                },
+                                                "lockScriptHash": {
+                                                    "type": "text",
+                                                    "fields": {
+                                                        "keyword": {
+                                                            "type": "keyword",
+                                                            "ignore_above": 256
+                                                        }
+                                                    }
+                                                },
+                                                "parameters": {
+                                                    "properties": {
+                                                        "data": {
+                                                            "type": "long"
+                                                        },
+                                                        "type": {
+                                                            "type": "text",
+                                                            "fields": {
+                                                                "keyword": {
+                                                                    "type": "keyword",
+                                                                    "ignore_above": 256
+                                                                }
+                                                            }
+                                                        }
+                                                    }
+                                                },
+                                                "amount": {
+                                                    "type": "long"
+                                                },
+                                                "assetType": {
+                                                    "type": "text",
+                                                    "fields": {
+                                                        "keyword": {
+                                                            "type": "keyword",
+                                                            "ignore_above": 256
+                                                        }
+                                                    }
+                                                }
+                                            }
                                         },
                                         "outputs": {
                                             "type": "nested",

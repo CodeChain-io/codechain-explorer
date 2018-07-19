@@ -45,7 +45,7 @@ class RequestTransactionInternal extends React.Component<Props> {
                 dispatch({
                     type: "CACHE_ASSET_SCHEME",
                     data: {
-                        assetType: (transaction as AssetMintTransactionDoc).data.assetType,
+                        assetType: (transaction as AssetMintTransactionDoc).data.output.assetType,
                         assetScheme: Type.getAssetSchemeDoc(transaction as AssetMintTransactionDoc)
                     }
                 })

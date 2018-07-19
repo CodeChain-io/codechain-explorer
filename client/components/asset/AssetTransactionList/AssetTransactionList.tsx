@@ -24,7 +24,7 @@ const TransactionObjectByType = (transaction: TransactionDoc) => {
                                 AssetType
                             </Col>
                             <Col md="10">
-                                <img src={Type.getMetadata(transactionDoc.data.metadata).icon_url} className="icon mr-2" /> <HexString link={`/asset/0x${transactionDoc.data.assetType}`} text={transactionDoc.data.assetType} />
+                                <img src={Type.getMetadata(transactionDoc.data.metadata).icon_url} className="icon mr-2" /> <HexString link={`/asset/0x${transactionDoc.data.output.assetType}`} text={transactionDoc.data.output.assetType} />
                             </Col>
                         </Row>
                         <Row className="inner-row">
@@ -45,8 +45,8 @@ const TransactionObjectByType = (transaction: TransactionDoc) => {
                             </Col>
                             <Col md="10">
                                 {
-                                    transactionDoc.data.owner ?
-                                        <HexString link={`/addr-asset/0x${transactionDoc.data.owner}`} text={transactionDoc.data.owner} />
+                                    transactionDoc.data.output.owner ?
+                                        <HexString link={`/addr-asset/0x${transactionDoc.data.output.owner}`} text={transactionDoc.data.output.owner} />
                                         : "Unknown"
                                 }
                             </Col>
@@ -56,7 +56,7 @@ const TransactionObjectByType = (transaction: TransactionDoc) => {
                                 Amount
                             </Col>
                             <Col md="10">
-                                {transactionDoc.data.amount}
+                                {transactionDoc.data.output.amount}
                             </Col>
                         </Row>
                     </div>

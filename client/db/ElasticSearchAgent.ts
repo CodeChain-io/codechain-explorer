@@ -154,7 +154,7 @@ export class ElasticSearchAgent {
         const transactions = await this.searchTransactions({
             "bool": {
                 "must": [
-                    { "term": { "parcels.action.transactions.data.assetType": assetType.value } }
+                    { "term": { "parcels.action.transactions.data.output.assetType": assetType.value } }
                 ]
             }
         })
@@ -207,10 +207,10 @@ export class ElasticSearchAgent {
             return {
                 assetScheme,
                 asset: {
-                    assetType: tx.data.assetType,
-                    lockScriptHash: tx.data.lockScriptHash,
-                    parameters: tx.data.parameters,
-                    amount: tx.data.amount || 0,
+                    assetType: tx.data.output.assetType,
+                    lockScriptHash: tx.data.output.lockScriptHash,
+                    parameters: tx.data.output.parameters,
+                    amount: tx.data.output.amount || 0,
                     transactionHash: tx.data.hash,
                     transactionOutputIndex: 0
                 }
@@ -246,7 +246,7 @@ export class ElasticSearchAgent {
                             }, "inner_hits": {}
                         }
                     },
-                    { "term": { "parcels.action.transactions.data.owner": address.value } }
+                    { "term": { "parcels.action.transactions.data.output.owner": address.value } }
                 ]
             }
         });
@@ -271,7 +271,7 @@ export class ElasticSearchAgent {
                             }
                         }
                     },
-                    { "term": { "parcels.action.transactions.data.owner": address.value } }
+                    { "term": { "parcels.action.transactions.data.output.owner": address.value } }
                 ]
             }
         });
@@ -292,12 +292,12 @@ export class ElasticSearchAgent {
             } else if (Type.isAssetMintTransactionDoc(transaction)) {
                 const retAssetDoc: AssetDoc[] = [];
                 const transactionDoc = (transaction as AssetMintTransactionDoc);
-                if (transactionDoc.data.owner === address.value) {
+                if (transactionDoc.data.output.owner === address.value) {
                     retAssetDoc.push({
-                        assetType: transactionDoc.data.assetType,
-                        lockScriptHash: transactionDoc.data.lockScriptHash,
-                        parameters: transactionDoc.data.parameters,
-                        amount: transactionDoc.data.amount || 0,
+                        assetType: transactionDoc.data.output.assetType,
+                        lockScriptHash: transactionDoc.data.output.lockScriptHash,
+                        parameters: transactionDoc.data.output.parameters,
+                        amount: transactionDoc.data.output.amount || 0,
                         transactionHash: transactionDoc.data.hash,
                         transactionOutputIndex: 0
                     })
@@ -327,7 +327,7 @@ export class ElasticSearchAgent {
         const transactions = await this.searchTransactions({
             "bool": {
                 "must": [
-                    { "term": { "parcels.action.transactions.data.assetType": assetType.value } }
+                    { "term": { "parcels.action.transactions.data.output.assetType": assetType.value } }
                 ]
             }
         });
