@@ -5,7 +5,7 @@ import { Container } from 'reactstrap';
 import { RequestAssetScheme } from "../../request";
 import AssetDetails from "../../components/asset/AssetDetails/AssetDetails";
 import RequestAssetTransactions from "../../request/RequestAssetTransactions";
-import TransactionList from "../../components/transaction/TransactionList/TransactionList";
+import AssetTransactionList from "../../components/asset/AssetTransactionList/AssetTransactionList";
 import { TransactionDoc, AssetSchemeDoc } from "../../db/DocType";
 
 import "./Asset.scss"
@@ -46,8 +46,13 @@ class Asset extends React.Component<Props, State> {
                 {assetScheme
                     ? <div><AssetDetails assetType={type} assetScheme={assetScheme} /></div>
                     : <div><RequestAssetScheme assetType={type} onAssetScheme={this.onAssetScheme} onNotFound={this.onAssetSchemeNotFound} onError={this.onError} /></div>}
+                <h2 className="sub-title">Transaction History</h2>
                 {
-                    transactions.length !== 0 ? <div><TransactionList searchByAssetType={true} transactions={transactions} /></div> : <RequestAssetTransactions assetType={type} onTransactions={this.onTransactionList} onError={this.onError} />
+                    transactions.length !== 0 ?
+                        <div>
+                            <AssetTransactionList transactions={transactions} />
+                        </div>
+                        : <RequestAssetTransactions assetType={type} onTransactions={this.onTransactionList} onError={this.onError} />
                 }
             </Container>
         )
