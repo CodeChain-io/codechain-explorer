@@ -1,19 +1,26 @@
-.account-detail-container {
-  .account-detail-table {
-    width: 100%;
-    margin-bottom: 0;
-    table-layout: auto;
-    word-break: break-all;
-    padding: 16px;
-    tr {
-      border-top: 1px solid #ccc;
-      td {
-        padding-top: 8px;
-        padding-bottom: 8px;
-      }
-      td:first-child {
-        width: 20%;
-      }
-    }
+.account-details {
+  background-color: #EFEFF8;
+  border-radius: 13px;
+  .icon {
+    width: 100px;
+    height: 100px;
+  }
+  .row>div:first-child {
+    padding-left: 27px;
+  }
+  .row>div:last-child {
+    padding-right: 27px;
+  }
+  .row>div {
+    padding-top: 8px;
+    padding-bottom: 8px;
+  }
+  .line {
+    background-color: #D5D5D5;
+    height: 1px;
+  }
+  .qr {
+    width: 100px;
+    height: 100px;
   }
 }

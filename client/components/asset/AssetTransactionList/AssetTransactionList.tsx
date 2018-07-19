@@ -160,7 +160,7 @@ const ParcelTransactionList = (props: Props) => {
     const { transactions } = props;
     return <div className="asset-transaction-list">{transactions.map((transaction, i: number) => {
         const hash = transaction.data.hash;
-        return <div key={`asset-transaction-${hash}`} className="transaction-item mt-3">
+        return <div key={`asset-transaction-${hash}`} className="transaction-item mb-3">
             <div className={`type ${getClassNameByType(transaction.type)}`}>
                 {transaction.type}
             </div>

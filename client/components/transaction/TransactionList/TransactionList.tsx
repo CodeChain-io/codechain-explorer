@@ -45,7 +45,7 @@ const TransactionList = (props: Props) => {
     const { transactions, searchByAssetType } = props;
     return <div className="mb-3">{transactions.map((transaction, i: number) => {
         const hash = transaction.data.hash;
-        return <div key={`parcel-transaction-${hash}`} className="parcel-transaction-list-container mt-3">
+        return <div key={`parcel-transaction-${hash}`} className="parcel-transaction-list-container mb-3">
             <b>Transaction</b>
             <table>
                 <tbody>

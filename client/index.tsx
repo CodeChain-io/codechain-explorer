@@ -17,7 +17,7 @@ import NodeInfo from "./pages/NodeInfo";
 import SendSignedParcel from './pages/SendSignedParcel';
 import Transaction from './pages/Transaction/Transaction';
 import Footer from './components/footer/Footer';
-import PlatformAddress from './pages/PlatformAddress';
+import PlatformAddress from './pages/PlatformAddress/PlatformAddress';
 import AssetTransferAddress from './pages/AssetTransferAddress';
 
 ReactDOM.render(

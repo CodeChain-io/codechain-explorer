@@ -1,6 +1,6 @@
 import * as React from "react";
 
-import "./BlockParcelList.scss"
+import "./ParcelList.scss"
 import HexString from "../../util/HexString/HexString";
 import { Row, Col } from "reactstrap";
 import * as arrow from "./img/arrow.png";
@@ -91,11 +91,11 @@ const getClassNameByType = (type: string) => {
     return null;
 }
 
-const BlockParcelList = (props: Props) => {
+const ParcelList = (props: Props) => {
     const { parcels } = props;
-    return <div className="block-parcel-list">{parcels.map((parcel, i: number) => {
+    return <div className="parcel-list">{parcels.map((parcel, i: number) => {
         const hash = parcel.hash;
-        return <div key={`block-parcel-${hash}`} className="parcel-item mb-3">
+        return <div key={`parcel-${hash}`} className="parcel-item mb-3">
             <div className={`type ${getClassNameByType(parcel.action.action)}`}>
                 {parcel.action.action}
             </div>
@@ -104,7 +104,7 @@ const BlockParcelList = (props: Props) => {
                     Parcel
                 </Col>
                 <Col md="10">
-                    <HexString link={`/parcel/0x${hash}`} text={hash} /> (Index {i})
+                    <HexString link={`/parcel/0x${hash}`} text={hash} />
                 </Col>
             </Row>
             <Row>
@@ -128,4 +128,4 @@ const BlockParcelList = (props: Props) => {
     })}</div >
 };
 
-export default BlockParcelList;
+export default ParcelList;

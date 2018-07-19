@@ -2,6 +2,8 @@ import * as React from "react";
 
 import { Col, Row } from 'reactstrap';
 
+import * as moment from "moment";
+
 import "./BlockDetails.scss"
 import HexString from "../../util/HexString/HexString";
 import { BlockDoc } from "../../../db/DocType";
@@ -76,7 +78,7 @@ class BlockDetails extends React.Component<OwnProps> {
                         Timestamp
                     </Col>
                     <Col md="10">
-                        {block.timestamp}
+                        {moment.unix(block.timestamp).format("YYYY-MM-DD HH:mm:ss")}
                     </Col>
                 </Row>
                 <Row>
