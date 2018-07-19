@@ -2,11 +2,13 @@ import * as React from "react";
 import { match } from "react-router";
 import { Container } from 'reactstrap';
 
-import { RequestAssetScheme } from "../request";
-import AssetDetails from "../components/asset/AssetDetails/AssetDetails";
-import RequestAssetTransactions from "../request/RequestAssetTransactions";
-import TransactionList from "../components/transaction/TransactionList/TransactionList";
-import { TransactionDoc, AssetSchemeDoc } from "../db/DocType";
+import { RequestAssetScheme } from "../../request";
+import AssetDetails from "../../components/asset/AssetDetails/AssetDetails";
+import RequestAssetTransactions from "../../request/RequestAssetTransactions";
+import TransactionList from "../../components/transaction/TransactionList/TransactionList";
+import { TransactionDoc, AssetSchemeDoc } from "../../db/DocType";
+
+import "./Asset.scss"
 
 interface Props {
     match: match<{ type: string }>;
@@ -39,17 +41,15 @@ class Asset extends React.Component<Props, State> {
             return <div><Container>Asset not exist for type: {type}</Container></div>
         }
         return (
-            <div>
-                <Container>
-                    {assetScheme
-                        ? <div><AssetDetails assetScheme={assetScheme} /></div>
-                        : <div><RequestAssetScheme assetType={type} onAssetScheme={this.onAssetScheme} onNotFound={this.onAssetSchemeNotFound} onError={this.onError} /></div>}
-                    <div>{/* FIXME: Modify name of ParcelTransactionList */}</div>
-                    {
-                        transactions.length !== 0 ? <div><TransactionList searchByAssetType={true} transactions={transactions} /></div> : <RequestAssetTransactions assetType={type} onTransactions={this.onTransactionList} onError={this.onError} />
-                    }
-                </Container>
-            </div>
+            <Container className="asset">
+                <h1>Asset Information</h1>
+                {assetScheme
+                    ? <div><AssetDetails assetType={type} assetScheme={assetScheme} /></div>
+                    : <div><RequestAssetScheme assetType={type} onAssetScheme={this.onAssetScheme} onNotFound={this.onAssetSchemeNotFound} onError={this.onError} /></div>}
+                {
+                    transactions.length !== 0 ? <div><TransactionList searchByAssetType={true} transactions={transactions} /></div> : <RequestAssetTransactions assetType={type} onTransactions={this.onTransactionList} onError={this.onError} />
+                }
+            </Container>
         )
     }
 

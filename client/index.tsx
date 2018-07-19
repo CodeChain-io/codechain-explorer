@@ -12,7 +12,7 @@ import Block from './pages/Block/Block';
 import Header from './components/header/Header/Header';
 import Home from './pages/Home/Home';
 import Parcel from './pages/Parcel/Parcel';
-import Asset from "./pages/Asset";
+import Asset from "./pages/Asset/Asset";
 import NodeInfo from "./pages/NodeInfo";
 import SendSignedParcel from './pages/SendSignedParcel';
 import Transaction from './pages/Transaction/Transaction';
