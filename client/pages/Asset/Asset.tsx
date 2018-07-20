@@ -9,6 +9,7 @@ import AssetTransactionList from "../../components/asset/AssetTransactionList/As
 import { TransactionDoc, AssetSchemeDoc } from "../../db/DocType";
 
 import "./Asset.scss"
+import { H256 } from "codechain-sdk/lib/core/H256";
 
 interface Props {
     match: match<{ type: string }>;
@@ -50,7 +51,7 @@ class Asset extends React.Component<Props, State> {
                 {
                     transactions.length !== 0 ?
                         <div>
-                            <AssetTransactionList transactions={transactions} />
+                            <AssetTransactionList type={new H256(type)} transactions={transactions} />
                         </div>
                         : <RequestAssetTransactions assetType={type} onTransactions={this.onTransactionList} onError={this.onError} />
                 }

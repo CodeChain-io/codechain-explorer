@@ -5,12 +5,14 @@ import HexString from "../../util/HexString/HexString";
 import { Row, Col } from "reactstrap";
 import * as arrow from "./img/arrow.png";
 import { ParcelDoc, Type, PaymentDoc, ChangeShardStateDoc, SetRegularKeyDoc } from "../../../db/DocType";
+import { H160 } from "codechain-sdk/lib/core/classes";
 
 interface Props {
     parcels: ParcelDoc[];
+    address: H160;
 }
 
-const ParcelObjectByType = (parcel: ParcelDoc) => {
+const ParcelObjectByType = (parcel: ParcelDoc, address: H160) => {
     if (Type.isPaymentDoc(parcel.action)) {
         return ([
             <Row key="payment-amount">
@@ -31,7 +33,11 @@ const ParcelObjectByType = (parcel: ParcelDoc) => {
                                         Sender
                                     </Col>
                                     <Col md="7">
-                                        <HexString link={`/addr-platform/0x${parcel.sender}`} text={parcel.sender} length={15} />
+                                        {
+                                            address.value === parcel.sender ?
+                                                <HexString text={parcel.sender} length={15} />
+                                                : <HexString link={`/addr-platform/0x${parcel.sender}`} text={parcel.sender} length={15} />
+                                        }
                                     </Col>
                                 </Row>
                             </Col>
@@ -44,7 +50,11 @@ const ParcelObjectByType = (parcel: ParcelDoc) => {
                                         Receiver
                                     </Col>
                                     <Col md="7">
-                                        <HexString link={`/addr-platform/0x${(parcel.action as PaymentDoc).receiver}`} text={(parcel.action as PaymentDoc).receiver} length={15} />
+                                        {
+                                            address.value === (parcel.action as PaymentDoc).receiver ?
+                                                <HexString link={`/addr-platform/0x${(parcel.action as PaymentDoc).receiver}`} text={(parcel.action as PaymentDoc).receiver} length={15} />
+                                                : <HexString link={`/addr-platform/0x${(parcel.action as PaymentDoc).receiver}`} text={(parcel.action as PaymentDoc).receiver} length={15} />
+                                        }
                                     </Col>
                                 </Row>
                             </Col>
@@ -92,7 +102,7 @@ const getClassNameByType = (type: string) => {
 }
 
 const ParcelList = (props: Props) => {
-    const { parcels } = props;
+    const { parcels, address } = props;
     return <div className="parcel-list">{parcels.map((parcel, i: number) => {
         const hash = parcel.hash;
         return <div key={`parcel-${hash}`} className="parcel-item mb-3">
@@ -123,7 +133,7 @@ const ParcelList = (props: Props) => {
                     {parcel.fee}
                 </Col>
             </Row>
-            {ParcelObjectByType(parcel)}
+            {ParcelObjectByType(parcel, address)}
         </div>
     })}</div >
 };

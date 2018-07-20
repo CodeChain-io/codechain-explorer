@@ -2,7 +2,7 @@ import * as React from "react";
 import { match } from "react-router";
 import { Container } from 'reactstrap';
 
-import { U256 } from "codechain-sdk/lib/core/classes"
+import { U256, H160 } from "codechain-sdk/lib/core/classes"
 import { RequestPlatformAddressAccount, RequestPlatformAddressParcels, RequestPlatformAddressAssets } from "../../request";
 import RequestPlatformAddressBlocks from "../../request/RequestPlatformAddressBlocks";
 import AccountDetails from "../../components/platformAddress/AccountDetails/AccountDetails";
@@ -79,7 +79,7 @@ class Address extends React.Component<Props, State> {
                         <div>
                             <h2 className="sub-title">Parcels</h2>
                             <hr />
-                            <ParcelList parcels={parcels} />
+                            <ParcelList address={new H160(address)} parcels={parcels} />
                         </div>
                         : null
                 }

@@ -8,11 +8,13 @@ import HexString from "../../util/HexString/HexString";
 
 import * as arrow from "./img/arrow.png";
 import { TransactionDoc, Type, AssetMintTransactionDoc, AssetTransferTransactionDoc } from "../../../db/DocType";
+import { H256 } from "codechain-sdk/lib/core/H256";
 
 interface Props {
+    type: H256,
     transactions: TransactionDoc[];
 }
-const TransactionObjectByType = (transaction: TransactionDoc) => {
+const TransactionObjectByType = (transaction: TransactionDoc, type: H256) => {
     if (Type.isAssetMintTransactionDoc(transaction)) {
         const transactionDoc = transaction as AssetMintTransactionDoc;
         return (
@@ -24,7 +26,7 @@ const TransactionObjectByType = (transaction: TransactionDoc) => {
                                 AssetType
                             </Col>
                             <Col md="10">
-                                <img src={Type.getMetadata(transactionDoc.data.metadata).icon_url} className="icon mr-2" /> <HexString link={`/asset/0x${transactionDoc.data.output.assetType}`} text={transactionDoc.data.output.assetType} />
+                                <img src={Type.getMetadata(transactionDoc.data.metadata).icon_url} className="icon mr-2" />{type.value === transactionDoc.data.output.assetType ? <HexString text={transactionDoc.data.output.assetType} /> : <HexString link={`/asset/0x${transactionDoc.data.output.assetType}`} text={transactionDoc.data.output.assetType} />}
                             </Col>
                         </Row>
                         <Row className="inner-row">
@@ -76,7 +78,7 @@ const TransactionObjectByType = (transaction: TransactionDoc) => {
                                         return (
                                             <div key={`input-${i}`} className="background-highlight mb-3">
                                                 <Row className="inner-row">
-                                                    <Col><img src={Type.getMetadata(input.prevOut.assetScheme.metadata).icon_url} className="icon mr-2" /> <HexString link={`/asset/0x${input.prevOut.assetType}`} text={input.prevOut.assetType} length={30} /></Col>
+                                                    <Col><img src={Type.getMetadata(input.prevOut.assetScheme.metadata).icon_url} className="icon mr-2" /> {type.value === input.prevOut.assetType ? <HexString text={input.prevOut.assetType} length={30} /> : <HexString link={`/asset/0x${input.prevOut.assetType}`} text={input.prevOut.assetType} length={30} />}</Col>
                                                 </Row>
                                                 <Row className="inner-row">
                                                     <Col md="4">
@@ -111,7 +113,7 @@ const TransactionObjectByType = (transaction: TransactionDoc) => {
                                         return (
                                             <div key={`output-${i}`} className="background-highlight mb-3">
                                                 <Row className="inner-row">
-                                                    <Col><img src={Type.getMetadata(output.assetScheme.metadata).icon_url} className="icon mr-2" /> <HexString link={`/asset/0x${output.assetType}`} text={output.assetType} length={30} /></Col>
+                                                    <Col><img src={Type.getMetadata(output.assetScheme.metadata).icon_url} className="icon mr-2" /> {type.value === output.assetType ? <HexString text={output.assetType} length={30} /> : <HexString link={`/asset/0x${output.assetType}`} text={output.assetType} length={30} />}</Col>
                                                 </Row>
                                                 <Row className="inner-row">
                                                     <Col md="4">
@@ -157,7 +159,7 @@ const getClassNameByType = (type: string) => {
 }
 
 const AssetTransactionList = (props: Props) => {
-    const { transactions } = props;
+    const { transactions, type } = props;
     return <div className="asset-transaction-list">{transactions.map((transaction, i: number) => {
         const hash = transaction.data.hash;
         return <div key={`asset-transaction-${hash}`} className="transaction-item mb-3">
@@ -172,7 +174,7 @@ const AssetTransactionList = (props: Props) => {
                     <HexString link={`/tx/0x${hash}`} text={hash} />
                 </Col>
             </Row>
-            {TransactionObjectByType(transaction)}
+            {TransactionObjectByType(transaction, type)}
         </div>
     })}</div>
 };

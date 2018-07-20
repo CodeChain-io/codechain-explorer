@@ -48,7 +48,11 @@ const TransactionObjectByType = (transaction: TransactionDoc, owner: H256) => {
                             <Col md="10">
                                 {
                                     transactionDoc.data.output.owner ?
-                                        <HexString link={`/addr-asset/0x${transactionDoc.data.output.owner}`} text={transactionDoc.data.output.owner} />
+                                        (
+                                            owner.value === transactionDoc.data.output.owner ?
+                                                <HexString text={transactionDoc.data.output.owner} />
+                                                : <HexString link={`/addr-asset/0x${transactionDoc.data.output.owner}`} text={transactionDoc.data.output.owner} />
+                                        )
                                         : "Unknown"
                                 }
                             </Col>
@@ -86,7 +90,11 @@ const TransactionObjectByType = (transaction: TransactionDoc, owner: H256) => {
                                                     </Col>
                                                     <Col md="8">{
                                                         input.prevOut.owner ?
-                                                            <HexString link={`/addr-asset/0x${input.prevOut.owner}`} text={input.prevOut.owner} length={10} />
+                                                            (
+                                                                owner.value === input.prevOut.owner ?
+                                                                    <HexString text={input.prevOut.owner} length={10} />
+                                                                    : <HexString link={`/addr-asset/0x${input.prevOut.owner}`} text={input.prevOut.owner} length={10} />
+                                                            )
                                                             : "Unknown"
                                                     }
                                                     </Col>
@@ -122,7 +130,11 @@ const TransactionObjectByType = (transaction: TransactionDoc, owner: H256) => {
                                                     <Col md="8">
                                                         {
                                                             output.owner ?
-                                                                <HexString link={`/addr-asset/0x${output.owner}`} text={output.owner} length={10} />
+                                                                (
+                                                                    owner.value === output.owner ?
+                                                                        <HexString text={output.owner} length={10} />
+                                                                        : <HexString link={`/addr-asset/0x${output.owner}`} text={output.owner} length={10} />
+                                                                )
                                                                 : "Unknown"
                                                         }
                                                     </Col>
