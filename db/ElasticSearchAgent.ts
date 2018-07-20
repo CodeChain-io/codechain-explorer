@@ -1,7 +1,7 @@
-import { Client, SearchResponse } from "elasticsearch";
-import { Block, H256, H160 } from "codechain-sdk/lib/core/classes";
+import { Client, SearchResponse, DeleteDocumentResponse } from "elasticsearch";
+import { Block, H256, H160, SignedParcel } from "codechain-sdk/lib/core/classes";
 import * as _ from "lodash";
-import { BlockDoc, ParcelDoc, Type, AssetTransferTransactionDoc, AssetMintTransactionDoc, Converter, TransactionDoc, AssetDoc, AssetSchemeDoc, AssetBundleDoc } from "../db/DocType";
+import { BlockDoc, ParcelDoc, Type, AssetTransferTransactionDoc, AssetMintTransactionDoc, Converter, TransactionDoc, AssetDoc, AssetSchemeDoc, AssetBundleDoc, PendingParcelDoc } from "../db/DocType";
 
 export class ElasticSearchAgent {
     private client: Client;
@@ -337,9 +337,71 @@ export class ElasticSearchAgent {
         return Type.getAssetSchemeDoc(transactions[0] as AssetMintTransactionDoc);
     }
 
+    public getCurrentPendingParcels = async (): Promise<PendingParcelDoc[]> => {
+        const response = await this.searchPendinParcel({
+            "query": {
+                "bool": {
+                    "must": [
+                        {
+                            "term": {
+                                "status": "pending"
+                            }
+                        }
+                    ]
+                }
+            }
+        });
+        if (response.hits.total === 0) {
+            return [];
+        }
+        return _.map(response.hits.hits, hit => hit._source);
+    }
+
+    public getPendingParcel = async (hash: H256): Promise<PendingParcelDoc | null> => {
+        const response = await this.searchPendinParcel({
+            "query": {
+                "bool": {
+                    "must": [
+                        {
+                            "term": {
+                                "parcel.hash": hash.value
+                            }
+                        }
+                    ]
+                }
+            }
+        });
+        if (response.hits.total === 0) {
+            return null;
+        }
+        return response.hits.hits[0]._source;
+    }
+
+    public getDeadPendingParcels = async (): Promise<PendingParcelDoc[]> => {
+        const response = await this.searchPendinParcel({
+            "query": {
+                "bool": {
+                    "must": [
+                        {
+                            "term": {
+                                "status": "dead"
+                            }
+                        }
+                    ]
+                }
+            }
+        });
+        if (response.hits.total === 0) {
+            return [];
+        }
+        return _.map(response.hits.hits, hit => hit._source);
+    }
+
     public checkIndexOrCreate = async (): Promise<void> => {
         const mappingBlockJson = require("./mapping_block.json");
+        const mappingPendingParcelJson = require("./mapping_pending_parcel.json");
         const isMappingBlockExisted = await this.client.indices.exists({ index: "block" });
+        const isMappingPendingParcelExisted = await this.client.indices.exists({ index: "pending_parcel" });
         if (!isMappingBlockExisted) {
             await this.client.indices.create({
                 index: "block"
@@ -350,10 +412,61 @@ export class ElasticSearchAgent {
                 body: mappingBlockJson
             });
         }
+        if (!isMappingPendingParcelExisted) {
+            await this.client.indices.create({
+                index: "pending_parcel"
+            });
+            await this.client.indices.putMapping({
+                index: "pending_parcel",
+                type: "_doc",
+                body: mappingPendingParcelJson
+            });
+        }
     }
 
     public addBlock = async (block: Block): Promise<void> => {
         return this.indexBlock(block);
+    }
+
+    public addPendingParcel = async (otherPendingParcels: SignedParcel[], pendingParcel: SignedParcel): Promise<void> => {
+        return this.indexPendingParcel(otherPendingParcels, pendingParcel);
+    }
+
+    public deadPendingParcel = async (hash: H256): Promise<void> => {
+        return this.client.update({
+            index: "pending_parcel",
+            type: "_doc",
+            id: hash.value,
+            refresh: "wait_for",
+            body: {
+                doc: {
+                    "status": "dead"
+                }
+            }
+        });
+    }
+
+    public removePendingParcel = async (hash: H256): Promise<DeleteDocumentResponse> => {
+        return this.client.delete({
+            index: "pending_parcel",
+            type: "_doc",
+            id: hash.value,
+            refresh: "wait_for"
+        });
+    }
+
+    public revialPendingParcel = async (hash: H256): Promise<void> => {
+        return this.client.update({
+            index: "pending_parcel",
+            type: "_doc",
+            id: hash.value,
+            refresh: "wait_for",
+            body: {
+                doc: {
+                    "status": "pending"
+                }
+            }
+        });
     }
 
     public retractBlock = async (blockHash: H256): Promise<void> => {
@@ -446,11 +559,30 @@ export class ElasticSearchAgent {
             .value();
     }
 
+    private searchPendinParcel = async (body: any): Promise<SearchResponse<any>> => {
+        return this.client.search({
+            index: "pending_parcel",
+            type: "_doc",
+            body
+        })
+    }
+
     private search = async (body: any): Promise<SearchResponse<any>> => {
         return this.client.search({
             index: "block",
             type: "_doc",
             body
+        });
+    }
+
+    private indexPendingParcel = async (otherPendingParcels: SignedParcel[], pendingParcel: SignedParcel): Promise<any> => {
+        const pendingParcelDoc: PendingParcelDoc = await Converter.fromPendingParcel(otherPendingParcels, pendingParcel, this);
+        return this.client.index({
+            index: "pending_parcel",
+            type: "_doc",
+            id: pendingParcel.hash().value,
+            body: pendingParcelDoc,
+            refresh: "wait_for"
         });
     }
 

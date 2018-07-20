@@ -154,27 +154,30 @@ export interface AssetTransferOutputDoc {
     owner: string;
 }
 
-const fromAssetTransferInput = async (block: Block, assetTransferInput: AssetTransferInput, elasticSearchAgent: ElasticSearchAgent): Promise<AssetTransferInputDoc> => {
+export interface PendingParcelDoc {
+    parcel: ParcelDoc;
+    status: string;
+    timestamp: number;
+}
+
+const fromAssetTransferInput = async (currentTransactions: Transaction[], assetTransferInput: AssetTransferInput, elasticSearchAgent: ElasticSearchAgent): Promise<AssetTransferInputDoc> => {
     const assetTransferInputJson = assetTransferInput.toJSON();
     const indexedTransaction = await elasticSearchAgent.getTransaction(new H256(assetTransferInputJson.prevOut.transactionHash));
-    const transactionInCurrentBlock = _.chain(block.parcels).filter((parcel: SignedParcel) => parcel.unsigned.action instanceof ChangeShardState)
-        .flatMap(parcel => (parcel.unsigned.action as ChangeShardState).transactions)
-        .filter((transaction: Transaction) => transaction.hash().value === assetTransferInputJson.prevOut.transactionHash)
-        .value();
+    const transactionInCurrentBlock = _.find(currentTransactions, transaction => transaction.hash().value === assetTransferInputJson.prevOut.transactionHash);
     let owner = "";
     let foundTransaction;
     if (indexedTransaction) {
         foundTransaction = indexedTransaction;
     }
-    if (transactionInCurrentBlock.length > 0) {
-        foundTransaction = await fromTransaction(block, transactionInCurrentBlock[0], elasticSearchAgent);
+    if (transactionInCurrentBlock) {
+        foundTransaction = await fromTransaction(currentTransactions, transactionInCurrentBlock, elasticSearchAgent);
     }
     if (foundTransaction && isAssetMintTransactionDoc(foundTransaction)) {
         owner = (foundTransaction as AssetMintTransactionDoc).data.output.owner;
     } else if (foundTransaction && isAssetTransferTransactionDoc(foundTransaction)) {
         owner = (foundTransaction as AssetTransferTransactionDoc).data.outputs[assetTransferInputJson.prevOut.index].owner;
     }
-    const assetScheme = await getAssetScheme(assetTransferInputJson.prevOut.assetType, block, elasticSearchAgent);
+    const assetScheme = await getAssetScheme(currentTransactions, assetTransferInputJson.prevOut.assetType, elasticSearchAgent);
     return {
         prevOut: {
             transactionHash: assetTransferInputJson.prevOut.transactionHash,
@@ -189,14 +192,12 @@ const fromAssetTransferInput = async (block: Block, assetTransferInput: AssetTra
     }
 }
 
-const getAssetScheme = async (assetType: string, block: Block, elasticSearchAgent: ElasticSearchAgent): Promise<AssetSchemeDoc> => {
+const getAssetScheme = async (currentTransactions: Transaction[], assetType: string, elasticSearchAgent: ElasticSearchAgent): Promise<AssetSchemeDoc> => {
     const indexedAssetScheme = await elasticSearchAgent.getAssetScheme(new H256(assetType));
     if (indexedAssetScheme) {
         return indexedAssetScheme
     }
-    const transactionInCurrentBlock = _.chain(block.parcels).filter((parcel: SignedParcel) => parcel.unsigned.action instanceof ChangeShardState)
-        .flatMap(parcel => (parcel.unsigned.action as ChangeShardState).transactions)
-        .filter((transaction: Transaction) => transaction instanceof AssetMintTransaction)
+    const transactionInCurrentBlock = _.chain(currentTransactions).filter((transaction: Transaction) => transaction instanceof AssetMintTransaction)
         .find((transaction: AssetMintTransaction) => transaction.getAssetSchemeAddress().value === assetType)
         .value()
     if (transactionInCurrentBlock) {
@@ -205,9 +206,9 @@ const getAssetScheme = async (assetType: string, block: Block, elasticSearchAgen
     throw new Error("Invalid asset type");
 }
 
-const fromAssetTransferOutput = async (block: Block, assetTransferOutput: AssetTransferOutput, elasticSearchAgent: ElasticSearchAgent): Promise<AssetTransferOutputDoc> => {
+const fromAssetTransferOutput = async (currentTransactions: Transaction[], assetTransferOutput: AssetTransferOutput, elasticSearchAgent: ElasticSearchAgent): Promise<AssetTransferOutputDoc> => {
     const assetTransferOutputJson = assetTransferOutput.toJSON();
-    const assetScheme = await getAssetScheme(assetTransferOutputJson.assetType, block, elasticSearchAgent)
+    const assetScheme = await getAssetScheme(currentTransactions, assetTransferOutputJson.assetType, elasticSearchAgent)
     return {
         lockScriptHash: assetTransferOutputJson.lockScriptHash,
         owner: assetTransferOutputJson.lockScriptHash === "f42a65ea518ba236c08b261c34af0521fa3cd1aa505e1c18980919cb8945f8f3" ? assetTransferOutputJson.parameters[0].toString("hex") : "",
@@ -218,7 +219,7 @@ const fromAssetTransferOutput = async (block: Block, assetTransferOutput: AssetT
     }
 }
 
-const fromTransaction = async (block: Block, transaction: Transaction, elasticSearchAgent: ElasticSearchAgent): Promise<TransactionDoc> => {
+const fromTransaction = async (currentTransactions: Transaction[], transaction: Transaction, elasticSearchAgent: ElasticSearchAgent): Promise<TransactionDoc> => {
     if (transaction instanceof AssetMintTransaction) {
         const transactionJson = transaction.toJSON();
         return {
@@ -240,9 +241,9 @@ const fromTransaction = async (block: Block, transaction: Transaction, elasticSe
         }
     } else if (transaction instanceof AssetTransferTransaction) {
         const transactionJson = transaction.toJSON();
-        const burns = await Promise.all(_.map(transaction.burns, burn => fromAssetTransferInput(block, burn, elasticSearchAgent)));
-        const inputs = await Promise.all(_.map(transaction.inputs, input => fromAssetTransferInput(block, input, elasticSearchAgent)));
-        const outputs = await Promise.all(_.map(transaction.outputs, output => fromAssetTransferOutput(block, output, elasticSearchAgent)));
+        const burns = await Promise.all(_.map(transaction.burns, burn => fromAssetTransferInput(currentTransactions, burn, elasticSearchAgent)));
+        const inputs = await Promise.all(_.map(transaction.inputs, input => fromAssetTransferInput(currentTransactions, input, elasticSearchAgent)));
+        const outputs = await Promise.all(_.map(transaction.outputs, output => fromAssetTransferOutput(currentTransactions, output, elasticSearchAgent)));
         return {
             type: transactionJson.type,
             data: {
@@ -258,10 +259,12 @@ const fromTransaction = async (block: Block, transaction: Transaction, elasticSe
     throw new Error("Unexpected transaction");
 }
 
-const fromAction = async (block: Block, action: Action, elasticSearchAgent: ElasticSearchAgent): Promise<ActionDoc> => {
+const fromAction = async (currentActions: Action[], action: Action, elasticSearchAgent: ElasticSearchAgent): Promise<ActionDoc> => {
     if (action instanceof ChangeShardState) {
         const actionJson = action.toJSON();
-        const transactionDocs = await Promise.all(_.map(action.transactions, transaction => fromTransaction(block, transaction, elasticSearchAgent)));
+        const currentTransactions = _.chain(currentActions).filter(currentAction => currentAction instanceof ChangeShardState)
+            .flatMap(currentAction => (currentAction as ChangeShardState).transactions).value()
+        const transactionDocs = await Promise.all(_.map(action.transactions, transaction => fromTransaction(currentTransactions, transaction, elasticSearchAgent)));
         return {
             action: actionJson.action,
             transactions: transactionDocs
@@ -288,9 +291,9 @@ const fromAction = async (block: Block, action: Action, elasticSearchAgent: Elas
     throw new Error("Unexpected action");
 }
 
-export const fromParcel = async (block: Block, parcel: SignedParcel, elasticSearchAgent: ElasticSearchAgent): Promise<ParcelDoc> => {
+const fromParcel = async (currentParcels: SignedParcel[], parcel: SignedParcel, elasticSearchAgent: ElasticSearchAgent): Promise<ParcelDoc> => {
     const parcelJson = parcel.toJSON();
-    const action = await fromAction(block, parcel.unsigned.action, elasticSearchAgent);
+    const action = await fromAction(_.map(currentParcels, p => p.unsigned.action), parcel.unsigned.action, elasticSearchAgent);
     return {
         blockNumber: parcelJson.blockNumber,
         blockHash: parcelJson.hash,
@@ -307,7 +310,7 @@ export const fromParcel = async (block: Block, parcel: SignedParcel, elasticSear
 
 export const fromBlock = async (block: Block, elasticSearchAgent: ElasticSearchAgent): Promise<BlockDoc> => {
     const blockJson = block.toJSON();
-    const parcelDocs = await Promise.all(_.map(block.parcels, parcel => fromParcel(block, parcel, elasticSearchAgent)));
+    const parcelDocs = await Promise.all(_.map(block.parcels, parcel => fromParcel(block.parcels, parcel, elasticSearchAgent)));
 
     return {
         parentHash: blockJson.parentHash,
@@ -323,6 +326,15 @@ export const fromBlock = async (block: Block, elasticSearchAgent: ElasticSearchA
         hash: blockJson.hash,
         parcels: parcelDocs,
         isRetracted: false
+    }
+}
+
+export const fromPendingParcel = async (otherPendingParcels: SignedParcel[], parcel: SignedParcel, elasticSearchAgent: ElasticSearchAgent): Promise<PendingParcelDoc> => {
+    const parcelDoc = await fromParcel(otherPendingParcels, parcel, elasticSearchAgent);
+    return {
+        parcel: parcelDoc,
+        status: "pending",
+        timestamp: Math.floor(Date.now() / 1000)
     }
 }
 
@@ -387,6 +399,5 @@ export let Type = {
 
 export let Converter = {
     fromBlock,
-    fromAsset,
-    fromAssetScheme,
+    fromPendingParcel
 }

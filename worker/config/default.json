@@ -6,6 +6,6 @@
         "host": "http://localhost:8080"
     },
     "cron": {
-        "blockWatch": "*/10 * * * * *"
+        "blockWatch": "*/5 * * * * *"
     }
 }

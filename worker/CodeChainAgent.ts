@@ -1,4 +1,4 @@
-import { Block } from "codechain-sdk/lib/core/classes";
+import { Block, SignedParcel } from "codechain-sdk/lib/core/classes";
 import { SDK } from "codechain-sdk";
 
 export class CodeChainAgent {
@@ -14,5 +14,9 @@ export class CodeChainAgent {
     public getBlock = async (blockNumber): Promise<Block> => {
         const blockHash = await this.sdk.rpc.chain.getBlockHash(blockNumber);
         return this.sdk.rpc.chain.getBlock(blockHash);
+    }
+
+    public getPendingParcels = async (): Promise<SignedParcel[]> => {
+        return this.sdk.rpc.chain.getPendingParcels();
     }
 }
