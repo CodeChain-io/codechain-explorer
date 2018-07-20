@@ -8,6 +8,7 @@ import BlockParcelList from "../../components/block/BlockParcelList/BlockParcelL
 
 import "./Block.scss";
 import { BlockDoc } from "../../db/DocType";
+import { Link } from "react-router-dom";
 
 interface State {
     block?: BlockDoc;
@@ -40,7 +41,13 @@ class Block extends React.Component<Props, State> {
         }
         return (
             <Container className="block">
-                <h1>#{block.number} Block Infomation</h1>
+                <div className="d-flex">
+                    <h1 className="d-inline mr-auto">#{block.number} Block Infomation</h1>
+                    <div className="d-inline d-flex align-items-center">
+                        <span className="mr-5"><Link to={`/block/${block.number - 1}`} className={block.number === 0 ? "disabled-link" : ""}>&lt; Prev</Link></span>
+                        <span><Link to={`/block/${block.number + 1}`}>Next &gt;</Link></span>
+                    </div>
+                </div>
                 <BlockDetails block={block} />
                 <div className="parcel-count-label">
                     <span className="blue-color">{block.parcels.length} Parcels</span> in this Block
