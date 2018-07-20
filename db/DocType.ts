@@ -1,4 +1,4 @@
-import { Block, Transaction, SignedParcel, Action, ChangeShardState, SetRegularKey, CreateShard, Payment, AssetTransferTransaction, AssetMintTransaction, AssetTransferInput, AssetTransferOutput, H256, Asset, AssetScheme } from "codechain-sdk/lib/core/classes";
+import { Block, Transaction, SignedParcel, Action, ChangeShardState, SetRegularKey, CreateShard, Payment, AssetTransferTransaction, AssetMintTransaction, AssetTransferInput, AssetTransferOutput, H256 } from "codechain-sdk/lib/core/classes";
 import * as _ from "lodash";
 import { ElasticSearchAgent } from "./ElasticSearchAgent";
 
@@ -78,6 +78,7 @@ export interface AssetDoc {
     transactionOutputIndex: number;
 }
 
+/*
 const fromAsset = (asset: Asset): AssetDoc => {
     return {
         assetType: asset.assetType.value,
@@ -97,7 +98,7 @@ const fromAssetScheme = (assetScheme: AssetScheme) => {
         networkId: assetScheme.networkId
     }
 }
-
+*/
 
 export interface AssetMintTransactionDoc {
     type: string;
