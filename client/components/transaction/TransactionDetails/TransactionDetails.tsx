@@ -61,6 +61,10 @@ const getTransactionInfoByType = (transaction: TransactionDoc) => {
                                                 <td><img src={Type.getMetadata(input.prevOut.assetScheme.metadata).icon_url} className="icon mr-2" /><HexString link={`/asset/0x${input.prevOut.assetType}`} text={input.prevOut.assetType} /></td>
                                             </tr>
                                             <tr>
+                                                <td>Owner</td>
+                                                <td>{input.prevOut.owner ? <HexString link={`/addr-asset/0x${input.prevOut.owner}`} text={input.prevOut.owner} /> : "Unknown"}</td>
+                                            </tr>
+                                            <tr>
                                                 <td>Amount</td>
                                                 <td>{input.prevOut.amount}</td>
                                             </tr>
