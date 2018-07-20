@@ -49,7 +49,7 @@ const BlockList = (prop: OwnProps) => {
                                 Timestamp
                             </Col>
                             <Col md="10">
-                                {moment.unix(block.timestamp).format("YYYY-MM-DD HH:mm:ss")}
+                                {moment.unix(block.timestamp).format("YYYY-MM-DD HH:mm:ssZ")}
                             </Col>
                         </Row>
                     </div>
