@@ -68,7 +68,7 @@ class Address extends React.Component<Props, State> {
                 {
                     assetBundles.length > 0 ?
                         <div>
-                            <h2 className="sub-title">Issues</h2>
+                            <h2 className="sub-title">Issued Tokens</h2>
                             <hr />
                             <AssetList assetBundles={assetBundles} />
                         </div>

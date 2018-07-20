@@ -58,7 +58,7 @@ const ParcelObjectByType = (parcel: ParcelDoc) => {
                 <div className="background-highlight">
                     <Row className="inner-row">
                         <Col md="2">
-                            Count of Txs
+                            # of Txs
                         </Col>
                         <Col md="10">
                             {(parcel.action as ChangeShardStateDoc).transactions.length}
