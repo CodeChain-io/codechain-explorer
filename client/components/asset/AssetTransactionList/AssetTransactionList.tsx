@@ -8,7 +8,7 @@ import HexString from "../../util/HexString/HexString";
 
 import * as arrow from "./img/arrow.png";
 import { TransactionDoc, Type, AssetMintTransactionDoc, AssetTransferTransactionDoc } from "../../../db/DocType";
-import { H256 } from "codechain-sdk/lib/core/H256";
+import { H256 } from "codechain-sdk/lib/core/classes";
 
 interface Props {
     type: H256,
