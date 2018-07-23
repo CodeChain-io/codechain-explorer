@@ -31,7 +31,7 @@ const LatestParcels = (props: Props) => {
                 <tbody>
                     {
                         _.map(_.reverse(_.values(blocksByNumber)), block => {
-                            return _.map(block.parcels, (parcel) => {
+                            return _.map(block.parcels.slice(0, 10), (parcel) => {
                                 const actionString = parcel.action.action;
                                 return (
                                     <tr key={`home-parcel-${parcel.hash}`}>

@@ -50,7 +50,7 @@ class Home extends React.Component<{}, State> {
                         <LatestTransactions blocksByNumber={blocksByNumber} />
                     </div>
                     {/* Reqest blocks */}
-                    {_.map(_.reverse(_.range(Math.max(0, (bestBlockNumber + 1) - 8), bestBlockNumber + 1)), n => {
+                    {_.map(_.reverse(_.range(Math.max(0, (bestBlockNumber + 1) - 10), bestBlockNumber + 1)), n => {
                         return <RequestBlock key={'request-block-num-' + n} id={n} onBlock={this.onBlock} onError={this.onError} />
                     })}
                 </Container>

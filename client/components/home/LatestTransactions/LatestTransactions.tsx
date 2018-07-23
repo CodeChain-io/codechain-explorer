@@ -31,26 +31,23 @@ const LatestTransactions = (props: Props) => {
                 <tbody>
                     {
                         _.map(_.reverse(_.values(blocksByNumber)), block => {
-                            return _.map(block.parcels, (parcel) => {
-                                if (Type.isChangeShardStateDoc(parcel.action)) {
-                                    const transactions = (parcel.action as ChangeShardStateDoc).transactions;
-                                    return _.map(transactions, (transaction) => {
-                                        const transactionType = transaction.type;
-                                        return (
-                                            <tr key={`home-transaction-hash-${transaction.data.hash}`}>
-                                                <td><div className={`transaction-type text-center ${transactionType === "assetMint" ? "asset-mint-type" : "asset-transfer-type"}`}>{transactionType}</div></td>
-                                                <td scope="row"><HexString link={`/tx/0x${transaction.data.hash}`} length={10} text={transaction.data.hash} /></td>
-                                                <td>{Type.isAssetMintTransactionDoc(transaction) ?
-                                                    <HexString link={`/asset/${(transaction as AssetMintTransactionDoc).data.output.assetType}`} text={(transaction as AssetMintTransactionDoc).data.output.assetType} length={10} />
-                                                    : (Type.isAssetTransferTransactionDoc(transaction) ? <div>{_.map((transaction as AssetTransferTransactionDoc).data.inputs, (input, index) => (<div key={`latest-transaction-assetType-${index}`}><HexString link={`/asset/0x${input.prevOut.assetType}`} text={input.prevOut.assetType} length={10} /></div>))}</div> : "")}</td>
-                                                <td>{Type.isAssetMintTransactionDoc(transaction) ? (transaction as AssetMintTransactionDoc).data.output.amount : (Type.isAssetTransferTransactionDoc(transaction) ? _.sumBy((transaction as AssetTransferTransactionDoc).data.inputs, (input) => input.prevOut.amount) : "")}</td>
-                                                <td>{moment.unix(block.timestamp).fromNow()}</td>
-                                            </tr>
-                                        );
-                                    });
-                                }
-                                return null;
-                            })
+                            return _.chain(block.parcels).filter(parcel => Type.isChangeShardStateDoc(parcel.action))
+                                .flatMap(parcel => (parcel.action as ChangeShardStateDoc).transactions)
+                                .slice(0, 10)
+                                .map(transaction => {
+                                    const transactionType = transaction.type;
+                                    return (
+                                        <tr key={`home-transaction-hash-${transaction.data.hash}`}>
+                                            <td><div className={`transaction-type text-center ${transactionType === "assetMint" ? "asset-mint-type" : "asset-transfer-type"}`}>{transactionType}</div></td>
+                                            <td scope="row"><HexString link={`/tx/0x${transaction.data.hash}`} length={10} text={transaction.data.hash} /></td>
+                                            <td>{Type.isAssetMintTransactionDoc(transaction) ?
+                                                <HexString link={`/asset/${(transaction as AssetMintTransactionDoc).data.output.assetType}`} text={(transaction as AssetMintTransactionDoc).data.output.assetType} length={10} />
+                                                : (Type.isAssetTransferTransactionDoc(transaction) ? <div>{_.map((transaction as AssetTransferTransactionDoc).data.inputs, (input, index) => (<div key={`latest-transaction-assetType-${index}`}><HexString link={`/asset/0x${input.prevOut.assetType}`} text={input.prevOut.assetType} length={10} /></div>))}</div> : "")}</td>
+                                            <td>{Type.isAssetMintTransactionDoc(transaction) ? (transaction as AssetMintTransactionDoc).data.output.amount : (Type.isAssetTransferTransactionDoc(transaction) ? _.sumBy((transaction as AssetTransferTransactionDoc).data.inputs, (input) => input.prevOut.amount) : "")}</td>
+                                            <td>{moment.unix(block.timestamp).fromNow()}</td>
+                                        </tr>
+                                    );
+                                }).value();
                         })
                     }
                 </tbody>
