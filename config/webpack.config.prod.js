@@ -274,6 +274,17 @@ module.exports = {
                         ),
                         // Note: this won't work without `new ExtractTextPlugin()` in `plugins`.
                     },
+                    {
+                        test: /.(ttf|otf|eot|svg|woff(2)?)(\?[a-z0-9]+)?$/,
+                        use: [{
+                            loader: 'file-loader',
+                            options: {
+                                name: '[name].[ext]',
+                                outputPath: 'fonts/', // where the fonts will go
+                                publicPath: '../' // override the default path
+                            }
+                        }]
+                    }
                     // "file" loader makes sure assets end up in the `build` folder.
                     // When you `import` an asset, you get its filename.
                     // This loader doesn't use a "test" so it will catch all modules
@@ -288,7 +299,7 @@ module.exports = {
                         options: {
                             name: 'static/media/[name].[hash:8].[ext]',
                         },
-                    },
+                    }
                     // ** STOP ** Are you adding a new loader?
                     // Make sure to add the new loader(s) before the "file" loader.
                 ],
