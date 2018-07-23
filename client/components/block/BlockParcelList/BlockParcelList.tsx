@@ -112,7 +112,7 @@ const BlockParcelList = (props: Props) => {
                     Signer
                 </Col>
                 <Col md="10">
-                    <HexString link={`/address/0x${parcel.sender}`} text={parcel.sender} />
+                    <HexString link={`/addr-platform/0x${parcel.sender}`} text={parcel.sender} />
                 </Col>
             </Row>
             <Row>
