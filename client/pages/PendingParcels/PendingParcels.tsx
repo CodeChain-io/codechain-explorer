@@ -1,15 +1,19 @@
 import * as React from "react";
+import * as _ from "lodash";
 import { Container } from 'reactstrap';
 
 import { RequestPendingParcels } from "../../request";
 
 import "./PendingParcels.scss";
-import { PendingParcelDoc } from "../../db/DocType";
+import { PendingParcelDoc, Type } from "../../db/DocType";
 import PendingParcelTable from "../../components/pendingParcels/PendingParcelTable/PendingParcelTable";
 
 interface State {
     pendingParcels: PendingParcelDoc[];
     requested: boolean;
+    isChangeShardStateFilterOn: boolean;
+    isPaymentFilterOn: boolean;
+    isSetRegularKeyFilterOn: boolean;
 }
 
 class PendingParcels extends React.Component<{}, State> {
@@ -17,7 +21,10 @@ class PendingParcels extends React.Component<{}, State> {
         super(props);
         this.state = {
             pendingParcels: [],
-            requested: false
+            requested: false,
+            isChangeShardStateFilterOn: true,
+            isPaymentFilterOn: true,
+            isSetRegularKeyFilterOn: true
         };
     }
 
@@ -26,7 +33,7 @@ class PendingParcels extends React.Component<{}, State> {
     }
 
     public render() {
-        const { pendingParcels, requested } = this.state;
+        const { pendingParcels, requested, isChangeShardStateFilterOn, isPaymentFilterOn, isSetRegularKeyFilterOn } = this.state;
         if (!requested) {
             return (
                 <div>
@@ -36,6 +43,7 @@ class PendingParcels extends React.Component<{}, State> {
                 </div>
             );
         }
+        const filteredPendingParcel = this.getFilteredPendingParcel(pendingParcels);
         return (
             <Container className="pending-parcels">
                 <div className="d-flex align-items-end">
@@ -45,17 +53,44 @@ class PendingParcels extends React.Component<{}, State> {
                 <div className="filter-container mt-3">
                     <div className="type-filter">
                         <span>Type Filter</span>
-                        <span className="filter-btn change-shard-state-btn">changeShardSate</span>
-                        <span className="filter-btn payment-btn">payment</span>
-                        <span className="filter-btn set-regular-key-btn">setRegularKey</span>
+                        <span onClick={this.toggleChangeShardStateFilter} className={`filter-btn change-shard-state-btn ${isChangeShardStateFilterOn ? "" : "disable"}`}>changeShardSate</span>
+                        <span onClick={this.togglePaymentFilter} className={`filter-btn payment-btn ${isPaymentFilterOn ? "" : "disable"}`}>payment</span>
+                        <span onClick={this.toggleSetRegularKeyFilter} className={`filter-btn set-regular-key-btn ${isSetRegularKeyFilterOn ? "" : "disable"}`}>setRegularKey</span>
                     </div>
                 </div>
-                <PendingParcelTable pendingParcels={pendingParcels} />
+                <PendingParcelTable pendingParcels={filteredPendingParcel} />
             </Container>
         )
     }
 
-    private updateRequestState() {
+    private getFilteredPendingParcel = (pendingParcels: PendingParcelDoc[]): PendingParcelDoc[] => {
+        return _.filter(pendingParcels, (pendingParcel: PendingParcelDoc) => {
+            if (Type.isChangeShardStateDoc(pendingParcel.parcel.action) && !this.state.isChangeShardStateFilterOn) {
+                return false;
+            }
+            if (Type.isPaymentDoc(pendingParcel.parcel.action) && !this.state.isPaymentFilterOn) {
+                return false;
+            }
+            if (Type.isSetRegularKeyDoc(pendingParcel.parcel.action) && !this.state.isSetRegularKeyFilterOn) {
+                return false;
+            }
+            return true;
+        })
+    }
+
+    private toggleChangeShardStateFilter = () => {
+        this.setState({ isChangeShardStateFilterOn: !this.state.isChangeShardStateFilterOn });
+    }
+
+    private togglePaymentFilter = () => {
+        this.setState({ isPaymentFilterOn: !this.state.isPaymentFilterOn });
+    }
+
+    private toggleSetRegularKeyFilter = () => {
+        this.setState({ isSetRegularKeyFilterOn: !this.state.isSetRegularKeyFilterOn });
+    }
+
+    private updateRequestState = () => {
         this.setState({ requested: true })
     }
 

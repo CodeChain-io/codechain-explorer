@@ -18,6 +18,8 @@ interface State {
     // fee : 0, txs: 1, pending duration: 2
     currentSortType: number,
     isASC: boolean,
+    currentSenderFilter: string,
+    isSenderFilterOn: boolean
 }
 
 class PendingParcelTable extends React.Component<Prop, State> {
@@ -27,14 +29,16 @@ class PendingParcelTable extends React.Component<Prop, State> {
             currentPage: 1,
             itemPerPage: 5,
             currentSortType: 2,
-            isASC: true
+            isASC: true,
+            currentSenderFilter: "",
+            isSenderFilterOn: false
         };
     }
 
     public render() {
         const { pendingParcels } = this.props;
-        const { currentPage, itemPerPage } = this.state;
-        const filteredParcel = pendingParcels;
+        const { currentPage, itemPerPage, isSenderFilterOn } = this.state;
+        const filteredParcel = this.filterListBySender(pendingParcels);
         const sortedParcels = this.sortListBySortType(filteredParcel);
         const maxPage = Math.floor(filteredParcel.length / itemPerPage) + 1;
         return (
@@ -69,9 +73,10 @@ class PendingParcelTable extends React.Component<Prop, State> {
                                 {
                                     _.map(sortedParcels.slice((currentPage - 1) * itemPerPage, (currentPage - 1) * itemPerPage + itemPerPage), (pendingParcel, index) => {
                                         return (
+                                            // Remove index in key prop
                                             <tr key={`pending-parcel-${pendingParcel.parcel.hash}-${index}`}>
                                                 <td><span className={`type-circle ${Type.isChangeShardStateDoc(pendingParcel.parcel.action) ? "change-shard-state-type" : (Type.isPaymentDoc(pendingParcel.parcel.action) ? "payment-type" : "set-regular-key-type")}`}>&nbsp;</span><HexString link={`/parcel/0x${pendingParcel.parcel.hash}`} text={pendingParcel.parcel.hash} /></td>
-                                                <td><HexString link={`/addr-platform/0x${pendingParcel.parcel.sender}`} text={pendingParcel.parcel.sender} /></td>
+                                                <td><FontAwesome className={`filter ${isSenderFilterOn ? "" : "disable"}`} onClick={_.partial(this.toogleFilter, pendingParcel.parcel.sender)} name="filter" /><HexString link={`/addr-platform/0x${pendingParcel.parcel.sender}`} text={pendingParcel.parcel.sender} /></td>
                                                 <td>{pendingParcel.parcel.fee}</td>
                                                 <td>{Type.isChangeShardStateDoc(pendingParcel.parcel.action) ? (pendingParcel.parcel.action as ChangeShardStateDoc).transactions.length : 0}</td>
                                                 <td>{moment.unix(pendingParcel.timestamp).fromNow()}</td>
@@ -110,6 +115,23 @@ class PendingParcelTable extends React.Component<Prop, State> {
                 </div>
             </div>
         )
+    }
+
+    private toogleFilter = (sender: string, e: any) => {
+        if (this.state.isSenderFilterOn) {
+            this.setState({ isSenderFilterOn: false, currentSenderFilter: "" });
+        } else {
+            this.setState({ isSenderFilterOn: true, currentSenderFilter: sender });
+        }
+    }
+
+    private filterListBySender = (pendingParcels: PendingParcelDoc[]) => {
+        if (!this.state.isSenderFilterOn) {
+            return pendingParcels;
+        }
+        return _.filter(pendingParcels, (pendingParcel: PendingParcelDoc) => {
+            return pendingParcel.parcel.sender === this.state.currentSenderFilter;
+        });
     }
 
     private sortListBySortType = (pendingParcels: PendingParcelDoc[]) => {

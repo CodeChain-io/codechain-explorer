@@ -46,6 +46,14 @@
   .sort-header {
     cursor: pointer;
   }
+  .filter {
+    cursor: pointer;
+    margin-right: 5px;
+    color: #3A3FAB;
+  }
+  .filter.disable {
+    color: #D5D5D5;
+  }
   .sort-btn {
     padding-left: 5px;
     padding-right: 5px;
