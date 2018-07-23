@@ -14,7 +14,10 @@ interface Prop {
 
 interface State {
     itemPerPage: number,
-    currentPage: number
+    currentPage: number,
+    // fee : 0, txs: 1, pending duration: 2
+    currentSortType: number,
+    isASC: boolean,
 }
 
 class PendingParcelTable extends React.Component<Prop, State> {
@@ -22,7 +25,9 @@ class PendingParcelTable extends React.Component<Prop, State> {
         super(props);
         this.state = {
             currentPage: 1,
-            itemPerPage: 5
+            itemPerPage: 5,
+            currentSortType: 2,
+            isASC: true
         };
     }
 
@@ -30,7 +35,7 @@ class PendingParcelTable extends React.Component<Prop, State> {
         const { pendingParcels } = this.props;
         const { currentPage, itemPerPage } = this.state;
         const filteredParcel = pendingParcels;
-        const sortedParcels = filteredParcel;
+        const sortedParcels = this.sortListBySortType(filteredParcel);
         const maxPage = Math.floor(filteredParcel.length / itemPerPage) + 1;
         return (
             <div className="pending-parcel-table">
@@ -54,9 +59,9 @@ class PendingParcelTable extends React.Component<Prop, State> {
                                 <tr>
                                     <th>Hash</th>
                                     <th>Signer</th>
-                                    <th>Fee</th>
-                                    <th>Txs</th>
-                                    <th>Pending duration</th>
+                                    <th className="sort-header" onClick={_.partial(this.handleSortButton, 0)}>Fee{this.getSortButton(0)}</th>
+                                    <th className="sort-header" onClick={_.partial(this.handleSortButton, 1)}>Txs{this.getSortButton(1)}</th>
+                                    <th className="sort-header" onClick={_.partial(this.handleSortButton, 2)}>Pending duration{this.getSortButton(2)}</th>
                                     <th>Estimated ...</th>
                                 </tr>
                             </thead>
@@ -103,6 +108,44 @@ class PendingParcelTable extends React.Component<Prop, State> {
                         </div>
                     </div>
                 </div>
+            </div>
+        )
+    }
+
+    private sortListBySortType = (pendingParcels: PendingParcelDoc[]) => {
+        const currentSortType = this.state.currentSortType;
+        return _.orderBy(pendingParcels, (pendingParcel: PendingParcelDoc) => {
+            if (currentSortType === 0) {
+                return pendingParcel.parcel.fee;
+            } else if (currentSortType === 1) {
+                if ( Type.isChangeShardStateDoc(pendingParcel.parcel.action)) {
+                    return (pendingParcel.parcel.action as ChangeShardStateDoc).transactions.length;
+                } else {
+                    return 0;
+                }
+            } else {
+                return pendingParcel.timestamp;
+            }
+        }, this.state.isASC ? ["asc"] : ["desc"])
+    }
+
+    private handleSortButton = (sortType: number) => {
+        if (sortType === this.state.currentSortType) {
+            this.setState({isASC : !this.state.isASC});
+        } else {
+            this.setState({currentSortType : sortType});
+            this.setState({isASC : true});
+        }
+    }
+
+    private getSortButton = (sortType: number) => {
+        return (
+            <div className={`d-inline sort-btn ${this.state.currentSortType !== sortType ? "disable" : ""}`}>
+                {
+                    this.state.currentSortType === sortType ?
+                        (this.state.isASC ? <FontAwesome name="caret-up" /> : <FontAwesome name="caret-down" />)
+                        : <FontAwesome name="caret-down" />
+                }
             </div>
         )
     }

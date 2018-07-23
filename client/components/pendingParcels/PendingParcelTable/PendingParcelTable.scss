@@ -43,6 +43,20 @@
   .set-regular-key-type {
     background-color: #3A4EB7;
   }
+  .sort-header {
+    cursor: pointer;
+  }
+  .sort-btn {
+    padding-left: 5px;
+    padding-right: 5px;
+    border-radius: 5px;
+    background-color: #3A3FAB;
+    margin-left: 5px;
+    color: white;
+  }
+  .sort-btn.disable {
+    background-color: #D5D5D5;
+  }
   .type-circle {
     display: inline-block;
     width: 20px;
