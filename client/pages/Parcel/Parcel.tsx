@@ -15,25 +15,29 @@ interface Props {
 
 interface State {
     parcel?: ParcelDoc;
+    page: number;
 }
 
 class Parcel extends React.Component<Props, State> {
+    private itemPerPage = 3;
     constructor(props: Props) {
         super(props);
-        this.state = {};
+        this.state = {
+            page: 1
+        };
     }
 
     public componentWillReceiveProps(props: Props) {
         const { match: { params: { hash } } } = this.props;
         const { match: { params: { hash: nextHash } } } = props;
         if (nextHash !== hash) {
-            this.setState({ parcel: undefined });
+            this.setState({ parcel: undefined, page: 1 });
         }
     }
 
     public render() {
         const { match: { params: { hash } } } = this.props;
-        const { parcel } = this.state;
+        const { parcel, page } = this.state;
         if (!parcel) {
             return <RequestParcel hash={hash}
                 onParcel={this.onParcel}
@@ -48,12 +52,12 @@ class Parcel extends React.Component<Props, State> {
                 </div>
             </div>
             <ParcelDetails parcel={parcel} />
-            {this.showTransactionList(parcel)}
+            {this.showTransactionList(parcel, page)}
         </Container>
         )
     }
 
-    private showTransactionList = (parcel: ParcelDoc) => {
+    private showTransactionList = (parcel: ParcelDoc, page: number) => {
         if (Type.isChangeShardStateDoc(parcel.action)) {
             return (
                 [
@@ -61,12 +65,28 @@ class Parcel extends React.Component<Props, State> {
                         <span className="blue-color">{(parcel.action as ChangeShardStateDoc).transactions.length} Transactions</span> in this Block
                     </div>,
                     <div key="parcel-transaction" className="mt-3">
-                        <ParcelTransactionList transactions={(parcel.action as ChangeShardStateDoc).transactions} />
+                        <ParcelTransactionList transactions={(parcel.action as ChangeShardStateDoc).transactions.slice(0, page * this.itemPerPage)} />
+                        {
+                            page * this.itemPerPage < (parcel.action as ChangeShardStateDoc).transactions.length ?
+                            <div className="mt-3">
+                                <div className="load-more-btn mx-auto">
+                                    <a href="#" onClick={this.loadMore}>
+                                        <h3>Load Transactions</h3>
+                                    </a>
+                                </div>
+                            </div>
+                            : null
+                        }
                     </div>
                 ]
             )
         }
         return null;
+    }
+
+    private loadMore = (e: any) => {
+        e.preventDefault();
+        this.setState({ page: this.state.page + 1 })
     }
 
     private onParcel = (parcel: ParcelDoc) => {

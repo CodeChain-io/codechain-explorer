@@ -1,8 +1,10 @@
 import * as React from "react";
-import { Container, Navbar, NavbarBrand, NavbarToggler, Nav, NavItem, NavLink, Collapse } from 'reactstrap';
+import { Container, Navbar, NavbarBrand, NavbarToggler, Nav, NavItem, NavLink, Collapse, UncontrolledDropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
 import { IndexLinkContainer } from 'react-router-bootstrap';
 import HealthChecker from '../../util/HealthChecker/HealthChecker';
 // import Search from "../Search/Search";
+
+import * as logo from "./img/logo.png";
 
 import './Header.scss';
 
@@ -25,7 +27,7 @@ class Header extends React.Component<{}, State> {
                 <Container>
                     <IndexLinkContainer to="/">
                         <NavbarBrand>
-                            CodeChain Explorer
+                            <img src={logo} className="logo" /> CodeChain Explorer
                         </NavbarBrand>
                     </IndexLinkContainer>
                     <NavbarToggler onClick={this.toggle} />
@@ -36,11 +38,9 @@ class Header extends React.Component<{}, State> {
                                     <NavLink>Home</NavLink>
                                 </NavItem>
                             </IndexLinkContainer>
-                            {
-                                /*
                             <UncontrolledDropdown nav={true} inNavbar={true}>
                                 <DropdownToggle nav={true} caret={true}>
-                                    Blockchain
+                                    Explorer
                                 </DropdownToggle>
                                 <DropdownMenu right={true}>
                                     <DropdownItem>
@@ -53,17 +53,21 @@ class Header extends React.Component<{}, State> {
                                         Latest Parcels
                                     </DropdownItem>
                                     <DropdownItem divider={true} />
-                                    <DropdownItem>
-                                        Pending Parcels
-                                    </DropdownItem>
+                                    <IndexLinkContainer to="/parcels-pending">
+                                        <DropdownItem>
+                                            Pending Parcels
+                                        </DropdownItem>
+                                    </IndexLinkContainer>
                                 </DropdownMenu>
                             </UncontrolledDropdown>
-                            <IndexLinkContainer to="/node_info">
-                                <NavItem>
-                                    <NavLink>Status</NavLink>
-                                </NavItem>
-                            </IndexLinkContainer>
-                            <UncontrolledDropdown nav={true} inNavbar={true}>
+                            {
+                                /*
+                                <IndexLinkContainer to="/node_info">
+                                    <NavItem>
+                                        <NavLink>Status</NavLink>
+                                    </NavItem>
+                                </IndexLinkContainer>
+                                <UncontrolledDropdown nav={true} inNavbar={true}>
                                 <DropdownToggle nav={true} caret={true}>
                                     MISC
                                 </DropdownToggle>
@@ -77,7 +81,7 @@ class Header extends React.Component<{}, State> {
                                         API
                                     </DropdownItem>
                                 </DropdownMenu>
-                            </UncontrolledDropdown>
+                                </UncontrolledDropdown>
                                 */
                             }
                         </Nav>

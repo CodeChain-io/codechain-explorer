@@ -30,4 +30,16 @@
       color: #328AF2;
     }
   }
+  .load-more-btn {
+    border: 1px solid #3A3FAB;
+    color: #3A3FAB;
+    border-radius: 40px;
+    width: 500px;
+    height: 56px;
+    text-align: center;
+    cursor: pointer;
+    h3 {
+      line-height: 56px;
+    }
+  }
 }

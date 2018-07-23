@@ -25,20 +25,23 @@ interface State {
     blocks: BlockDoc[],
     parcels: ParcelDoc[],
     assetBundles: AssetBundleDoc[],
-    requested: boolean
+    requested: boolean,
+    blockPage: number,
+    parcelPage: number
 }
 
 class Address extends React.Component<Props, State> {
+    private itemPerPage = 3;
     constructor(props: Props) {
         super(props);
-        this.state = { blocks: [], parcels: [], assetBundles: [], requested: false };
+        this.state = { blocks: [], parcels: [], assetBundles: [], requested: false, blockPage: 1, parcelPage: 1 };
     }
 
     public componentWillReceiveProps(props: Props) {
         const { match: { params: { address } } } = this.props;
         const { match: { params: { address: nextAddress } } } = props;
         if (nextAddress !== address) {
-            this.setState({ account: undefined, blocks: [], parcels: [], requested: false });
+            this.setState({ account: undefined, blocks: [], parcels: [], requested: false, blockPage: 1, parcelPage: 1 });
         }
     }
 
@@ -48,7 +51,7 @@ class Address extends React.Component<Props, State> {
 
     public render() {
         const { match: { params: { address } } } = this.props;
-        const { account, blocks, assetBundles, parcels, requested } = this.state;
+        const { account, blocks, assetBundles, parcels, requested, blockPage, parcelPage } = this.state;
         if (!requested) {
             return (
                 <div>
@@ -80,7 +83,18 @@ class Address extends React.Component<Props, State> {
                         <div>
                             <h2 className="sub-title">Parcels</h2>
                             <hr />
-                            <ParcelList address={new H160(address)} parcels={parcels} />
+                            <ParcelList address={new H160(address)} parcels={parcels.slice(0, this.itemPerPage * parcelPage)} />
+                            {
+                                this.itemPerPage * parcelPage < parcels.length ?
+                                    <div className="mt-3">
+                                        <div className="load-more-btn mx-auto">
+                                            <a href="#" onClick={this.loadMoreParcels}>
+                                                <h3>Load Parcels</h3>
+                                            </a>
+                                        </div>
+                                    </div>
+                                    : null
+                            }
                         </div>
                         : null
                 }
@@ -89,12 +103,31 @@ class Address extends React.Component<Props, State> {
                         <div>
                             <h2 className="sub-title">Authored Blocks</h2>
                             <hr />
-                            <BlockList blocks={blocks} />
+                            <BlockList blocks={blocks.slice(0, this.itemPerPage * blockPage)} />
+                            {
+                                this.itemPerPage * blockPage < blocks.length ?
+                                    <div className="mt-3">
+                                        <div className="load-more-btn mx-auto">
+                                            <a href="#" onClick={this.loadMoreBlocks}>
+                                                <h3>Load Blocks</h3>
+                                            </a>
+                                        </div>
+                                    </div>
+                                    : null
+                            }
                         </div>
                         : null
                 }
             </Container>
         )
+    }
+    private loadMoreParcels = (e: any) => {
+        e.preventDefault();
+        this.setState({ parcelPage: this.state.parcelPage + 1 })
+    }
+    private loadMoreBlocks = (e: any) => {
+        e.preventDefault();
+        this.setState({ blockPage: this.state.blockPage + 1 })
     }
     private updateRequestState() {
         this.setState({ requested: true })

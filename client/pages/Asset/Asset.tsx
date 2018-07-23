@@ -19,25 +19,27 @@ interface State {
     transactions: TransactionDoc[];
     assetScheme?: AssetSchemeDoc;
     notFound: boolean;
+    page: number;
 }
 
 class Asset extends React.Component<Props, State> {
+    private itemPerPage = 0;
     constructor(props: Props) {
         super(props);
-        this.state = { notFound: false, transactions: [] };
+        this.state = { notFound: false, transactions: [], page: 1 };
     }
 
     public componentWillReceiveProps(props: Props) {
         const { match: { params: { type } } } = this.props;
         const { match: { params: { type: nextType } } } = props;
         if (nextType !== type) {
-            this.setState({ ...this.state, assetScheme: undefined, transactions: [] });
+            this.setState({ ...this.state, assetScheme: undefined, transactions: [], page: 1 });
         }
     }
 
     public render() {
         const { match: { params: { type } } } = this.props;
-        const { notFound, assetScheme, transactions } = this.state;
+        const { notFound, assetScheme, transactions, page } = this.state;
         if (notFound) {
             return <div><Container>Asset not exist for type: {type}</Container></div>
         }
@@ -51,12 +53,27 @@ class Asset extends React.Component<Props, State> {
                 {
                     transactions.length !== 0 ?
                         <div>
-                            <AssetTransactionList type={new H256(type)} transactions={transactions} />
+                            <AssetTransactionList type={new H256(type)} transactions={transactions.slice(0, this.itemPerPage * page)} />
+                            {
+                                this.itemPerPage * page < transactions.length ?
+                                    <div className="mt-3">
+                                        <div className="load-more-btn mx-auto">
+                                            <a href="#" onClick={this.loadMore}>
+                                                <h3>Load Transactions</h3>
+                                            </a>
+                                        </div>
+                                    </div>
+                                    : null
+                            }
                         </div>
                         : <RequestAssetTransactions assetType={type} onTransactions={this.onTransactionList} onError={this.onError} />
                 }
             </Container>
         )
+    }
+    private loadMore = (e: any) => {
+        e.preventDefault();
+        this.setState({ page: this.state.page + 1 })
     }
 
     private onAssetScheme = (assetScheme: AssetSchemeDoc) => {

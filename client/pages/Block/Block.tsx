@@ -12,6 +12,7 @@ import { Link } from "react-router-dom";
 
 interface State {
     block?: BlockDoc;
+    page: number;
 }
 
 interface Props {
@@ -19,22 +20,25 @@ interface Props {
 }
 
 class Block extends React.Component<Props, State> {
+    private itemPerPage = 3;
     constructor(props: Props) {
         super(props);
-        this.state = {};
+        this.state = {
+            page: 1
+        };
     }
 
     public componentWillReceiveProps(props: Props) {
         const { match: { params: { id } } } = this.props;
         const { match: { params: { id: nextId } } } = props;
         if (nextId !== id) {
-            this.setState({ block: undefined });
+            this.setState({ block: undefined, page: 1 });
         }
     }
 
     public render() {
         const { match: { params: { id } } } = this.props;
-        const { block } = this.state;
+        const { block, page } = this.state;
 
         if (!block) {
             return <RequestBlock id={id} onBlock={this.onBlock} onError={this.onError} />;
@@ -53,10 +57,26 @@ class Block extends React.Component<Props, State> {
                     <span className="blue-color">{block.parcels.length} Parcels</span> in this Block
                 </div>
                 <div className="mt-3">
-                    <BlockParcelList parcels={block.parcels} />
+                    <BlockParcelList parcels={block.parcels.slice(0, this.itemPerPage * page)} />
+                    {
+                        this.itemPerPage * page < block.parcels.length ?
+                            <div className="mt-3">
+                                <div className="load-more-btn mx-auto">
+                                    <a href="#" onClick={this.loadMore}>
+                                        <h3>Load Parcels</h3>
+                                    </a>
+                                </div>
+                            </div>
+                            : null
+                    }
                 </div>
             </Container>
         );
+    }
+
+    private loadMore = (e: any) => {
+        e.preventDefault();
+        this.setState({ page: this.state.page + 1 })
     }
 
     private onBlock = (block: BlockDoc) => {

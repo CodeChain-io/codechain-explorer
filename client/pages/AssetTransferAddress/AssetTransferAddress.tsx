@@ -18,20 +18,22 @@ interface Props {
 interface State {
     utxo: AssetBundleDoc[],
     transactions: TransactionDoc[],
-    requested: boolean
+    requested: boolean,
+    page: number
 }
 
 class AssetTransferAddress extends React.Component<Props, State> {
+    private itemPerPage = 3;
     constructor(props: Props) {
         super(props);
-        this.state = { utxo: [], transactions: [], requested: false };
+        this.state = { utxo: [], transactions: [], requested: false, page: 1 };
     }
 
     public componentWillReceiveProps(props: Props) {
         const { match: { params: { address } } } = this.props;
         const { match: { params: { address: nextAddress } } } = props;
         if (nextAddress !== address) {
-            this.setState({ utxo: [], transactions: [], requested: false });
+            this.setState({ utxo: [], transactions: [], requested: false, page: 1 });
         }
     }
 
@@ -41,7 +43,7 @@ class AssetTransferAddress extends React.Component<Props, State> {
 
     public render() {
         const { match: { params: { address } } } = this.props;
-        const { utxo, transactions, requested } = this.state;
+        const { utxo, transactions, requested, page } = this.state;
         const account = {
             assetCount: utxo.length,
             txCount: transactions.length,
@@ -72,12 +74,27 @@ class AssetTransferAddress extends React.Component<Props, State> {
                         <div>
                             <h2 className="sub-title">Transactions</h2>
                             <hr />
-                            <TransactionList owner={new H256(address)} transactions={transactions} />
+                            <TransactionList owner={new H256(address)} transactions={transactions.slice(0, this.itemPerPage * page)} />
+                            {
+                                this.itemPerPage * page < transactions.length ?
+                                    <div className="mt-3">
+                                        <div className="load-more-btn mx-auto">
+                                            <a href="#" onClick={this.loadMore}>
+                                                <h3>Load Transactions</h3>
+                                            </a>
+                                        </div>
+                                    </div>
+                                    : null
+                            }
                         </div>
                         : null
                 }
             </Container>
         )
+    }
+    private loadMore = (e: any) => {
+        e.preventDefault();
+        this.setState({ page: this.state.page + 1 })
     }
     private updateRequestState() {
         this.setState({ requested: true })
