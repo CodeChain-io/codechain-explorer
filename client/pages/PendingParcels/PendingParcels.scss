@@ -1,0 +1,36 @@
+.pending-parcels {
+  padding-top: 60px;
+  padding-bottom: 108px;
+  .filter-container {
+    position: relative;
+    .type-filter {
+      .filter-btn {
+        display: inline-block;
+        width: 160px;
+        margin-left: 8px;
+        margin-right: 8px;
+        color: white;
+        border-radius: 10px;
+        padding-left: 10px;
+        padding-right: 10px;
+        text-align: center;
+        cursor: pointer;
+      }
+      .change-shard-state-btn {
+        background-color: #00B8D4;
+      }
+      .payment-btn {
+        background-color: #03A9F4;
+      }
+      .set-regular-key-btn {
+        background-color: #3A4EB7;
+      }
+      .inactive {
+        background-color: #D5D5D5;
+      }
+    }
+    .blue-color {
+      color: #2F80ED;
+    }
+  }
+}

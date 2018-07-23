@@ -42,6 +42,10 @@ class Address extends React.Component<Props, State> {
         }
     }
 
+    public componentDidMount() {
+        this.updateRequestState()
+    }
+
     public render() {
         const { match: { params: { address } } } = this.props;
         const { account, blocks, assetBundles, parcels, requested } = this.state;
@@ -51,9 +55,6 @@ class Address extends React.Component<Props, State> {
                     <RequestPlatformAddressBlocks address={address} onBlocks={this.onBlocks} onError={this.onError} />
                     <RequestPlatformAddressParcels address={address} onParcels={this.onParcels} onError={this.onError} />
                     <RequestPlatformAddressAssets address={address} onAssetBundles={this.onAssetBundles} onError={this.onError} />
-                    {
-                        this.setState({ requested: true })
-                    }
                 </div>
             )
         }
@@ -94,6 +95,9 @@ class Address extends React.Component<Props, State> {
                 }
             </Container>
         )
+    }
+    private updateRequestState() {
+        this.setState({ requested: true })
     }
     private onParcels = (parcels: ParcelDoc[]) => {
         this.setState({ parcels });

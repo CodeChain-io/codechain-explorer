@@ -35,6 +35,10 @@ class AssetTransferAddress extends React.Component<Props, State> {
         }
     }
 
+    public componentDidMount() {
+        this.updateRequestState();
+    }
+
     public render() {
         const { match: { params: { address } } } = this.props;
         const { utxo, transactions, requested } = this.state;
@@ -47,9 +51,6 @@ class AssetTransferAddress extends React.Component<Props, State> {
                 <div>
                     <RequestAssetTransferAddressUTXO address={address} onUTXO={this.onUTXO} onError={this.onError} />
                     <RequestAssetTransferAddressTransactions address={address} onTransactions={this.onTransactions} onError={this.onError} />
-                    {
-                        this.setState({ requested: true })
-                    }
                 </div>
             )
         }
@@ -77,6 +78,9 @@ class AssetTransferAddress extends React.Component<Props, State> {
                 }
             </Container>
         )
+    }
+    private updateRequestState() {
+        this.setState({ requested: true })
     }
     private onTransactions = (transactions: TransactionDoc[]) => {
         this.setState({ transactions });
