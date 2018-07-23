@@ -118,7 +118,7 @@ class PendingParcelTable extends React.Component<Prop, State> {
             if (currentSortType === 0) {
                 return pendingParcel.parcel.fee;
             } else if (currentSortType === 1) {
-                if ( Type.isChangeShardStateDoc(pendingParcel.parcel.action)) {
+                if (Type.isChangeShardStateDoc(pendingParcel.parcel.action)) {
                     return (pendingParcel.parcel.action as ChangeShardStateDoc).transactions.length;
                 } else {
                     return 0;
@@ -131,10 +131,10 @@ class PendingParcelTable extends React.Component<Prop, State> {
 
     private handleSortButton = (sortType: number) => {
         if (sortType === this.state.currentSortType) {
-            this.setState({isASC : !this.state.isASC});
+            this.setState({ isASC: !this.state.isASC });
         } else {
-            this.setState({currentSortType : sortType});
-            this.setState({isASC : true});
+            this.setState({ currentSortType: sortType });
+            this.setState({ isASC: true });
         }
     }
 
