@@ -1,6 +1,9 @@
 .pending-parcels {
   padding-top: 60px;
   padding-bottom: 108px;
+  .blue-color {
+    color: #2F80ED;
+  }
   .filter-container {
     position: relative;
     .type-filter {
@@ -28,9 +31,6 @@
       .inactive {
         background-color: #D5D5D5;
       }
-    }
-    .blue-color {
-      color: #2F80ED;
     }
   }
 }
