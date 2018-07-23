@@ -30,7 +30,7 @@ const LatestParcels = (props: Props) => {
                 </thead>
                 <tbody>
                     {
-                        _.map(_.reverse(_.values(blocksByNumber)), block => {
+                        _.flatMap(_.reverse(_.values(blocksByNumber)), block => {
                             return _.map(block.parcels, (parcel) => {
                                 const actionString = parcel.action.action;
                                 return (

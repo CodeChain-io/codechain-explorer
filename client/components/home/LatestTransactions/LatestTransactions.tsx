@@ -30,7 +30,7 @@ const LatestTransactions = (props: Props) => {
                 </thead>
                 <tbody>
                     {
-                        _.map(_.reverse(_.values(blocksByNumber)), block => {
+                        _.flatMap(_.reverse(_.values(blocksByNumber)), block => {
                             return _.chain(block.parcels).filter(parcel => Type.isChangeShardStateDoc(parcel.action))
                                 .flatMap(parcel => (parcel.action as ChangeShardStateDoc).transactions)
                                 .map(transaction => {
