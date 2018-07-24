@@ -1,7 +1,7 @@
 import { Client, SearchResponse, DeleteDocumentResponse } from "elasticsearch";
 import { Block, H256, H160, SignedParcel } from "codechain-sdk/lib/core/classes";
 import * as _ from "lodash";
-import { BlockDoc, ParcelDoc, Type, AssetTransferTransactionDoc, AssetMintTransactionDoc, Converter, TransactionDoc, AssetDoc, AssetSchemeDoc, AssetBundleDoc, PendingParcelDoc } from "../db/DocType";
+import { BlockDoc, ParcelDoc, Type, AssetTransferTransactionDoc, AssetMintTransactionDoc, Converter, TransactionDoc, AssetDoc, AssetSchemeDoc, AssetBundleDoc, PendingParcelDoc, PendingTransactionDoc } from "../db/DocType";
 
 export class ElasticSearchAgent {
     private client: Client;
@@ -375,6 +375,54 @@ export class ElasticSearchAgent {
             return null;
         }
         return response.hits.hits[0]._source;
+    }
+
+    public getPendingTransaction = async (hash: H256): Promise<PendingTransactionDoc | null> => {
+        const response = await this.searchPendinParcel({
+            "query": {
+                "bool": {
+                    "must": [
+                        {
+                            "nested": {
+                                "path": "parcel.action",
+                                "query": {
+                                    "nested": {
+                                        "path": "parcel.action.transactions",
+                                        "query": {
+                                            "bool": {
+                                                "must": [
+                                                    {
+                                                        "term": {
+                                                            "parcel.action.transactions.data.hash": hash.value
+                                                        }
+                                                    }
+                                                ]
+                                            }
+                                        },
+                                        "inner_hits": {}
+                                    }
+                                },
+                                "inner_hits": {
+                                    "_source": false
+                                }
+                            }
+                        }
+                    ]
+                }
+            }
+        });
+        if (response.hits.total === 0) {
+            return null;
+        }
+        const transactionDocs = _.chain(response.hits.hits).flatMap(hit => hit.inner_hits["parcel.action"].hits.hits)
+            .flatMap(hit => hit.inner_hits["parcel.action.transactions"].hits.hits)
+            .map(hit => (hit._source as TransactionDoc))
+            .value();
+        return {
+            timestamp: response.hits.hits[0]._source.timestamp,
+            status: response.hits.hits[0]._source.status,
+            transaction: transactionDocs[0]
+        }
     }
 
     public getDeadPendingParcels = async (): Promise<PendingParcelDoc[]> => {

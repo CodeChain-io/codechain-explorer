@@ -66,17 +66,35 @@ export function createApiRouter(context: ServerContext, useCors = false) {
         }
     });
 
+    router.get("/parcel/pending/:hash", async (req, res, next) => {
+        try {
+            const { hash } = req.params;
+            context.db.getPendingParcel(new H256(hash)).then(pendingParcel => {
+                pendingParcel ? res.send(pendingParcel) : res.send(JSON.stringify(null));
+            })
+        } catch (e) {
+            next(e);
+        }
+    });
+
     router.get("/parcel/:hash", async (req, res, next) => {
         const { hash } = req.params;
         context.db.getParcel(new H256(hash)).then(parcel => {
-            res.send(parcel);
+            parcel ? res.send(parcel) : res.send(JSON.stringify(null));
         }).catch(next);
     });
 
     router.get("/tx/:hash", async (req, res, next) => {
         const { hash } = req.params;
         context.db.getTransaction(new H256(hash)).then(transaction => {
-            res.send(transaction);
+            transaction ? res.send(transaction) : res.send(JSON.stringify(null));
+        }).catch(next);
+    })
+
+    router.get("/tx/pending/:hash", async (req, res, next) => {
+        const { hash } = req.params;
+        context.db.getPendingTransaction(new H256(hash)).then(pendingTransaction => {
+            pendingTransaction ? res.send(pendingTransaction) : res.send(JSON.stringify(null));
         }).catch(next);
     })
 
@@ -218,7 +236,7 @@ export function createApiRouter(context: ServerContext, useCors = false) {
     router.get("/asset/:assetType", async (req, res, next) => {
         const { assetType } = req.params;
         context.db.getAssetScheme(new H256(assetType)).then(assetScheme => {
-            res.send(assetScheme);
+            assetScheme ? res.send(assetScheme) : res.send(JSON.stringify(null));
         }).catch(next);
     });
 

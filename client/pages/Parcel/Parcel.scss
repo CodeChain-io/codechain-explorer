@@ -23,6 +23,15 @@
     .payment-type {
       background-color: #03A9F4;
     }
+    .dead {
+      color: #EB5757;
+    }
+    .pending {
+      color: #F2C94C;
+    }
+    .confirmed {
+      color: #1CCF68;
+    }
   }
   .transaction-count-label {
     margin-top: 16px;

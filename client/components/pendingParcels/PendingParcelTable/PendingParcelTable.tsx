@@ -73,8 +73,7 @@ class PendingParcelTable extends React.Component<Prop, State> {
                                 {
                                     _.map(sortedParcels.slice((currentPage - 1) * itemPerPage, (currentPage - 1) * itemPerPage + itemPerPage), (pendingParcel, index) => {
                                         return (
-                                            // Remove index in key prop
-                                            <tr key={`pending-parcel-${pendingParcel.parcel.hash}-${index}`}>
+                                            <tr key={`pending-parcel-${pendingParcel.parcel.hash}`}>
                                                 <td><span className={`type-circle ${Type.isChangeShardStateDoc(pendingParcel.parcel.action) ? "change-shard-state-type" : (Type.isPaymentDoc(pendingParcel.parcel.action) ? "payment-type" : "set-regular-key-type")}`}>&nbsp;</span><HexString link={`/parcel/0x${pendingParcel.parcel.hash}`} text={pendingParcel.parcel.hash} /></td>
                                                 <td><FontAwesome className={`filter ${isSenderFilterOn ? "" : "disable"}`} onClick={_.partial(this.toogleFilter, pendingParcel.parcel.sender)} name="filter" /><HexString link={`/addr-platform/0x${pendingParcel.parcel.sender}`} text={pendingParcel.parcel.sender} /></td>
                                                 <td>{pendingParcel.parcel.fee}</td>

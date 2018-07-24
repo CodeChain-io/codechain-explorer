@@ -161,6 +161,12 @@ export interface PendingParcelDoc {
     timestamp: number;
 }
 
+export interface PendingTransactionDoc {
+    transaction: TransactionDoc;
+    status: string;
+    timestamp: number;
+}
+
 const fromAssetTransferInput = async (currentTransactions: Transaction[], assetTransferInput: AssetTransferInput, elasticSearchAgent: ElasticSearchAgent): Promise<AssetTransferInputDoc> => {
     const assetTransferInputJson = assetTransferInput.toJSON();
     const indexedTransaction = await elasticSearchAgent.getTransaction(new H256(assetTransferInputJson.prevOut.transactionHash));

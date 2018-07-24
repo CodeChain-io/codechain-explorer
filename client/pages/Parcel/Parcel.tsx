@@ -1,4 +1,5 @@
 import * as React from "react";
+import * as FontAwesome from "react-fontawesome";
 import { match } from "react-router";
 import { Container } from 'reactstrap';
 
@@ -8,13 +9,22 @@ import ParcelDetails from "../../components/parcel/ParcelDetails/ParcelDetails";
 import "./Parcel.scss";
 import ParcelTransactionList from "../../components/parcel/ParcelTransactionList/ParcelTransactionList";
 import { ParcelDoc, Type, ChangeShardStateDoc } from "../../db/DocType";
+import RequestPendingParcel from "../../request/RequestPendingParcel";
+import { PendingParcelDoc } from "db/DocType";
 
 interface Props {
     match: match<{ hash: string }>;
 }
 
+interface ParcelResult {
+    parcel: ParcelDoc;
+    status: string;
+}
+
 interface State {
-    parcel?: ParcelDoc;
+    parcelResult?: ParcelResult;
+    notExistedInBlock: boolean;
+    notExistedInPendingParcel: boolean;
     page: number;
 }
 
@@ -23,7 +33,9 @@ class Parcel extends React.Component<Props, State> {
     constructor(props: Props) {
         super(props);
         this.state = {
-            page: 1
+            page: 1,
+            notExistedInBlock: false,
+            notExistedInPendingParcel: false
         };
     }
 
@@ -31,28 +43,39 @@ class Parcel extends React.Component<Props, State> {
         const { match: { params: { hash } } } = this.props;
         const { match: { params: { hash: nextHash } } } = props;
         if (nextHash !== hash) {
-            this.setState({ parcel: undefined, page: 1 });
+            this.setState({ parcelResult: undefined, page: 1, notExistedInBlock: false, notExistedInPendingParcel: false });
         }
     }
 
     public render() {
         const { match: { params: { hash } } } = this.props;
-        const { parcel, page } = this.state;
-        if (!parcel) {
-            return <RequestParcel hash={hash}
-                onParcel={this.onParcel}
-                onParcelNotExist={this.onParcelNotExist}
-                onError={this.onError} />;
+        const { parcelResult, page, notExistedInBlock, notExistedInPendingParcel } = this.state;
+        if (!parcelResult) {
+            if (!notExistedInBlock) {
+                return <RequestParcel hash={hash}
+                    onParcel={this.onParcel}
+                    onParcelNotExist={this.onParcelNotExist}
+                    onError={this.onError} />;
+            } else if (!notExistedInPendingParcel) {
+                return <RequestPendingParcel hash={hash} onError={this.onError} onPendingParcel={this.onPendingParcel} onPendingParcelNotExist={this.onPendingParcelNotExist} />
+            } else {
+                return <div>{hash} not found.</div>
+            }
         }
         return (<Container className="parcel">
-            <div className="title-container mb-2">
+            <div className="title-container mb-2 d-flex align-items-center">
                 <h1 className="d-inline-block">Parcel Information</h1>
-                <div className={`d-inline-block parcel-type ${Type.isChangeShardStateDoc(parcel.action) ? "change-shard-state-type" : (Type.isPaymentDoc(parcel.action) ? "payment-type" : "set-regular-key-type")}`}>
-                    <span>{parcel.action.action}</span>
+                <div className={`mr-auto d-inline-block parcel-type ${Type.isChangeShardStateDoc(parcelResult.parcel.action) ? "change-shard-state-type" : (Type.isPaymentDoc(parcelResult.parcel.action) ? "payment-type" : "set-regular-key-type")}`}>
+                    <span>{parcelResult.parcel.action.action}</span>
+                </div>
+                <div className="d-inline-block">
+                    {
+                        this.getStatusElement(parcelResult.status)
+                    }
                 </div>
             </div>
-            <ParcelDetails parcel={parcel} />
-            {this.showTransactionList(parcel, page)}
+            <ParcelDetails parcel={parcelResult.parcel} />
+            {this.showTransactionList(parcelResult.parcel, page)}
         </Container>
         )
     }
@@ -68,18 +91,30 @@ class Parcel extends React.Component<Props, State> {
                         <ParcelTransactionList transactions={(parcel.action as ChangeShardStateDoc).transactions.slice(0, page * this.itemPerPage)} />
                         {
                             page * this.itemPerPage < (parcel.action as ChangeShardStateDoc).transactions.length ?
-                            <div className="mt-3">
-                                <div className="load-more-btn mx-auto">
-                                    <a href="#" onClick={this.loadMore}>
-                                        <h3>Load Transactions</h3>
-                                    </a>
+                                <div className="mt-3">
+                                    <div className="load-more-btn mx-auto">
+                                        <a href="#" onClick={this.loadMore}>
+                                            <h3>Load Transactions</h3>
+                                        </a>
+                                    </div>
                                 </div>
-                            </div>
-                            : null
+                                : null
                         }
                     </div>
                 ]
             )
+        }
+        return null;
+    }
+
+    private getStatusElement = (status: string) => {
+        switch (status) {
+            case "dead":
+                return <div className="dead"><FontAwesome name="circle" />&nbsp;Dead</div>
+            case "confirmed":
+                return <div className="confirmed"><FontAwesome name="circle" />&nbsp;Confirmed</div>
+            case "pending":
+                return <div className="pending"><FontAwesome name="circle" />&nbsp;Pending</div >
         }
         return null;
     }
@@ -89,15 +124,32 @@ class Parcel extends React.Component<Props, State> {
         this.setState({ page: this.state.page + 1 })
     }
 
+    private onPendingParcel = (pendingParcel: PendingParcelDoc) => {
+        const parcelResult = {
+            parcel: pendingParcel.parcel,
+            status: pendingParcel.status
+        }
+        this.setState({ parcelResult });
+    }
+
+    private onPendingParcelNotExist = () => {
+        this.setState({ notExistedInPendingParcel: true });
+    }
     private onParcel = (parcel: ParcelDoc) => {
-        this.setState({ parcel });
+        const parcelResult = {
+            parcel,
+            status: "confirmed"
+        }
+        this.setState({ parcelResult });
     }
 
     private onParcelNotExist = () => {
-        console.log("parcel not exist");
+        this.setState({ notExistedInBlock: true });
     }
 
-    private onError = () => ({/* Not implemented */ });
+    private onError = (e: any) => {
+        console.log(e);
+    };
 }
 
 export default Parcel;
