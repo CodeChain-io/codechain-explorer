@@ -1,5 +1,6 @@
 import * as React from "react";
 import * as _ from "lodash";
+import * as moment from "moment";
 import { Table } from 'reactstrap';
 
 import "./ParcelTable.scss";
@@ -65,7 +66,7 @@ class ParcelTable extends React.Component<Prop, State> {
                                                 <td scope="row"><HexString link={`/parcel/0x${parcel.hash}`} text={parcel.hash} length={10} /></td>
                                                 <td><HexString link={`/addr-platform/0x${parcel.sender}`} text={parcel.sender} length={10} /></td>
                                                 <td>{parcel.fee}</td>
-                                                <td>?</td>
+                                                <td>{moment.unix(parcel.timestamp).fromNow()}</td>
                                             </tr>
                                         );
                                     })

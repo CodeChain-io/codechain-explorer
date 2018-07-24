@@ -382,6 +382,9 @@
                                                     "ignore_above": 256
                                                 }
                                             }
+                                        },
+                                        "timestamp": {
+                                            "type": "long"
                                         }
                                     }
                                 },
@@ -424,6 +427,9 @@
                             "ignore_above": 256
                         }
                     }
+                },
+                "timestamp": {
+                    "type": "long"
                 },
                 "blockNumber": {
                     "type": "long"

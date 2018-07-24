@@ -1,5 +1,6 @@
 import * as React from "react";
 import * as _ from "lodash";
+import * as moment from "moment";
 import { Table } from 'reactstrap';
 
 import "./TransactionTable.scss";
@@ -67,7 +68,7 @@ class TransactionTable extends React.Component<Prop, State> {
                                                     <HexString link={`/asset/${(transaction as AssetMintTransactionDoc).data.output.assetType}`} text={(transaction as AssetMintTransactionDoc).data.output.assetType} length={10} />
                                                     : (Type.isAssetTransferTransactionDoc(transaction) ? <div>{_.map((transaction as AssetTransferTransactionDoc).data.inputs, (input, index) => (<div key={`latest-transaction-assetType-${index}`}><HexString link={`/asset/0x${input.prevOut.assetType}`} text={input.prevOut.assetType} length={10} /></div>))}</div> : "")}</td>
                                                 <td>{Type.isAssetMintTransactionDoc(transaction) ? (transaction as AssetMintTransactionDoc).data.output.amount : (Type.isAssetTransferTransactionDoc(transaction) ? _.sumBy((transaction as AssetTransferTransactionDoc).data.inputs, (input) => input.prevOut.amount) : "")}</td>
-                                                <td>?</td>
+                                                <td>{moment.unix(transaction.data.timestamp).fromNow()}</td>
                                             </tr>
                                         );
                                     })

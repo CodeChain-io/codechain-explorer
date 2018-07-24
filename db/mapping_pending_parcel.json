@@ -295,6 +295,9 @@
                                                 }
                                             }
                                         },
+                                        "timestamp": {
+                                            "type": "long"
+                                        },
                                         "registrar": {
                                             "type": "text",
                                             "fields": {
@@ -345,6 +348,9 @@
                             "ignore_above": 256
                         }
                     }
+                },
+                "timestamp": {
+                    "type": "long"
                 },
                 "blockNumber": {
                     "type": "long"
