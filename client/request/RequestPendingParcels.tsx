@@ -11,7 +11,7 @@ interface OwnProps {
 class RequestPendingParcels extends React.Component<OwnProps> {
     public componentWillMount() {
         const { onPendingParcels, onError } = this.props;
-        apiRequest({ path: `parcel/pending` }).then((response: any) => {
+        apiRequest({ path: `parcels/pending` }).then((response: any) => {
             onPendingParcels(response);
         }).catch(onError);
     }

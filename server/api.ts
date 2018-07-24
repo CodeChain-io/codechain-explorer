@@ -57,7 +57,7 @@ export function createApiRouter(context: ServerContext, useCors = false) {
         }
     });
 
-    router.get("/parcel/pending", async (req, res, next) => {
+    router.get("/parcels/pending", async (req, res, next) => {
         try {
             const pendingParcels = await context.db.getCurrentPendingParcels();
             res.send(pendingParcels);
