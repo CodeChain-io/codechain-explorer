@@ -20,6 +20,9 @@ import Footer from './components/footer/Footer';
 import PlatformAddress from './pages/PlatformAddress/PlatformAddress';
 import AssetTransferAddress from './pages/AssetTransferAddress/AssetTransferAddress';
 import PendingParcels from './pages/PendingParcels/PendingParcels';
+import Parcels from './pages/Parcels/Parcels';
+import Transactions from './pages/Transactions/Transactions';
+import Blocks from './pages/Blocks/Blocks';
 
 ReactDOM.render(
   <Provider store={store}>
@@ -37,6 +40,9 @@ ReactDOM.render(
           <Route path="/addr-platform/:address" component={PlatformAddress} />
           <Route path="/addr-asset/:address" component={AssetTransferAddress} />
           <Route path="/parcels-pending" component={PendingParcels} />
+          <Route path="/parcels" component={Parcels} />
+          <Route path="/txs" component={Transactions} />
+          <Route path="/blocks" component={Blocks} />
         </div>
         <Footer />
       </div>

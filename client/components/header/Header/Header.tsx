@@ -43,15 +43,21 @@ class Header extends React.Component<{}, State> {
                                     Explorer
                                 </DropdownToggle>
                                 <DropdownMenu right={true}>
-                                    <DropdownItem>
-                                        Latest Blocks
-                                    </DropdownItem>
-                                    <DropdownItem>
-                                        Latest Transactions
-                                    </DropdownItem>
-                                    <DropdownItem>
-                                        Latest Parcels
-                                    </DropdownItem>
+                                    <IndexLinkContainer to="/blocks">
+                                        <DropdownItem>
+                                            Latest Blocks
+                                        </DropdownItem>
+                                    </IndexLinkContainer>
+                                    <IndexLinkContainer to="/parcels">
+                                        <DropdownItem>
+                                            Latest Parcels
+                                        </DropdownItem>
+                                    </IndexLinkContainer>
+                                    <IndexLinkContainer to="/txs">
+                                        <DropdownItem>
+                                            Latest Transactions
+                                        </DropdownItem>
+                                    </IndexLinkContainer>
                                     <DropdownItem divider={true} />
                                     <IndexLinkContainer to="/parcels-pending">
                                         <DropdownItem>
@@ -87,9 +93,7 @@ class Header extends React.Component<{}, State> {
                         </Nav>
                         <Nav>
                             <NavItem>
-                                <NavLink>
-                                    <HealthChecker />
-                                </NavLink>
+                                <HealthChecker />
                             </NavItem>
                         </Nav>
                     </Collapse>

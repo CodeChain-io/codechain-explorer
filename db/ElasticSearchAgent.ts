@@ -62,6 +62,29 @@ export class ElasticSearchAgent {
         });
     }
 
+    public getBlocks = async (): Promise<BlockDoc[]> => {
+        return this.search({
+            sort: [
+                {
+                    "number": { order: "desc" }
+                }
+            ],
+            "size": 10000,
+            query: {
+                "bool": {
+                    "must": [
+                        { "term": { "isRetracted": false } }
+                    ]
+                }
+            }
+        }).then((response: SearchResponse<BlockDoc>) => {
+            if (response.hits.total === 0) {
+                return [];
+            }
+            return _.map(response.hits.hits, hit => hit._source);
+        });
+    }
+
     public getBlockByHash = async (hash: H256): Promise<BlockDoc> => {
         return this.search({
             "sort": [
@@ -69,6 +92,7 @@ export class ElasticSearchAgent {
                     "number": { "order": "desc" }
                 }
             ],
+            "size": 10000,
             "query": {
                 "bool": {
                     "must": [
@@ -89,6 +113,7 @@ export class ElasticSearchAgent {
                     "number": { "order": "desc" }
                 }
             ],
+            "size": 10000,
             "query": {
                 "bool": {
                     "must": [
@@ -119,6 +144,12 @@ export class ElasticSearchAgent {
         return parcels[0];
     }
 
+    public getParcels = async (): Promise<ParcelDoc[]> => {
+        return await this.searchParcels({
+            "match_all": {}
+        });
+    }
+
     public getTransaction = async (hash: H256): Promise<TransactionDoc | null> => {
         const transactions = await this.searchTransactions({
             "bool": {
@@ -132,6 +163,12 @@ export class ElasticSearchAgent {
             return null;
         }
         return transactions[0];
+    }
+
+    public getTransactions = async (): Promise<TransactionDoc[]> => {
+        return await this.searchTransactions({
+            "match_all": {}
+        });
     }
 
     public getAssetTransferTransactions = async (assetType: H256): Promise<AssetTransferTransactionDoc[]> => {
@@ -530,6 +567,7 @@ export class ElasticSearchAgent {
                     "number": { "order": "desc" }
                 }
             ],
+            "size": 10000,
             "_source": false,
             "query": {
                 "bool": {
@@ -565,6 +603,7 @@ export class ElasticSearchAgent {
                     "number": { "order": "desc" }
                 }
             ],
+            "size": 10000,
             "_source": false,
             "query": {
                 "bool": {

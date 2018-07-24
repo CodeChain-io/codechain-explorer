@@ -52,13 +52,11 @@ const LatestTransactions = (props: Props) => {
                 </tbody>
             </Table>
             {
-                /*
-                    <div className="mt-3">
-                        <div className="view-all-btn text-center mx-auto">
-                            <span>View All</span>
-                        </div>
+                <div className="mt-3">
+                    <div className="view-all-btn text-center mx-auto">
+                        <span>View All</span>
                     </div>
-                */
+                </div>
             }
         </div>
     </div>

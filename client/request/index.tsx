@@ -13,6 +13,9 @@ import RequestPlatfromAddressBlocks from "./RequestPlatformAddressBlocks";
 import RequestPlatformAddressAccount from "./RequestPlatformAddressAccount";
 import RequestPlatformAddressParcels from "./RequestPlatformAddressParcels";
 import RequestPlatformAddressAssets from "./RequestPlatformAddressAssets";
+import RequestParcels from "./RequestParcels";
+import RequestBlocks from "./RequestBlocks";
+import RequestTransactions from "./RequestTransactions";
 
 export { RequestPing };
 export { RequestParcel };
@@ -29,3 +32,6 @@ export { RequestPlatfromAddressBlocks };
 export { RequestPlatformAddressAccount };
 export { RequestPlatformAddressParcels };
 export { RequestPlatformAddressAssets };
+export { RequestBlocks };
+export { RequestParcels };
+export { RequestTransactions };

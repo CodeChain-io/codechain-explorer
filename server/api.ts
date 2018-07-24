@@ -57,6 +57,15 @@ export function createApiRouter(context: ServerContext, useCors = false) {
         }
     });
 
+    router.get("/blocks", async (req, res, next) => {
+        try {
+            const blocks = await context.db.getBlocks();
+            res.send(blocks);
+        } catch (e) {
+            next(e);
+        }
+    });
+
     router.get("/parcels/pending", async (req, res, next) => {
         try {
             const pendingParcels = await context.db.getCurrentPendingParcels();
@@ -84,12 +93,30 @@ export function createApiRouter(context: ServerContext, useCors = false) {
         }).catch(next);
     });
 
+    router.get("/parcels", async (req, res, next) => {
+        try {
+            const parcels = await context.db.getParcels();
+            res.send(parcels);
+        } catch (e) {
+            next(e);
+        }
+    });
+
     router.get("/tx/:hash", async (req, res, next) => {
         const { hash } = req.params;
         context.db.getTransaction(new H256(hash)).then(transaction => {
             transaction ? res.send(transaction) : res.send(JSON.stringify(null));
         }).catch(next);
-    })
+    });
+
+    router.get("/txs", async (req, res, next) => {
+        try {
+            const transactions = await context.db.getTransactions();
+            res.send(transactions);
+        } catch (e) {
+            next(e);
+        }
+    });
 
     router.get("/tx/pending/:hash", async (req, res, next) => {
         const { hash } = req.params;
