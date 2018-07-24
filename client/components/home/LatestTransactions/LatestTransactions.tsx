@@ -6,6 +6,7 @@ import { Table } from 'reactstrap';
 import './LatestTransactions.scss';
 import HexString from "../../util/HexString/HexString";
 import { BlockDoc, Type, ChangeShardStateDoc, AssetMintTransactionDoc, AssetTransferTransactionDoc } from "../../../db/DocType";
+import { Link } from "react-router-dom";
 
 interface Props {
     blocksByNumber: {
@@ -53,9 +54,11 @@ const LatestTransactions = (props: Props) => {
             </Table>
             {
                 <div className="mt-3">
-                    <div className="view-all-btn text-center mx-auto">
-                        <span>View All</span>
-                    </div>
+                    <Link to="/txs">
+                        <div className="view-all-btn text-center mx-auto">
+                            <span>View All</span>
+                        </div>
+                    </Link>
                 </div>
             }
         </div>

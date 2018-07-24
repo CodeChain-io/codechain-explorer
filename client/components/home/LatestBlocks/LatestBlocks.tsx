@@ -47,9 +47,11 @@ const LatestBlocks = (props: Props) => {
             </Table>
             {
                 <div className="mt-3">
-                    <div className="view-all-btn text-center mx-auto">
-                        <span>View All</span>
-                    </div>
+                    <Link to={"/blocks"}>
+                        <div className="view-all-btn text-center mx-auto">
+                            <span>View All</span>
+                        </div>
+                    </Link>
                 </div>
             }
         </div>
