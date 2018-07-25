@@ -43,7 +43,7 @@ const AssetDetails = (prop: OwnProps) => {
                 Registrar
             </Col>
             <Col md="10">
-                {prop.assetScheme.registrar ? <Link to={`/addr-platform/0x${PlatformAddress.fromAccountId(prop.assetScheme.registrar).value}`}>{PlatformAddress.fromAccountId(prop.assetScheme.registrar).value}</Link> : "Not existed"}
+                {prop.assetScheme.registrar ? <Link to={`/addr-platform/${PlatformAddress.fromAccountId(prop.assetScheme.registrar).value}`}>{PlatformAddress.fromAccountId(prop.assetScheme.registrar).value}</Link> : "Not existed"}
             </Col>
         </Row>
     </div>
