@@ -20,10 +20,6 @@ class Parcels extends React.Component<{}, State> {
         };
     }
 
-    public componentDidMount() {
-        this.updateRequestState()
-    }
-
     public render() {
         const { parcels, requested } = this.state;
 
@@ -38,12 +34,9 @@ class Parcels extends React.Component<{}, State> {
         );
     }
 
-    private updateRequestState = () => {
-        this.setState({ requested: true })
-    }
-
     private onParcels = (parcels: ParcelDoc[]) => {
         this.setState({ parcels });
+        this.setState({ requested: true });
     };
 
     private onError = () => ({});

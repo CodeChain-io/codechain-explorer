@@ -28,10 +28,6 @@ class PendingParcels extends React.Component<{}, State> {
         };
     }
 
-    public componentDidMount() {
-        this.updateRequestState()
-    }
-
     public render() {
         const { pendingParcels, requested, isChangeShardStateFilterOn, isPaymentFilterOn, isSetRegularKeyFilterOn } = this.state;
         if (!requested) {
@@ -90,12 +86,9 @@ class PendingParcels extends React.Component<{}, State> {
         this.setState({ isSetRegularKeyFilterOn: !this.state.isSetRegularKeyFilterOn });
     }
 
-    private updateRequestState = () => {
-        this.setState({ requested: true })
-    }
-
     private onPendingParcels = (pendingParcels: PendingParcelDoc[]) => {
         this.setState({ pendingParcels });
+        this.setState({ requested: true });
     }
 
     private onError = () => ({/* Not implemented */ });

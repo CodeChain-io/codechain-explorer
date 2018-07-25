@@ -20,10 +20,6 @@ class Transactions extends React.Component<{}, State> {
         };
     }
 
-    public componentDidMount() {
-        this.updateRequestState()
-    }
-
     public render() {
         const { transactions, requested } = this.state;
 
@@ -38,12 +34,9 @@ class Transactions extends React.Component<{}, State> {
         );
     }
 
-    private updateRequestState = () => {
-        this.setState({ requested: true })
-    }
-
     private onTransactions = (transactions: TransactionDoc[]) => {
         this.setState({ transactions });
+        this.setState({ requested: true });
     };
 
     private onError = () => ({});

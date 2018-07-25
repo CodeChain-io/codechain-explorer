@@ -20,10 +20,6 @@ class Blocks extends React.Component<{}, State> {
         };
     }
 
-    public componentDidMount() {
-        this.updateRequestState()
-    }
-
     public render() {
         const { blocks, requested } = this.state;
 
@@ -38,12 +34,9 @@ class Blocks extends React.Component<{}, State> {
         );
     }
 
-    private updateRequestState = () => {
-        this.setState({ requested: true })
-    }
-
     private onBlocks = (blocks: BlockDoc[]) => {
         this.setState({ blocks });
+        this.setState({ requested: true });
     };
 
     private onError = (e: any) => {

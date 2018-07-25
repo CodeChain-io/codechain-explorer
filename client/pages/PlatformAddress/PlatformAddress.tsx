@@ -45,10 +45,6 @@ class Address extends React.Component<Props, State> {
         }
     }
 
-    public componentDidMount() {
-        this.updateRequestState()
-    }
-
     public render() {
         const { match: { params: { address } } } = this.props;
         const { account, blocks, assetBundles, parcels, requested, blockPage, parcelPage } = this.state;
@@ -129,9 +125,6 @@ class Address extends React.Component<Props, State> {
         e.preventDefault();
         this.setState({ blockPage: this.state.blockPage + 1 })
     }
-    private updateRequestState() {
-        this.setState({ requested: true })
-    }
     private onParcels = (parcels: ParcelDoc[]) => {
         this.setState({ parcels });
     }
@@ -140,6 +133,7 @@ class Address extends React.Component<Props, State> {
     }
     private onBlocks = (blocks: BlockDoc[]) => {
         this.setState({ blocks });
+        this.setState({ requested: true });
     }
     private onAccount = (account: { nonce: U256, balance: U256 }) => {
         this.setState({ account });
