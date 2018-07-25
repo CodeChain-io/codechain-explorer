@@ -1,6 +1,6 @@
 import * as React from "react";
 
-import { H160, H256, AssetMintTransaction } from "codechain-sdk/lib/core/classes";
+import { AssetMintTransaction } from "codechain-sdk/lib/core/classes";
 
 interface Props {
     onChange: (t: AssetMintTransaction) => void;
@@ -92,6 +92,7 @@ export default class AssetMintTransactionEditor extends React.Component<Props, S
 
     // FIXME: throttle
     private emitChange = () => {
+        /*
         const { nonce, metadata, lockScriptHash, amount, registrar } = this.state;
         this.props.onChange(new AssetMintTransaction({
             nonce,
@@ -106,5 +107,6 @@ export default class AssetMintTransactionEditor extends React.Component<Props, S
             // FIXME: U256
             registrar: registrar.length === 40 ? new H160(registrar) : null,
         }))
+        */
     }
 }
