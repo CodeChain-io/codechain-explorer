@@ -1,5 +1,4 @@
 interface ApiRequestData {
-    port?: number;
     path: string;
     body?: any;
 }
@@ -8,9 +7,10 @@ export interface ApiError {
     message: string;
 }
 
-export const apiRequest = ({ port = 8081, path, body }: ApiRequestData) => {
+export const apiRequest = ({ path, body }: ApiRequestData) => {
+    const host = process.env.REACT_APP_SERVER_HOST ? process.env.REACT_APP_SERVER_HOST : 'localhost:8081';
     return new Promise((resolve, reject) => {
-        fetch(`http://localhost:${port}/api/${path}`, body && {
+        fetch(`http://${host}/api/${path}`, body && {
             body: JSON.stringify(body),
             headers: { "Content-Type": "application/json" },
             method: "POST",

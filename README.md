@@ -52,6 +52,10 @@ Run CodeChain-explorer client in development mode
 ```
 # yarn run start-client
 ```
+* You can change Server host using environment variable
+```
+# REACT_APP_SERVER_HOST=127.0.0.1:8080 yarn run start-client
+```
 ### Running worker, server, client at once
 ```
 # yarn run start
@@ -61,4 +65,8 @@ Run CodeChain-explorer client in development mode
 Build CodeChain-explorer with following script. You can get optimized, uglified build code. It will locate at "/build" directory
 ```
 # yarn run build
+```
+* You can change Server host using environment variable
+```
+# REACT_APP_SERVER_HOST=127.0.0.1:8080 yarn run build
 ```
