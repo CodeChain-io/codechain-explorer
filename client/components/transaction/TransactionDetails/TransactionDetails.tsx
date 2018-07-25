@@ -6,10 +6,10 @@ import { Col, Row } from 'reactstrap';
 import "./TransactionDetails.scss"
 import HexString from "../../util/HexString/HexString";
 import { TransactionDoc, Type, AssetTransferTransactionDoc, AssetMintTransactionDoc } from "../../../db/DocType";
-import { Script } from "codechain-sdk/lib/core/classes";
+import { Script, H256 } from "codechain-sdk/lib/core/classes";
 import { Buffer } from "buffer";
 import { Link } from "react-router-dom";
-import { PlatformAddress } from "codechain-sdk/lib/key/classes";
+import { PlatformAddress, AssetTransferAddress } from "codechain-sdk/lib/key/classes";
 
 interface Props {
     transaction: TransactionDoc;
@@ -64,7 +64,8 @@ const getTransactionInfoByType = (transaction: TransactionDoc) => {
                                             </tr>
                                             <tr>
                                                 <td>Owner</td>
-                                                <td>{input.prevOut.owner ? <HexString link={`/addr-asset/0x${input.prevOut.owner}`} text={input.prevOut.owner} /> : "Unknown"}</td>
+                                                <td>{input.prevOut.owner ? <Link to={`/addr-asset/${AssetTransferAddress.fromPublicKeyHash(new H256(input.prevOut.owner)).value}`}>{AssetTransferAddress.fromPublicKeyHash(new H256(input.prevOut.owner)).value}</Link>
+                                                    : "Unknown"}</td>
                                             </tr>
                                             <tr>
                                                 <td>Amount</td>
@@ -110,7 +111,7 @@ const getTransactionInfoByType = (transaction: TransactionDoc) => {
                                             <tr>
                                                 <td>Owner</td>
                                                 <td>{
-                                                    output.owner ? <HexString link={`/addr-asset/0x${output.owner}`} text={output.owner} /> : "Unknown"
+                                                    output.owner ? <Link to={`/addr-asset/${AssetTransferAddress.fromPublicKeyHash(new H256(output.owner)).value}`}>{AssetTransferAddress.fromPublicKeyHash(new H256(output.owner)).value}</Link> : "Unknown"
                                                 }</td>
                                             </tr>
                                             <tr>
@@ -171,7 +172,7 @@ const getTransactionInfoByType = (transaction: TransactionDoc) => {
                     </Col>
                     <Col md="10">
                         {
-                            transactionDoc.data.output.owner ? <HexString link={`/addr-asset/0x${transactionDoc.data.output.owner}`} text={transactionDoc.data.output.owner} /> : "Unknown"
+                            transactionDoc.data.output.owner ? <Link to={`/addr-asset/${AssetTransferAddress.fromPublicKeyHash(new H256(transactionDoc.data.output.owner)).value}`}>{AssetTransferAddress.fromPublicKeyHash(new H256(transactionDoc.data.output.owner)).value}</Link> : "Unknown"
                         }
                     </Col>
                 </Row>

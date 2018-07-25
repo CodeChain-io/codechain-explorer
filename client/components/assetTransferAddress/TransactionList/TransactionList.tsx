@@ -10,13 +10,13 @@ import * as arrow from "./img/arrow.png";
 import { TransactionDoc, Type, AssetMintTransactionDoc, AssetTransferTransactionDoc } from "../../../db/DocType";
 import { H256 } from "codechain-sdk/lib/core/classes";
 import { Link } from "react-router-dom";
-import { PlatformAddress } from "codechain-sdk/lib/key/classes";
+import { PlatformAddress, AssetTransferAddress } from "codechain-sdk/lib/key/classes";
 
 interface Props {
-    owner: H256;
+    owner: string;
     transactions: TransactionDoc[];
 }
-const TransactionObjectByType = (transaction: TransactionDoc, owner: H256) => {
+const TransactionObjectByType = (transaction: TransactionDoc, owner: string) => {
     if (Type.isAssetMintTransactionDoc(transaction)) {
         const transactionDoc = transaction as AssetMintTransactionDoc;
         return (
@@ -51,9 +51,9 @@ const TransactionObjectByType = (transaction: TransactionDoc, owner: H256) => {
                                 {
                                     transactionDoc.data.output.owner ?
                                         (
-                                            owner.value === transactionDoc.data.output.owner ?
-                                                <HexString text={transactionDoc.data.output.owner} />
-                                                : <HexString link={`/addr-asset/0x${transactionDoc.data.output.owner}`} text={transactionDoc.data.output.owner} />
+                                            owner === AssetTransferAddress.fromPublicKeyHash(new H256(transactionDoc.data.output.owner)).value ?
+                                                AssetTransferAddress.fromPublicKeyHash(new H256(transactionDoc.data.output.owner)).value
+                                                : <Link to={`/addr-asset/${AssetTransferAddress.fromPublicKeyHash(new H256(transactionDoc.data.output.owner)).value}`}>{AssetTransferAddress.fromPublicKeyHash(new H256(transactionDoc.data.output.owner)).value}</Link>
                                         )
                                         : "Unknown"
                                 }
@@ -82,7 +82,7 @@ const TransactionObjectByType = (transaction: TransactionDoc, owner: H256) => {
                                 {
                                     _.map(transactionDoc.data.inputs, (input, i) => {
                                         return (
-                                            <div key={`input-${i}`} className={`background-highlight mb-3 ${input.prevOut.owner === owner.value ? "input-highlight" : ""}`}>
+                                            <div key={`input-${i}`} className={`background-highlight mb-3 ${AssetTransferAddress.fromPublicKeyHash(new H256(input.prevOut.owner)).value === owner ? "input-highlight" : ""}`}>
                                                 <Row className="inner-row">
                                                     <Col><img src={Type.getMetadata(input.prevOut.assetScheme.metadata).icon_url} className="icon mr-2" /> <HexString link={`/asset/0x${input.prevOut.assetType}`} text={input.prevOut.assetType} length={30} /></Col>
                                                 </Row>
@@ -93,9 +93,9 @@ const TransactionObjectByType = (transaction: TransactionDoc, owner: H256) => {
                                                     <Col md="8">{
                                                         input.prevOut.owner ?
                                                             (
-                                                                owner.value === input.prevOut.owner ?
-                                                                    <HexString text={input.prevOut.owner} length={10} />
-                                                                    : <HexString link={`/addr-asset/0x${input.prevOut.owner}`} text={input.prevOut.owner} length={10} />
+                                                                owner === AssetTransferAddress.fromPublicKeyHash(new H256(input.prevOut.owner)).value ?
+                                                                    AssetTransferAddress.fromPublicKeyHash(new H256(input.prevOut.owner)).value.slice(0, 10)
+                                                                    : <Link to={`/addr-asset/${AssetTransferAddress.fromPublicKeyHash(new H256(input.prevOut.owner)).value}`}>{AssetTransferAddress.fromPublicKeyHash(new H256(input.prevOut.owner)).value.slice(0, 10)}</Link>
                                                             )
                                                             : "Unknown"
                                                     }
@@ -121,7 +121,7 @@ const TransactionObjectByType = (transaction: TransactionDoc, owner: H256) => {
                                 {
                                     _.map(transactionDoc.data.outputs, (output, i) => {
                                         return (
-                                            <div key={`output-${i}`} className={`background-highlight mb-3 ${output.owner === owner.value ? "output-highlight" : ""}`}>
+                                            <div key={`output-${i}`} className={`background-highlight mb-3 ${AssetTransferAddress.fromPublicKeyHash(new H256(output.owner)).value === owner ? "output-highlight" : ""}`}>
                                                 <Row className="inner-row">
                                                     <Col><img src={Type.getMetadata(output.assetScheme.metadata).icon_url} className="icon mr-2" /> <HexString link={`/asset/0x${output.assetType}`} text={output.assetType} length={30} /></Col>
                                                 </Row>
@@ -133,9 +133,9 @@ const TransactionObjectByType = (transaction: TransactionDoc, owner: H256) => {
                                                         {
                                                             output.owner ?
                                                                 (
-                                                                    owner.value === output.owner ?
-                                                                        <HexString text={output.owner} length={10} />
-                                                                        : <HexString link={`/addr-asset/0x${output.owner}`} text={output.owner} length={10} />
+                                                                    owner === AssetTransferAddress.fromPublicKeyHash(new H256(output.owner)).value ?
+                                                                        AssetTransferAddress.fromPublicKeyHash(new H256(output.owner)).value.slice(0, 10)
+                                                                        : <Link to={`/addr-asset/${AssetTransferAddress.fromPublicKeyHash(new H256(output.owner)).value}`}>{AssetTransferAddress.fromPublicKeyHash(new H256(output.owner)).value.slice(0, 10)}</Link>
                                                                 )
                                                                 : "Unknown"
                                                         }

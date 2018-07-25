@@ -6,7 +6,7 @@ import { H256, SignedParcel } from "codechain-sdk/lib/core/classes";
 
 import { ServerContext } from './ServerContext';
 import { TransactionDoc } from '../db/DocType';
-import { PlatformAddress } from 'codechain-sdk/lib/key/classes';
+import { PlatformAddress, AssetTransferAddress } from 'codechain-sdk/lib/key/classes';
 
 const corsOptions = {
     origin: true,
@@ -180,7 +180,7 @@ export function createApiRouter(context: ServerContext, useCors = false) {
         const { address } = req.params;
         const accountId = PlatformAddress.fromString(address).getAccountId();
         try {
-            const blocks = await context.db.getBlocksByPlatformAddress(accountId);
+            const blocks = await context.db.getBlocksByAccountId(accountId);
             res.send(blocks);
         } catch (e) {
             next(e);
@@ -191,7 +191,7 @@ export function createApiRouter(context: ServerContext, useCors = false) {
         const { address } = req.params;
         const accountId = PlatformAddress.fromString(address).getAccountId();
         try {
-            const parcels = await context.db.getParcelsByPlatformAddress(accountId);
+            const parcels = await context.db.getParcelsByAccountId(accountId);
             res.send(parcels);
         } catch (e) {
             next(e);
@@ -202,7 +202,7 @@ export function createApiRouter(context: ServerContext, useCors = false) {
         const { address } = req.params;
         const accountId = PlatformAddress.fromString(address).getAccountId();
         try {
-            const assetBundles = await context.db.getAssetBundlesByPlatformAddress(accountId);
+            const assetBundles = await context.db.getAssetBundlesByAccountId(accountId);
             res.send(assetBundles);
         } catch (e) {
             next(e);
@@ -212,7 +212,14 @@ export function createApiRouter(context: ServerContext, useCors = false) {
     router.get("/addr-asset-utxo/:address", async (req, res, next) => {
         const { address } = req.params;
         try {
-            const assets = await context.db.getAssetsByAssetAddress(new H256(address));
+            const lockscriptHashAndParams = AssetTransferAddress.fromString(address).getLockScriptHashAndParameters();
+            if (lockscriptHashAndParams.lockScriptHash.value !== "f42a65ea518ba236c08b261c34af0521fa3cd1aa505e1c18980919cb8945f8f3") {
+                // FIXME : Currently only standard scripts are available
+                res.send([]);
+                return;
+            }
+            const pubKey = lockscriptHashAndParams.parameters[0].toString("hex");
+            const assets = await context.db.getAssetsByPubKey(new H256(pubKey));
             const utxoPromise = _.map(assets, async (asset) => {
                 const getAssetResult = await context.codechainSdk.rpc.chain.getAsset(new H256(asset.transactionHash), asset.transactionOutputIndex);
                 if (!getAssetResult) {
@@ -238,7 +245,14 @@ export function createApiRouter(context: ServerContext, useCors = false) {
     router.get("/addr-asset-txs/:address", async (req, res, next) => {
         const { address } = req.params;
         try {
-            const transactions: TransactionDoc[] = await context.db.getTransactionsByAddress(new H256(address));
+            const lockscriptHashAndParams = AssetTransferAddress.fromString(address).getLockScriptHashAndParameters();
+            if (lockscriptHashAndParams.lockScriptHash.value !== "f42a65ea518ba236c08b261c34af0521fa3cd1aa505e1c18980919cb8945f8f3") {
+                // FIXME : Currently only standard scripts are available
+                res.send([]);
+                return;
+            }
+            const pubKey = lockscriptHashAndParams.parameters[0].toString("hex");
+            const transactions: TransactionDoc[] = await context.db.getTransactionsByPubKey(new H256(pubKey));
             res.send(transactions);
         } catch (e) {
             next(e);

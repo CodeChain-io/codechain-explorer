@@ -106,7 +106,7 @@ export class ElasticSearchAgent {
         });
     }
 
-    public getBlocksByPlatformAddress = async (address: H160): Promise<BlockDoc[]> => {
+    public getBlocksByAccountId = async (accountId: H160): Promise<BlockDoc[]> => {
         return this.search({
             "sort": [
                 {
@@ -117,7 +117,7 @@ export class ElasticSearchAgent {
             "query": {
                 "bool": {
                     "must": [
-                        { "term": { "author": address.value } },
+                        { "term": { "author": accountId.value } },
                         { "term": { "isRetracted": false } }
                     ]
                 }
@@ -201,18 +201,18 @@ export class ElasticSearchAgent {
         return (transactions[0] as AssetMintTransactionDoc);
     }
 
-    public getParcelsByPlatformAddress = async (address: H160): Promise<ParcelDoc[]> => {
+    public getParcelsByAccountId = async (accountId: H160): Promise<ParcelDoc[]> => {
         const parcels = await this.searchParcels({
             "bool": {
                 "should": [
-                    { "term": { "parcels.sender": address.value } },
+                    { "term": { "parcels.sender": accountId.value } },
                     {
                         "nested": {
                             "path": "parcels.action",
                             "query": {
                                 "bool": {
                                     "must": [
-                                        { "term": { "parcels.action.receiver": address.value } }
+                                        { "term": { "parcels.action.receiver": accountId.value } }
                                     ]
                                 }
                             },
@@ -228,11 +228,11 @@ export class ElasticSearchAgent {
         return parcels;
     }
 
-    public getAssetBundlesByPlatformAddress = async (address: H160): Promise<AssetBundleDoc[]> => {
+    public getAssetBundlesByAccountId = async (accountId: H160): Promise<AssetBundleDoc[]> => {
         const transactions = await this.searchTransactions({
             "bool": {
                 "must": [
-                    { "term": { "parcels.action.transactions.data.registrar": address.value } }
+                    { "term": { "parcels.action.transactions.data.registrar": accountId.value } }
                 ]
             }
         });
@@ -255,7 +255,7 @@ export class ElasticSearchAgent {
         });
     }
 
-    public getTransactionsByAddress = async (address: H256): Promise<TransactionDoc[]> => {
+    public getTransactionsByPubKey = async (pubKey: H256): Promise<TransactionDoc[]> => {
         const transactions = await this.searchTransactions({
             "bool": {
                 "should": [
@@ -265,7 +265,7 @@ export class ElasticSearchAgent {
                             "query": {
                                 "bool": {
                                     "must": [
-                                        { "term": { "parcels.action.transactions.data.outputs.owner": address.value } }
+                                        { "term": { "parcels.action.transactions.data.outputs.owner": pubKey.value } }
                                     ]
                                 }
                             }, "inner_hits": {}
@@ -277,20 +277,20 @@ export class ElasticSearchAgent {
                             "query": {
                                 "bool": {
                                     "must": [
-                                        { "term": { "parcels.action.transactions.data.inputs.owner": address.value } }
+                                        { "term": { "parcels.action.transactions.data.inputs.owner": pubKey.value } }
                                     ]
                                 }
                             }, "inner_hits": {}
                         }
                     },
-                    { "term": { "parcels.action.transactions.data.output.owner": address.value } }
+                    { "term": { "parcels.action.transactions.data.output.owner": pubKey.value } }
                 ]
             }
         });
         return transactions;
     }
 
-    public getAssetsByAssetAddress = async (address: H160): Promise<AssetDoc[]> => {
+    public getAssetsByPubKey = async (pubKey: H160): Promise<AssetDoc[]> => {
         const transactions = await this.searchTransactions({
             "bool": {
                 "should": [
@@ -301,21 +301,21 @@ export class ElasticSearchAgent {
                                 "bool": {
                                     "must": [
                                         {
-                                            "term": { "parcels.action.transactions.data.outputs.owner": address.value }
+                                            "term": { "parcels.action.transactions.data.outputs.owner": pubKey.value }
                                         }
                                     ]
                                 }
                             }
                         }
                     },
-                    { "term": { "parcels.action.transactions.data.output.owner": address.value } }
+                    { "term": { "parcels.action.transactions.data.output.owner": pubKey.value } }
                 ]
             }
         });
         return _.flatMap(transactions, transaction => {
             if (Type.isAssetTransferTransactionDoc(transaction)) {
                 return _.chain((transaction as AssetTransferTransactionDoc).data.outputs)
-                    .filter(output => output.owner === address.value)
+                    .filter(output => output.owner === pubKey.value)
                     .map((output, index) => {
                         return {
                             assetType: output.assetType,
@@ -329,7 +329,7 @@ export class ElasticSearchAgent {
             } else if (Type.isAssetMintTransactionDoc(transaction)) {
                 const retAssetDoc: AssetDoc[] = [];
                 const transactionDoc = (transaction as AssetMintTransactionDoc);
-                if (transactionDoc.data.output.owner === address.value) {
+                if (transactionDoc.data.output.owner === pubKey.value) {
                     retAssetDoc.push({
                         assetType: transactionDoc.data.output.assetType,
                         lockScriptHash: transactionDoc.data.output.lockScriptHash,

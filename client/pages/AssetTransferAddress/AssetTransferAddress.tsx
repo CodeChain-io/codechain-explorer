@@ -9,7 +9,6 @@ import "./AssetTransferAddress.scss";
 import AccountDetails from "../../components/assetTransferAddress/AccountDetails/AccountDetails";
 import AssetList from "../../components/assetTransferAddress/AssetList/AssetList";
 import TransactionList from "../../components/assetTransferAddress/TransactionList/TransactionList";
-import { H256 } from "codechain-sdk/lib/core/classes";
 
 interface Props {
     match: match<{ address: string }>;
@@ -70,7 +69,7 @@ class AssetTransferAddress extends React.Component<Props, State> {
                         <div>
                             <h2 className="sub-title">Transactions</h2>
                             <hr />
-                            <TransactionList owner={new H256(address)} transactions={transactions.slice(0, this.itemPerPage * page)} />
+                            <TransactionList owner={address} transactions={transactions.slice(0, this.itemPerPage * page)} />
                             {
                                 this.itemPerPage * page < transactions.length ?
                                     <div className="mt-3">
