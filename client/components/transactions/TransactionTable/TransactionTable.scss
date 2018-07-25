@@ -34,4 +34,15 @@
     background-color: #D5D5D5;
     cursor: inherit;
   }
+  .transaction-type {
+    color: white;
+    width: 160px;
+    border-radius: 11px;
+  }
+  .asset-transfer-type {
+    background-color: #5300DB;
+  }
+  .asset-mint-type {
+    background-color: #00DBB4;
+  }
 }

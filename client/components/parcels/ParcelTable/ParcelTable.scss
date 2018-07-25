@@ -34,4 +34,18 @@
     background-color: #D5D5D5;
     cursor: inherit;
   }
+  .parcel-type {
+    color: white;
+    width: 160px;
+    border-radius: 11px;
+  }
+  .payment-type {
+    background-color: #03A9F4;
+  }
+  .change-shard-state-type {
+    background-color: #00B8D4;
+  }
+  .set-regular-key-type {
+    background-color: #3A4EB7;
+  }
 }
