@@ -5,8 +5,8 @@ import { Table } from 'reactstrap';
 
 import "./BlockTable.scss";
 import { BlockDoc } from "../../../db/DocType";
-import HexString from "../../util/HexString/HexString";
 import { Link } from "react-router-dom";
+import { PlatformAddress } from "codechain-sdk/lib/key/classes";
 
 interface Prop {
     blocks: BlockDoc[];
@@ -65,7 +65,7 @@ class BlockTable extends React.Component<Prop, State> {
                                                 <td scope="row"><Link to={`/block/${block.number}`}>{block.number}</Link></td>
                                                 <td>{block.parcels.length}</td>
                                                 <td>{10000}</td>
-                                                <td><HexString link={`/addr-platform/0x${block.author}`} text={block.author} length={10} /></td>
+                                                <td><Link to={`/addr-platform/${PlatformAddress.fromAccountId(block.author).value}`}>{PlatformAddress.fromAccountId(block.author).value}</Link></td>
                                                 <td>{moment.unix(block.timestamp).fromNow()}</td>
                                             </tr>
                                         );

@@ -6,6 +6,8 @@ import { Table } from 'reactstrap';
 import "./ParcelTable.scss";
 import { ParcelDoc } from "../../../db/DocType";
 import HexString from "../../util/HexString/HexString";
+import { Link } from "react-router-dom";
+import { PlatformAddress } from "codechain-sdk/lib/key/classes";
 
 interface Prop {
     parcels: ParcelDoc[];
@@ -63,8 +65,8 @@ class ParcelTable extends React.Component<Prop, State> {
                                         return (
                                             <tr key={`parcel-${parcel.hash}`}>
                                                 <td><div className={`parcel-type text-center ${actionString === "changeShardState" ? "change-shard-state-type" : (actionString === "payment" ? "payment-type" : "set-regular-key-type")}`}>{actionString}</div></td>
-                                                <td scope="row"><HexString link={`/parcel/0x${parcel.hash}`} text={parcel.hash} length={10} /></td>
-                                                <td><HexString link={`/addr-platform/0x${parcel.sender}`} text={parcel.sender} length={10} /></td>
+                                                <td scope="row"><HexString link={`/parcel/0x${parcel.hash}`} text={parcel.hash} /></td>
+                                                <td><Link to={`/addr-platform/${PlatformAddress.fromAccountId(parcel.sender).value}`}>{PlatformAddress.fromAccountId(parcel.sender).value}</Link></td>
                                                 <td>{parcel.fee}</td>
                                                 <td>{moment.unix(parcel.timestamp).fromNow()}</td>
                                             </tr>

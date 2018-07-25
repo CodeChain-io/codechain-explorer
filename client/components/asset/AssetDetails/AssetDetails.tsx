@@ -3,7 +3,8 @@ import * as React from "react";
 import "./AssetDetails.scss"
 import { AssetSchemeDoc, Type } from "../../../db/DocType";
 import { Row, Col } from "reactstrap";
-import HexString from "../../util/HexString/HexString";
+import { PlatformAddress } from "codechain-sdk/lib/key/classes";
+import { Link } from "react-router-dom";
 
 interface OwnProps {
     assetType: string;
@@ -42,7 +43,7 @@ const AssetDetails = (prop: OwnProps) => {
                 Registrar
             </Col>
             <Col md="10">
-                {prop.assetScheme.registrar ? <HexString link={`/addr-platform/0x${prop.assetScheme.registrar}`} text={prop.assetScheme.registrar} /> : "Not existed"}
+                {prop.assetScheme.registrar ? <Link to={`/addr-platform/0x${PlatformAddress.fromAccountId(prop.assetScheme.registrar).value}`}>{PlatformAddress.fromAccountId(prop.assetScheme.registrar).value}</Link> : "Not existed"}
             </Col>
         </Row>
     </div>

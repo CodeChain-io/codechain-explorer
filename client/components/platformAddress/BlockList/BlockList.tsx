@@ -9,6 +9,7 @@ import "./BlockList.scss";
 import HexString from "../../util/HexString/HexString";
 import { BlockDoc } from "../../../db/DocType";
 import { Link } from "react-router-dom";
+import { PlatformAddress } from "codechain-sdk/lib/key/classes";
 
 interface OwnProps {
     blocks: BlockDoc[]
@@ -33,7 +34,7 @@ const BlockList = (prop: OwnProps) => {
                                 Author
                             </Col>
                             <Col md="10">
-                                <HexString text={block.author} />
+                                {PlatformAddress.fromAccountId(block.author).value}
                             </Col>
                         </Row>
                         <Row>

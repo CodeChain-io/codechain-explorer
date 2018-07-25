@@ -8,6 +8,8 @@ import HexString from "../../util/HexString/HexString";
 import { TransactionDoc, Type, AssetTransferTransactionDoc, AssetMintTransactionDoc } from "../../../db/DocType";
 import { Script } from "codechain-sdk/lib/core/classes";
 import { Buffer } from "buffer";
+import { Link } from "react-router-dom";
+import { PlatformAddress } from "codechain-sdk/lib/key/classes";
 
 interface Props {
     transaction: TransactionDoc;
@@ -152,7 +154,7 @@ const getTransactionInfoByType = (transaction: TransactionDoc) => {
                         Registrar
                     </Col>
                     <Col md="10">
-                        {transactionDoc.data.registrar ? <HexString link={`/addr-platform/0x${transactionDoc.data.registrar}`} text={transactionDoc.data.registrar} /> : "Not existed"}
+                        {transactionDoc.data.registrar ? <Link to={`/addr-platform/${PlatformAddress.fromAccountId(transactionDoc.data.registrar).value}`}>{PlatformAddress.fromAccountId(transactionDoc.data.registrar).value}</Link> : "Not existed"}
                     </Col>
                 </Row>
                 <Row>

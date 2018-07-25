@@ -6,6 +6,7 @@ import "./ParcelDetails.scss"
 import HexString from "../../util/HexString/HexString";
 import { ParcelDoc, Type, PaymentDoc, SetRegularKeyDoc } from "../../../db/DocType";
 import { Link } from "react-router-dom";
+import { PlatformAddress } from "codechain-sdk/lib/key/classes";
 
 interface Props {
     parcel: ParcelDoc;
@@ -20,8 +21,7 @@ const getElementByType = (parcel: ParcelDoc) => {
                     Sender
                 </Col>
                 <Col md="10">
-                    <HexString link={`/addr-platform/0x${parcel.sender}`} text={parcel.sender} />
-
+                    <Link to={`/addr-platform/${PlatformAddress.fromAccountId(parcel.sender).value}`}>{PlatformAddress.fromAccountId(parcel.sender).value}</Link>
                 </Col>
             </Row>,
             <Row key="parcel-header-table-payment-receiver">
@@ -29,7 +29,7 @@ const getElementByType = (parcel: ParcelDoc) => {
                     Receiver
                 </Col>
                 <Col md="10">
-                    <HexString link={`/addr-platform/0x${(parcel.action as PaymentDoc).receiver}`} text={(parcel.action as PaymentDoc).receiver} />
+                    <Link to={`/addr-platform/${PlatformAddress.fromAccountId((parcel.action as PaymentDoc).receiver).value}`}>{PlatformAddress.fromAccountId((parcel.action as PaymentDoc).receiver).value}</Link>
                 </Col>
             </Row>,
             <Row key="parcel-header-table-payment-amount">
@@ -109,7 +109,7 @@ const ParcelDetails = (props: Props) => {
                 Signer
             </Col>
             <Col md="10">
-                <HexString link={`/addr-platform/0x${parcel.sender}`} text={parcel.sender} />
+                <Link to={`/addr-platform/${PlatformAddress.fromAccountId(parcel.sender).value}`}>{PlatformAddress.fromAccountId(parcel.sender).value}</Link>
             </Col>
         </Row>
         <Row>

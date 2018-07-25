@@ -5,6 +5,8 @@ import HexString from "../../util/HexString/HexString";
 import { Row, Col } from "reactstrap";
 import * as arrow from "./img/arrow.png";
 import { ParcelDoc, Type, PaymentDoc, ChangeShardStateDoc, SetRegularKeyDoc } from "../../../db/DocType";
+import { PlatformAddress } from "codechain-sdk/lib/key/classes";
+import { Link } from "react-router-dom";
 
 interface Props {
     parcels: ParcelDoc[];
@@ -31,7 +33,7 @@ const ParcelObjectByType = (parcel: ParcelDoc) => {
                                         Sender
                                     </Col>
                                     <Col md="7">
-                                        <HexString link={`/addr-platform/0x${parcel.sender}`} text={parcel.sender} length={15} />
+                                        <Link to={`/addr-platform/${PlatformAddress.fromAccountId(parcel.sender).value}`}>{PlatformAddress.fromAccountId(parcel.sender).value.slice(0, 15)}...</Link>
                                     </Col>
                                 </Row>
                             </Col>
@@ -44,7 +46,7 @@ const ParcelObjectByType = (parcel: ParcelDoc) => {
                                         Receiver
                                     </Col>
                                     <Col md="7">
-                                        <HexString link={`/addr-platform/0x${(parcel.action as PaymentDoc).receiver}`} text={(parcel.action as PaymentDoc).receiver} length={15} />
+                                        <Link to={`/addr-platform/${PlatformAddress.fromAccountId((parcel.action as PaymentDoc).receiver).value}`}>{PlatformAddress.fromAccountId((parcel.action as PaymentDoc).receiver).value.slice(0, 15)}...</Link>
                                     </Col>
                                 </Row>
                             </Col>
@@ -112,7 +114,7 @@ const BlockParcelList = (props: Props) => {
                     Signer
                 </Col>
                 <Col md="10">
-                    <HexString link={`/addr-platform/0x${parcel.sender}`} text={parcel.sender} />
+                    <Link to={`/addr-platform/${PlatformAddress.fromAccountId(parcel.sender).value}`}>{PlatformAddress.fromAccountId(parcel.sender).value}</Link>
                 </Col>
             </Row>
             <Row>

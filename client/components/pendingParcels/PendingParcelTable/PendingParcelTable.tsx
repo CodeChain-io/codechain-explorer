@@ -7,6 +7,8 @@ import * as FontAwesome from "react-fontawesome";
 import "./PendingParcelTable.scss";
 import { PendingParcelDoc, Type, ChangeShardStateDoc } from "../../../db/DocType";
 import HexString from "../../util/HexString/HexString";
+import { Link } from "react-router-dom";
+import { PlatformAddress } from "codechain-sdk/lib/key/classes";
 
 interface Prop {
     pendingParcels: PendingParcelDoc[];
@@ -75,7 +77,7 @@ class PendingParcelTable extends React.Component<Prop, State> {
                                         return (
                                             <tr key={`pending-parcel-${pendingParcel.parcel.hash}`}>
                                                 <td><span className={`type-circle ${Type.isChangeShardStateDoc(pendingParcel.parcel.action) ? "change-shard-state-type" : (Type.isPaymentDoc(pendingParcel.parcel.action) ? "payment-type" : "set-regular-key-type")}`}>&nbsp;</span><HexString link={`/parcel/0x${pendingParcel.parcel.hash}`} text={pendingParcel.parcel.hash} /></td>
-                                                <td><FontAwesome className={`filter ${isSenderFilterOn ? "" : "disable"}`} onClick={_.partial(this.toogleFilter, pendingParcel.parcel.sender)} name="filter" /><HexString link={`/addr-platform/0x${pendingParcel.parcel.sender}`} text={pendingParcel.parcel.sender} /></td>
+                                                <td><FontAwesome className={`filter ${isSenderFilterOn ? "" : "disable"}`} onClick={_.partial(this.toogleFilter, pendingParcel.parcel.sender)} name="filter" /><Link to={`/addr-platform/${PlatformAddress.fromAccountId(pendingParcel.parcel.sender).value}`}>{PlatformAddress.fromAccountId(pendingParcel.parcel.sender).value}</Link></td>
                                                 <td>{pendingParcel.parcel.fee}</td>
                                                 <td>{Type.isChangeShardStateDoc(pendingParcel.parcel.action) ? (pendingParcel.parcel.action as ChangeShardStateDoc).transactions.length : 0}</td>
                                                 <td>{moment.unix(pendingParcel.timestamp).fromNow()}</td>

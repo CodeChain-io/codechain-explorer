@@ -5,8 +5,8 @@ import { Table } from 'reactstrap';
 import { Link } from "react-router-dom";
 
 import './LatestBlocks.scss';
-import HexString from "../../util/HexString/HexString";
 import { BlockDoc } from "../../../db/DocType";
+import { PlatformAddress } from "codechain-sdk/lib/key/classes";
 
 interface Props {
     blocksByNumber: {
@@ -37,7 +37,7 @@ const LatestBlocks = (props: Props) => {
                                     <td scope="row"><Link to={`/block/${block.number}`}>{block.number}</Link></td>
                                     <td>{block.parcels.length}</td>
                                     <td>{10000}</td>
-                                    <td><HexString link={`/addr-platform/0x${block.author}`} text={block.author} length={10} /></td>
+                                    <td><Link to={`/addr-platform/${PlatformAddress.fromAccountId(block.author).value}`}>{PlatformAddress.fromAccountId(block.author).value.slice(0, 20)}...</Link></td>
                                     <td>{moment.unix(block.timestamp).fromNow()}</td>
                                 </tr>
                             );

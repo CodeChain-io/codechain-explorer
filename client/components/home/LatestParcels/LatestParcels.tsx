@@ -7,6 +7,7 @@ import './LatestParcels.scss';
 import HexString from "../../util/HexString/HexString";
 import { BlockDoc } from "../../../db/DocType";
 import { Link } from "react-router-dom";
+import { PlatformAddress } from "codechain-sdk/lib/key/classes";
 
 interface Props {
     blocksByNumber: {
@@ -37,8 +38,8 @@ const LatestParcels = (props: Props) => {
                                 return (
                                     <tr key={`home-parcel-${parcel.hash}`}>
                                         <td><div className={`parcel-type text-center ${actionString === "changeShardState" ? "change-shard-state-type" : (actionString === "payment" ? "payment-type" : "set-regular-key-type")}`}>{actionString}</div></td>
-                                        <td scope="row"><HexString link={`/parcel/0x${parcel.hash}`} text={parcel.hash} length={10} /></td>
-                                        <td><HexString link={`/addr-platform/0x${parcel.sender}`} text={parcel.sender} length={10} /></td>
+                                        <td scope="row"><HexString link={`/parcel/0x${parcel.hash}`} text={parcel.hash} /></td>
+                                        <td><Link to={`/addr-platform/${PlatformAddress.fromAccountId(parcel.sender).value}`}>{PlatformAddress.fromAccountId(parcel.sender).value}</Link></td>
                                         <td>{parcel.fee}</td>
                                         <td>{moment.unix(block.timestamp).fromNow()}</td>
                                     </tr>

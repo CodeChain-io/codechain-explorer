@@ -7,6 +7,8 @@ import * as moment from "moment";
 import "./BlockDetails.scss"
 import HexString from "../../util/HexString/HexString";
 import { BlockDoc } from "../../../db/DocType";
+import { PlatformAddress } from "codechain-sdk/lib/key/classes";
+import { Link } from "react-router-dom";
 
 interface OwnProps {
     block: BlockDoc;
@@ -70,7 +72,7 @@ class BlockDetails extends React.Component<OwnProps> {
                         Author
                     </Col>
                     <Col md="10">
-                        <HexString link={`/addr-platform/0x${block.author}`} text={block.author} />
+                        <Link to={`/addr-platform/${PlatformAddress.fromAccountId(block.author).value}`}>{PlatformAddress.fromAccountId(block.author).value}</Link>
                     </Col>
                 </Row>
                 <Row>

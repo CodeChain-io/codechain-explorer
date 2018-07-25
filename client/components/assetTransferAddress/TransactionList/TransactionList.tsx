@@ -9,6 +9,8 @@ import HexString from "../../util/HexString/HexString";
 import * as arrow from "./img/arrow.png";
 import { TransactionDoc, Type, AssetMintTransactionDoc, AssetTransferTransactionDoc } from "../../../db/DocType";
 import { H256 } from "codechain-sdk/lib/core/classes";
+import { Link } from "react-router-dom";
+import { PlatformAddress } from "codechain-sdk/lib/key/classes";
 
 interface Props {
     owner: H256;
@@ -36,7 +38,7 @@ const TransactionObjectByType = (transaction: TransactionDoc, owner: H256) => {
                             <Col md="10">
                                 {
                                     transactionDoc.data.registrar ?
-                                        <HexString link={`/addr-platform/0x${transactionDoc.data.registrar}`} text={transactionDoc.data.registrar} />
+                                        <Link to={`/addr-platform/${PlatformAddress.fromAccountId(transactionDoc.data.registrar).value}`}>{PlatformAddress.fromAccountId(transactionDoc.data.registrar).value}</Link>
                                         : "Unknown"
                                 }
                             </Col>

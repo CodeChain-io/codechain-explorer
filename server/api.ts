@@ -2,10 +2,11 @@ import * as cors from 'cors';
 import * as express from 'express';
 import * as _ from 'lodash';
 
-import { H256, H160, SignedParcel, Transaction } from "codechain-sdk/lib/core/classes";
+import { H256, SignedParcel } from "codechain-sdk/lib/core/classes";
 
 import { ServerContext } from './ServerContext';
 import { TransactionDoc } from '../db/DocType';
+import { PlatformAddress } from 'codechain-sdk/lib/key/classes';
 
 const corsOptions = {
     origin: true,
@@ -159,31 +160,12 @@ export function createApiRouter(context: ServerContext, useCors = false) {
         }
     });
 
-    router.get("/account/:address", async (req, res, next) => {
-        const { address } = req.params;
-        Promise.all([
-            context.db.getNonce(new H160(address)),
-            context.db.getBalance(new H160(address)),
-        ]).then(([nonce, balance]) => {
-            res.send(({
-                nonce: nonce.value.toString(),
-                balance: balance.value.toString()
-            }));
-        });
-    });
-
-    router.get("/account/:address/nonce", async (req, res, next) => {
-        const { address } = req.params;
-        context.db.getNonce(new H160(address)).then(nonce => {
-            res.send(nonce.value.toString());
-        }).catch(next);
-    });
-
     router.get("/addr-platform-account/:address", async (req, res, next) => {
         const { address } = req.params;
+        const accountId = PlatformAddress.fromString(address).getAccountId();
         try {
-            const balance = await context.codechainSdk.rpc.chain.getBalance(new H160(address));
-            const nonce = await context.codechainSdk.rpc.chain.getNonce(new H160(address));
+            const balance = await context.codechainSdk.rpc.chain.getBalance(accountId);
+            const nonce = await context.codechainSdk.rpc.chain.getNonce(accountId);
             const account = {
                 balance: balance.value,
                 nonce: nonce.value
@@ -196,8 +178,9 @@ export function createApiRouter(context: ServerContext, useCors = false) {
 
     router.get("/addr-platform-blocks/:address", async (req, res, next) => {
         const { address } = req.params;
+        const accountId = PlatformAddress.fromString(address).getAccountId();
         try {
-            const blocks = await context.db.getBlocksByPlatformAddress(new H160(address));
+            const blocks = await context.db.getBlocksByPlatformAddress(accountId);
             res.send(blocks);
         } catch (e) {
             next(e);
@@ -206,8 +189,9 @@ export function createApiRouter(context: ServerContext, useCors = false) {
 
     router.get("/addr-platform-parcels/:address", async (req, res, next) => {
         const { address } = req.params;
+        const accountId = PlatformAddress.fromString(address).getAccountId();
         try {
-            const parcels = await context.db.getParcelsByPlatformAddress(new H160(address));
+            const parcels = await context.db.getParcelsByPlatformAddress(accountId);
             res.send(parcels);
         } catch (e) {
             next(e);
@@ -216,8 +200,9 @@ export function createApiRouter(context: ServerContext, useCors = false) {
 
     router.get("/addr-platform-assets/:address", async (req, res, next) => {
         const { address } = req.params;
+        const accountId = PlatformAddress.fromString(address).getAccountId();
         try {
-            const assetBundles = await context.db.getAssetBundlesByPlatformAddress(new H160(address));
+            const assetBundles = await context.db.getAssetBundlesByPlatformAddress(accountId);
             res.send(assetBundles);
         } catch (e) {
             next(e);

@@ -11,6 +11,12 @@
         padding-top: 8px;
         padding-bottom: 8px;
       }
+      td {
+        max-width: 0;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
       thead {
         th {
           border-bottom: 1px solid black;
