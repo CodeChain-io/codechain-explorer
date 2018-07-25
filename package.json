@@ -74,11 +74,9 @@
     },
     "scripts": {
         "start": "concurrently --kill-others \"yarn start-worker\" \"yarn start-server\" \"yarn start-client\"",
-        "prestart-client": "rm -rf client/db && cp -r db client/db",
         "start-client": "node scripts/start.js",
-        "start-server": "ts-node --project tsconfig.server.json server/index.ts",
-        "start-worker": "ts-node --project tsconfig.worker.json worker/index.ts",
-        "prebuild": "rm -rf client/db && cp -r db client/db",
+        "start-server": "ts-node --project tsconfig.server.json src/server/index.ts",
+        "start-worker": "ts-node --project tsconfig.worker.json src/worker/index.ts",
         "build": "node scripts/build.js",
         "test": "node scripts/test.js --env=jsdom",
         "postinstall": "cd node_modules/codechain-sdk && yarn install && yarn build"
