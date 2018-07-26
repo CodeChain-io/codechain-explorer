@@ -103,7 +103,7 @@ class Header extends React.Component<{}, State> {
             <Container className="searchbar-container d-flex">
                 <Search className="ml-auto" />
             </Container>
-            <LoadingBar />
+            <LoadingBar className="loading-bar" />
         </div>
     }
 
