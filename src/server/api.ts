@@ -49,6 +49,10 @@ export function createApiRouter(context: ServerContext, useCors = false) {
     router.get("/block/:id", async (req, res, next) => {
         const { id } = req.params;
         try {
+            if (isNaN(id) && !(id.length === 64 || id.length === 66)) {
+                res.send(JSON.stringify(null));
+                return;
+            }
             const block = (id.length === 64 || id.length === 66)
                 ? await context.db.getBlockByHash(new H256(id))
                 : await context.db.getBlock(Number.parseInt(id));
@@ -79,9 +83,12 @@ export function createApiRouter(context: ServerContext, useCors = false) {
     router.get("/parcel/pending/:hash", async (req, res, next) => {
         try {
             const { hash } = req.params;
-            context.db.getPendingParcel(new H256(hash)).then(pendingParcel => {
-                pendingParcel ? res.send(pendingParcel) : res.send(JSON.stringify(null));
-            })
+            if (!(hash.length === 64 || hash.length === 66)) {
+                res.send(JSON.stringify(null));
+                return;
+            }
+            const pendingParcel = await context.db.getPendingParcel(new H256(hash));
+            pendingParcel ? res.send(pendingParcel) : res.send(JSON.stringify(null));
         } catch (e) {
             next(e);
         }
@@ -90,6 +97,10 @@ export function createApiRouter(context: ServerContext, useCors = false) {
     router.get("/parcel/:hash", async (req, res, next) => {
         const { hash } = req.params;
         try {
+            if (!(hash.length === 64 || hash.length === 66)) {
+                res.send(JSON.stringify(null));
+                return;
+            }
             const parcel = await context.db.getParcel(new H256(hash));
             parcel ? res.send(parcel) : res.send(JSON.stringify(null));
         } catch (e) {
@@ -109,6 +120,10 @@ export function createApiRouter(context: ServerContext, useCors = false) {
     router.get("/tx/:hash", async (req, res, next) => {
         const { hash } = req.params;
         try {
+            if (!(hash.length === 64 || hash.length === 66)) {
+                res.send(JSON.stringify(null));
+                return;
+            }
             const transaction = await context.db.getTransaction(new H256(hash));
             transaction ? res.send(transaction) : res.send(JSON.stringify(null));
         } catch (e) {
@@ -127,9 +142,16 @@ export function createApiRouter(context: ServerContext, useCors = false) {
 
     router.get("/tx/pending/:hash", async (req, res, next) => {
         const { hash } = req.params;
-        context.db.getPendingTransaction(new H256(hash)).then(pendingTransaction => {
+        try {
+            if (!(hash.length === 64 || hash.length === 66)) {
+                res.send(JSON.stringify(null));
+                return;
+            }
+            const pendingTransaction = await context.db.getPendingTransaction(new H256(hash));
             pendingTransaction ? res.send(pendingTransaction) : res.send(JSON.stringify(null));
-        }).catch(next);
+        } catch (e) {
+            next(e);
+        }
     })
 
     router.post("/parcel/signed", async (req, res, next) => {
@@ -156,7 +178,6 @@ export function createApiRouter(context: ServerContext, useCors = false) {
 
     router.get("/asset-txs/:assetType", async (req, res, next) => {
         const { assetType } = req.params;
-        // TODO: Add limit to query.
         try {
             const txs: TransactionDoc[] = await context.db.getAssetTransferTransactions(new H256(assetType));
             const mintTx: TransactionDoc = await context.db.getAssetMintTransaction(new H256(assetType));
@@ -168,8 +189,14 @@ export function createApiRouter(context: ServerContext, useCors = false) {
 
     router.get("/addr-platform-account/:address", async (req, res, next) => {
         const { address } = req.params;
+        let accountId;
         try {
-            const accountId = PlatformAddress.fromString(address).getAccountId();
+            accountId = PlatformAddress.fromString(address).getAccountId();
+        } catch (e) {
+            res.send(JSON.stringify(null));
+            return;
+        }
+        try {
             const balance = await context.codechainSdk.rpc.chain.getBalance(accountId);
             const nonce = await context.codechainSdk.rpc.chain.getNonce(accountId);
             const account = {
@@ -268,6 +295,10 @@ export function createApiRouter(context: ServerContext, useCors = false) {
     router.get("/asset/:assetType", async (req, res, next) => {
         const { assetType } = req.params;
         try {
+            if (!(assetType.length === 64 || assetType.length === 66)) {
+                res.send(JSON.stringify(null));
+                return;
+            }
             const assetScheme = await context.db.getAssetScheme(new H256(assetType));
             assetScheme ? res.send(assetScheme) : res.send(JSON.stringify(null));
         } catch (e) {

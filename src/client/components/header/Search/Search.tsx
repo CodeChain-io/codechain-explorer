@@ -12,6 +12,7 @@ interface State {
     inputValue: string;
     status: string;
     redirectTo?: string;
+    requestCount: number;
 }
 
 interface Props {
@@ -23,7 +24,8 @@ class Search extends React.Component<Props, State> {
         super(props);
         this.state = {
             status: "wait",
-            inputValue: ""
+            inputValue: "",
+            requestCount: 0
         };
     }
 
@@ -31,16 +33,17 @@ class Search extends React.Component<Props, State> {
         this.setState({
             status: "wait",
             inputValue: "",
-            redirectTo: undefined
+            redirectTo: undefined,
+            requestCount: 0
         });
     }
 
     public render() {
-        const { inputValue, status, redirectTo } = this.state;
+        const { inputValue, status, redirectTo, requestCount } = this.state;
         return <Form inline={true} onSubmit={this.handleSumbit} className={`search-form ${this.props.className}`}>
             <FormGroup className="mb-0">
                 <div>
-                    <Input className="search-input" value={inputValue} onChange={this.updateInputValue} type="text" placeholder="Block / Parcel / Tx / Asset / Address" />
+                    <Input className={`search-input ${requestCount === 0 && status === "notFound" && !redirectTo ? "is-invalid" : ""}`} value={inputValue} onChange={this.updateInputValue} type="text" placeholder="Block / Parcel / Tx / Asset / Address" />
                     <LoadingBar scope="searchBar" className="search-loading-bar" />
                 </div>
             </FormGroup>
@@ -57,36 +60,34 @@ class Search extends React.Component<Props, State> {
                     : null
             }
             {
-                redirectTo ?
-                    <Redirect push={true} to={redirectTo} />
-                    : null
+                requestCount === 0 && redirectTo ? <Redirect push={true} to={redirectTo} /> : null
             }
         </Form>
     }
 
     private onBlock = (block: BlockDoc) => {
         this.cancelOtherRequest();
-        this.setState({ redirectTo: `/block/${block.number}` });
+        this.setState({ redirectTo: `/block/${block.number}`, requestCount: this.state.requestCount - 1 });
     }
 
     private onParcel = (parcel: ParcelDoc) => {
         this.cancelOtherRequest();
-        this.setState({ redirectTo: `/parcel/0x${parcel.hash}` });
+        this.setState({ redirectTo: `/parcel/0x${parcel.hash}`, requestCount: this.state.requestCount - 1 });
     }
 
     private onTransaction = (transaction: TransactionDoc) => {
         this.cancelOtherRequest();
-        this.setState({ redirectTo: `/tx/0x${transaction.data.hash}` });
+        this.setState({ redirectTo: `/tx/0x${transaction.data.hash}`, requestCount: this.state.requestCount - 1 });
     }
 
     private onAssetScheme = (asset: AssetSchemeDoc, assetType: string) => {
         this.cancelOtherRequest();
-        this.setState({ redirectTo: `/asset/${assetType}` });
+        this.setState({ redirectTo: `/asset/${assetType}`, requestCount: this.state.requestCount - 1 });
     }
 
     private onAccount = (account: { nonce: U256, balance: U256 }, address: string) => {
         this.cancelOtherRequest();
-        this.setState({ redirectTo: `/addr-platform/${address}` });
+        this.setState({ redirectTo: `/addr-platform/${address}`, requestCount: this.state.requestCount - 1 });
     }
 
     private cancelOtherRequest = () => {
@@ -94,11 +95,19 @@ class Search extends React.Component<Props, State> {
     }
 
     private onReqeustNotExist = () => {
-        // TODO
+        this.handleNotFoundOrError();
     }
 
     private onError = (e: any) => {
-        console.log(e);
+        this.handleNotFoundOrError();
+    }
+
+    private handleNotFoundOrError = () => {
+        if (this.state.requestCount === 1) {
+            this.setState({ requestCount: 0, status: "notFound" });
+        } else {
+            this.setState({ requestCount: this.state.requestCount - 1 });
+        }
     }
 
     private updateInputValue = (e: any) => {
@@ -109,7 +118,7 @@ class Search extends React.Component<Props, State> {
 
     private handleSumbit = (e: any) => {
         e.preventDefault();
-        this.setState({ status: "search" });
+        this.setState({ status: "search", requestCount: 5 });
     }
 }
 
