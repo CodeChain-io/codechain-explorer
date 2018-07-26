@@ -1,4 +1,5 @@
 import * as React from "react";
+import { Dispatch, connect } from "react-redux";
 
 import { apiRequest, ApiError } from "./ApiRequest";
 import { AssetBundleDoc } from "../../db/DocType";
@@ -9,10 +10,16 @@ interface OwnProps {
     onError: (e: ApiError) => void;
 }
 
-class RequestAssetTransferAddressUTXO extends React.Component<OwnProps> {
+interface DispatchProps {
+    dispatch: Dispatch;
+}
+
+type Props = OwnProps & DispatchProps;
+
+class RequestAssetTransferAddressUTXOInternal extends React.Component<Props> {
     public componentWillMount() {
-        const { address, onUTXO, onError } = this.props;
-        apiRequest({ path: `addr-asset-utxo/${address}` }).then((response: AssetBundleDoc[]) => {
+        const { address, onUTXO, onError, dispatch } = this.props;
+        apiRequest({ path: `addr-asset-utxo/${address}`, dispatch }).then((response: AssetBundleDoc[]) => {
             onUTXO(response);
         }).catch(onError);
     }
@@ -21,5 +28,9 @@ class RequestAssetTransferAddressUTXO extends React.Component<OwnProps> {
         return (null);
     }
 }
+
+const RequestAssetTransferAddressUTXO = connect(null, ((dispatch: Dispatch) => {
+    return { dispatch }
+}))(RequestAssetTransferAddressUTXOInternal);
 
 export default RequestAssetTransferAddressUTXO;

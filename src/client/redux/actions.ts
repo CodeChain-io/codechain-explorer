@@ -1,6 +1,12 @@
 import { BlockDoc, ParcelDoc, TransactionDoc, AssetSchemeDoc } from "../../db/DocType";
+import { combineReducers } from "redux";
+import { loadingBarReducer } from 'react-redux-loading-bar'
 
 export interface RootState {
+    appReducer: AppReducer;
+}
+
+interface AppReducer {
     bestBlockNumber?: number;
     blocksByNumber: {
         [n: number]: BlockDoc;
@@ -22,7 +28,7 @@ export interface RootState {
     }
 }
 
-const initialState: RootState = {
+const initialState: AppReducer = {
     bestBlockNumber: undefined,
     blocksByNumber: {},
     blocksByHash: {},
@@ -71,7 +77,7 @@ interface CacheAssetTransactionsAction {
 
 type Action = BestBlockNumberAction | CacheAssetSchemeAction | CacheBlockAction | CacheParcelAction | CacheTransactionAction | CacheAssetTransactionsAction;
 
-export const rootReducer = (state = initialState, action: Action) => {
+const appReducer = (state = initialState, action: Action) => {
     if (action.type === "BEST_BLOCK_NUMBER_ACTION") {
         return { ...state, bestBlockNumber: action.data }
     } else if (action.type === "CACHE_BLOCK") {
@@ -99,3 +105,8 @@ export const rootReducer = (state = initialState, action: Action) => {
         return state;
     }
 };
+
+export const rootReducer = combineReducers({
+    appReducer,
+    loadingBar: loadingBarReducer
+})

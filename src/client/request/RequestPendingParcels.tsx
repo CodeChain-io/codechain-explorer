@@ -1,4 +1,5 @@
 import * as React from "react";
+import { Dispatch, connect } from "react-redux";
 
 import { apiRequest, ApiError } from "./ApiRequest";
 import { PendingParcelDoc } from "../../db/DocType";
@@ -8,10 +9,16 @@ interface OwnProps {
     onError: (e: ApiError) => void;
 }
 
-class RequestPendingParcels extends React.Component<OwnProps> {
+interface DispatchProps {
+    dispatch: Dispatch;
+}
+
+type Props = OwnProps & DispatchProps;
+
+class RequestPendingParcelsInternal extends React.Component<Props> {
     public componentWillMount() {
-        const { onPendingParcels, onError } = this.props;
-        apiRequest({ path: `parcels/pending` }).then((response: any) => {
+        const { onPendingParcels, onError, dispatch } = this.props;
+        apiRequest({ path: `parcels/pending`, dispatch }).then((response: any) => {
             onPendingParcels(response);
         }).catch(onError);
     }
@@ -20,5 +27,9 @@ class RequestPendingParcels extends React.Component<OwnProps> {
         return (null);
     }
 }
+
+const RequestPendingParcels = connect(null, ((dispatch: Dispatch) => {
+    return { dispatch }
+}))(RequestPendingParcelsInternal);
 
 export default RequestPendingParcels;

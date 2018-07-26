@@ -1,8 +1,9 @@
 import * as React from "react";
 import { Container, Navbar, NavbarBrand, NavbarToggler, Nav, NavItem, NavLink, Collapse, UncontrolledDropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
 import { IndexLinkContainer } from 'react-router-bootstrap';
+import LoadingBar from "react-redux-loading-bar";
 import HealthChecker from '../../util/HealthChecker/HealthChecker';
-// import Search from "../Search/Search";
+import Search from "../Search/Search";
 
 import * as logo from "./img/logo.png";
 
@@ -99,13 +100,10 @@ class Header extends React.Component<{}, State> {
                     </Collapse>
                 </Container>
             </Navbar>
-            {
-                /*
-                    <Container className="searchbar-container d-flex">
-                        <Search className="ml-auto" />
-                    </Container>
-                */
-            }
+            <Container className="searchbar-container d-flex">
+                <Search className="ml-auto" />
+            </Container>
+            <LoadingBar />
         </div>
     }
 

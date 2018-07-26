@@ -31,7 +31,7 @@ class RequestAssetSchemeInternal extends React.Component<Props> {
             setTimeout(() => onAssetScheme(cached));
             return
         }
-        apiRequest({ path: `asset/${assetType}` }).then((response: AssetSchemeDoc) => {
+        apiRequest({ path: `asset/${assetType}`, dispatch }).then((response: AssetSchemeDoc) => {
             if (response === null) {
                 return onNotFound();
             }
@@ -56,11 +56,11 @@ class RequestAssetSchemeInternal extends React.Component<Props> {
 const RequestAssetScheme = connect((state: RootState, props: OwnProps) => {
     if (props.assetType.length === 64 || props.assetType.length === 66) {
         return {
-            cached: state.assetSchemeByAssetType[new H256(props.assetType).value]
+            cached: state.appReducer.assetSchemeByAssetType[new H256(props.assetType).value]
         };
     }
     return {
-        cached: state.assetSchemeByAssetType[props.assetType]
+        cached: state.appReducer.assetSchemeByAssetType[props.assetType]
     };
 })(RequestAssetSchemeInternal);
 

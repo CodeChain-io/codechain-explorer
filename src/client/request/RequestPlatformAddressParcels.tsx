@@ -1,4 +1,5 @@
 import * as React from "react";
+import { Dispatch, connect } from "react-redux";
 
 import { apiRequest, ApiError } from "./ApiRequest";
 import { ParcelDoc } from "../../db/DocType";
@@ -9,10 +10,16 @@ interface OwnProps {
     onError: (e: ApiError) => void;
 }
 
-class RequestPlatformAddressParcels extends React.Component<OwnProps> {
+interface DispatchProps {
+    dispatch: Dispatch;
+}
+
+type Props = OwnProps & DispatchProps;
+
+class RequestPlatformAddressParcelsInternal extends React.Component<Props> {
     public componentWillMount() {
-        const { address, onParcels, onError } = this.props;
-        apiRequest({ path: `addr-platform-parcels/${address}` }).then((response: ParcelDoc[]) => {
+        const { address, onParcels, onError, dispatch } = this.props;
+        apiRequest({ path: `addr-platform-parcels/${address}`, dispatch }).then((response: ParcelDoc[]) => {
             onParcels(response);
         }).catch(onError);
     }
@@ -21,5 +28,9 @@ class RequestPlatformAddressParcels extends React.Component<OwnProps> {
         return (null);
     }
 }
+
+const RequestPlatformAddressParcels = connect(null, ((dispatch: Dispatch) => {
+    return { dispatch }
+}))(RequestPlatformAddressParcelsInternal);
 
 export default RequestPlatformAddressParcels;

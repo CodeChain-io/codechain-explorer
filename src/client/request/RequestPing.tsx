@@ -1,4 +1,5 @@
 import * as React from "react";
+import { Dispatch, connect } from "react-redux";
 
 import { apiRequest, ApiError } from "./ApiRequest";
 
@@ -7,7 +8,13 @@ interface OwnProps {
     onError: (e: ApiError) => void;
 }
 
-class RequestPing extends React.Component<OwnProps> {
+interface DispatchProps {
+    dispatch: Dispatch;
+}
+
+type Props = OwnProps & DispatchProps;
+
+class RequestPingInternal extends React.Component<Props> {
     public componentWillMount() {
         const { onPong, onError } = this.props;
         apiRequest({ path: `ping` }).then((response: string) => {
@@ -23,5 +30,9 @@ class RequestPing extends React.Component<OwnProps> {
         return (null);
     }
 }
+
+const RequestPing = connect(null, ((dispatch: Dispatch) => {
+    return { dispatch }
+}))(RequestPingInternal);
 
 export default RequestPing;

@@ -1,4 +1,5 @@
 import * as React from "react";
+import { Dispatch, connect } from "react-redux";
 
 import { apiRequest, ApiError } from "./ApiRequest";
 import { PendingParcelDoc } from "../../db/DocType";
@@ -10,10 +11,16 @@ interface OwnProps {
     hash: string;
 }
 
-class RequestPendingParcel extends React.Component<OwnProps> {
+interface DispatchProps {
+    dispatch: Dispatch;
+}
+
+type Props = OwnProps & DispatchProps;
+
+class RequestPendingParcelInternal extends React.Component<Props> {
     public componentWillMount() {
-        const { onPendingParcel, onError, onPendingParcelNotExist, hash } = this.props;
-        apiRequest({ path: `parcel/pending/${hash}` }).then((response: any) => {
+        const { onPendingParcel, onError, onPendingParcelNotExist, hash, dispatch } = this.props;
+        apiRequest({ path: `parcel/pending/${hash}`, dispatch }).then((response: any) => {
             if (!response) {
                 onPendingParcelNotExist();
             }
@@ -25,5 +32,9 @@ class RequestPendingParcel extends React.Component<OwnProps> {
         return (null);
     }
 }
+
+const RequestPendingParcel = connect(null, ((dispatch: Dispatch) => {
+    return { dispatch }
+}))(RequestPendingParcelInternal);
 
 export default RequestPendingParcel;

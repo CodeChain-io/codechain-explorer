@@ -30,7 +30,7 @@ class RequestTransactionInternal extends React.Component<Props> {
             setTimeout(() => onTransaction(cached));
             return;
         }
-        apiRequest({ path: `tx/${hash}` }).then((response: TransactionDoc) => {
+        apiRequest({ path: `tx/${hash}`, dispatch }).then((response: TransactionDoc) => {
             if (response === null) {
                 return onTransactionNotExist();
             }
@@ -61,9 +61,9 @@ class RequestTransactionInternal extends React.Component<Props> {
 
 const RequestTransaction = connect((state: RootState, props: OwnProps) => {
     if (props.hash.length === 66 || props.hash.length === 64) {
-        return { cached: state.transactionByHash[new H256(props.hash).value] };
+        return { cached: state.appReducer.transactionByHash[new H256(props.hash).value] };
     }
-    return { cached: state.transactionByHash[props.hash] };
+    return { cached: state.appReducer.transactionByHash[props.hash] };
 }, (dispatch: Dispatch) => ({ dispatch }))(RequestTransactionInternal);
 
 export default RequestTransaction;

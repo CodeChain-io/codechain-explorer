@@ -1712,20 +1712,6 @@ code-point-at@^1.0.0:
     ripemd160 "^2.0.2"
     rlp "^2.0.0"
 
-"codechain-sdk@https://github.com/CodeChain-io/codechain-sdk-js#e361ad40bc583774bb22849930d837b8520a8918":
-  version "0.1.0-alpha.13"
-  resolved "https://github.com/CodeChain-io/codechain-sdk-js#e361ad40bc583774bb22849930d837b8520a8918"
-  dependencies:
-    bignumber.js "^6.0.0"
-    blakejs "^1.1.0"
-    buffer "^5.1.0"
-    elliptic "^6.4.0"
-    jayson "^2.0.6"
-    lodash "^4.17.10"
-    node-fetch "^2.1.2"
-    ripemd160 "^2.0.2"
-    rlp "^2.0.0"
-
 collection-visit@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/collection-visit/-/collection-visit-1.0.0.tgz#4bc0373c164bc3291b4d368c829cf1a80a59dca0"
@@ -6268,7 +6254,7 @@ react-fontawesome@^1.6.1:
   dependencies:
     prop-types "^15.5.6"
 
-react-lifecycles-compat@^3.0.4:
+react-lifecycles-compat@^3.0.2, react-lifecycles-compat@^3.0.4:
   version "3.0.4"
   resolved "https://registry.yarnpkg.com/react-lifecycles-compat/-/react-lifecycles-compat-3.0.4.tgz#4f1a273afdfc8f3488a8c516bfda78f872352362"
 
@@ -6278,6 +6264,13 @@ react-popper@^0.10.4:
   dependencies:
     popper.js "^1.14.1"
     prop-types "^15.6.1"
+
+react-redux-loading-bar@^4.0.5:
+  version "4.0.5"
+  resolved "https://registry.yarnpkg.com/react-redux-loading-bar/-/react-redux-loading-bar-4.0.5.tgz#a536ca27e39070f017f623e4a6d4aefc860ce650"
+  dependencies:
+    prop-types "^15.5.6"
+    react-lifecycles-compat "^3.0.2"
 
 react-redux@^5.0.7:
   version "5.0.7"

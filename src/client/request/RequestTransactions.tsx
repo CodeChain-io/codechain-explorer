@@ -1,4 +1,5 @@
 import * as React from "react";
+import { Dispatch, connect } from "react-redux";
 
 import { apiRequest, ApiError } from "./ApiRequest";
 import { TransactionDoc } from "../../db/DocType";
@@ -8,10 +9,16 @@ interface OwnProps {
     onError: (e: ApiError) => void;
 }
 
-class RequestTransactions extends React.Component<OwnProps> {
+interface DispatchProps {
+    dispatch: Dispatch;
+}
+
+type Props = OwnProps & DispatchProps;
+
+class RequestTransactionsInternal extends React.Component<Props> {
     public componentWillMount() {
-        const { onError, onTransactions } = this.props;
-        apiRequest({ path: `txs` }).then((response: any) => {
+        const { onError, onTransactions, dispatch } = this.props;
+        apiRequest({ path: `txs`, dispatch }).then((response: any) => {
             onTransactions(response);
         }).catch(onError);
     }
@@ -20,5 +27,9 @@ class RequestTransactions extends React.Component<OwnProps> {
         return (null);
     }
 }
+
+const RequestTransactions = connect(null, ((dispatch: Dispatch) => {
+    return { dispatch }
+}))(RequestTransactionsInternal);
 
 export default RequestTransactions;

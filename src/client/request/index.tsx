@@ -1,6 +1,5 @@
 import RequestPing from "./RequestPing";
 import RequestBlockNumber from "./RequestBlockNumber";
-import RequestBlockHash from "./RequestBlockHash";
 import RequestBlock from "./RequestBlock";
 import RequestParcel from "./RequestParcel";
 import RequestAssetScheme from "./RequestAssetScheme";
@@ -20,7 +19,6 @@ import RequestTransactions from "./RequestTransactions";
 export { RequestPing };
 export { RequestParcel };
 export { RequestBlockNumber };
-export { RequestBlockHash };
 export { RequestBlock };
 export { RequestAssetScheme };
 export { RequestPendingParcels };

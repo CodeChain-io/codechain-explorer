@@ -31,7 +31,7 @@ class RequestParcelInternal extends React.Component<Props> {
             setTimeout(() => onParcel(cached));
             return;
         }
-        apiRequest({ path: `parcel/${hash}` }).then((response: ParcelDoc) => {
+        apiRequest({ path: `parcel/${hash}`, dispatch }).then((response: ParcelDoc) => {
             if (response === null) {
                 return onParcelNotExist();
             }
@@ -69,9 +69,9 @@ class RequestParcelInternal extends React.Component<Props> {
 
 const RequestParcel = connect((state: RootState, props: OwnProps) => {
     if (props.hash.length === 66 || props.hash.length === 64) {
-        return { cached: state.parcelByHash[new H256(props.hash).value] };
+        return { cached: state.appReducer.parcelByHash[new H256(props.hash).value] };
     }
-    return { cached: state.parcelByHash[props.hash] };
+    return { cached: state.appReducer.parcelByHash[props.hash] };
 }, (dispatch: Dispatch) => ({ dispatch }))(RequestParcelInternal);
 
 export default RequestParcel;

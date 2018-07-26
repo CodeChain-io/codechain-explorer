@@ -1,4 +1,5 @@
 import * as React from "react";
+import { Dispatch, connect } from "react-redux";
 
 import { U256 } from "codechain-sdk/lib/core/classes";
 
@@ -10,10 +11,16 @@ interface OwnProps {
     onError: (e: ApiError) => void;
 }
 
-class RequestPlatformAddressAccount extends React.Component<OwnProps> {
+interface DispatchProps {
+    dispatch: Dispatch;
+}
+
+type Props = OwnProps & DispatchProps;
+
+class RequestPlatformAddressAccountInternal extends React.Component<Props> {
     public componentWillMount() {
-        const { address, onAccount, onError } = this.props;
-        apiRequest({ path: `addr-platform-account/${address}` }).then((response: any) => {
+        const { address, onAccount, onError, dispatch } = this.props;
+        apiRequest({ path: `addr-platform-account/${address}`, dispatch }).then((response: any) => {
             const { nonce, balance } = response;
             onAccount({
                 nonce: new U256(nonce),
@@ -26,5 +33,9 @@ class RequestPlatformAddressAccount extends React.Component<OwnProps> {
         return (null);
     }
 }
+
+const RequestPlatformAddressAccount = connect(null, ((dispatch: Dispatch) => {
+    return { dispatch }
+}))(RequestPlatformAddressAccountInternal);
 
 export default RequestPlatformAddressAccount;

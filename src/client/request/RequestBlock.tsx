@@ -29,7 +29,7 @@ class RequestBlockInternal extends React.Component<OwnProps & StateProps & Dispa
             setTimeout(() => onBlock(cached));
             return;
         }
-        apiRequest({ path: `block/${id}` }).then((response: BlockDoc) => {
+        apiRequest({ path: `block/${id}`, dispatch }).then((response: BlockDoc) => {
             const block = response;
             dispatch({
                 type: "CACHE_BLOCK",
@@ -61,7 +61,7 @@ class RequestBlockInternal extends React.Component<OwnProps & StateProps & Dispa
             })
 
             onBlock(block);
-        }).catch(onError);
+        }).catch(onError)
     }
 
     public render() {
@@ -74,7 +74,7 @@ function isString(x: number | string): x is string {
 }
 
 const RequestBlock = connect((state: RootState, props: OwnProps) => {
-    const { blocksByHash, blocksByNumber } = state;
+    const { blocksByHash, blocksByNumber } = state.appReducer;
     const { id } = props;
     if (isString(id)) {
         if (id.length === 66 || id.length === 64) {

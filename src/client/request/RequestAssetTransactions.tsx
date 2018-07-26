@@ -30,7 +30,7 @@ class RequestAssetTransactionsInternal extends React.Component<Props> {
             setTimeout(() => onTransactions(cached));
             return
         }
-        apiRequest({ path: `asset-txs/${assetType}` }).then((response: TransactionDoc[]) => {
+        apiRequest({ path: `asset-txs/${assetType}`, dispatch }).then((response: TransactionDoc[]) => {
             const transactions = response;
             const cacheKey = new H256(assetType).value;
             dispatch({
@@ -52,11 +52,11 @@ class RequestAssetTransactionsInternal extends React.Component<Props> {
 const RequestAssetTransactions = connect((state: RootState, props: OwnProps) => {
     if (props.assetType.length === 64 || props.assetType.length === 66) {
         return {
-            cached: state.transactionsByAssetType[new H256(props.assetType).value]
+            cached: state.appReducer.transactionsByAssetType[new H256(props.assetType).value]
         };
     }
     return {
-        cached: state.transactionsByAssetType[props.assetType]
+        cached: state.appReducer.transactionsByAssetType[props.assetType]
     };
 })(RequestAssetTransactionsInternal);
 

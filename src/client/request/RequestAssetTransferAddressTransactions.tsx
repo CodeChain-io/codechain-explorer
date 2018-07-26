@@ -1,4 +1,5 @@
 import * as React from "react";
+import { Dispatch, connect } from "react-redux";
 
 import { apiRequest, ApiError } from "./ApiRequest";
 import { TransactionDoc } from "../../db/DocType";
@@ -9,10 +10,16 @@ interface OwnProps {
     onError: (e: ApiError) => void;
 }
 
-class RequestAssetTransferAddressTransactions extends React.Component<OwnProps> {
+interface DispatchProps {
+    dispatch: Dispatch;
+}
+
+type Props = OwnProps & DispatchProps;
+
+class RequestAssetTransferAddressTransactionsInternal extends React.Component<Props> {
     public componentWillMount() {
-        const { address, onTransactions, onError } = this.props;
-        apiRequest({ path: `addr-asset-txs/${address}` }).then((response: TransactionDoc[]) => {
+        const { address, onTransactions, onError, dispatch } = this.props;
+        apiRequest({ path: `addr-asset-txs/${address}`, dispatch }).then((response: TransactionDoc[]) => {
             onTransactions(response);
         }).catch(onError);
     }
@@ -20,5 +27,9 @@ class RequestAssetTransferAddressTransactions extends React.Component<OwnProps> 
         return (null);
     }
 }
+
+const RequestAssetTransferAddressTransactions = connect(null, ((dispatch: Dispatch) => {
+    return { dispatch }
+}))(RequestAssetTransferAddressTransactionsInternal);
 
 export default RequestAssetTransferAddressTransactions;
