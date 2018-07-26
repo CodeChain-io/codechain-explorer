@@ -41,7 +41,7 @@ class Block extends React.Component<Props, State> {
         const { block, page } = this.state;
 
         if (!block) {
-            return <RequestBlock id={id} onBlock={this.onBlock} onError={this.onError} />;
+            return <RequestBlock id={id} onBlock={this.onBlock} onError={this.onError} onBlockNotExist={this.onBlockNotExist} />;
         }
         return (
             <Container className="block">
@@ -77,6 +77,10 @@ class Block extends React.Component<Props, State> {
     private loadMore = (e: any) => {
         e.preventDefault();
         this.setState({ page: this.state.page + 1 })
+    }
+
+    private onBlockNotExist = () => {
+        // TODO
     }
 
     private onBlock = (block: BlockDoc) => {

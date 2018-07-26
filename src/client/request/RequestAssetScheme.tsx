@@ -9,9 +9,10 @@ import { AssetSchemeDoc } from "../../db/DocType";
 
 interface OwnProps {
     assetType: string;
-    onAssetScheme: (s: AssetSchemeDoc) => void;
-    onNotFound: () => void;
+    onAssetScheme: (assetScheme: AssetSchemeDoc, assetType: string) => void;
+    onAssetSchemeNotExist: () => void;
     onError: (e: ApiError) => void;
+    progressBarTarget?: string;
 }
 
 interface StateProps {
@@ -26,14 +27,14 @@ type Props = OwnProps & StateProps & DispatchProps;
 
 class RequestAssetSchemeInternal extends React.Component<Props> {
     public componentWillMount() {
-        const { cached, dispatch, assetType, onAssetScheme, onNotFound, onError } = this.props;
+        const { cached, dispatch, assetType, onAssetScheme, onAssetSchemeNotExist, onError, progressBarTarget } = this.props;
         if (cached) {
-            setTimeout(() => onAssetScheme(cached));
+            setTimeout(() => onAssetScheme(cached, assetType));
             return
         }
-        apiRequest({ path: `asset/${assetType}`, dispatch }).then((response: AssetSchemeDoc) => {
+        apiRequest({ path: `asset/${assetType}`, dispatch, progressBarTarget }).then((response: AssetSchemeDoc) => {
             if (response === null) {
-                return onNotFound();
+                return onAssetSchemeNotExist();
             }
             const assetScheme = response;
             const cacheKey = new H256(assetType).value;
@@ -44,7 +45,7 @@ class RequestAssetSchemeInternal extends React.Component<Props> {
                     assetScheme
                 }
             });
-            onAssetScheme(assetScheme);
+            onAssetScheme(assetScheme, assetType);
         }).catch(onError);
     }
 

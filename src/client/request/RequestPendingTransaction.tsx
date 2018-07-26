@@ -8,6 +8,7 @@ interface OwnProps {
     onPendingTransaction: (pendingTransactionDoc: PendingTransactionDoc) => void;
     onError: (e: ApiError) => void;
     onPendingTransactionNotExist: () => void;
+    progressBarTarget?: string;
     hash: string;
 }
 
@@ -19,10 +20,10 @@ type Props = OwnProps & DispatchProps;
 
 class RequestPendingTransactionInternal extends React.Component<Props> {
     public componentWillMount() {
-        const { onPendingTransaction, onError, hash, onPendingTransactionNotExist, dispatch } = this.props;
-        apiRequest({ path: `tx/pending/${hash}`, dispatch }).then((response: any) => {
+        const { onPendingTransaction, onError, hash, onPendingTransactionNotExist, dispatch, progressBarTarget } = this.props;
+        apiRequest({ path: `tx/pending/${hash}`, dispatch, progressBarTarget }).then((response: any) => {
             if (response === null) {
-                onPendingTransactionNotExist();
+                return onPendingTransactionNotExist();
             }
             onPendingTransaction(response);
         }).catch(onError);

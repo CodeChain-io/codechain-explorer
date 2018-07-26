@@ -12,6 +12,7 @@ interface OwnProps {
     onParcel: (parcel: ParcelDoc) => void;
     onParcelNotExist: () => void;
     onError: (e: ApiError) => void;
+    progressBarTarget?: string;
 }
 
 interface StateProps {
@@ -26,12 +27,12 @@ type Props = OwnProps & StateProps & DispatchProps;
 
 class RequestParcelInternal extends React.Component<Props> {
     public componentWillMount() {
-        const { cached, dispatch, hash, onParcel, onParcelNotExist, onError } = this.props;
+        const { cached, dispatch, hash, onParcel, onParcelNotExist, onError, progressBarTarget } = this.props;
         if (cached) {
             setTimeout(() => onParcel(cached));
             return;
         }
-        apiRequest({ path: `parcel/${hash}`, dispatch }).then((response: ParcelDoc) => {
+        apiRequest({ path: `parcel/${hash}`, dispatch, progressBarTarget }).then((response: ParcelDoc) => {
             if (response === null) {
                 return onParcelNotExist();
             }

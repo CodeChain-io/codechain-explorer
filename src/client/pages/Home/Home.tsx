@@ -51,7 +51,7 @@ class Home extends React.Component<{}, State> {
                     </div>
                     {/* Reqest blocks */}
                     {_.map(_.reverse(_.range(Math.max(0, (bestBlockNumber + 1) - 10), bestBlockNumber + 1)), n => {
-                        return <RequestBlock key={'request-block-num-' + n} id={n} onBlock={this.onBlock} onError={this.onError} />
+                        return <RequestBlock key={'request-block-num-' + n} id={n} onBlock={this.onBlock} onError={this.onError} onBlockNotExist={this.onBlockNotExist} />
                     })}
                 </Container>
                 <RequestBlockNumber
@@ -71,6 +71,10 @@ class Home extends React.Component<{}, State> {
             ...this.state,
             blocksByNumber
         });
+    }
+
+    private onBlockNotExist = () => {
+        // TODO
     }
 
     private onBlockNumber = (n: number) => {

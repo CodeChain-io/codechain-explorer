@@ -11,6 +11,7 @@ interface OwnProps {
     onTransaction: (transaction: TransactionDoc) => void;
     onTransactionNotExist: () => void;
     onError: (e: ApiError) => void;
+    progressBarTarget?: string;
 }
 
 interface StateProps {
@@ -25,12 +26,12 @@ type Props = OwnProps & StateProps & DispatchProps;
 
 class RequestTransactionInternal extends React.Component<Props> {
     public componentWillMount() {
-        const { cached, dispatch, hash, onTransaction, onTransactionNotExist, onError } = this.props;
+        const { cached, dispatch, hash, onTransaction, onTransactionNotExist, onError, progressBarTarget } = this.props;
         if (cached) {
             setTimeout(() => onTransaction(cached));
             return;
         }
-        apiRequest({ path: `tx/${hash}`, dispatch }).then((response: TransactionDoc) => {
+        apiRequest({ path: `tx/${hash}`, dispatch, progressBarTarget }).then((response: TransactionDoc) => {
             if (response === null) {
                 return onTransactionNotExist();
             }

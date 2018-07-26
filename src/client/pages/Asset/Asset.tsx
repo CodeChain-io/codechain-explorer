@@ -48,7 +48,7 @@ class Asset extends React.Component<Props, State> {
                 <h1>Asset Information</h1>
                 {assetScheme
                     ? <div><AssetDetails assetType={type} assetScheme={assetScheme} /></div>
-                    : <div><RequestAssetScheme assetType={type} onAssetScheme={this.onAssetScheme} onNotFound={this.onAssetSchemeNotFound} onError={this.onError} /></div>}
+                    : <div><RequestAssetScheme assetType={type} onAssetScheme={this.onAssetScheme} onAssetSchemeNotExist={this.onAssetSchemeNotFound} onError={this.onError} /></div>}
                 <h2 className="sub-title">Transaction History</h2>
                 {
                     transactions.length !== 0 ?

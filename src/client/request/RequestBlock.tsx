@@ -12,6 +12,8 @@ interface OwnProps {
     id: number | string;
     onBlock: (b: BlockDoc) => void;
     onError: (e: any) => void;
+    onBlockNotExist: () => void;
+    progressBarTarget?: string;
 }
 
 interface StateProps {
@@ -24,12 +26,15 @@ interface DispatchProps {
 
 class RequestBlockInternal extends React.Component<OwnProps & StateProps & DispatchProps> {
     public componentWillMount() {
-        const { cached, dispatch, onError, onBlock, id } = this.props;
+        const { cached, dispatch, onError, onBlock, id, progressBarTarget, onBlockNotExist } = this.props;
         if (cached) {
             setTimeout(() => onBlock(cached));
             return;
         }
-        apiRequest({ path: `block/${id}`, dispatch }).then((response: BlockDoc) => {
+        apiRequest({ path: `block/${id}`, dispatch, progressBarTarget }).then((response: BlockDoc) => {
+            if (response === null) {
+                return onBlockNotExist();
+            }
             const block = response;
             dispatch({
                 type: "CACHE_BLOCK",

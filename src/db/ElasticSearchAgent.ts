@@ -42,7 +42,7 @@ export class ElasticSearchAgent {
         });
     }
 
-    public getBlock = async (blockNumber: number): Promise<BlockDoc> => {
+    public getBlock = async (blockNumber: number): Promise<BlockDoc | null> => {
         return this.search({
             sort: [
                 {
@@ -58,6 +58,9 @@ export class ElasticSearchAgent {
                 }
             }
         }).then((response: SearchResponse<BlockDoc>) => {
+            if (response.hits.total === 0) {
+                return null;
+            }
             return response.hits.hits[0]._source;
         });
     }
@@ -85,7 +88,7 @@ export class ElasticSearchAgent {
         });
     }
 
-    public getBlockByHash = async (hash: H256): Promise<BlockDoc> => {
+    public getBlockByHash = async (hash: H256): Promise<BlockDoc | null> => {
         return this.search({
             "sort": [
                 {
@@ -102,6 +105,9 @@ export class ElasticSearchAgent {
                 }
             }
         }).then((response: SearchResponse<BlockDoc>) => {
+            if (response.hits.total === 0) {
+                return null;
+            }
             return response.hits.hits[0]._source;
         });
     }

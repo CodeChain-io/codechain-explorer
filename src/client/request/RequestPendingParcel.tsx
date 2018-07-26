@@ -8,6 +8,7 @@ interface OwnProps {
     onPendingParcel: (parcel: PendingParcelDoc) => void;
     onError: (e: ApiError) => void;
     onPendingParcelNotExist: () => void;
+    progressBarTarget?: string;
     hash: string;
 }
 
@@ -19,8 +20,8 @@ type Props = OwnProps & DispatchProps;
 
 class RequestPendingParcelInternal extends React.Component<Props> {
     public componentWillMount() {
-        const { onPendingParcel, onError, onPendingParcelNotExist, hash, dispatch } = this.props;
-        apiRequest({ path: `parcel/pending/${hash}`, dispatch }).then((response: any) => {
+        const { onPendingParcel, onError, onPendingParcelNotExist, hash, dispatch, progressBarTarget } = this.props;
+        apiRequest({ path: `parcel/pending/${hash}`, dispatch, progressBarTarget }).then((response: any) => {
             if (!response) {
                 onPendingParcelNotExist();
             }

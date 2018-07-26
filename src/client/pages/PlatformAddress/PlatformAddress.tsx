@@ -63,7 +63,7 @@ class Address extends React.Component<Props, State> {
                 {
                     account ?
                         <AccountDetails address={address} account={account} />
-                        : <RequestPlatformAddressAccount address={address} onAccount={this.onAccount} onError={this.onError} />
+                        : <RequestPlatformAddressAccount address={address} onAccount={this.onAccount} onError={this.onError} onAccountNotExist={this.onAccountNotExist} />
                 }
                 {
                     assetBundles.length > 0 ?
@@ -134,6 +134,9 @@ class Address extends React.Component<Props, State> {
     private onBlocks = (blocks: BlockDoc[]) => {
         this.setState({ blocks });
         this.setState({ requested: true });
+    }
+    private onAccountNotExist = () => {
+        // TODO
     }
     private onAccount = (account: { nonce: U256, balance: U256 }) => {
         this.setState({ account });

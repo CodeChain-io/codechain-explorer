@@ -52,7 +52,7 @@ export function createApiRouter(context: ServerContext, useCors = false) {
             const block = (id.length === 64 || id.length === 66)
                 ? await context.db.getBlockByHash(new H256(id))
                 : await context.db.getBlock(Number.parseInt(id));
-            res.send(block);
+            res.send(block === null ? JSON.stringify(null) : block);
         } catch (e) {
             next(e);
         }
@@ -89,9 +89,12 @@ export function createApiRouter(context: ServerContext, useCors = false) {
 
     router.get("/parcel/:hash", async (req, res, next) => {
         const { hash } = req.params;
-        context.db.getParcel(new H256(hash)).then(parcel => {
+        try {
+            const parcel = await context.db.getParcel(new H256(hash));
             parcel ? res.send(parcel) : res.send(JSON.stringify(null));
-        }).catch(next);
+        } catch (e) {
+            next(e);
+        }
     });
 
     router.get("/parcels", async (req, res, next) => {
@@ -105,9 +108,12 @@ export function createApiRouter(context: ServerContext, useCors = false) {
 
     router.get("/tx/:hash", async (req, res, next) => {
         const { hash } = req.params;
-        context.db.getTransaction(new H256(hash)).then(transaction => {
+        try {
+            const transaction = await context.db.getTransaction(new H256(hash));
             transaction ? res.send(transaction) : res.send(JSON.stringify(null));
-        }).catch(next);
+        } catch (e) {
+            next(e);
+        }
     });
 
     router.get("/txs", async (req, res, next) => {
@@ -162,8 +168,8 @@ export function createApiRouter(context: ServerContext, useCors = false) {
 
     router.get("/addr-platform-account/:address", async (req, res, next) => {
         const { address } = req.params;
-        const accountId = PlatformAddress.fromString(address).getAccountId();
         try {
+            const accountId = PlatformAddress.fromString(address).getAccountId();
             const balance = await context.codechainSdk.rpc.chain.getBalance(accountId);
             const nonce = await context.codechainSdk.rpc.chain.getNonce(accountId);
             const account = {
@@ -261,9 +267,12 @@ export function createApiRouter(context: ServerContext, useCors = false) {
 
     router.get("/asset/:assetType", async (req, res, next) => {
         const { assetType } = req.params;
-        context.db.getAssetScheme(new H256(assetType)).then(assetScheme => {
+        try {
+            const assetScheme = await context.db.getAssetScheme(new H256(assetType));
             assetScheme ? res.send(assetScheme) : res.send(JSON.stringify(null));
-        }).catch(next);
+        } catch (e) {
+            next(e);
+        }
     });
 
     return router;
