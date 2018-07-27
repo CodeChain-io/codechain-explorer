@@ -203,7 +203,7 @@ class Search extends React.Component<Props, State> {
     );
 
     private getSuggestionValue = (suggestion: AssetBundleDoc) => {
-        return suggestion.asset.assetType;
+        return `0x${suggestion.asset.assetType}`;
     };
 
     private onSuggestionsClearRequested = () => {
