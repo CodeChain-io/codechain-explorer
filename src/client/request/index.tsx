@@ -15,6 +15,8 @@ import RequestPlatformAddressAssets from "./RequestPlatformAddressAssets";
 import RequestParcels from "./RequestParcels";
 import RequestBlocks from "./RequestBlocks";
 import RequestTransactions from "./RequestTransactions";
+import RequestPendingParcel from "./RequestPendingParcel";
+import RequestPendingTransaction from "./RequestPendingTransaction";
 
 export { RequestPing };
 export { RequestParcel };
@@ -33,3 +35,5 @@ export { RequestPlatformAddressAssets };
 export { RequestBlocks };
 export { RequestParcels };
 export { RequestTransactions };
+export { RequestPendingParcel };
+export { RequestPendingTransaction };

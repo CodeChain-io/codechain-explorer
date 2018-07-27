@@ -5,7 +5,7 @@ import { H256 } from "codechain-sdk/lib/core/classes";
 
 import { apiRequest, ApiError } from "./ApiRequest";
 import { RootState } from "../redux/actions";
-import { AssetSchemeDoc } from "../../db/DocType";
+import { AssetSchemeDoc, Type } from "../../db/DocType";
 
 interface OwnProps {
     assetType: string;
@@ -55,7 +55,7 @@ class RequestAssetSchemeInternal extends React.Component<Props> {
 }
 
 const RequestAssetScheme = connect((state: RootState, props: OwnProps) => {
-    if (props.assetType.length === 64 || props.assetType.length === 66) {
+    if (Type.isH256String(props.assetType)) {
         return {
             cached: state.appReducer.assetSchemeByAssetType[new H256(props.assetType).value]
         };

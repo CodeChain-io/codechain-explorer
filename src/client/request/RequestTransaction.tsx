@@ -61,7 +61,7 @@ class RequestTransactionInternal extends React.Component<Props> {
 }
 
 const RequestTransaction = connect((state: RootState, props: OwnProps) => {
-    if (props.hash.length === 66 || props.hash.length === 64) {
+    if (Type.isH256String(props.hash)) {
         return { cached: state.appReducer.transactionByHash[new H256(props.hash).value] };
     }
     return { cached: state.appReducer.transactionByHash[props.hash] };

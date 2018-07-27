@@ -5,7 +5,7 @@ import { H256 } from "codechain-sdk/lib/core/classes";
 
 import { apiRequest, ApiError } from "./ApiRequest";
 import { RootState } from "../redux/actions";
-import { TransactionDoc } from "../../db/DocType";
+import { TransactionDoc, Type } from "../../db/DocType";
 
 interface OwnProps {
     assetType: string;
@@ -50,7 +50,7 @@ class RequestAssetTransactionsInternal extends React.Component<Props> {
 }
 
 const RequestAssetTransactions = connect((state: RootState, props: OwnProps) => {
-    if (props.assetType.length === 64 || props.assetType.length === 66) {
+    if (Type.isH256String(props.assetType)) {
         return {
             cached: state.appReducer.transactionsByAssetType[new H256(props.assetType).value]
         };

@@ -4,8 +4,8 @@ import LoadingBar from "react-redux-loading-bar";
 import { Redirect } from "react-router";
 
 import './Search.scss';
-import { RequestBlock, RequestParcel, RequestTransaction, RequestAssetScheme, RequestPlatformAddressAccount } from "../../../request";
-import { BlockDoc, ParcelDoc, TransactionDoc, AssetSchemeDoc } from "../../../../db/DocType";
+import { RequestBlock, RequestParcel, RequestTransaction, RequestAssetScheme, RequestPlatformAddressAccount, RequestPendingParcel, RequestPendingTransaction, RequestAssetTransferAddressTransactions } from "../../../request";
+import { BlockDoc, ParcelDoc, TransactionDoc, AssetSchemeDoc, PendingParcelDoc, PendingTransactionDoc } from "../../../../db/DocType";
 import { U256 } from "codechain-sdk/lib/core/classes";
 
 interface State {
@@ -56,6 +56,9 @@ class Search extends React.Component<Props, State> {
                         <RequestTransaction progressBarTarget="searchBar" hash={inputValue} onTransaction={this.onTransaction} onTransactionNotExist={this.onReqeustNotExist} onError={this.onError} />
                         <RequestAssetScheme progressBarTarget="searchBar" assetType={inputValue} onAssetScheme={this.onAssetScheme} onAssetSchemeNotExist={this.onReqeustNotExist} onError={this.onError} />
                         <RequestPlatformAddressAccount progressBarTarget="searchBar" address={inputValue} onAccount={this.onAccount} onAccountNotExist={this.onReqeustNotExist} onError={this.onError} />
+                        <RequestPendingParcel progressBarTarget="searchBar" hash={inputValue} onPendingParcel={this.onPendingParcel} onPendingParcelNotExist={this.onReqeustNotExist} onError={this.onError} />
+                        <RequestPendingTransaction progressBarTarget="searchBar" hash={inputValue} onPendingTransaction={this.onPendingTransaction} onPendingTransactionNotExist={this.onReqeustNotExist} onError={this.onError} />
+                        <RequestAssetTransferAddressTransactions progressBarTarget="searchBar" address={inputValue} onTransactions={this.onTransactionsForAssetTransferAddress} onError={this.onError} />
                     </div>
                     : null
             }
@@ -85,9 +88,28 @@ class Search extends React.Component<Props, State> {
         this.setState({ redirectTo: `/asset/${assetType}`, requestCount: this.state.requestCount - 1 });
     }
 
+    private onPendingParcel = (pendingParcel: PendingParcelDoc) => {
+        this.cancelOtherRequest();
+        this.setState({ redirectTo: `/parcel/0x${pendingParcel.parcel.hash}`, requestCount: this.state.requestCount - 1 });
+    }
+
+    private onTransactionsForAssetTransferAddress = (transactions: TransactionDoc[], address: string) => {
+        if (transactions.length > 0) {
+            this.cancelOtherRequest();
+            this.setState({ redirectTo: `/addr-asset/${address}`, requestCount: this.state.requestCount - 1 });
+        } else {
+            this.handleNotFoundOrError();
+        }
+    }
+
     private onAccount = (account: { nonce: U256, balance: U256 }, address: string) => {
         this.cancelOtherRequest();
         this.setState({ redirectTo: `/addr-platform/${address}`, requestCount: this.state.requestCount - 1 });
+    }
+
+    private onPendingTransaction = (pendingTransaction: PendingTransactionDoc) => {
+        this.cancelOtherRequest();
+        this.setState({ redirectTo: `/tx/0x${pendingTransaction.transaction.data.hash}`, requestCount: this.state.requestCount - 1 });
     }
 
     private cancelOtherRequest = () => {
@@ -103,10 +125,11 @@ class Search extends React.Component<Props, State> {
     }
 
     private handleNotFoundOrError = () => {
-        if (this.state.requestCount === 1) {
-            this.setState({ requestCount: 0, status: "notFound" });
+        const requestCount = this.state.requestCount - 1;
+        if (requestCount === 0) {
+            this.setState({ requestCount, status: "notFound" });
         } else {
-            this.setState({ requestCount: this.state.requestCount - 1 });
+            this.setState({ requestCount });
         }
     }
 
@@ -118,7 +141,11 @@ class Search extends React.Component<Props, State> {
 
     private handleSumbit = (e: any) => {
         e.preventDefault();
-        this.setState({ status: "search", requestCount: 5 });
+        if (this.state.status === "search") {
+            return;
+        }
+        const inputValue = this.state.inputValue.trim();
+        this.setState({ status: "search", requestCount: 8, inputValue });
     }
 }
 

@@ -5,7 +5,7 @@ import * as _ from 'lodash';
 import { H256, SignedParcel } from "codechain-sdk/lib/core/classes";
 
 import { ServerContext } from './ServerContext';
-import { TransactionDoc } from '../db/DocType';
+import { TransactionDoc, Type } from '../db/DocType';
 import { PlatformAddress, AssetTransferAddress } from 'codechain-sdk/lib/key/classes';
 
 const corsOptions = {
@@ -49,11 +49,11 @@ export function createApiRouter(context: ServerContext, useCors = false) {
     router.get("/block/:id", async (req, res, next) => {
         const { id } = req.params;
         try {
-            if (isNaN(id) && !(id.length === 64 || id.length === 66)) {
+            if (isNaN(id) && !Type.isH256String(id)) {
                 res.send(JSON.stringify(null));
                 return;
             }
-            const block = (id.length === 64 || id.length === 66)
+            const block = Type.isH256String(id)
                 ? await context.db.getBlockByHash(new H256(id))
                 : await context.db.getBlock(Number.parseInt(id));
             res.send(block === null ? JSON.stringify(null) : block);
@@ -83,7 +83,7 @@ export function createApiRouter(context: ServerContext, useCors = false) {
     router.get("/parcel/pending/:hash", async (req, res, next) => {
         try {
             const { hash } = req.params;
-            if (!(hash.length === 64 || hash.length === 66)) {
+            if (!Type.isH256String(hash)) {
                 res.send(JSON.stringify(null));
                 return;
             }
@@ -97,7 +97,7 @@ export function createApiRouter(context: ServerContext, useCors = false) {
     router.get("/parcel/:hash", async (req, res, next) => {
         const { hash } = req.params;
         try {
-            if (!(hash.length === 64 || hash.length === 66)) {
+            if (!Type.isH256String(hash)) {
                 res.send(JSON.stringify(null));
                 return;
             }
@@ -120,7 +120,7 @@ export function createApiRouter(context: ServerContext, useCors = false) {
     router.get("/tx/:hash", async (req, res, next) => {
         const { hash } = req.params;
         try {
-            if (!(hash.length === 64 || hash.length === 66)) {
+            if (!Type.isH256String(hash)) {
                 res.send(JSON.stringify(null));
                 return;
             }
@@ -143,7 +143,7 @@ export function createApiRouter(context: ServerContext, useCors = false) {
     router.get("/tx/pending/:hash", async (req, res, next) => {
         const { hash } = req.params;
         try {
-            if (!(hash.length === 64 || hash.length === 66)) {
+            if (!Type.isH256String(hash)) {
                 res.send(JSON.stringify(null));
                 return;
             }
@@ -181,7 +181,7 @@ export function createApiRouter(context: ServerContext, useCors = false) {
         try {
             const txs: TransactionDoc[] = await context.db.getAssetTransferTransactions(new H256(assetType));
             const mintTx: TransactionDoc = await context.db.getAssetMintTransaction(new H256(assetType));
-            res.send(_.map(_.concat(txs, mintTx)));
+            res.send(_.compact(_.map(_.concat(txs, mintTx))));
         } catch (e) {
             next(e);
         }
@@ -244,8 +244,14 @@ export function createApiRouter(context: ServerContext, useCors = false) {
 
     router.get("/addr-asset-utxo/:address", async (req, res, next) => {
         const { address } = req.params;
+        let lockscriptHashAndParams;
         try {
-            const lockscriptHashAndParams = AssetTransferAddress.fromString(address).getLockScriptHashAndParameters();
+            lockscriptHashAndParams = AssetTransferAddress.fromString(address).getLockScriptHashAndParameters();
+        } catch (e) {
+            res.send([]);
+            return;
+        }
+        try {
             if (lockscriptHashAndParams.lockScriptHash.value !== "f42a65ea518ba236c08b261c34af0521fa3cd1aa505e1c18980919cb8945f8f3") {
                 // FIXME : Currently only standard scripts are available
                 res.send([]);
@@ -277,8 +283,14 @@ export function createApiRouter(context: ServerContext, useCors = false) {
 
     router.get("/addr-asset-txs/:address", async (req, res, next) => {
         const { address } = req.params;
+        let lockscriptHashAndParams;
         try {
-            const lockscriptHashAndParams = AssetTransferAddress.fromString(address).getLockScriptHashAndParameters();
+            lockscriptHashAndParams = AssetTransferAddress.fromString(address).getLockScriptHashAndParameters();
+        } catch (e) {
+            res.send([]);
+            return;
+        }
+        try {
             if (lockscriptHashAndParams.lockScriptHash.value !== "f42a65ea518ba236c08b261c34af0521fa3cd1aa505e1c18980919cb8945f8f3") {
                 // FIXME : Currently only standard scripts are available
                 res.send([]);
@@ -295,7 +307,7 @@ export function createApiRouter(context: ServerContext, useCors = false) {
     router.get("/asset/:assetType", async (req, res, next) => {
         const { assetType } = req.params;
         try {
-            if (!(assetType.length === 64 || assetType.length === 66)) {
+            if (!Type.isH256String(assetType)) {
                 res.send(JSON.stringify(null));
                 return;
             }

@@ -82,7 +82,7 @@ const RequestBlock = connect((state: RootState, props: OwnProps) => {
     const { blocksByHash, blocksByNumber } = state.appReducer;
     const { id } = props;
     if (isString(id)) {
-        if (id.length === 66 || id.length === 64) {
+        if (Type.isH256String(id)) {
             return {
                 cached: blocksByHash[new H256(id).value]
             };

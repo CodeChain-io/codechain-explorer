@@ -384,6 +384,11 @@ function getAssetSchemeDoc(transaction: AssetMintTransactionDoc): AssetSchemeDoc
     }
 }
 
+function isH256String(data: string) {
+    const regexp = /^(0x)?[0-9a-fA-F]+$/;
+    return regexp.test(data) && (data.length === 64 || data.length === 66);
+}
+
 export interface MetadataFormat {
     name?: string;
     description?: string;
@@ -407,7 +412,8 @@ export let Type = {
     isAssetTransferTransactionDoc,
     isAssetMintTransactionDoc,
     getAssetSchemeDoc,
-    getMetadata
+    getMetadata,
+    isH256String
 }
 
 export let Converter = {

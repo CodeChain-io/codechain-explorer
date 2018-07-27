@@ -69,7 +69,7 @@ class RequestParcelInternal extends React.Component<Props> {
 }
 
 const RequestParcel = connect((state: RootState, props: OwnProps) => {
-    if (props.hash.length === 66 || props.hash.length === 64) {
+    if (Type.isH256String(props.hash)) {
         return { cached: state.appReducer.parcelByHash[new H256(props.hash).value] };
     }
     return { cached: state.appReducer.parcelByHash[props.hash] };

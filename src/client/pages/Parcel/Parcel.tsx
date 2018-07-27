@@ -3,14 +3,12 @@ import * as FontAwesome from "react-fontawesome";
 import { match } from "react-router";
 import { Container } from 'reactstrap';
 
-import { RequestParcel } from "../../request";
+import { RequestParcel, RequestPendingParcel } from "../../request";
 import ParcelDetails from "../../components/parcel/ParcelDetails/ParcelDetails";
 
 import "./Parcel.scss";
 import ParcelTransactionList from "../../components/parcel/ParcelTransactionList/ParcelTransactionList";
-import { ParcelDoc, Type, ChangeShardStateDoc } from "../../../db/DocType";
-import RequestPendingParcel from "../../request/RequestPendingParcel";
-import { PendingParcelDoc } from "../../../db/DocType";
+import { ParcelDoc, Type, ChangeShardStateDoc, PendingParcelDoc } from "../../../db/DocType";
 
 interface Props {
     match: match<{ hash: string }>;
