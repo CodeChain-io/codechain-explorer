@@ -117,7 +117,9 @@ export interface AssetMintTransactionDoc {
         registrar: string | null;
         nonce: number;
         hash: string;
+        /* custom field for indexing */
         timestamp: number;
+        assetName: string;
     };
 }
 
@@ -130,6 +132,7 @@ export interface AssetTransferTransactionDoc {
         outputs: AssetTransferOutputDoc[];
         nonce: number;
         hash: string;
+        /* custom field for indexing */
         timestamp: number;
     };
 }
@@ -232,6 +235,7 @@ const fromAssetTransferOutput = async (currentTransactions: Transaction[], asset
 const fromTransaction = async (currentTransactions: Transaction[], transaction: Transaction, elasticSearchAgent: ElasticSearchAgent, timestamp: number): Promise<TransactionDoc> => {
     if (transaction instanceof AssetMintTransaction) {
         const transactionJson = transaction.toJSON();
+        const metadata = getMetadata(transactionJson.data.metadata);
         return {
             type: transactionJson.type,
             data: {
@@ -247,7 +251,8 @@ const fromTransaction = async (currentTransactions: Transaction[], transaction: 
                 registrar: transactionJson.data.registrar,
                 nonce: transactionJson.data.nonce,
                 hash: transactionJson.data.hash,
-                timestamp
+                timestamp,
+                assetName: metadata.name || ""
             }
         }
     } else if (transaction instanceof AssetTransferTransaction) {

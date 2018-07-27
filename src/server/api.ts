@@ -242,6 +242,16 @@ export function createApiRouter(context: ServerContext, useCors = false) {
         }
     });
 
+    router.get("/search/asset/:assetName", async (req, res, next) => {
+        const { assetName } = req.params;
+        try {
+            const assetBundles = await context.db.getAssetBundlesByAssetName(assetName);
+            res.send(assetBundles);
+        } catch (e) {
+            next(e);
+        }
+    });
+
     router.get("/addr-asset-utxo/:address", async (req, res, next) => {
         const { address } = req.params;
         let lockscriptHashAndParams;

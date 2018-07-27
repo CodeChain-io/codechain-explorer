@@ -163,7 +163,10 @@ export class ElasticSearchAgent {
                     { "term": { "parcels.action.transactions.data.hash": hash.value } }
                 ]
             }
-        });
+        },
+            {
+                "number": { "order": "desc" }
+            });
 
         if (transactions.length === 0) {
             return null;
@@ -174,7 +177,10 @@ export class ElasticSearchAgent {
     public getTransactions = async (): Promise<TransactionDoc[]> => {
         return await this.searchTransactions({
             "match_all": {}
-        });
+        },
+            {
+                "number": { "order": "desc" }
+            });
     }
 
     public getAssetTransferTransactions = async (assetType: H256): Promise<AssetTransferTransactionDoc[]> => {
@@ -189,7 +195,10 @@ export class ElasticSearchAgent {
                     }
                 }, "inner_hits": {}
             }
-        });
+        },
+            {
+                "number": { "order": "desc" }
+            });
         return _.map(transactions, (tx) => (tx as AssetTransferTransactionDoc));
     }
 
@@ -200,7 +209,10 @@ export class ElasticSearchAgent {
                     { "term": { "parcels.action.transactions.data.output.assetType": assetType.value } }
                 ]
             }
-        })
+        },
+            {
+                "number": { "order": "desc" }
+            })
         if (transactions.length === 0) {
             return null;
         }
@@ -241,7 +253,10 @@ export class ElasticSearchAgent {
                     { "term": { "parcels.action.transactions.data.registrar": accountId.value } }
                 ]
             }
-        });
+        },
+            {
+                "number": { "order": "desc" }
+            });
         if (transactions.length === 0) {
             return [];
         }
@@ -292,7 +307,10 @@ export class ElasticSearchAgent {
                     { "term": { "parcels.action.transactions.data.output.owner": pubKey.value } }
                 ]
             }
-        });
+        },
+            {
+                "number": { "order": "desc" }
+            });
         return transactions;
     }
 
@@ -317,7 +335,10 @@ export class ElasticSearchAgent {
                     { "term": { "parcels.action.transactions.data.output.owner": pubKey.value } }
                 ]
             }
-        });
+        },
+            {
+                "number": { "order": "desc" }
+            });
         return _.flatMap(transactions, transaction => {
             if (Type.isAssetTransferTransactionDoc(transaction)) {
                 return _.chain((transaction as AssetTransferTransactionDoc).data.outputs)
@@ -373,11 +394,42 @@ export class ElasticSearchAgent {
                     { "term": { "parcels.action.transactions.data.output.assetType": assetType.value } }
                 ]
             }
-        });
+        },
+            {
+                "number": { "order": "desc" }
+            });
         if (transactions.length === 0) {
             return null;
         }
         return Type.getAssetSchemeDoc(transactions[0] as AssetMintTransactionDoc);
+    }
+
+    public getAssetBundlesByAssetName = async (name: string): Promise<AssetBundleDoc[]> => {
+        const transactions = await this.searchTransactions({
+            "match": {
+                "parcels.action.transactions.data.assetName": {
+                    "query": name,
+                    "fuzziness": 3
+                }
+            }
+        }, {}, 10);
+        if (transactions.length === 0) {
+            return [];
+        }
+        return _.map(transactions, (tx: AssetMintTransactionDoc) => {
+            const assetScheme = Type.getAssetSchemeDoc(tx);
+            return {
+                assetScheme,
+                asset: {
+                    assetType: tx.data.output.assetType,
+                    lockScriptHash: tx.data.output.lockScriptHash,
+                    parameters: tx.data.output.parameters,
+                    amount: tx.data.output.amount || 0,
+                    transactionHash: tx.data.hash,
+                    transactionOutputIndex: 0
+                }
+            }
+        });
     }
 
     public getCurrentPendingParcels = async (): Promise<PendingParcelDoc[]> => {
@@ -602,14 +654,12 @@ export class ElasticSearchAgent {
             .value();
     }
 
-    private searchTransactions = async (query: any): Promise<TransactionDoc[]> => {
+    private searchTransactions = async (query: any, sort: any, limit?: number): Promise<TransactionDoc[]> => {
         const response = await this.search({
             "sort": [
-                {
-                    "number": { "order": "desc" }
-                }
+                sort
             ],
-            "size": 10000,
+            "size": limit || 10000,
             "_source": false,
             "query": {
                 "bool": {
