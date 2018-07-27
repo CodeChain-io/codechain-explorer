@@ -32,7 +32,7 @@ class RequestAssetSchemeInternal extends React.Component<Props> {
             setTimeout(() => onAssetScheme(cached, assetType));
             return
         }
-        apiRequest({ path: `asset/${assetType}`, dispatch, progressBarTarget }).then((response: AssetSchemeDoc) => {
+        apiRequest({ path: `asset/${assetType}`, dispatch, progressBarTarget, showProgressBar: true }).then((response: AssetSchemeDoc) => {
             if (response === null) {
                 return onAssetSchemeNotExist();
             }

@@ -19,7 +19,7 @@ type Props = OwnProps & DispatchProps;
 class RequestAssetTransferAddressTransactionsInternal extends React.Component<Props> {
     public componentWillMount() {
         const { address, onTransactions, onError, dispatch } = this.props;
-        apiRequest({ path: `addr-asset-txs/${address}`, dispatch }).then((response: TransactionDoc[]) => {
+        apiRequest({ path: `addr-asset-txs/${address}`, dispatch, showProgressBar: true }).then((response: TransactionDoc[]) => {
             onTransactions(response);
         }).catch(onError);
     }

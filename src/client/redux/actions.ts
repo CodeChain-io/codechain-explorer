@@ -25,7 +25,7 @@ interface AppReducer {
     };
     transactionsByAssetType: {
         [assetType: string]: TransactionDoc[];
-    }
+    };
 }
 
 const initialState: AppReducer = {

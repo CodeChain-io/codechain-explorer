@@ -18,7 +18,7 @@ type Props = OwnProps & DispatchProps;
 class RequestTransactionsInternal extends React.Component<Props> {
     public componentWillMount() {
         const { onError, onTransactions, dispatch } = this.props;
-        apiRequest({ path: `txs`, dispatch }).then((response: any) => {
+        apiRequest({ path: `txs`, dispatch, showProgressBar: true }).then((response: any) => {
             onTransactions(response);
         }).catch(onError);
     }

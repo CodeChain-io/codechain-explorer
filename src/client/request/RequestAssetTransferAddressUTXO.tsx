@@ -19,7 +19,7 @@ type Props = OwnProps & DispatchProps;
 class RequestAssetTransferAddressUTXOInternal extends React.Component<Props> {
     public componentWillMount() {
         const { address, onUTXO, onError, dispatch } = this.props;
-        apiRequest({ path: `addr-asset-utxo/${address}`, dispatch }).then((response: AssetBundleDoc[]) => {
+        apiRequest({ path: `addr-asset-utxo/${address}`, dispatch, showProgressBar: true }).then((response: AssetBundleDoc[]) => {
             onUTXO(response);
         }).catch(onError);
     }

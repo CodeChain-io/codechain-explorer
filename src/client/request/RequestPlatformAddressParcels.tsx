@@ -19,7 +19,7 @@ type Props = OwnProps & DispatchProps;
 class RequestPlatformAddressParcelsInternal extends React.Component<Props> {
     public componentWillMount() {
         const { address, onParcels, onError, dispatch } = this.props;
-        apiRequest({ path: `addr-platform-parcels/${address}`, dispatch }).then((response: ParcelDoc[]) => {
+        apiRequest({ path: `addr-platform-parcels/${address}`, dispatch, showProgressBar: true }).then((response: ParcelDoc[]) => {
             onParcels(response);
         }).catch(onError);
     }

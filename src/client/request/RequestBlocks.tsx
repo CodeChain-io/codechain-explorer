@@ -18,7 +18,7 @@ type Props = OwnProps & DispatchProps;
 class RequestBlocksInternal extends React.Component<Props> {
     public componentWillMount() {
         const { onError, onBlocks, dispatch } = this.props;
-        apiRequest({ path: `blocks`, dispatch }).then((response: any) => {
+        apiRequest({ path: `blocks`, dispatch, showProgressBar: true }).then((response: any) => {
             onBlocks(response);
         }).catch(onError);
     }

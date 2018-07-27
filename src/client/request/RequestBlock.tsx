@@ -31,7 +31,7 @@ class RequestBlockInternal extends React.Component<OwnProps & StateProps & Dispa
             setTimeout(() => onBlock(cached));
             return;
         }
-        apiRequest({ path: `block/${id}`, dispatch, progressBarTarget }).then((response: BlockDoc) => {
+        apiRequest({ path: `block/${id}`, dispatch, progressBarTarget, showProgressBar: true }).then((response: BlockDoc) => {
             if (response === null) {
                 return onBlockNotExist();
             }

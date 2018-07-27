@@ -32,7 +32,7 @@ class RequestParcelInternal extends React.Component<Props> {
             setTimeout(() => onParcel(cached));
             return;
         }
-        apiRequest({ path: `parcel/${hash}`, dispatch, progressBarTarget }).then((response: ParcelDoc) => {
+        apiRequest({ path: `parcel/${hash}`, dispatch, progressBarTarget, showProgressBar: true }).then((response: ParcelDoc) => {
             if (response === null) {
                 return onParcelNotExist();
             }

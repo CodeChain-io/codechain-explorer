@@ -22,7 +22,7 @@ type Props = OwnProps & DispatchProps;
 class RequestPlatformAddressAccountInternal extends React.Component<Props> {
     public componentWillMount() {
         const { address, onAccount, onError, dispatch, progressBarTarget, onAccountNotExist } = this.props;
-        apiRequest({ path: `addr-platform-account/${address}`, dispatch, progressBarTarget }).then((response: any) => {
+        apiRequest({ path: `addr-platform-account/${address}`, dispatch, progressBarTarget, showProgressBar: true }).then((response: any) => {
             if (response === null) {
                 return onAccountNotExist();
             }

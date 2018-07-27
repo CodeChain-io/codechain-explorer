@@ -4,7 +4,8 @@ import { showLoading, hideLoading } from "react-redux-loading-bar";
 interface ApiRequestData {
     path: string;
     body?: any;
-    dispatch?: Dispatch;
+    dispatch: Dispatch;
+    showProgressBar: boolean;
     progressBarTarget?: string;
 }
 
@@ -12,15 +13,15 @@ export interface ApiError {
     message: string;
 }
 
-export const apiRequest = ({ path, body, dispatch, progressBarTarget }: ApiRequestData) => {
+export const apiRequest = ({ path, body, dispatch, progressBarTarget, showProgressBar }: ApiRequestData) => {
     const host = process.env.REACT_APP_SERVER_HOST ? process.env.REACT_APP_SERVER_HOST : 'localhost:8081';
     return new Promise((resolve, reject) => {
-        if (dispatch) {
+        if (showProgressBar) {
             dispatch(showLoading(progressBarTarget ? progressBarTarget : undefined));
         }
 
         const timeout = setTimeout(() => {
-            if (dispatch) {
+            if (showProgressBar) {
                 dispatch(hideLoading(progressBarTarget ? progressBarTarget : undefined));
             }
             reject(new Error('Request timed out'));
@@ -44,7 +45,7 @@ export const apiRequest = ({ path, body, dispatch, progressBarTarget }: ApiReque
             }
         }).catch(err => {
             clearTimeout(timeout);
-            if (dispatch) {
+            if (showProgressBar) {
                 dispatch(hideLoading(progressBarTarget ? progressBarTarget : undefined));
             }
             reject(err);

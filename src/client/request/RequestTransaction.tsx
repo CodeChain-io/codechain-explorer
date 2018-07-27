@@ -31,7 +31,7 @@ class RequestTransactionInternal extends React.Component<Props> {
             setTimeout(() => onTransaction(cached));
             return;
         }
-        apiRequest({ path: `tx/${hash}`, dispatch, progressBarTarget }).then((response: TransactionDoc) => {
+        apiRequest({ path: `tx/${hash}`, dispatch, progressBarTarget, showProgressBar: true }).then((response: TransactionDoc) => {
             if (response === null) {
                 return onTransactionNotExist();
             }

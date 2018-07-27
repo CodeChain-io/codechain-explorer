@@ -1,4 +1,5 @@
 import * as React from "react";
+import * as FontAwesome from "react-fontawesome";
 
 import { RequestPing } from "../../../request";
 
@@ -15,12 +16,17 @@ class HealthChecker extends React.Component<{}, State> {
     public render() {
         const { isNodeAlive } = this.state;
         if (isNodeAlive === undefined) {
-            return <div>Checking node.. <RequestPing onPong={this.onPong} onError={this.onError} /></div>
-        } else if (isNodeAlive) {
-            return <div className="text-success">Node is available</div>
-        } else {
-            return <div className="text-danger">Node is not available</div>
+            return <div>Status <FontAwesome name="circle" /><RequestPing onPong={this.onPong} onError={this.onError} /></div>
         }
+        return (
+            <div>
+                {
+                    isNodeAlive ? <div className="text-success">Status <FontAwesome name="circle" /></div>
+                        : <div className="text-danger">Status <FontAwesome name="circle" /></div>
+                }
+                <RequestPing repeat={5000} onPong={this.onPong} onError={this.onError} />
+            </div>
+        )
     }
 
     private onPong = () => {

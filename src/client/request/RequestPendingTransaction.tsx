@@ -21,7 +21,7 @@ type Props = OwnProps & DispatchProps;
 class RequestPendingTransactionInternal extends React.Component<Props> {
     public componentWillMount() {
         const { onPendingTransaction, onError, hash, onPendingTransactionNotExist, dispatch, progressBarTarget } = this.props;
-        apiRequest({ path: `tx/pending/${hash}`, dispatch, progressBarTarget }).then((response: any) => {
+        apiRequest({ path: `tx/pending/${hash}`, dispatch, progressBarTarget, showProgressBar: true }).then((response: any) => {
             if (response === null) {
                 return onPendingTransactionNotExist();
             }

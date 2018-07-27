@@ -60,7 +60,7 @@ class RequestBlockNumberInternal extends React.Component<Props, State> {
 
     private request() {
         const { dispatch, onBlockNumber, onError } = this.props;
-        apiRequest({ path: "blockNumber" }).then((response: string) => {
+        apiRequest({ path: "blockNumber", showProgressBar: false, dispatch }).then((response: string) => {
             const num = Number.parseInt(response)
             dispatch({
                 type: "BEST_BLOCK_NUMBER_ACTION",

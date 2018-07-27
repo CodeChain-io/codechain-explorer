@@ -2,7 +2,7 @@ import * as React from "react";
 
 import { H256, SignedParcel } from "codechain-sdk/lib/core/classes";
 
-import { apiRequest, ApiError } from "./ApiRequest";
+import { ApiError } from "./ApiRequest";
 
 interface OwnProps {
     parcel: SignedParcel,
@@ -12,14 +12,7 @@ interface OwnProps {
 
 export class RequestSendSignedParcel extends React.Component<OwnProps> {
     public componentWillMount() {
-        const { parcel, onSuccess, onError } = this.props;
-        apiRequest({
-            path: `parcel/signed`,
-            body: parcel.toJSON()
-        }).then((response: string) => {
-            const hash = new H256(response);
-            onSuccess(hash);
-        }).catch(onError);
+        // TODO
     }
 
     public render() {

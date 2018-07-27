@@ -18,7 +18,7 @@ type Props = OwnProps & DispatchProps;
 class RequestPendingParcelsInternal extends React.Component<Props> {
     public componentWillMount() {
         const { onPendingParcels, onError, dispatch } = this.props;
-        apiRequest({ path: `parcels/pending`, dispatch }).then((response: any) => {
+        apiRequest({ path: `parcels/pending`, dispatch, showProgressBar: true }).then((response: any) => {
             onPendingParcels(response);
         }).catch(onError);
     }

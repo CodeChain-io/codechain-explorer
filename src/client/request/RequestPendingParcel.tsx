@@ -21,7 +21,7 @@ type Props = OwnProps & DispatchProps;
 class RequestPendingParcelInternal extends React.Component<Props> {
     public componentWillMount() {
         const { onPendingParcel, onError, onPendingParcelNotExist, hash, dispatch, progressBarTarget } = this.props;
-        apiRequest({ path: `parcel/pending/${hash}`, dispatch, progressBarTarget }).then((response: any) => {
+        apiRequest({ path: `parcel/pending/${hash}`, dispatch, progressBarTarget, showProgressBar: true }).then((response: any) => {
             if (!response) {
                 onPendingParcelNotExist();
             }

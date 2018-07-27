@@ -2,7 +2,7 @@ import * as React from "react";
 
 import { Invoice } from "codechain-sdk/lib/core/classes";
 
-import { apiRequest, ApiError } from "./ApiRequest";
+import { ApiError } from "./ApiRequest";
 
 interface OwnProps {
     txhash: string;
@@ -13,14 +13,7 @@ interface OwnProps {
 
 class RequestTransactionInvoice extends React.Component<OwnProps> {
     public componentWillMount() {
-        const { txhash, onInvoice, onNotFound, onError } = this.props;
-        apiRequest({ path: `tx/${txhash}/invoice` }).then((response: any) => {
-            if (!response) {
-                return onNotFound();
-            }
-            const invoice = Invoice.fromJSON(response);
-            onInvoice(invoice);
-        }).catch(onError);
+        // TODO
     }
 
     public render() {
