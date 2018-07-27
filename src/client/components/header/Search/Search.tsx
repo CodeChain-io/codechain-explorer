@@ -1,11 +1,13 @@
 import * as React from "react";
-import { Form, FormGroup, Input, Button } from "reactstrap";
+import * as _ from "lodash";
+import { Form, FormGroup, Button } from "reactstrap";
 import LoadingBar from "react-redux-loading-bar";
 import { Redirect } from "react-router";
+import * as Autosuggest from "react-autosuggest";
 
 import "./Search.scss";
-import { RequestBlock, RequestParcel, RequestTransaction, RequestAssetScheme, RequestPlatformAddressAccount, RequestPendingParcel, RequestPendingTransaction, RequestAssetTransferAddressTransactions } from "../../../request";
-import { BlockDoc, ParcelDoc, TransactionDoc, AssetSchemeDoc, PendingParcelDoc, PendingTransactionDoc } from "../../../../db/DocType";
+import { RequestBlock, RequestParcel, RequestTransaction, RequestAssetScheme, RequestPlatformAddressAccount, RequestPendingParcel, RequestPendingTransaction, RequestAssetTransferAddressTransactions, RequestAssetBundlesByName } from "../../../request";
+import { BlockDoc, ParcelDoc, TransactionDoc, AssetSchemeDoc, PendingParcelDoc, PendingTransactionDoc, AssetBundleDoc, Type } from "../../../../db/DocType";
 import { U256 } from "codechain-sdk/lib/core/classes";
 
 interface State {
@@ -13,6 +15,8 @@ interface State {
     status: string;
     redirectTo?: string;
     requestCount: number;
+    suggestions: AssetBundleDoc[];
+    searchStatusForSuggest: string;
 }
 
 interface Props {
@@ -20,13 +24,17 @@ interface Props {
 }
 
 class Search extends React.Component<Props, State> {
+    private debouncedLoadSuggestions: any;
     constructor(props: Props) {
         super(props);
         this.state = {
             status: "wait",
             inputValue: "",
-            requestCount: 0
+            requestCount: 0,
+            suggestions: [],
+            searchStatusForSuggest: "wait"
         };
+        this.debouncedLoadSuggestions = _.debounce(this.fetchAssetBundles, 500);
     }
 
     public componentWillReceiveProps(props: Props) {
@@ -34,16 +42,32 @@ class Search extends React.Component<Props, State> {
             status: "wait",
             inputValue: "",
             redirectTo: undefined,
-            requestCount: 0
+            requestCount: 0,
+            searchStatusForSuggest: "wait"
         });
     }
 
     public render() {
-        const { inputValue, status, redirectTo, requestCount } = this.state;
+        const { inputValue, status, redirectTo, requestCount, suggestions, searchStatusForSuggest } = this.state;
+        const inputProps = {
+            placeholder: "Block / Parcel / Tx / Asset / Address",
+            value: inputValue,
+            onChange: this.updateInputValue
+        };
         return <Form inline={true} onSubmit={this.handleSumbit} className={`search-form ${this.props.className}`}>
             <FormGroup className="mb-0">
                 <div>
+                    {/*
                     <Input className={`search-input ${requestCount === 0 && status === "notFound" && !redirectTo ? "is-invalid" : ""}`} value={inputValue} onChange={this.updateInputValue} type="text" placeholder="Block / Parcel / Tx / Asset / Address" />
+                    */}
+                    <Autosuggest
+                        suggestions={suggestions}
+                        onSuggestionsFetchRequested={this.onSuggestionsFetchRequested}
+                        onSuggestionsClearRequested={this.onSuggestionsClearRequested}
+                        getSuggestionValue={this.getSuggestionValue}
+                        renderSuggestion={this.renderSuggestion}
+                        inputProps={inputProps}
+                    />
                     <LoadingBar scope="searchBar" className="search-loading-bar" />
                 </div>
             </FormGroup>
@@ -65,7 +89,23 @@ class Search extends React.Component<Props, State> {
             {
                 requestCount === 0 && redirectTo ? <Redirect push={true} to={redirectTo} /> : null
             }
+            {
+                searchStatusForSuggest === "search" ?
+                    <RequestAssetBundlesByName assetName={inputValue} onAssetBundles={this.onAssetBundles} onError={this.onSearchError} />
+                    : null
+            }
         </Form>
+    }
+
+    private onSearchError = (e: any) => {
+        console.log(e)
+    }
+
+    private onAssetBundles = (assetBundles: AssetBundleDoc[]) => {
+        this.setState({
+            suggestions: assetBundles,
+            searchStatusForSuggest: "wait"
+        });
     }
 
     private onBlock = (block: BlockDoc) => {
@@ -133,11 +173,44 @@ class Search extends React.Component<Props, State> {
         }
     }
 
-    private updateInputValue = (e: any) => {
+    private updateInputValue = (e: any, value: any) => {
         this.setState({
-            inputValue: e.target.value
+            inputValue: value.newValue
         });
     }
+
+    private onSuggestionsFetchRequested = (request: { value: string, reason: any }) => {
+        if (this.state.searchStatusForSuggest === "search" && request.reason !== "input-changed") {
+            return;
+        }
+        this.debouncedLoadSuggestions();
+    };
+
+    private fetchAssetBundles() {
+        if (!this.state.inputValue || this.state.inputValue.trim() === "") {
+            return;
+        }
+        this.setState({
+            searchStatusForSuggest: "search"
+        });
+    }
+
+    private renderSuggestion = (suggestion: AssetBundleDoc) => (
+        <div>
+            <img className="icon" src={Type.getMetadata(suggestion.assetScheme.metadata).icon_url} />
+            {Type.getMetadata(suggestion.assetScheme.metadata).name}
+        </div>
+    );
+
+    private getSuggestionValue = (suggestion: AssetBundleDoc) => {
+        return suggestion.asset.assetType;
+    };
+
+    private onSuggestionsClearRequested = () => {
+        this.setState({
+            suggestions: []
+        });
+    };
 
     private handleSumbit = (e: any) => {
         e.preventDefault();
