@@ -1,9 +1,9 @@
 import * as React from "react";
 import * as _ from "lodash";
 import * as moment from "moment";
-import { Table } from 'reactstrap';
+import { Table } from "reactstrap";
 
-import './LatestParcels.scss';
+import "./LatestParcels.scss";
 import HexString from "../../util/HexString/HexString";
 import { BlockDoc } from "../../../../db/DocType";
 import { Link } from "react-router-dom";

@@ -1,29 +1,29 @@
-import * as React from 'react';
-import * as ReactDOM from 'react-dom';
+import * as React from "react";
+import * as ReactDOM from "react-dom";
 import { Provider } from "react-redux";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 
-import 'bootstrap/dist/css/bootstrap.min.css';
-import './index.scss';
+import "bootstrap/dist/css/bootstrap.min.css";
+import "./index.scss";
 
 import { store } from "./redux/store";
-import RegisterServiceWorker from './register_service_worker';
-import Block from './pages/Block/Block';
-import Header from './components/header/Header/Header';
-import Home from './pages/Home/Home';
-import Parcel from './pages/Parcel/Parcel';
+import RegisterServiceWorker from "./register_service_worker";
+import Block from "./pages/Block/Block";
+import Header from "./components/header/Header/Header";
+import Home from "./pages/Home/Home";
+import Parcel from "./pages/Parcel/Parcel";
 import Asset from "./pages/Asset/Asset";
 import NodeInfo from "./pages/NodeInfo";
-import SendSignedParcel from './pages/SendSignedParcel';
-import Transaction from './pages/Transaction/Transaction';
-import Footer from './components/footer/Footer';
-import PlatformAddress from './pages/PlatformAddress/PlatformAddress';
-import AssetTransferAddress from './pages/AssetTransferAddress/AssetTransferAddress';
-import PendingParcels from './pages/PendingParcels/PendingParcels';
-import Parcels from './pages/Parcels/Parcels';
-import Transactions from './pages/Transactions/Transactions';
-import Blocks from './pages/Blocks/Blocks';
-import NotFound from './pages/NotFound/NotFound';
+import SendSignedParcel from "./pages/SendSignedParcel";
+import Transaction from "./pages/Transaction/Transaction";
+import Footer from "./components/footer/Footer";
+import PlatformAddress from "./pages/PlatformAddress/PlatformAddress";
+import AssetTransferAddress from "./pages/AssetTransferAddress/AssetTransferAddress";
+import PendingParcels from "./pages/PendingParcels/PendingParcels";
+import Parcels from "./pages/Parcels/Parcels";
+import Transactions from "./pages/Transactions/Transactions";
+import Blocks from "./pages/Blocks/Blocks";
+import NotFound from "./pages/NotFound/NotFound";
 
 ReactDOM.render(
   <Provider store={store}>
@@ -52,6 +52,6 @@ ReactDOM.render(
         </div>
     </Router >
   </Provider >,
-  document.getElementById('root') as HTMLElement
+  document.getElementById("root") as HTMLElement
 );
 RegisterServiceWorker();

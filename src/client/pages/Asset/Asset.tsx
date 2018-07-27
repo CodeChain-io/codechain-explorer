@@ -1,6 +1,6 @@
 import * as React from "react";
 import { match } from "react-router";
-import { Container } from 'reactstrap';
+import { Container } from "reactstrap";
 
 import { RequestAssetScheme } from "../../request";
 import AssetDetails from "../../components/asset/AssetDetails/AssetDetails";

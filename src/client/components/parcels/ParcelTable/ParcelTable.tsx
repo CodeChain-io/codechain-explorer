@@ -1,7 +1,7 @@
 import * as React from "react";
 import * as _ from "lodash";
 import * as moment from "moment";
-import { Table } from 'reactstrap';
+import { Table } from "reactstrap";
 
 import "./ParcelTable.scss";
 import { ParcelDoc } from "../../../../db/DocType";

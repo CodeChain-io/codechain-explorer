@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Row, Col } from 'reactstrap';
+import { Row, Col } from "reactstrap";
 
 import "./Summary.scss";
 

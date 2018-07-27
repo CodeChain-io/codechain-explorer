@@ -1,6 +1,6 @@
 import { BlockDoc, ParcelDoc, TransactionDoc, AssetSchemeDoc } from "../../db/DocType";
 import { combineReducers } from "redux";
-import { loadingBarReducer } from 'react-redux-loading-bar'
+import { loadingBarReducer } from "react-redux-loading-bar"
 
 export interface RootState {
     appReducer: AppReducer;

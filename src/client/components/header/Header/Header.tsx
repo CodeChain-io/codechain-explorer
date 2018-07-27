@@ -1,13 +1,13 @@
 import * as React from "react";
-import { Container, Navbar, NavbarBrand, NavbarToggler, Nav, NavItem, NavLink, Collapse, UncontrolledDropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
-import { IndexLinkContainer } from 'react-router-bootstrap';
+import { Container, Navbar, NavbarBrand, NavbarToggler, Nav, NavItem, NavLink, Collapse, UncontrolledDropdown, DropdownToggle, DropdownMenu, DropdownItem } from "reactstrap";
+import { IndexLinkContainer } from "react-router-bootstrap";
 import LoadingBar from "react-redux-loading-bar";
-import HealthChecker from '../../util/HealthChecker/HealthChecker';
+import HealthChecker from "../../util/HealthChecker/HealthChecker";
 import Search from "../Search/Search";
 
 import * as logo from "./img/logo.png";
 
-import './Header.scss';
+import "./Header.scss";
 
 interface State {
     isOpen: boolean;

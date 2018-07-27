@@ -1,14 +1,14 @@
-import * as React from 'react';
+import * as React from "react";
 import * as _ from "lodash";
-import { RequestBlockNumber, RequestBlock } from '../../request';
-import { Container } from 'reactstrap';
-import LatestBlocks from '../../components/home/LatestBlocks/LatestBlocks';
-import LatestParcels from '../../components/home/LatestParcels/LatestParcels';
-import LatestTransactions from '../../components/home/LatestTransactions/LatestTransactions';
+import { RequestBlockNumber, RequestBlock } from "../../request";
+import { Container } from "reactstrap";
+import LatestBlocks from "../../components/home/LatestBlocks/LatestBlocks";
+import LatestParcels from "../../components/home/LatestParcels/LatestParcels";
+import LatestTransactions from "../../components/home/LatestTransactions/LatestTransactions";
 
 import "./Home.scss"
-import Summary from '../../components/home/Summary/Summary';
-import { BlockDoc } from '../../../db/DocType';
+import Summary from "../../components/home/Summary/Summary";
+import { BlockDoc } from "../../../db/DocType";
 
 interface State {
     bestBlockNumber?: number;
@@ -51,7 +51,7 @@ class Home extends React.Component<{}, State> {
                     </div>
                     {/* Reqest blocks */}
                     {_.map(_.reverse(_.range(Math.max(0, (bestBlockNumber + 1) - 10), bestBlockNumber + 1)), n => {
-                        return <RequestBlock key={'request-block-num-' + n} id={n} onBlock={this.onBlock} onError={this.onError} onBlockNotExist={this.onBlockNotExist} />
+                        return <RequestBlock key={"request-block-num-" + n} id={n} onBlock={this.onBlock} onError={this.onError} onBlockNotExist={this.onBlockNotExist} />
                     })}
                 </Container>
                 <RequestBlockNumber

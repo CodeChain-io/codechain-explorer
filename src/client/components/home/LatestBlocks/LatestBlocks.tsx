@@ -1,10 +1,10 @@
 import * as React from "react";
 import * as _ from "lodash";
 import * as moment from "moment";
-import { Table } from 'reactstrap';
+import { Table } from "reactstrap";
 import { Link } from "react-router-dom";
 
-import './LatestBlocks.scss';
+import "./LatestBlocks.scss";
 import { BlockDoc } from "../../../../db/DocType";
 import { PlatformAddress } from "codechain-sdk/lib/key/classes";
 

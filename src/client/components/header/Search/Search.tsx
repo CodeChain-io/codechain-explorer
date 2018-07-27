@@ -1,9 +1,9 @@
 import * as React from "react";
-import { Form, FormGroup, Input, Button } from 'reactstrap';
+import { Form, FormGroup, Input, Button } from "reactstrap";
 import LoadingBar from "react-redux-loading-bar";
 import { Redirect } from "react-router";
 
-import './Search.scss';
+import "./Search.scss";
 import { RequestBlock, RequestParcel, RequestTransaction, RequestAssetScheme, RequestPlatformAddressAccount, RequestPendingParcel, RequestPendingTransaction, RequestAssetTransferAddressTransactions } from "../../../request";
 import { BlockDoc, ParcelDoc, TransactionDoc, AssetSchemeDoc, PendingParcelDoc, PendingTransactionDoc } from "../../../../db/DocType";
 import { U256 } from "codechain-sdk/lib/core/classes";

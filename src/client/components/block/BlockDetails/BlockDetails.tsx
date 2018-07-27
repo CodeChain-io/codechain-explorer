@@ -1,6 +1,6 @@
 import * as React from "react";
 
-import { Col, Row } from 'reactstrap';
+import { Col, Row } from "reactstrap";
 
 import * as moment from "moment";
 

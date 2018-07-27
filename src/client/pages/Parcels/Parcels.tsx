@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Container } from 'reactstrap';
+import { Container } from "reactstrap";
 
 import { RequestParcels } from "../../request";
 import "./Parcels.scss";

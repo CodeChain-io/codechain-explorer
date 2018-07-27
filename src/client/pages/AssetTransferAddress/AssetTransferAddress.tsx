@@ -1,6 +1,6 @@
 import * as React from "react";
 import { match } from "react-router";
-import { Container } from 'reactstrap';
+import { Container } from "reactstrap";
 
 import { RequestAssetTransferAddressUTXO, RequestAssetTransferAddressTransactions } from "../../request";
 import { TransactionDoc, AssetBundleDoc } from "../../../db/DocType";

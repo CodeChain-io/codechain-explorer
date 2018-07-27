@@ -1,12 +1,12 @@
-import * as cors from 'cors';
-import * as express from 'express';
-import * as _ from 'lodash';
+import * as cors from "cors";
+import * as express from "express";
+import * as _ from "lodash";
 
 import { H256, SignedParcel } from "codechain-sdk/lib/core/classes";
 
-import { ServerContext } from './ServerContext';
-import { TransactionDoc, Type } from '../db/DocType';
-import { PlatformAddress, AssetTransferAddress } from 'codechain-sdk/lib/key/classes';
+import { ServerContext } from "./ServerContext";
+import { TransactionDoc, Type } from "../db/DocType";
+import { PlatformAddress, AssetTransferAddress } from "codechain-sdk/lib/key/classes";
 
 const corsOptions = {
     origin: true,

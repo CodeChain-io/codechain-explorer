@@ -3,7 +3,7 @@ import * as React from "react";
 import { H256, Transaction, AssetMintTransaction } from "codechain-sdk/lib/core/classes"
 import TransactionEditor from "../components/editor/TransactionEditor";
 import { Link } from "react-router-dom";
-import { Container } from 'reactstrap';
+import { Container } from "reactstrap";
 
 type Status = "input" | "sending" | "sent" | "error";
 type TransactionType = "assetMint" | "assetTransfer";

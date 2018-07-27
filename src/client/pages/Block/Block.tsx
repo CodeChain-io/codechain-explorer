@@ -1,6 +1,6 @@
 import * as React from "react";
 import { match } from "react-router";
-import { Container } from 'reactstrap';
+import { Container } from "reactstrap";
 
 import { RequestBlock } from "../../request";
 import BlockDetails from "../../components/block/BlockDetails/BlockDetails";

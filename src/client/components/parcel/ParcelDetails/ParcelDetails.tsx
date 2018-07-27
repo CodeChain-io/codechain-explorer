@@ -1,6 +1,6 @@
 import * as React from "react";
 
-import { Col, Row } from 'reactstrap';
+import { Col, Row } from "reactstrap";
 
 import "./ParcelDetails.scss"
 import HexString from "../../util/HexString/HexString";

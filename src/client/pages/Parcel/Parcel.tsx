@@ -1,7 +1,7 @@
 import * as React from "react";
 import * as FontAwesome from "react-fontawesome";
 import { match } from "react-router";
-import { Container } from 'reactstrap';
+import { Container } from "reactstrap";
 
 import { RequestParcel, RequestPendingParcel } from "../../request";
 import ParcelDetails from "../../components/parcel/ParcelDetails/ParcelDetails";

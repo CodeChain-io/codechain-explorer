@@ -1,7 +1,7 @@
 import * as React from "react";
 import * as _ from "lodash";
 
-import { Col, Row } from 'reactstrap';
+import { Col, Row } from "reactstrap";
 
 import "./TransactionDetails.scss"
 import HexString from "../../util/HexString/HexString";

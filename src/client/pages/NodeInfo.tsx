@@ -1,6 +1,6 @@
 import * as React from "react";
 import { connect } from "react-redux";
-import { Container } from 'reactstrap';
+import { Container } from "reactstrap";
 import { RootState } from "../redux/actions";
 
 interface StateProps {

@@ -1,6 +1,6 @@
 import * as React from "react";
-import { Container } from 'reactstrap';
-import './Footer.scss';
+import { Container } from "reactstrap";
+import "./Footer.scss";
 
 const Footer = () => {
     return <div className="footer">

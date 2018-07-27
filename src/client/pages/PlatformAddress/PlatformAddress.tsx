@@ -1,6 +1,6 @@
 import * as React from "react";
 import { match } from "react-router";
-import { Container } from 'reactstrap';
+import { Container } from "reactstrap";
 
 import { U256 } from "codechain-sdk/lib/core/classes"
 import { RequestPlatformAddressAccount, RequestPlatformAddressParcels, RequestPlatformAddressAssets } from "../../request";

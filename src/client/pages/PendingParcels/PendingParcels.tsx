@@ -1,6 +1,6 @@
 import * as React from "react";
 import * as _ from "lodash";
-import { Container } from 'reactstrap';
+import { Container } from "reactstrap";
 
 import { RequestPendingParcels } from "../../request";
 

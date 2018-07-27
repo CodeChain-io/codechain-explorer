@@ -13,7 +13,7 @@ export class ElasticSearchAgent {
 
     public ping = async (): Promise<string> => {
         return this.client.ping({ requestTimeout: 30000 }).then((data) => {
-            return 'pong';
+            return "pong";
         });
     }
 

@@ -64,7 +64,7 @@ class RequestPingInternal extends React.Component<Props, State> {
             if (response === "pong") {
                 onPong();
             } else {
-                onError({ message: `Expected 'pong' but '${response}'` });
+                onError({ message: `Expected "pong" but "${response}"` });
             }
         }).catch(onError);
     }

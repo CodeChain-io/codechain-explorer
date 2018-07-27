@@ -1,9 +1,9 @@
 import * as React from "react";
 import * as _ from "lodash";
 import * as moment from "moment";
-import { Table } from 'reactstrap';
+import { Table } from "reactstrap";
 
-import './LatestTransactions.scss';
+import "./LatestTransactions.scss";
 import HexString from "../../util/HexString/HexString";
 import { BlockDoc, Type, ChangeShardStateDoc, AssetMintTransactionDoc, AssetTransferTransactionDoc } from "../../../../db/DocType";
 import { Link } from "react-router-dom";
