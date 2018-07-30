@@ -38,3 +38,71 @@
 .mint-transaction-text-color {
   color: $mint-transaction-primary-color;
 }
+
+.data-set {
+  &>.row {
+    padding-top: 7px;
+    padding-bottom: 7px;
+    &>[class*="col-"]:nth-child(1) {
+      @include heading-font;
+    }
+    &>[class*="col-"]:nth-child(2) {
+      @include data-font;
+      @include ellipsis-block;
+    }
+  }
+  hr {
+    border: 0;
+    clear: both;
+    display: block;
+    height: 1px;
+    background-color: $line-color;
+    margin: 0;
+  }
+  .text-area {
+    background-color: $background-gray;
+    max-height: 58px;
+    min-height: 37px;
+    overflow-y: scroll;
+    word-wrap: break-word;
+    white-space: normal;
+    padding: 8px;
+  }
+}
+
+.hash-container {
+  .hash {
+    vertical-align: top;
+    @include ellipsis-block;
+    margin-right: 5px;
+    flex-grow: 1;
+    height: 30px;
+    background-color: $background-gray;
+    padding-left: 5px;
+    padding-right: 5px;
+    span {
+      @include data-font;
+      line-height: 30px;
+    }
+  }
+  .copy {
+    vertical-align: top;
+    height: 30px;
+    background-color: $background-gray;
+    span {
+      line-height: 30px;
+      width: 30px;
+    }
+  }
+}
+
+.type-badge {
+  padding-top: 2px;
+  padding-bottom: 2px;
+  padding-left: 12px;
+  padding-right: 12px;
+  text-align: center;
+  color: white;
+  display: inline-block;
+  @include small-text;
+}

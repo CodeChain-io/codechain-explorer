@@ -52,7 +52,7 @@ class Block extends React.Component<Props, State> {
                     <Col md="8" xl="7">
                         <div className="d-flex align-items-end title-container">
                             <h1 className="d-inline-block mr-auto">Block <span className="block-number">#{block.number}</span></h1>
-                            <span className="block-time">{moment.unix(block.timestamp).format("YYYY-MM-DD HH:mm:ssZ")}</span>
+                            <span className="timestamp">{moment.unix(block.timestamp).format("YYYY-MM-DD HH:mm:ssZ")}</span>
                         </div>
                     </Col>
                 </Row>

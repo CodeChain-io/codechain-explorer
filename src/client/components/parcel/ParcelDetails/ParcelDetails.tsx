@@ -1,10 +1,12 @@
 import * as React from "react";
+import * as _ from "lodash";
+import * as FontAwesome from "react-fontawesome";
 
 import { Col, Row } from "reactstrap";
 
 import "./ParcelDetails.scss"
 import HexString from "../../util/HexString/HexString";
-import { ParcelDoc, Type, PaymentDoc, SetRegularKeyDoc } from "../../../../db/DocType";
+import { ParcelDoc, Type, PaymentDoc, SetRegularKeyDoc, ChangeShardStateDoc } from "../../../../db/DocType";
 import { Link } from "react-router-dom";
 import { PlatformAddress } from "codechain-sdk/lib/key/classes";
 
@@ -15,44 +17,59 @@ interface Props {
 const getElementByType = (parcel: ParcelDoc) => {
     if (Type.isPaymentDoc(parcel.action)) {
         return [
-            <div key="parcel-header-table-payment-line" className="line" />,
             <Row key="parcel-header-table-payment-sender">
-                <Col md="2">
+                <Col md="3">
                     Sender
                 </Col>
-                <Col md="10">
+                <Col md="9">
                     <Link to={`/addr-platform/${PlatformAddress.fromAccountId(parcel.sender).value}`}>{PlatformAddress.fromAccountId(parcel.sender).value}</Link>
                 </Col>
             </Row>,
+            <hr key="line1" />,
             <Row key="parcel-header-table-payment-receiver">
-                <Col md="2">
+                <Col md="3">
                     Receiver
                 </Col>
-                <Col md="10">
+                <Col md="9">
                     <Link to={`/addr-platform/${PlatformAddress.fromAccountId((parcel.action as PaymentDoc).receiver).value}`}>{PlatformAddress.fromAccountId((parcel.action as PaymentDoc).receiver).value}</Link>
                 </Col>
             </Row>,
+            <hr key="line2" />,
             <Row key="parcel-header-table-payment-amount">
-                <Col md="2">
+                <Col md="3">
                     Amount
                 </Col>
-                <Col md="10">
+                <Col md="9">
                     {(parcel.action as PaymentDoc).amount}
                 </Col>
-            </Row>
+            </Row>,
+            <hr key="line3" />
         ];
     } else if (Type.isSetRegularKeyDoc(parcel.action)) {
         return (
             [
-                <div key="parcel-header-table-regular-key-line" className="line" />,
                 <Row key="parcel-header-table-regular-key">
-                    <Col md="2">
+                    <Col md="3">
                         Key
                     </Col>
-                    <Col md="10">
+                    <Col md="9">
                         <HexString text={(parcel.action as SetRegularKeyDoc).key} />
                     </Col>
-                </Row >
+                </Row >,
+                <hr key="line" />
+            ]);
+    } else if (Type.isChangeShardStateDoc(parcel.action)) {
+        return (
+            [
+                <Row key="parcel-header-table-change-shard-state-key">
+                    <Col md="3">
+                        # of Transactions
+                    </Col>
+                    <Col md="9">
+                        {(parcel.action as ChangeShardStateDoc).transactions.length}
+                    </Col>
+                </Row >,
+                <hr key="line" />
             ]);
     }
     return null;
@@ -63,66 +80,100 @@ const ParcelDetails = (props: Props) => {
 
     return <div className="parcel-details">
         <Row>
-            <Col md="2">
-                Hash
-            </Col>
-            <Col md="10">
-                <HexString text={parcel.hash} />
+            <Col lg="9">
+                <h2>Details</h2>
+                <hr className="heading-hr" />
             </Col>
         </Row>
         <Row>
-            <Col md="2">
-                Network ID
+            <Col lg="9" className="mb-3 mb-lg-0">
+                <div className="data-set">
+                    <Row>
+                        <Col md="3">
+                            Block No.
+                        </Col>
+                        <Col md="9">
+                            <Link to={`/block/${parcel.blockNumber}`}>
+                                {parcel.blockNumber}
+                            </Link>
+                        </Col>
+                    </Row>
+                    <hr />
+                    <Row>
+                        <Col md="3">
+                            Parcel Index
+                        </Col>
+                        <Col md="9">
+                            {parcel.parcelIndex}
+                        </Col>
+                    </Row>
+                    <hr />
+                    <Row>
+                        <Col md="3">
+                            Network ID
+                        </Col>
+                        <Col md="9">
+                            {parcel.networkId}
+                        </Col>
+                    </Row>
+                    <hr />
+                    <Row>
+                        <Col md="3">
+                            Nonce
+                        </Col>
+                        <Col md="9">
+                            {parcel.nonce}
+                        </Col>
+                    </Row>
+                    <hr />
+                    <Row>
+                        <Col md="3">
+                            Signer
+                        </Col>
+                        <Col md="9">
+                            <Link to={`/addr-platform/${PlatformAddress.fromAccountId(parcel.sender).value}`}>{PlatformAddress.fromAccountId(parcel.sender).value}</Link>
+                        </Col>
+                    </Row>
+                    <hr />
+                    <Row>
+                        <Col md="3">
+                            Fee
+                        </Col>
+                        <Col md="9">
+                            {parcel.fee}
+                        </Col>
+                    </Row>
+                    <hr />
+                    {
+                        getElementByType(parcel)
+                    }
+                </div>
             </Col>
-            <Col md="10">
-                {parcel.networkId}
-            </Col>
+            {
+                Type.isChangeShardStateDoc(parcel.action) ?
+                    <Col lg="3">
+                        <div className="right-panel-item">
+                            <h2># of Transaction types</h2>
+                            <hr />
+                            <div className="d-flex align-items-center">
+                                <FontAwesome className="square asset-transfer-transaction-text-color" name="square" />
+                                <span className="mr-auto item-name">Transfer</span>
+                                <span>
+                                    {_.filter((parcel.action as ChangeShardStateDoc).transactions, (tx) => Type.isAssetTransferTransactionDoc(tx)).length
+                                    }</span>
+                            </div>
+                            <hr />
+                            <div className="d-flex align-items-center">
+                                <FontAwesome className="square mint-transaction-text-color" name="square" />
+                                <span className="mr-auto item-name">Mint</span>
+                                <span>
+                                    {_.filter((parcel.action as ChangeShardStateDoc).transactions, (tx) => Type.isAssetMintTransactionDoc(tx)).length}</span>
+                            </div>
+                        </div>
+                    </Col>
+                    : null
+            }
         </Row>
-        <Row>
-            <Col md="2">
-                Block No.
-            </Col>
-            <Col md="10">
-                <Link to={`/block/${parcel.blockNumber}`}>
-                    {parcel.blockNumber}
-                </Link>
-            </Col>
-        </Row>
-        <Row>
-            <Col md="2">
-                Parcel Index
-            </Col>
-            <Col md="10">
-                {parcel.parcelIndex}
-            </Col>
-        </Row>
-        <Row>
-            <Col md="2">
-                Nonce
-            </Col>
-            <Col md="10">
-                {parcel.nonce}
-            </Col>
-        </Row>
-        <Row>
-            <Col md="2">
-                Signer
-            </Col>
-            <Col md="10">
-                <Link to={`/addr-platform/${PlatformAddress.fromAccountId(parcel.sender).value}`}>{PlatformAddress.fromAccountId(parcel.sender).value}</Link>
-            </Col>
-        </Row>
-        <Row>
-            <Col md="2">
-                Fee
-            </Col>
-            <Col md="10">
-                {parcel.fee}
-            </Col>
-        </Row>
-        {
-            getElementByType(parcel)
-        }
     </div>
 };
 

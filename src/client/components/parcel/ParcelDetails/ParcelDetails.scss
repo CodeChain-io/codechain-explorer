@@ -1,18 +1,26 @@
+@import "../../../mixins.scss";
+@import "../../../variables.scss";
 .parcel-details {
-  background-color: #F8F8F8;
-  border-radius: 13px;
-  .row>div:first-child {
-    padding-left: 27px;
+  h2 {
+    color: $parcel-primary-color;
   }
-  .row>div:last-child {
-    padding-right: 27px;
+  .heading-hr {
+    border-top: 2px solid $parcel-primary-color;
+    margin-top: 2px;
+    margin-bottom: 2px;
   }
-  .line {
-    background-color: #BDBDBD;
-    height: 1px;
-  }
-  .row>div {
-    padding-top: 8px;
-    padding-bottom: 8px;
+  .right-panel-item {
+    background-color: $background-gray;
+    padding: 12px;
+    .square {
+      margin-right: 10px;
+    }
+    .item-name {
+      @include heading-font;
+    }
+    hr {
+      margin-top: 8px;
+      margin-bottom: 8px;
+    }
   }
 }

@@ -7,6 +7,7 @@ $line-color: #BDBDBD;
 // Color set
 $primary-color: #3A3FAB;
 $block-primary-color: #3A3FAB;
+$parcel-primary-color: #6AD400;
 // action
 $payment-action-primary-color: #F2B04C;
 $change-shard-state-action-primary-color: #6AD400;
@@ -14,3 +15,7 @@ $set-regular-key-action-primary-color: #FF866C;
 // transaction
 $asset-transfer-transaction-primary-color: #5300DB;
 $mint-transaction-primary-color: #00DBB4;
+// Status
+$pending-color: #F2C94C;
+$confirmed-color: #1CCF68;
+$dead-color: #EB5757;

@@ -1,36 +1,14 @@
+@import "../../mixins.scss";
+@import "../../variables.scss";
 .parcel {
   padding-top: 60px;
-  padding-bottom: 108px;
+  padding-bottom: 100px;
   .title-container {
-    display: flex;
-    align-items: center;
     h1 {
-      margin-bottom: 0;
+      color: $primary-color;
     }
-    .parcel-type {
-      border-radius: 10px;
-      padding-right: 20px;
-      padding-left: 20px;
-      color: white;
-      margin-left: 10px;
-    }
-    .set-regular-key-type {
-      background-color: #3A4EB7;
-    }
-    .change-shard-state-type {
-      background-color: #00B8D4;
-    }
-    .payment-type {
-      background-color: #03A9F4;
-    }
-    .dead {
-      color: #EB5757;
-    }
-    .pending {
-      color: #F2C94C;
-    }
-    .confirmed {
-      color: #1CCF68;
+    .timestamp {
+      @include small-text;
     }
   }
   .transaction-count-label {

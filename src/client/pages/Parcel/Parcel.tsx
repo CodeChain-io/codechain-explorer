@@ -1,7 +1,8 @@
 import * as React from "react";
 import * as FontAwesome from "react-fontawesome";
+import * as moment from "moment";
 import { match } from "react-router";
-import { Container } from "reactstrap";
+import { Container, Row, Col } from "reactstrap";
 
 import { RequestParcel, RequestPendingParcel } from "../../request";
 import ParcelDetails from "../../components/parcel/ParcelDetails/ParcelDetails";
@@ -9,6 +10,7 @@ import ParcelDetails from "../../components/parcel/ParcelDetails/ParcelDetails";
 import "./Parcel.scss";
 import ParcelTransactionList from "../../components/parcel/ParcelTransactionList/ParcelTransactionList";
 import { ParcelDoc, Type, ChangeShardStateDoc, PendingParcelDoc } from "../../../db/DocType";
+import HexString from "../../components/util/HexString/HexString";
 
 interface Props {
     match: match<{ hash: string }>;
@@ -61,21 +63,53 @@ class Parcel extends React.Component<Props, State> {
             }
         }
         return (<Container className="parcel">
-            <div className="title-container mb-2 d-flex align-items-center">
-                <h1 className="d-inline-block">Parcel Information</h1>
-                <div className={`mr-auto d-inline-block parcel-type ${Type.isChangeShardStateDoc(parcelResult.parcel.action) ? "change-shard-state-type" : (Type.isPaymentDoc(parcelResult.parcel.action) ? "payment-type" : "set-regular-key-type")}`}>
-                    <span>{parcelResult.parcel.action.action}</span>
-                </div>
-                <div className="d-inline-block">
-                    {
-                        this.getStatusElement(parcelResult.status)
-                    }
-                </div>
-            </div>
+            <Row className="mb-2">
+                <Col md="8" xl="7">
+                    <div className="d-flex title-container">
+                        <h1 className="d-inline-block align-self-center">Parcel</h1>
+                        <div className={`type-badge align-self-center ml-3 mr-auto ${this.getBadgeClassNameByAction(parcelResult.parcel.action.action)}`}>{this.getActionString(parcelResult.parcel.action.action)}</div>
+                        <span className="timestamp align-self-end">{moment.unix(parcelResult.parcel.timestamp).format("YYYY-MM-DD HH:mm:ssZ")}</span>
+                    </div>
+                </Col>
+            </Row>
+            <Row className="mb-4">
+                <Col md="8" xl="7" className="hash-container d-flex mb-3 mb-md-0">
+                    <div className="d-inline-block hash">
+                        <HexString text={parcelResult.parcel.hash} />
+                    </div>
+                    <div className="d-inline-block copy text-center">
+                        <FontAwesome name="copy" />
+                    </div>
+                </Col>
+            </Row>
             <ParcelDetails parcel={parcelResult.parcel} />
             {this.showTransactionList(parcelResult.parcel, page)}
         </Container>
         )
+    }
+
+    private getBadgeClassNameByAction = (action: string) => {
+        switch (action) {
+            case "changeShardState":
+                return "change-shard-state-action-back-color";
+            case "payment":
+                return "payment-action-back-color";
+            case "setRegularKey":
+                return "set-regular-key-action-back-color";
+        }
+        return "";
+    }
+
+    private getActionString = (action: string) => {
+        switch (action) {
+            case "changeShardState":
+                return "ChangeShardState";
+            case "payment":
+                return "Payment";
+            case "setRegularKey":
+                return "SetRegularKey";
+        }
+        return "";
     }
 
     private showTransactionList = (parcel: ParcelDoc, page: number) => {
@@ -101,18 +135,6 @@ class Parcel extends React.Component<Props, State> {
                     </div>
                 ]
             )
-        }
-        return null;
-    }
-
-    private getStatusElement = (status: string) => {
-        switch (status) {
-            case "dead":
-                return <div className="dead"><FontAwesome name="circle" />&nbsp;Dead</div>
-            case "confirmed":
-                return <div className="confirmed"><FontAwesome name="circle" />&nbsp;Confirmed</div>
-            case "pending":
-                return <div className="pending"><FontAwesome name="circle" />&nbsp;Pending</div >
         }
         return null;
     }

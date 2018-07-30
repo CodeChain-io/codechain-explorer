@@ -9,36 +9,6 @@
     margin-top: 2px;
     margin-bottom: 2px;
   }
-  .data-set {
-    &>.row {
-      padding-top: 7px;
-      padding-bottom: 7px;
-      &>[class*="col-"]:nth-child(1) {
-        @include heading-font;
-      }
-      &>[class*="col-"]:nth-child(2) {
-        @include data-font;
-        @include ellipsis-block;
-      }
-    }
-    hr {
-      border: 0;
-      clear: both;
-      display: block;
-      height: 1px;
-      background-color: $line-color;
-      margin: 0;
-    }
-    .text-area {
-      background-color: $background-gray;
-      max-height: 58px;
-      min-height: 37px;
-      overflow-y: scroll;
-      word-wrap: break-word;
-      white-space: normal;
-      padding: 8px;
-    }
-  }
   .right-panel-item {
     background-color: $background-gray;
     padding: 12px;
