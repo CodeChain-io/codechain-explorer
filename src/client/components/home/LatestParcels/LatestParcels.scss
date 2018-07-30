@@ -1,3 +1,4 @@
+@import "../../../mixins.scss";
 .latest-parcels {
   .latest-container {
     table {
@@ -16,6 +17,7 @@
         overflow: hidden;
         text-overflow: ellipsis;
         white-space: nowrap;
+        @include data-font;
       }
       thead {
         th {
