@@ -1,14 +1,50 @@
+@import "../../mixins.scss";
+@import "../../variables.scss";
 .block {
   padding-top: 60px;
-  padding-bottom: 108px;
+  padding-bottom: 60px;
+  .title-container {
+    h1 {
+      color: $block-primary-color;
+      .block-number {
+        @include data-font;
+        color: $dark-color;
+      }
+    }
+    .block-time {
+      @include small-text;
+    }
+  }
+  .hash-container {
+    .hash {
+      vertical-align: top;
+      @include ellipsis-block;
+      margin-right: 5px;
+      flex-grow: 1;
+      height: 30px;
+      background-color: $background-gray;
+      padding-left: 5px;
+      padding-right: 5px;
+      span {
+        @include data-font;
+        line-height: 30px;
+      }
+    }
+    .copy {
+      vertical-align: top;
+      height: 30px;
+      background-color: $background-gray;
+      span {
+        line-height: 30px;
+        width: 30px;
+      }
+    }
+  }
   .parcel-count-label {
     margin-top: 16px;
     .blue-color {
       color: #328AF2;
     }
-  }
-  .disabled-link {
-    pointer-events: none;
   }
   .load-more-btn {
     border: 1px solid #3A3FAB;

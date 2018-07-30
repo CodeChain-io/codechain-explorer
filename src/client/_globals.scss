@@ -1,0 +1,40 @@
+@import "variables.scss";
+.payment-action-back-color {
+  background-color: $payment-action-primary-color;
+}
+
+.payment-action-text-color {
+  color: $payment-action-primary-color;
+}
+
+.change-shard-state-action-back-color {
+  background-color: $change-shard-state-action-primary-color;
+}
+
+.change-shard-state-action-text-color {
+  color: $change-shard-state-action-primary-color;
+}
+
+.set-regular-key-action-back-color {
+  background-color: $set-regular-key-action-primary-color;
+}
+
+.set-regular-key-action-text-color {
+  color: $set-regular-key-action-primary-color;
+}
+
+.asset-transfer-transaction-back-color {
+  background-color: $asset-transfer-transaction-primary-color;
+}
+
+.asset-transfer-transaction-text-color {
+  color: $asset-transfer-transaction-primary-color;
+}
+
+.mint-transaction-back-color {
+  background-color: $mint-transaction-primary-color;
+}
+
+.mint-transaction-text-color {
+  color: $mint-transaction-primary-color;
+}

@@ -1,6 +1,8 @@
 import * as React from "react";
+import * as moment from "moment";
+import * as FontAwesome from "react-fontawesome";
 import { match } from "react-router";
-import { Container } from "reactstrap";
+import { Container, Col, Row } from "reactstrap";
 
 import { RequestBlock } from "../../request";
 import BlockDetails from "../../components/block/BlockDetails/BlockDetails";
@@ -9,6 +11,7 @@ import BlockParcelList from "../../components/block/BlockParcelList/BlockParcelL
 import "./Block.scss";
 import { BlockDoc } from "../../../db/DocType";
 import { Link } from "react-router-dom";
+import HexString from "../../components/util/HexString/HexString";
 
 interface State {
     block?: BlockDoc;
@@ -45,13 +48,28 @@ class Block extends React.Component<Props, State> {
         }
         return (
             <Container className="block">
-                <div className="d-flex">
-                    <h1 className="d-inline mr-auto">#{block.number} Block Infomation</h1>
-                    <div className="d-inline d-flex align-items-center">
-                        <span className="mr-5"><Link to={`/block/${block.number - 1}`} className={block.number === 0 ? "disabled-link" : ""}>&lt; Prev</Link></span>
-                        <span><Link to={`/block/${block.number + 1}`}>Next &gt;</Link></span>
-                    </div>
-                </div>
+                <Row className="mb-2">
+                    <Col md="8" xl="7">
+                        <div className="d-flex align-items-end title-container">
+                            <h1 className="d-inline-block mr-auto">Block <span className="block-number">#{block.number}</span></h1>
+                            <span className="block-time">{moment.unix(block.timestamp).format("YYYY-MM-DD HH:mm:ssZ")}</span>
+                        </div>
+                    </Col>
+                </Row>
+                <Row className="mb-4">
+                    <Col md="8" xl="7" className="hash-container d-flex mb-3 mb-md-0">
+                        <div className="d-inline-block hash">
+                            <HexString text={block.hash} />
+                        </div>
+                        <div className="d-inline-block copy text-center">
+                            <FontAwesome name="copy" />
+                        </div>
+                    </Col>
+                    <Col md="3" xl="2" className="d-flex align-items-center justify-content-between offset-md-1 offset-xl-3">
+                        <Link to={block.number !== 0 ? `/block/${block.number - 1}` : "#"}><button type="button" className={`btn btn-primary ${block.number === 0 ? "disabled" : ""}`}>&lt; Prev</button></Link>
+                        <Link to={`/block/${block.number + 1}`}><button type="button" className="btn btn-primary">Next &gt;</button></Link>
+                    </Col>
+                </Row>
                 <BlockDetails block={block} />
                 <div className="parcel-count-label">
                     <span className="blue-color">{block.parcels.length} Parcels</span> in this Block

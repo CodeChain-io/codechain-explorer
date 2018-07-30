@@ -1,9 +1,18 @@
 @mixin heading-font() {
-  font-family: 'Montserrat', sans-serif;
   font-weight: 600;
 }
 
 @mixin data-font() {
   font-family: 'Roboto Mono', monospace;
   font-weight: 300;
+}
+
+@mixin small-text() {
+  font-size: 0.8rem;
+}
+
+@mixin ellipsis-block() {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
