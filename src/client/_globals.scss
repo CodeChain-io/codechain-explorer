@@ -31,12 +31,12 @@
   color: $asset-transfer-transaction-primary-color;
 }
 
-.mint-transaction-back-color {
-  background-color: $mint-transaction-primary-color;
+.asset-mint-transaction-back-color {
+  background-color: $asset-mint-transaction-primary-color;
 }
 
-.mint-transaction-text-color {
-  color: $mint-transaction-primary-color;
+.asset-mint-transaction-text-color {
+  color: $asset-mint-transaction-primary-color;
 }
 
 .data-set {
@@ -49,6 +49,10 @@
     &>[class*="col-"]:nth-child(2) {
       @include data-font;
       @include ellipsis-block;
+      .icon {
+        width: 18px;
+        height: 18px;
+      }
     }
   }
   hr {

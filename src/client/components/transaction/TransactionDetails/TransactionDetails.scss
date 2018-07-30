@@ -1,45 +1,12 @@
+@import "../../../mixins.scss";
+@import "../../../variables.scss";
 .transaction-details {
-  background-color: #F8F8F8;
-  border-radius: 13px;
-  .row {
-    .inner-table {
-      width: 100%;
-      td:first-child {
-        width: 20%;
-      }
-      td {
-        padding-top: 5px;
-        padding-bottom: 5px;
-      }
-    }
+  h2 {
+    color: $transaction-primary-color;
   }
-  .row>div:first-child {
-    padding-left: 27px;
-  }
-  .row>div:last-child {
-    padding-right: 27px;
-  }
-  .asset-icon {
-    width: 30px;
-    height: 30px;
-  }
-  .icon {
-    width: 30px;
-    height: 30px;
-  }
-  .asset-item {
-    background-color: #F2F2F2;
-    margin-left: 30px;
-    margin-right: 30px;
-    margin-bottom: 15px;
-    border-radius: 10px;
-  }
-  .line {
-    background-color: #BDBDBD;
-    height: 1px;
-  }
-  .row>div {
-    padding-top: 8px;
-    padding-bottom: 8px;
+  .heading-hr {
+    border-top: 2px solid $transaction-primary-color;
+    margin-top: 2px;
+    margin-bottom: 2px;
   }
 }

@@ -1,33 +1,14 @@
+@import "../../mixins.scss";
+@import "../../variables.scss";
 .transaction {
   padding-top: 60px;
-  padding-bottom: 108px;
+  padding-bottom: 100px;
   .title-container {
-    display: flex;
-    align-items: center;
     h1 {
-      margin-bottom: 0;
+      color: $primary-color;
     }
-    .transaction-type {
-      border-radius: 10px;
-      padding-right: 20px;
-      padding-left: 20px;
-      color: white;
-      margin-left: 10px;
-    }
-    .asset-mint-type {
-      background-color: #00DBB4;
-    }
-    .asset-transfer-type {
-      background-color: #5300DB;
-    }
-    .dead {
-      color: #EB5757;
-    }
-    .pending {
-      color: #F2C94C;
-    }
-    .confirmed {
-      color: #1CCF68;
+    .timestamp {
+      @include small-text;
     }
   }
 }

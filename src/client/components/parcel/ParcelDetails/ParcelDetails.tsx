@@ -164,7 +164,7 @@ const ParcelDetails = (props: Props) => {
                             </div>
                             <hr />
                             <div className="d-flex align-items-center">
-                                <FontAwesome className="square mint-transaction-text-color" name="square" />
+                                <FontAwesome className="square asset-mint-transaction-text-color" name="square" />
                                 <span className="mr-auto item-name">Mint</span>
                                 <span>
                                     {_.filter((parcel.action as ChangeShardStateDoc).transactions, (tx) => Type.isAssetMintTransactionDoc(tx)).length}</span>

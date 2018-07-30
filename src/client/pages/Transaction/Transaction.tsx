@@ -1,7 +1,8 @@
 import * as React from "react";
-import { match } from "react-router";
-import { Container } from "reactstrap";
 import * as FontAwesome from "react-fontawesome";
+import * as moment from "moment";
+import { match } from "react-router";
+import { Container, Row, Col } from "reactstrap";
 
 import { RequestTransaction } from "../../request";
 import TransactionDetails from "../../components/transaction/TransactionDetails/TransactionDetails";
@@ -11,6 +12,7 @@ import "./Transaction.scss";
 import { TransactionDoc } from "../../../db/DocType";
 import RequestPendingTransaction from "../../request/RequestPendingTransaction";
 import { PendingTransactionDoc } from "../../../db/DocType";
+import HexString from "../../components/util/HexString/HexString";
 
 interface Props {
     match: match<{ hash: string }>;
@@ -61,39 +63,48 @@ class Transaction extends React.Component<Props, State> {
         }
         return (
             <Container className="transaction">
-                <div className="title-container d-flex mb-2 align-items-center">
-                    <h1 className="d-inline-block">Transaction Information</h1>
-                    <div className={`mr-auto d-inline-block transaction-type ${transactionResult.transaction.type === "assetTransfer" ? "asset-transfer-type" : "asset-mint-type"}`}>
-                        <span>{transactionResult.transaction.type}</span>
-                    </div>
-                    <div className={`d-inline-block`}>
-                        {
-                            this.getStatusElement(transactionResult.status)
-                        }
-                    </div>
-                </div>
-                {
-                    /*
-                        <div className="mb-3">
-                            {<TransactionSummary transaction={transaction} />}
+                <Row className="mb-2">
+                    <Col md="8" xl="7">
+                        <div className="d-flex title-container">
+                            <h1 className="d-inline-block align-self-center">Transaction</h1>
+                            <div className={`type-badge align-self-center ml-3 mr-auto ${this.getBadgeClassNameByType(transactionResult.transaction.type)}`}>{this.getTypeString(transactionResult.transaction.type)}</div>
+                            <span className="timestamp align-self-end">{moment.unix(transactionResult.transaction.data.timestamp).format("YYYY-MM-DD HH:mm:ssZ")}</span>
                         </div>
-                    */
-                }
+                    </Col>
+                </Row>
+                <Row className="mb-4">
+                    <Col md="8" xl="7" className="hash-container d-flex mb-3 mb-md-0">
+                        <div className="d-inline-block hash">
+                            <HexString text={transactionResult.transaction.data.hash} />
+                        </div>
+                        <div className="d-inline-block copy text-center">
+                            <FontAwesome name="copy" />
+                        </div>
+                    </Col>
+                </Row>
                 <TransactionDetails transaction={transactionResult.transaction} />
             </Container>
         )
     }
 
-    private getStatusElement = (status: string) => {
-        switch (status) {
-            case "dead":
-                return <div className="dead"><FontAwesome name="circle" />&nbsp;Dead</div>
-            case "confirmed":
-                return <div className="confirmed"><FontAwesome name="circle" />&nbsp;Confirmed</div>
-            case "pending":
-                return <div className="pending"><FontAwesome name="circle" />&nbsp;Pending</div >
+    private getBadgeClassNameByType = (type: string) => {
+        switch (type) {
+            case "assetTransfer":
+                return "asset-transfer-transaction-back-color";
+            case "assetMint":
+                return "asset-mint-transaction-back-color";
         }
-        return null;
+        return "";
+    }
+
+    private getTypeString = (type: string) => {
+        switch (type) {
+            case "assetTransfer":
+                return "Transfer";
+            case "assetMint":
+                return "Mint";
+        }
+        return "";
     }
 
     private onPendingTransactionNotExist = () => {
