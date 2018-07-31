@@ -296,7 +296,7 @@ const getTransactionInfoByType = (transaction: TransactionDoc) => {
                                 Name
                             </Col>
                             <Col md="9">
-                                {metadata.name ? metadata.name : "Unknown"}
+                                {metadata.name ? metadata.name : "None"}
                             </Col>
                         </Row>
                         <hr />
@@ -306,7 +306,7 @@ const getTransactionInfoByType = (transaction: TransactionDoc) => {
                             </Col>
                             <Col md="9">
                                 <div className="text-area">
-                                    {metadata.description ? metadata.description : "Unknown"}
+                                    {metadata.description ? metadata.description : "None"}
                                 </div>
                             </Col>
                         </Row>
@@ -317,7 +317,18 @@ const getTransactionInfoByType = (transaction: TransactionDoc) => {
                             </Col>
                             <Col md="9">
                                 <div className="text-area">
-                                    {metadata.icon_url ? metadata.icon_url : "Unknown"}
+                                    {metadata.icon_url ? metadata.icon_url : "None"}
+                                </div>
+                            </Col>
+                        </Row>
+                        <hr />
+                        <Row>
+                            <Col md="3">
+                                Raw data
+                            </Col>
+                            <Col md="9">
+                                <div className="text-area">
+                                    {transactionDoc.data.metadata}
                                 </div>
                             </Col>
                         </Row>

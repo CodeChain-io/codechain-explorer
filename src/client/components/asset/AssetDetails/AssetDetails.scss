@@ -1,22 +1,12 @@
+@import "../../../mixins.scss";
+@import "../../../variables.scss";
 .asset-details {
-  background-color: #EFEFF8;
-  border-radius: 13px;
-  .row>div:first-child {
-    padding-left: 27px;
+  h2 {
+    color: $asset-primary-color;
   }
-  .row>div:last-child {
-    padding-right: 27px;
-  }
-  .row>div {
-    padding-top: 8px;
-    padding-bottom: 8px;
-  }
-  .asset-icon {
-    width: 100px;
-    height: 100px;
-  }
-  .line {
-    background-color: #D5D5D5;
-    height: 1px;
+  .heading-hr {
+    border-top: 2px solid $asset-primary-color;
+    margin-top: 2px;
+    margin-bottom: 2px;
   }
 }

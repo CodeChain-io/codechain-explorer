@@ -16,6 +16,7 @@ import HexString from "../../components/util/HexString/HexString";
 interface State {
     block?: BlockDoc;
     page: number;
+    notFound: boolean;
 }
 
 interface Props {
@@ -27,7 +28,8 @@ class Block extends React.Component<Props, State> {
     constructor(props: Props) {
         super(props);
         this.state = {
-            page: 1
+            page: 1,
+            notFound: false
         };
     }
 
@@ -35,16 +37,19 @@ class Block extends React.Component<Props, State> {
         const { match: { params: { id } } } = this.props;
         const { match: { params: { id: nextId } } } = props;
         if (nextId !== id) {
-            this.setState({ block: undefined, page: 1 });
+            this.setState({ block: undefined, page: 1, notFound: false });
         }
     }
 
     public render() {
         const { match: { params: { id } } } = this.props;
-        const { block, page } = this.state;
+        const { block, page, notFound } = this.state;
 
         if (!block) {
             return <RequestBlock id={id} onBlock={this.onBlock} onError={this.onError} onBlockNotExist={this.onBlockNotExist} />;
+        }
+        if (notFound) {
+            return <div>{id} not found.</div>
         }
         return (
             <Container className="block">

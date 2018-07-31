@@ -1,15 +1,17 @@
 import * as React from "react";
+import * as FontAwesome from "react-fontawesome";
 import { match } from "react-router";
-import { Container } from "reactstrap";
+import { Container, Row, Col } from "reactstrap";
 
 import { RequestAssetScheme } from "../../request";
 import AssetDetails from "../../components/asset/AssetDetails/AssetDetails";
 import RequestAssetTransactions from "../../request/RequestAssetTransactions";
 import AssetTransactionList from "../../components/asset/AssetTransactionList/AssetTransactionList";
-import { TransactionDoc, AssetSchemeDoc } from "../../../db/DocType";
+import { TransactionDoc, AssetSchemeDoc, Type } from "../../../db/DocType";
 
 import "./Asset.scss"
 import { H256 } from "codechain-sdk/lib/core/H256";
+import HexString from "../../components/util/HexString/HexString";
 
 interface Props {
     match: match<{ type: string }>;
@@ -40,15 +42,36 @@ class Asset extends React.Component<Props, State> {
     public render() {
         const { match: { params: { type } } } = this.props;
         const { notFound, assetScheme, transactions, page } = this.state;
+
+        if (!assetScheme) {
+            return <RequestAssetScheme assetType={type} onAssetScheme={this.onAssetScheme} onAssetSchemeNotExist={this.onAssetSchemeNotFound} onError={this.onError} />;
+        }
         if (notFound) {
-            return <div><Container>Asset not exist for type: {type}</Container></div>
+            return <div>{type} not found.</div>
         }
         return (
             <Container className="asset">
-                <h1>Asset Information</h1>
-                {assetScheme
-                    ? <div><AssetDetails assetType={type} assetScheme={assetScheme} /></div>
-                    : <div><RequestAssetScheme assetType={type} onAssetScheme={this.onAssetScheme} onAssetSchemeNotExist={this.onAssetSchemeNotFound} onError={this.onError} /></div>}
+                <Row className="mb-4">
+                    <Col>
+                        <div className="title-container d-flex">
+                            <div className="d-inline-block left-container">
+                                <img src={Type.getMetadata(assetScheme.metadata).icon_url} className="icon" />
+                            </div>
+                            <div className="d-inline-block right-container">
+                                <h1>Asset</h1>
+                                <div className="hash-container d-flex">
+                                    <div className="d-inline-block hash">
+                                        <HexString text={type} />
+                                    </div>
+                                    <div className="d-inline-block copy text-center">
+                                        <FontAwesome name="copy" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </Col>
+                </Row>
+                <AssetDetails assetType={type} assetScheme={assetScheme} />
                 <h2 className="sub-title">Transaction History</h2>
                 {
                     transactions.length !== 0 ?

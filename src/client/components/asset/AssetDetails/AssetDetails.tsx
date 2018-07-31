@@ -15,35 +15,75 @@ const AssetDetails = (prop: OwnProps) => {
     const metadata = Type.getMetadata(prop.assetScheme.metadata);
     return <div className="asset-details">
         <Row>
-            <Col md="2">{metadata.icon_url ? <img className="asset-icon" src={metadata.icon_url} /> : "Unknown"}</Col>
-            <Col md="10">
-                <h1>{metadata.name ? metadata.name : "Unknown"}</h1>
-                {metadata.description ? metadata.description : "No description"}
-            </Col>
-        </Row>
-        <div className="line" />
-        <Row>
-            <Col md="2">
-                AssetType
-            </Col>
-            <Col md="10">
-                {prop.assetType}
+            <Col>
+                <h2>Details</h2>
+                <hr className="heading-hr" />
             </Col>
         </Row>
         <Row>
-            <Col md="2">
-                Total Supply
-            </Col>
-            <Col md="10">
-                {prop.assetScheme.amount}
-            </Col>
-        </Row>
-        <Row>
-            <Col md="2">
-                Registrar
-            </Col>
-            <Col md="10">
-                {prop.assetScheme.registrar ? <Link to={`/addr-platform/${PlatformAddress.fromAccountId(prop.assetScheme.registrar).value}`}>{PlatformAddress.fromAccountId(prop.assetScheme.registrar).value}</Link> : "Not existed"}
+            <Col>
+                <div className="data-set">
+                    <Row>
+                        <Col md="3">
+                            Name
+                        </Col>
+                        <Col md="9">
+                            {metadata.name ? metadata.name : "None"}
+                        </Col>
+                    </Row>
+                    <hr />
+                    <Row>
+                        <Col md="3">
+                            Description
+                        </Col>
+                        <Col md="9">
+                            <div className="text-area">
+                                {metadata.description ? metadata.description : "None"}
+                            </div>
+                        </Col>
+                    </Row>
+                    <hr />
+                    <Row>
+                        <Col md="3">
+                            Icon
+                        </Col>
+                        <Col md="9">
+                            <div className="text-area">
+                                {metadata.icon_url ? metadata.icon_url : "None"}
+                            </div>
+                        </Col>
+                    </Row>
+                    <hr />
+                    <Row>
+                        <Col md="3">
+                            Raw metadata
+                            </Col>
+                        <Col md="9">
+                            <div className="text-area">
+                                {prop.assetScheme.metadata}
+                            </div>
+                        </Col>
+                    </Row>
+                    <hr />
+                    <Row>
+                        <Col md="3">
+                            Registrar
+                        </Col>
+                        <Col md="9">
+                            {prop.assetScheme.registrar ? <Link to={`/addr-platform/${PlatformAddress.fromAccountId(prop.assetScheme.registrar).value}`}>{PlatformAddress.fromAccountId(prop.assetScheme.registrar).value}</Link> : "None"}
+                        </Col>
+                    </Row>
+                    <hr />
+                    <Row>
+                        <Col md="3">
+                            Total Supply
+                        </Col>
+                        <Col md="9">
+                            {prop.assetScheme.amount}
+                        </Col>
+                    </Row>
+                    <hr />
+                </div>
             </Col>
         </Row>
     </div>
