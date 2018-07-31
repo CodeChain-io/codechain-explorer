@@ -116,9 +116,6 @@ class Parcel extends React.Component<Props, State> {
         if (Type.isChangeShardStateDoc(parcel.action)) {
             return (
                 [
-                    <div key="transaction-label" className="transaction-count-label">
-                        <span className="blue-color">{(parcel.action as ChangeShardStateDoc).transactions.length} Transactions</span> in this Block
-                    </div>,
                     <div key="parcel-transaction" className="mt-3">
                         <ParcelTransactionList transactions={(parcel.action as ChangeShardStateDoc).transactions.slice(0, page * this.itemPerPage)} />
                         {
