@@ -18,7 +18,7 @@ class BlockDetails extends React.Component<OwnProps> {
     public render() {
         const { block } = this.props;
         return (
-            <div className="block-details">
+            <div className="block-details mb-4">
                 <Row>
                     <Col lg="9">
                         <h2>Details</h2>

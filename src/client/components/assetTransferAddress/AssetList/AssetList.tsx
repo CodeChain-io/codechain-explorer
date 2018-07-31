@@ -30,10 +30,14 @@ const AssetList = (prop: OwnProps) => {
                                         <div className="d-inline-block">
                                             <img src={metadata.icon_url} className="icon" />
                                         </div>
-                                        <div className="d-inline-block mr-auto d-flex align-items-center">
+                                        <div className="d-inline-block d-flex align-items-center asset-text-container">
                                             <div>
-                                                <h3 className="mb-0"><Link to={`/asset/0x${assetBundle.asset.assetType}`}>{metadata.name}</Link></h3>
-                                                <span>x {assetBundle.asset.amount}</span>
+                                                <Link to={`/asset/0x${assetBundle.asset.assetType}`}>
+                                                    <h3 className="mb-0">{metadata.name}</h3>
+                                                </Link>
+                                                <div>
+                                                    <span>x {assetBundle.asset.amount}</span>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>

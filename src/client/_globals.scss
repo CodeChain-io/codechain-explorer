@@ -110,3 +110,20 @@
   display: inline-block;
   @include small-text;
 }
+
+.card-list-item {
+  position: relative;
+  border: 1px solid $line-color;
+  .card-list-item-header {
+    padding: 6px;
+    background-color: $background-gray;
+    border-bottom: 1px solid $line-color;
+    .title {
+      @include heading-font;
+    }
+  }
+  .card-list-item-body {
+    padding-left: 6px;
+    padding-right: 6px;
+  }
+}

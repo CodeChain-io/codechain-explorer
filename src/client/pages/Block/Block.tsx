@@ -76,23 +76,18 @@ class Block extends React.Component<Props, State> {
                     </Col>
                 </Row>
                 <BlockDetails block={block} />
-                <div className="parcel-count-label">
-                    <span className="blue-color">{block.parcels.length} Parcels</span> in this Block
-                </div>
-                <div className="mt-3">
-                    <BlockParcelList parcels={block.parcels.slice(0, this.itemPerPage * page)} />
-                    {
-                        this.itemPerPage * page < block.parcels.length ?
-                            <div className="mt-3">
-                                <div className="load-more-btn mx-auto">
-                                    <a href="#" onClick={this.loadMore}>
-                                        <h3>Load Parcels</h3>
-                                    </a>
-                                </div>
+                <BlockParcelList parcels={block.parcels.slice(0, this.itemPerPage * page)} />
+                {
+                    this.itemPerPage * page < block.parcels.length ?
+                        <div className="mt-3">
+                            <div className="load-more-btn mx-auto">
+                                <a href="#" onClick={this.loadMore}>
+                                    <h3>Load Parcels</h3>
+                                </a>
                             </div>
-                            : null
-                    }
-                </div>
+                        </div>
+                        : null
+                }
             </Container>
         );
     }

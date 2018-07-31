@@ -86,11 +86,7 @@ class Address extends React.Component<Props, State> {
                 <AccountDetails account={account} />
                 {
                     assetBundles.length > 0 ?
-                        <div>
-                            <h2 className="sub-title">Issued Assets</h2>
-                            <hr />
-                            <AssetList assetBundles={assetBundles} />
-                        </div>
+                        <AssetList assetBundles={assetBundles} />
                         : null
                 }
                 {

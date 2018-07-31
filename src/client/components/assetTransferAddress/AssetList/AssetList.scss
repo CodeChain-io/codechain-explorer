@@ -19,5 +19,15 @@
       height: 50px;
       margin-right: 8px;
     }
+    .asset-text-container {
+      flex-grow: 1;
+      overflow: hidden;
+      &>div {
+        overflow: hidden;
+      }
+      h3 {
+        @include ellipsis-block;
+      }
+    }
   }
 }
