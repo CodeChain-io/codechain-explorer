@@ -1,13 +1,19 @@
+@import "../../mixins.scss";
+@import "../../variables.scss";
 .asset {
   padding-top: 60px;
   padding-bottom: 100px;
   .title-container {
+    h1 {
+      color: $primary-color;
+      margin-bottom: 5px;
+    }
     .left-container {
       vertical-align: top;
       margin-right: 10px;
       .icon {
-        width: 62px;
-        height: 62px;
+        width: 65px;
+        height: 65px;
       }
     }
     .right-container {

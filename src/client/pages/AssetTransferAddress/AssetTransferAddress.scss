@@ -1,11 +1,27 @@
+@import "../../mixins.scss";
+@import "../../variables.scss";
 .asset-transfer-address {
   padding-top: 60px;
-  padding-bottom: 108px;
-  .sub-title {
-    margin-top: 60px;
-  }
-  hr {
-    border-top: 1px solid black;
+  padding-bottom: 100px;
+  .title-container {
+    h1 {
+      color: $primary-color;
+      margin-bottom: 5px;
+    }
+    .left-container {
+      vertical-align: top;
+      margin-right: 10px;
+      .icon {
+        width: 65px;
+        height: 65px;
+      }
+    }
+    .right-container {
+      max-width: 700px;
+      flex-grow: 1;
+      overflow: hidden;
+      vertical-align: top;
+    }
   }
   .load-more-btn {
     border: 1px solid #3A3FAB;

@@ -3,11 +3,8 @@ import { U256 } from "codechain-sdk/lib/core/classes";
 import { Row, Col } from "reactstrap";
 
 import "./AccountDetails.scss";
-import * as icon from "./img/icon.png";
-import * as qr from "./img/qr.png";
 
 interface OwnProps {
-    address: string,
     account: {
         nonce: U256,
         balance: U256,
@@ -15,41 +12,36 @@ interface OwnProps {
 }
 
 const AccountDetails = (prop: OwnProps) => {
-    const { account, address } = prop;
+    const { account } = prop;
     return <div className="account-details">
         <Row>
-            <Col md="2">
-                <img src={icon} className="icon" />
+            <Col>
+                <h2>Details</h2>
+                <hr className="heading-hr" />
             </Col>
-            <Col md="10">
-                <div className="d-flex">
-                    <div className="d-inline-block mr-auto d-flex align-items-center">
-                        <div>
-                            <h4>{address}</h4>
-                            <span>Username</span>
-                        </div>
-                    </div>
-                    <div className="d-inline-block">
-                        <img src={qr} className="qr" />
-                    </div>
+        </Row>
+        <Row>
+            <Col>
+                <div className="data-set">
+                    <Row>
+                        <Col md="3">
+                            Balance
+                        </Col>
+                        <Col md="9">
+                            {account.balance.value.toString()}
+                        </Col>
+                    </Row>
+                    <hr />
+                    <Row>
+                        <Col md="3">
+                            Nonce
+                        </Col>
+                        <Col md="9">
+                            {account.nonce.value.toString()}
+                        </Col>
+                    </Row>
+                    <hr />
                 </div>
-            </Col>
-        </Row>
-        <div className="line" />
-        <Row>
-            <Col md="2">
-                Balance
-            </Col>
-            <Col md="10">
-                {account.balance.value.toString()}
-            </Col>
-        </Row>
-        <Row>
-            <Col md="2">
-                Nonce
-            </Col>
-            <Col md="10">
-                {account.nonce.value.toString()}
             </Col>
         </Row>
     </div>

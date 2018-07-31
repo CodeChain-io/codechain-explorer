@@ -1,12 +1,13 @@
 import * as React from "react";
+import * as FontAwesome from "react-fontawesome";
 import { match } from "react-router";
-import { Container } from "reactstrap";
+import { Container, Row, Col } from "reactstrap";
 
 import { RequestAssetTransferAddressUTXO, RequestAssetTransferAddressTransactions } from "../../request";
 import { TransactionDoc, AssetBundleDoc } from "../../../db/DocType";
 
 import "./AssetTransferAddress.scss";
-import AccountDetails from "../../components/assetTransferAddress/AccountDetails/AccountDetails";
+import AddressDetails from "../../components/assetTransferAddress/AddressDetails/AddressDetails";
 import AssetList from "../../components/assetTransferAddress/AssetList/AssetList";
 import TransactionList from "../../components/assetTransferAddress/TransactionList/TransactionList";
 
@@ -39,10 +40,6 @@ class AssetTransferAddress extends React.Component<Props, State> {
     public render() {
         const { match: { params: { address } } } = this.props;
         const { utxo, transactions, requested, page } = this.state;
-        const account = {
-            assetCount: utxo.length,
-            txCount: transactions.length,
-        }
         if (!requested) {
             return (
                 <div>
@@ -53,8 +50,27 @@ class AssetTransferAddress extends React.Component<Props, State> {
         }
         return (
             <Container className="asset-transfer-address">
-                <h1>Asset Transfer Address</h1>
-                <AccountDetails address={address} account={account} />
+                <Row className="mb-4">
+                    <Col>
+                        <div className="title-container d-flex">
+                            <div className="d-inline-block left-container">
+                                <img src="tmp" className="icon" />
+                            </div>
+                            <div className="d-inline-block right-container">
+                                <h1>Asset Transfer Address</h1>
+                                <div className="hash-container d-flex">
+                                    <div className="d-inline-block hash">
+                                        <span>{address}</span>
+                                    </div>
+                                    <div className="d-inline-block copy text-center">
+                                        <FontAwesome name="copy" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </Col>
+                </Row>
+                <AddressDetails utxo={utxo} transactions={transactions} />
                 {
                     utxo.length > 0 ?
                         <div>
