@@ -215,7 +215,7 @@ const getTransactionInfoByType = (transaction: TransactionDoc) => {
                                 Registrar
                             </Col>
                             <Col md="9">
-                                {transactionDoc.data.registrar ? <Link to={`/addr-platform/${PlatformAddress.fromAccountId(transactionDoc.data.registrar).value}`}>{PlatformAddress.fromAccountId(transactionDoc.data.registrar).value}</Link> : "Not existed"}
+                                {transactionDoc.data.registrar ? <Link to={`/addr-platform/${PlatformAddress.fromAccountId(transactionDoc.data.registrar).value}`}>{PlatformAddress.fromAccountId(transactionDoc.data.registrar).value}</Link> : "None"}
                             </Col>
                         </Row>
                         <hr />

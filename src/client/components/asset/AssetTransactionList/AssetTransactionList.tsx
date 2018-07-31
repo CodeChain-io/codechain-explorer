@@ -33,13 +33,13 @@ const TransactionObjectByType = (transaction: TransactionDoc, type: H256) => {
                         </Row>
                         <Row className="inner-row">
                             <Col md="2">
-                                Registarar
+                                Registrar
                             </Col>
                             <Col md="10">
                                 {
                                     transactionDoc.data.registrar ?
                                         <Link to={`/addr-platform/${PlatformAddress.fromAccountId(transactionDoc.data.registrar).value}`}>{PlatformAddress.fromAccountId(transactionDoc.data.registrar).value}</Link>
-                                        : "Unknown"
+                                        : "None"
                                 }
                             </Col>
                         </Row>
