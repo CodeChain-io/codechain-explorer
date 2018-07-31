@@ -73,11 +73,7 @@ class AssetTransferAddress extends React.Component<Props, State> {
                 <AddressDetails utxo={utxo} transactions={transactions} />
                 {
                     utxo.length > 0 ?
-                        <div>
-                            <h2 className="sub-title">Assets</h2>
-                            <hr />
-                            <AssetList assetBundles={utxo} />
-                        </div>
+                        <AssetList assetBundles={utxo} />
                         : null
                 }
                 {

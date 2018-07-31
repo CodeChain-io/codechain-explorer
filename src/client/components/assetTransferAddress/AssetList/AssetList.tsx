@@ -11,28 +11,38 @@ interface OwnProps {
 }
 
 const AssetList = (prop: OwnProps) => {
-    return <div className="asset-list">
+    return <div className="asset-list mt-4">
         <Row>
-            {
-                _.map(prop.assetBundles, (assetBundle, index) => {
-                    const metadata = Type.getMetadata(assetBundle.assetScheme.metadata);
-                    return (
-                        <Col key={`asset-item-${index}`} lg="3" md="4" sm="6" className="mb-3">
-                            <div className="asset-item d-flex">
-                                <div className="d-inline-block">
-                                    <img src={metadata.icon_url} className="icon" />
-                                </div>
-                                <div className="d-inline-block mr-auto d-flex align-items-center">
-                                    <div>
-                                        <h4 className="mb-0"><Link to={`/asset/0x${assetBundle.asset.assetType}`}>{metadata.name}</Link></h4>
-                                        <span>X {assetBundle.asset.amount}</span>
+            <Col lg="9">
+                <h2>Assets</h2>
+                <hr className="heading-hr mb-3" />
+            </Col>
+        </Row>
+        <Row>
+            <Col lg="9">
+                <Row>
+                    {
+                        _.map(prop.assetBundles, (assetBundle, index) => {
+                            const metadata = Type.getMetadata(assetBundle.assetScheme.metadata);
+                            return (
+                                <Col key={`asset-item-${index}`} lg="4" md="4" sm="6" className="mb-3">
+                                    <div className="asset-item d-flex">
+                                        <div className="d-inline-block">
+                                            <img src={metadata.icon_url} className="icon" />
+                                        </div>
+                                        <div className="d-inline-block mr-auto d-flex align-items-center">
+                                            <div>
+                                                <h3 className="mb-0"><Link to={`/asset/0x${assetBundle.asset.assetType}`}>{metadata.name}</Link></h3>
+                                                <span>x {assetBundle.asset.amount}</span>
+                                            </div>
+                                        </div>
                                     </div>
-                                </div>
-                            </div>
-                        </Col>
-                    );
-                })
-            }
+                                </Col>
+                            );
+                        })
+                    }
+                </Row>
+            </Col>
         </Row>
     </div>
 };
