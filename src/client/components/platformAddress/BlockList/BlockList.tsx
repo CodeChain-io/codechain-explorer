@@ -16,47 +16,63 @@ interface OwnProps {
 }
 
 const BlockList = (prop: OwnProps) => {
-    return <div className="block-list">
-        {
-            _.map(prop.blocks, (block, index) => {
-                return (
-                    <div key={`block-list-${index}`} className="block-item mb-3" >
-                        <Row>
-                            <Col md="2">
-                                Block
-                            </Col>
-                            <Col md="10">
-                                <HexString link={`/block/0x${block.hash}`} text={block.hash} />(#<Link to={`/block/${block.number}`}>{block.number}</Link>)
-                            </Col>
-                        </Row>
-                        <Row>
-                            <Col md="2">
-                                Author
-                            </Col>
-                            <Col md="10">
-                                {PlatformAddress.fromAccountId(block.author).value}
-                            </Col>
-                        </Row>
-                        <Row>
-                            <Col md="2">
-                                Reward
-                            </Col>
-                            <Col md="10">
-                                3000 CCC
-                            </Col>
-                        </Row>
-                        <Row>
-                            <Col md="2">
-                                Timestamp
-                            </Col>
-                            <Col md="10">
-                                {moment.unix(block.timestamp).format("YYYY-MM-DD HH:mm:ssZ")}
-                            </Col>
-                        </Row>
-                    </div>
-                )
-            })
-        }
+    return <div className="block-list mt-4">
+        <Row className="mb-3">
+            <Col>
+                <h2>Authored Blocks</h2>
+                <hr className="heading-hr" />
+            </Col>
+        </Row>
+        <Row>
+            <Col>
+                {
+                    _.map(prop.blocks, (block, index) => {
+                        return (
+                            <div key={`block-list-${index}`} className="card-list-item mb-3" >
+                                <div className="card-list-item-header">
+                                    <Row>
+                                        <Col md="3">
+                                            <Link to={`/block/${block.number}`}><span className="title">#{block.number}</span></Link>
+                                        </Col>
+                                        <Col md="9">
+                                            <span className="timestamp float-right">{moment.unix(block.timestamp).format("YYYY-MM-DD HH:mm:ssZ")}</span>
+                                        </Col>
+                                    </Row>
+                                </div>
+                                <div className="card-list-item-body data-set">
+                                    <Row>
+                                        <Col md="2">
+                                            Hash
+                                        </Col>
+                                        <Col md="10">
+                                            <HexString link={`/block/0x${block.hash}`} text={block.hash} />
+                                        </Col>
+                                    </Row>
+                                    <hr />
+                                    <Row>
+                                        <Col md="2">
+                                            Author
+                                        </Col>
+                                        <Col md="10">
+                                            {PlatformAddress.fromAccountId(block.author).value}
+                                        </Col>
+                                    </Row>
+                                    <hr />
+                                    <Row>
+                                        <Col md="2">
+                                            Reward
+                                        </Col>
+                                        <Col md="10">
+                                            3000 CCC
+                                        </Col>
+                                    </Row>
+                                </div>
+                            </div>
+                        )
+                    })
+                }
+            </Col>
+        </Row>
     </div>
 };
 

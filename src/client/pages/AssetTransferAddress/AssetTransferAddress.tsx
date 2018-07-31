@@ -79,8 +79,6 @@ class AssetTransferAddress extends React.Component<Props, State> {
                 {
                     transactions.length > 0 ?
                         <div>
-                            <h2 className="sub-title">Transactions</h2>
-                            <hr />
                             <TransactionList owner={address} transactions={transactions.slice(0, this.itemPerPage * page)} />
                             {
                                 this.itemPerPage * page < transactions.length ?

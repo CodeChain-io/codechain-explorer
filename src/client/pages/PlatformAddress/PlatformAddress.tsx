@@ -92,8 +92,6 @@ class Address extends React.Component<Props, State> {
                 {
                     parcels.length > 0 ?
                         <div>
-                            <h2 className="sub-title">Parcels</h2>
-                            <hr />
                             <ParcelList address={address} parcels={parcels.slice(0, this.itemPerPage * parcelPage)} />
                             {
                                 this.itemPerPage * parcelPage < parcels.length ?
@@ -112,8 +110,6 @@ class Address extends React.Component<Props, State> {
                 {
                     blocks.length > 0 ?
                         <div>
-                            <h2 className="sub-title">Authored Blocks</h2>
-                            <hr />
                             <BlockList blocks={blocks.slice(0, this.itemPerPage * blockPage)} />
                             {
                                 this.itemPerPage * blockPage < blocks.length ?

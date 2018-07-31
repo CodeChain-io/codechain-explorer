@@ -14,7 +14,7 @@ import { H256 } from "codechain-sdk/lib/core/H256";
 import HexString from "../../components/util/HexString/HexString";
 
 interface Props {
-    match: match<{ type: string }>;
+    match: match<{ assetType: string }>;
 }
 
 interface State {
@@ -32,22 +32,22 @@ class Asset extends React.Component<Props, State> {
     }
 
     public componentWillReceiveProps(props: Props) {
-        const { match: { params: { type } } } = this.props;
-        const { match: { params: { type: nextType } } } = props;
-        if (nextType !== type) {
+        const { match: { params: { assetType } } } = this.props;
+        const { match: { params: { assetType: nextType } } } = props;
+        if (nextType !== assetType) {
             this.setState({ ...this.state, assetScheme: undefined, transactions: [], page: 1 });
         }
     }
 
     public render() {
-        const { match: { params: { type } } } = this.props;
+        const { match: { params: { assetType } } } = this.props;
         const { notFound, assetScheme, transactions, page } = this.state;
 
         if (!assetScheme) {
-            return <RequestAssetScheme assetType={type} onAssetScheme={this.onAssetScheme} onAssetSchemeNotExist={this.onAssetSchemeNotFound} onError={this.onError} />;
+            return <RequestAssetScheme assetType={assetType} onAssetScheme={this.onAssetScheme} onAssetSchemeNotExist={this.onAssetSchemeNotFound} onError={this.onError} />;
         }
         if (notFound) {
-            return <div>{type} not found.</div>
+            return <div>{assetType} not found.</div>
         }
         return (
             <Container className="asset">
@@ -61,7 +61,7 @@ class Asset extends React.Component<Props, State> {
                                 <h1>Asset</h1>
                                 <div className="hash-container d-flex">
                                     <div className="d-inline-block hash">
-                                        <HexString text={type} />
+                                        <HexString text={assetType} />
                                     </div>
                                     <div className="d-inline-block copy text-center">
                                         <FontAwesome name="copy" />
@@ -71,12 +71,11 @@ class Asset extends React.Component<Props, State> {
                         </div>
                     </Col>
                 </Row>
-                <AssetDetails assetType={type} assetScheme={assetScheme} />
-                <h2 className="sub-title">Transaction History</h2>
+                <AssetDetails assetType={assetType} assetScheme={assetScheme} />
                 {
                     transactions.length !== 0 ?
                         <div>
-                            <AssetTransactionList type={new H256(type)} transactions={transactions.slice(0, this.itemPerPage * page)} />
+                            <AssetTransactionList assetType={new H256(assetType)} transactions={transactions.slice(0, this.itemPerPage * page)} />
                             {
                                 this.itemPerPage * page < transactions.length ?
                                     <div className="mt-3">
@@ -89,7 +88,7 @@ class Asset extends React.Component<Props, State> {
                                     : null
                             }
                         </div>
-                        : <RequestAssetTransactions assetType={type} onTransactions={this.onTransactionList} onError={this.onError} />
+                        : <RequestAssetTransactions assetType={assetType} onTransactions={this.onTransactionList} onError={this.onError} />
                 }
             </Container>
         )
