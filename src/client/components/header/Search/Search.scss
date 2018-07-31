@@ -1,7 +1,13 @@
+@import "../../../mixins.scss";
+@import "../../../variables.scss";
 .search-form {
   padding-bottom: 16px;
+  width: 400px;
+  .search-form-group {
+    flex-grow: 1;
+  }
   .react-autosuggest__input {
-    width: 300px;
+    width: 100%;
     height: 34px;
     margin-right: 5px;
     padding-left: 10px;
@@ -17,7 +23,7 @@
     display: block;
     position: absolute;
     top: 34px;
-    width: 300px;
+    width: 100%;
     border: 1px solid #aaa;
     background-color: #fff;
     border-bottom-left-radius: 4px;
@@ -28,6 +34,7 @@
     margin: 0;
     padding: 0;
     list-style-type: none;
+    @include ellipsis-block;
     .icon {
       width: 25px;
       height: 25px;
