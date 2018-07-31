@@ -21,7 +21,7 @@ const getTransactionInfoByType = (transaction: TransactionDoc) => {
         return (
             [
                 <Row key="details" className="mb-4">
-                    <Col lg="9" className="mb-3 mb-lg-0">
+                    <Col lg="12" className="mb-3 mb-lg-0">
                         <div className="data-set">
                             <Row>
                                 <Col md="3">
@@ -49,13 +49,13 @@ const getTransactionInfoByType = (transaction: TransactionDoc) => {
                         _.map(transactionDoc.data.inputs, (input, index) => {
                             return ([
                                 <Row key={`transaction-header-table-input-title-${index}`}>
-                                    <Col lg="9">
+                                    <Col lg="12">
                                         <h2>Input #{index}</h2>
                                         <hr className="heading-hr" />
                                     </Col>
                                 </Row>,
                                 <Row key={`transaction-header-table-input-detail-${index}`} className="mb-4">
-                                    <Col lg="9">
+                                    <Col lg="12">
                                         <div className="data-set">
                                             <Row>
                                                 <Col md="3">
@@ -137,13 +137,13 @@ const getTransactionInfoByType = (transaction: TransactionDoc) => {
                         _.map(transactionDoc.data.outputs, (output, index) => {
                             return ([
                                 <Row key={`transaction-header-table-output-title-${index}`}>
-                                    <Col lg="9">
+                                    <Col lg="12">
                                         <h2>Output #{index}</h2>
                                         <hr className="heading-hr" />
                                     </Col>
                                 </Row>,
                                 <Row key={`transaction-header-table-output-details-${index}`} className="mb-4">
-                                    <Col lg="9">
+                                    <Col lg="12">
                                         <div className="data-set">
                                             <Row>
                                                 <Col md="3">
@@ -208,7 +208,7 @@ const getTransactionInfoByType = (transaction: TransactionDoc) => {
         const metadata = Type.getMetadata(transactionDoc.data.metadata);
         return ([
             <Row key="details" className="mb-4">
-                <Col lg="9">
+                <Col lg="12">
                     <div className="data-set">
                         <Row>
                             <Col md="3">
@@ -283,13 +283,13 @@ const getTransactionInfoByType = (transaction: TransactionDoc) => {
                 </Col>
             </Row>,
             <Row key="metadata">
-                <Col lg="9">
+                <Col lg="12">
                     <h2>Metadata</h2>
                     <hr className="heading-hr" />
                 </Col>
             </Row>,
             <Row key="metadata-detail">
-                <Col lg="9">
+                <Col lg="12">
                     <div className="data-set">
                         <Row>
                             <Col md="3">
@@ -335,7 +335,7 @@ const TransactionDetails = (props: Props) => {
 
     return <div className="transaction-details">
         <Row>
-            <Col lg="9">
+            <Col lg="12">
                 <h2>Details</h2>
                 <hr className="heading-hr" />
             </Col>

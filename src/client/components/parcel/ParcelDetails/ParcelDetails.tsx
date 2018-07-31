@@ -80,13 +80,13 @@ const ParcelDetails = (props: Props) => {
 
     return <div className="parcel-details">
         <Row>
-            <Col lg="9">
+            <Col lg={Type.isChangeShardStateDoc(parcel.action) ? "9" : "12"}>
                 <h2>Details</h2>
                 <hr className="heading-hr" />
             </Col>
         </Row>
         <Row>
-            <Col lg="9" className="mb-3 mb-lg-0">
+            <Col lg={Type.isChangeShardStateDoc(parcel.action) ? "9" : "12"} className="mb-3 mb-lg-0">
                 <div className="data-set">
                     <Row>
                         <Col md="3">
