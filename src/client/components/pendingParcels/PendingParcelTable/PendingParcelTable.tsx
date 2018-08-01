@@ -56,7 +56,7 @@ class PendingParcelTable extends React.Component<Prop, State> {
                                 <option value="50">50</option>
                                 <option value="100">100</option>
                             </select>
-                            <span> entities</span>
+                            <span> entries</span>
                         </div>
                     </div>
                     <div>
