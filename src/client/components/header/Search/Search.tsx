@@ -1,5 +1,6 @@
 import * as React from "react";
 import * as _ from "lodash";
+import * as FontAwesome from "react-fontawesome";
 import { Form, FormGroup, Button } from "reactstrap";
 import LoadingBar from "react-redux-loading-bar";
 import { Redirect } from "react-router";
@@ -56,7 +57,7 @@ class Search extends React.Component<Props, State> {
         };
         return <Form inline={true} onSubmit={this.handleSumbit} className={`search-form d-flex ${this.props.className}`}>
             <FormGroup className="mb-0 search-form-group">
-                <div className="w-100 mr-3">
+                <div className="w-100">
                     {/*
                     <Input className={`search-input ${requestCount === 0 && status === "notFound" && !redirectTo ? "is-invalid" : ""}`} value={inputValue} onChange={this.updateInputValue} type="text" placeholder="Block / Parcel / Tx / Asset / Address" />
                     */}
@@ -71,7 +72,7 @@ class Search extends React.Component<Props, State> {
                     <LoadingBar scope="searchBar" className="search-loading-bar" />
                 </div>
             </FormGroup>
-            <Button className="search-summit" type="submit">Search</Button>
+            <Button className="search-summit" type="submit"><span className="search-big">Search</span><span className="search-small"><FontAwesome name="search" /></span></Button>
             {
                 status === "search" ?
                     <div>

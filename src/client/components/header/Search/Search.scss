@@ -3,8 +3,15 @@
 .search-form {
   padding-bottom: 16px;
   width: 400px;
+  @media (max-width: 400px) {
+    & {
+      width: 100%;
+    }
+  }
   .search-form-group {
     flex-grow: 1;
+    margin-right: 8px;
+    overflow: hidden;
   }
   .react-autosuggest__input {
     width: 100%;
@@ -14,6 +21,7 @@
     padding-right: 10px;
   }
   .react-autosuggest__container {
+    width: 100%;
     position: relative;
   }
   .react-autosuggest__suggestions-container {
@@ -50,7 +58,6 @@
   }
   .search-loading-bar {
     background-color: #F2B04C;
-    max-width: 300px;
     height: 3px;
     position: absolute;
   }
@@ -59,5 +66,26 @@
     width: 100px;
     color: white;
     background-color: #00DBB4;
+    @media (max-width: 400px) {
+      & {
+        width: 50px;
+      }
+    }
+  }
+  @media (max-width: 400px) {
+    .search-small {
+      display: inline;
+    }
+    .search-big {
+      display: none;
+    }
+  }
+  @media (min-width: 400px) {
+    .search-small {
+      display: none;
+    }
+    .search-big {
+      display: inline;
+    }
   }
 }
