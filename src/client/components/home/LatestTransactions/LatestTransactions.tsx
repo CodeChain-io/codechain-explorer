@@ -7,6 +7,7 @@ import "./LatestTransactions.scss";
 import HexString from "../../util/HexString/HexString";
 import { BlockDoc, Type, ChangeShardStateDoc, AssetMintTransactionDoc, AssetTransferTransactionDoc } from "../../../../db/DocType";
 import { Link } from "react-router-dom";
+import { TypeBadge } from "../../../utils/TypeBadge/TypeBadge";
 
 interface Props {
     blocksByNumber: {
@@ -19,14 +20,14 @@ const LatestTransactions = (props: Props) => {
     return <div className="latest-transactions">
         <h1>Latest Transactions</h1>
         <div className="latest-container">
-            <Table striped={true}>
+            <Table striped={true} className="data-table">
                 <thead>
                     <tr>
-                        <th>Type</th>
-                        <th>Hash</th>
-                        <th>Assets</th>
-                        <th>Amount</th>
-                        <th>Age</th>
+                        <th style={{ width: '20%' }}>Type</th>
+                        <th style={{ width: '25%' }}>Hash</th>
+                        <th style={{ width: '25%' }}>Assets</th>
+                        <th style={{ width: '15%' }}>Amount</th>
+                        <th style={{ width: '15%' }}>Age</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -35,10 +36,9 @@ const LatestTransactions = (props: Props) => {
                             return _.chain(block.parcels).filter(parcel => Type.isChangeShardStateDoc(parcel.action))
                                 .flatMap(parcel => (parcel.action as ChangeShardStateDoc).transactions)
                                 .map(transaction => {
-                                    const transactionType = transaction.type;
                                     return (
                                         <tr key={`home-transaction-hash-${transaction.data.hash}`}>
-                                            <td><div className={`transaction-type text-center ${transactionType === "assetMint" ? "asset-mint-type" : "asset-transfer-type"}`}>{transactionType}</div></td>
+                                            <td><TypeBadge transaction={transaction} /> </td>
                                             <td scope="row"><HexString link={`/tx/0x${transaction.data.hash}`} text={transaction.data.hash} /></td>
                                             <td>{Type.isAssetMintTransactionDoc(transaction) ?
                                                 <HexString link={`/asset/${(transaction as AssetMintTransactionDoc).data.output.assetType}`} text={(transaction as AssetMintTransactionDoc).data.output.assetType} />
@@ -54,10 +54,10 @@ const LatestTransactions = (props: Props) => {
             </Table>
             {
                 <div className="mt-3">
-                    <Link to="/txs">
-                        <div className="view-all-btn text-center mx-auto">
-                            <span>View All</span>
-                        </div>
+                    <Link to={"/txs"}>
+                        <button type="button" className="btn btn-primary w-100">
+                            <span>View all transactions</span>
+                        </button>
                     </Link>
                 </div>
             }

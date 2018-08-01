@@ -6,6 +6,7 @@ import { Table } from "reactstrap";
 import "./TransactionTable.scss";
 import { TransactionDoc, Type, AssetMintTransactionDoc, AssetTransferTransactionDoc } from "../../../../db/DocType";
 import HexString from "../../util/HexString/HexString";
+import { TypeBadge } from "../../../utils/TypeBadge/TypeBadge";
 
 interface Prop {
     transactions: TransactionDoc[];
@@ -46,23 +47,22 @@ class TransactionTable extends React.Component<Prop, State> {
                         </div>
                     </div>
                     <div>
-                        <Table striped={true}>
+                        <Table striped={true} className="data-table">
                             <thead>
                                 <tr>
-                                    <th>Type</th>
-                                    <th>Hash</th>
-                                    <th>Assets</th>
-                                    <th>Amount</th>
-                                    <th>Age</th>
+                                    <th style={{ width: '20%' }}>Type</th>
+                                    <th style={{ width: '25%' }}>Hash</th>
+                                    <th style={{ width: '25%' }}>Assets</th>
+                                    <th style={{ width: '15%' }}>Amount</th>
+                                    <th style={{ width: '15%' }}>Age</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 {
                                     _.map(transactions.slice((currentPage - 1) * itemPerPage, (currentPage - 1) * itemPerPage + itemPerPage), (transaction) => {
-                                        const transactionType = transaction.type;
                                         return (
                                             <tr key={`transaction-${transaction.data.hash}`}>
-                                                <td><div className={`transaction-type text-center ${transactionType === "assetMint" ? "asset-mint-type" : "asset-transfer-type"}`}>{transactionType}</div></td>
+                                                <td><TypeBadge transaction={transaction} /></td>
                                                 <td scope="row"><HexString link={`/tx/0x${transaction.data.hash}`} text={transaction.data.hash} /></td>
                                                 <td>{Type.isAssetMintTransactionDoc(transaction) ?
                                                     <HexString link={`/asset/${(transaction as AssetMintTransactionDoc).data.output.assetType}`} text={(transaction as AssetMintTransactionDoc).data.output.assetType} />

@@ -7,7 +7,6 @@ import LatestParcels from "../../components/home/LatestParcels/LatestParcels";
 import LatestTransactions from "../../components/home/LatestTransactions/LatestTransactions";
 
 import "./Home.scss"
-import Summary from "../../components/home/Summary/Summary";
 import { BlockDoc } from "../../../db/DocType";
 
 interface State {
@@ -37,9 +36,13 @@ class Home extends React.Component<{}, State> {
         return (
             <div className="home">
                 <Container>
-                    <div className="home-element-container">
-                        <Summary />
-                    </div>
+                    {
+                        /*
+                            <div className="home-element-container">
+                                <Summary />
+                            </div>
+                        */
+                    }
                     <div className="home-element-container">
                         <LatestBlocks blocksByNumber={blocksByNumber} />
                     </div>

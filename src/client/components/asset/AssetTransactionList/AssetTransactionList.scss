@@ -1,14 +1,6 @@
 @import "../../../mixins.scss";
 @import "../../../variables.scss";
 .asset-transaction-list {
-  h2 {
-    color: $asset-primary-color;
-  }
-  .heading-hr {
-    border-top: 2px solid $asset-primary-color;
-    margin-top: 2px;
-    margin-bottom: 2px;
-  }
   .input-output-container {
     background-color: $background-gray;
     padding-left: 8px;

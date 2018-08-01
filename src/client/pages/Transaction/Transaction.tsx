@@ -13,6 +13,7 @@ import { TransactionDoc } from "../../../db/DocType";
 import RequestPendingTransaction from "../../request/RequestPendingTransaction";
 import { PendingTransactionDoc } from "../../../db/DocType";
 import HexString from "../../components/util/HexString/HexString";
+import { TypeBadge } from "../../utils/TypeBadge/TypeBadge";
 
 interface Props {
     match: match<{ hash: string }>;
@@ -67,7 +68,7 @@ class Transaction extends React.Component<Props, State> {
                     <Col md="8" xl="7">
                         <div className="d-flex title-container">
                             <h1 className="d-inline-block align-self-center">Transaction</h1>
-                            <div className={`type-badge align-self-center ml-3 mr-auto ${this.getBadgeClassNameByType(transactionResult.transaction.type)}`}>{this.getTypeString(transactionResult.transaction.type)}</div>
+                            <TypeBadge className="align-self-center ml-3 mr-auto" transaction={transactionResult.transaction} />
                             <span className="timestamp align-self-end">{moment.unix(transactionResult.transaction.data.timestamp).format("YYYY-MM-DD HH:mm:ssZ")}</span>
                         </div>
                     </Col>
@@ -85,26 +86,6 @@ class Transaction extends React.Component<Props, State> {
                 <TransactionDetails transaction={transactionResult.transaction} />
             </Container>
         )
-    }
-
-    private getBadgeClassNameByType = (type: string) => {
-        switch (type) {
-            case "assetTransfer":
-                return "asset-transfer-transaction-back-color";
-            case "assetMint":
-                return "asset-mint-transaction-back-color";
-        }
-        return "";
-    }
-
-    private getTypeString = (type: string) => {
-        switch (type) {
-            case "assetTransfer":
-                return "Transfer";
-            case "assetMint":
-                return "Mint";
-        }
-        return "";
     }
 
     private onPendingTransactionNotExist = () => {

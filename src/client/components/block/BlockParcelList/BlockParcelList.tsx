@@ -8,33 +8,10 @@ import * as arrow from "./img/arrow.png";
 import { ParcelDoc, Type, PaymentDoc, ChangeShardStateDoc, SetRegularKeyDoc } from "../../../../db/DocType";
 import { PlatformAddress } from "codechain-sdk/lib/key/classes";
 import { Link } from "react-router-dom";
+import { ActionBadge } from "../../../utils/ActionBadge/ActionBadge";
 
 interface Props {
     parcels: ParcelDoc[];
-}
-
-const getBadgeClassNameByAction = (action: string) => {
-    switch (action) {
-        case "changeShardState":
-            return "change-shard-state-action-back-color";
-        case "payment":
-            return "payment-action-back-color";
-        case "setRegularKey":
-            return "set-regular-key-action-back-color";
-    }
-    return "";
-}
-
-const getActionString = (action: string) => {
-    switch (action) {
-        case "changeShardState":
-            return "ChangeShardState";
-        case "payment":
-            return "Payment";
-        case "setRegularKey":
-            return "SetRegularKey";
-    }
-    return "";
 }
 
 const ParcelObjectByType = (parcel: ParcelDoc) => {
@@ -120,7 +97,7 @@ const BlockParcelList = (props: Props) => {
                                         Action
                                     </Col>
                                     <Col md="9">
-                                        <span className={`type-badge ${getBadgeClassNameByAction(parcel.action.action)}`}>{getActionString(parcel.action.action)}</span>
+                                        <ActionBadge parcel={parcel} />
                                     </Col>
                                 </Row>
                                 <hr />

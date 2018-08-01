@@ -1,4 +1,5 @@
 @import "variables.scss";
+@import "mixins.scss";
 .payment-action-back-color {
   background-color: $payment-action-primary-color;
 }
@@ -74,6 +75,36 @@
   }
 }
 
+.data-table {
+  margin-bottom: 0;
+  table-layout: fixed;
+  border-color: white;
+  th,
+  td {
+    border-top: none;
+    padding-top: 8px;
+    padding-bottom: 8px;
+  }
+  @include respond-below(sm) {
+    th,
+    td {
+      @include small-text;
+    }
+  }
+  td {
+    max-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    @include data-font;
+  }
+  thead {
+    th {
+      border-bottom: 2px solid $primary-color;
+    }
+  }
+}
+
 .hash-container {
   .hash {
     vertical-align: top;
@@ -100,17 +131,6 @@
   }
 }
 
-.type-badge {
-  padding-top: 2px;
-  padding-bottom: 2px;
-  padding-left: 12px;
-  padding-right: 12px;
-  text-align: center;
-  color: white;
-  display: inline-block;
-  @include small-text;
-}
-
 .card-list-item {
   position: relative;
   border: 1px solid $line-color;
@@ -126,4 +146,10 @@
     padding-left: 6px;
     padding-right: 6px;
   }
+}
+
+.heading-hr {
+  border-top: 2px solid $primary-color;
+  margin-top: 2px;
+  margin-bottom: 2px;
 }

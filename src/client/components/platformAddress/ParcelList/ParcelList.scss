@@ -1,14 +1,6 @@
 @import "../../../mixins.scss";
 @import "../../../variables.scss";
 .parcel-list {
-  h2 {
-    color: $account-primary-color;
-  }
-  .heading-hr {
-    border-top: 2px solid $account-primary-color;
-    margin-top: 2px;
-    margin-bottom: 2px;
-  }
   .sender-receiver-container {
     @include ellipsis-block;
     background-color: $background-gray;

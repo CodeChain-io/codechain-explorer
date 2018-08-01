@@ -12,29 +12,10 @@ import { TransactionDoc, Type, AssetMintTransactionDoc, AssetTransferTransaction
 import { Link } from "react-router-dom";
 import { PlatformAddress, AssetTransferAddress } from "codechain-sdk/lib/key/classes";
 import { H256 } from "codechain-sdk/lib/core/classes";
+import { TypeBadge } from "../../../utils/TypeBadge/TypeBadge";
 
 interface Props {
     transactions: TransactionDoc[];
-}
-
-const getBadgeClassNameByType = (type: string) => {
-    switch (type) {
-        case "assetTransfer":
-            return "asset-transfer-transaction-back-color";
-        case "assetMint":
-            return "asset-mint-transaction-back-color";
-    }
-    return "";
-}
-
-const getTypeString = (type: string) => {
-    switch (type) {
-        case "assetTransfer":
-            return "Transfer";
-        case "assetMint":
-            return "Mint";
-    }
-    return "";
 }
 const TransactionObjectByType = (transaction: TransactionDoc) => {
     if (Type.isAssetMintTransactionDoc(transaction)) {
@@ -225,7 +206,7 @@ const ParcelTransactionList = (props: Props) => {
                                         Type
                                     </Col>
                                     <Col md="9">
-                                        <span className={`type-badge ${getBadgeClassNameByType(transaction.type)}`}>{getTypeString(transaction.type)}</span>
+                                        <TypeBadge transaction={transaction} />
                                     </Col>
                                 </Row>
                                 <hr />

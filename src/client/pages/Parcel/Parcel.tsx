@@ -11,6 +11,7 @@ import "./Parcel.scss";
 import ParcelTransactionList from "../../components/parcel/ParcelTransactionList/ParcelTransactionList";
 import { ParcelDoc, Type, ChangeShardStateDoc, PendingParcelDoc } from "../../../db/DocType";
 import HexString from "../../components/util/HexString/HexString";
+import { ActionBadge } from "../../utils/ActionBadge/ActionBadge";
 
 interface Props {
     match: match<{ hash: string }>;
@@ -67,7 +68,7 @@ class Parcel extends React.Component<Props, State> {
                 <Col md="8" xl="7">
                     <div className="d-flex title-container">
                         <h1 className="d-inline-block align-self-center">Parcel</h1>
-                        <div className={`type-badge align-self-center ml-3 mr-auto ${this.getBadgeClassNameByAction(parcelResult.parcel.action.action)}`}>{this.getActionString(parcelResult.parcel.action.action)}</div>
+                        <ActionBadge className="align-self-center ml-3 mr-auto" parcel={parcelResult.parcel} />
                         <span className="timestamp align-self-end">{moment.unix(parcelResult.parcel.timestamp).format("YYYY-MM-DD HH:mm:ssZ")}</span>
                     </div>
                 </Col>
@@ -86,30 +87,6 @@ class Parcel extends React.Component<Props, State> {
             {this.showTransactionList(parcelResult.parcel, page)}
         </Container>
         )
-    }
-
-    private getBadgeClassNameByAction = (action: string) => {
-        switch (action) {
-            case "changeShardState":
-                return "change-shard-state-action-back-color";
-            case "payment":
-                return "payment-action-back-color";
-            case "setRegularKey":
-                return "set-regular-key-action-back-color";
-        }
-        return "";
-    }
-
-    private getActionString = (action: string) => {
-        switch (action) {
-            case "changeShardState":
-                return "ChangeShardState";
-            case "payment":
-                return "Payment";
-            case "setRegularKey":
-                return "SetRegularKey";
-        }
-        return "";
     }
 
     private showTransactionList = (parcel: ParcelDoc, page: number) => {

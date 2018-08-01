@@ -1,14 +1,6 @@
 @import "../../../mixins.scss";
 @import "../../../variables.scss";
 .block-details {
-  h2 {
-    color: $block-primary-color;
-  }
-  .heading-hr {
-    border-top: 2px solid $block-primary-color;
-    margin-top: 2px;
-    margin-bottom: 2px;
-  }
   .right-panel-item {
     background-color: $background-gray;
     padding: 12px;

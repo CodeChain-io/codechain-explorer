@@ -19,14 +19,14 @@ const LatestBlocks = (props: Props) => {
     return <div className="latest-blocks">
         <h1>Latest Blocks</h1>
         <div className="latest-container">
-            <Table striped={true}>
+            <Table striped={true} className="data-table">
                 <thead>
                     <tr>
-                        <th>No.</th>
-                        <th>Parcels</th>
-                        <th>Reward</th>
-                        <th>Author</th>
-                        <th>Age</th>
+                        <th style={{ width: '15%' }}>No.</th>
+                        <th style={{ width: '15%' }}>Parcels</th>
+                        <th style={{ width: '40%' }}>Author</th>
+                        <th style={{ width: '15%' }}>Reward</th>
+                        <th style={{ width: '15%' }}>Age</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -36,8 +36,8 @@ const LatestBlocks = (props: Props) => {
                                 <tr key={`home-block-num-${block.hash}`}>
                                     <td scope="row"><Link to={`/block/${block.number}`}>{block.number}</Link></td>
                                     <td>{block.parcels.length}</td>
+                                    <td><Link to={`/addr-platform/${PlatformAddress.fromAccountId(block.author).value}`}>{PlatformAddress.fromAccountId(block.author).value}</Link></td>
                                     <td>{10000}</td>
-                                    <td><Link to={`/addr-platform/${PlatformAddress.fromAccountId(block.author).value}`}>{PlatformAddress.fromAccountId(block.author).value.slice(0, 20)}...</Link></td>
                                     <td>{moment.unix(block.timestamp).fromNow()}</td>
                                 </tr>
                             );
@@ -48,9 +48,9 @@ const LatestBlocks = (props: Props) => {
             {
                 <div className="mt-3">
                     <Link to={"/blocks"}>
-                        <div className="view-all-btn text-center mx-auto">
-                            <span>View All</span>
-                        </div>
+                        <button type="button" className="btn btn-primary w-100">
+                            <span>View all blocks</span>
+                        </button>
                     </Link>
                 </div>
             }

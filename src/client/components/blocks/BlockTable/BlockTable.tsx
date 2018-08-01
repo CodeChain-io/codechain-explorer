@@ -47,14 +47,14 @@ class BlockTable extends React.Component<Prop, State> {
                         </div>
                     </div>
                     <div>
-                        <Table striped={true}>
+                        <Table striped={true} className="data-table">
                             <thead>
                                 <tr>
-                                    <th>No.</th>
-                                    <th>Parcels</th>
-                                    <th>Reward</th>
-                                    <th>Author</th>
-                                    <th>Age</th>
+                                    <th style={{ width: '15%' }}>No.</th>
+                                    <th style={{ width: '15%' }}>Parcels</th>
+                                    <th style={{ width: '40%' }}>Author</th>
+                                    <th style={{ width: '15%' }}>Reward</th>
+                                    <th style={{ width: '15%' }}>Age</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -64,8 +64,8 @@ class BlockTable extends React.Component<Prop, State> {
                                             <tr key={`block-${block.hash}`}>
                                                 <td scope="row"><Link to={`/block/${block.number}`}>{block.number}</Link></td>
                                                 <td>{block.parcels.length}</td>
-                                                <td>{10000}</td>
                                                 <td><Link to={`/addr-platform/${PlatformAddress.fromAccountId(block.author).value}`}>{PlatformAddress.fromAccountId(block.author).value}</Link></td>
+                                                <td>{10000}</td>
                                                 <td>{moment.unix(block.timestamp).fromNow()}</td>
                                             </tr>
                                         );

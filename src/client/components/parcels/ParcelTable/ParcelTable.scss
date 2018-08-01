@@ -1,30 +1,5 @@
 @import "../../../mixins.scss";
 .parcel-table {
-  table {
-    margin-bottom: 0;
-    table-layout: fixed;
-    word-break: break-all;
-    border-color: white;
-    width: 100%;
-    th,
-    td {
-      border-top: none;
-      padding-top: 8px;
-      padding-bottom: 8px;
-    }
-    td {
-      max-width: 0;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-      @include data-font;
-    }
-    thead {
-      th {
-        border-bottom: 1px solid black;
-      }
-    }
-  }
   .page-btn {
     background-color: #3A3FAB;
     color: white;
@@ -40,14 +15,5 @@
     color: white;
     width: 160px;
     border-radius: 11px;
-  }
-  .payment-type {
-    background-color: #03A9F4;
-  }
-  .change-shard-state-type {
-    background-color: #00B8D4;
-  }
-  .set-regular-key-type {
-    background-color: #3A4EB7;
   }
 }
