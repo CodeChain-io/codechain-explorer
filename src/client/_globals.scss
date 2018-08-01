@@ -97,6 +97,11 @@
     text-overflow: ellipsis;
     white-space: nowrap;
     @include data-font;
+    .icon {
+      margin-right: 5px;
+      width: 18px;
+      height: 18px;
+    }
   }
   thead {
     th {
