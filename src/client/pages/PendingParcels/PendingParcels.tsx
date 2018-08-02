@@ -1,6 +1,6 @@
 import * as React from "react";
 import * as _ from "lodash";
-import { Container } from "reactstrap";
+import { Container, Row, Col } from "reactstrap";
 
 import { RequestPendingParcels } from "../../request";
 
@@ -44,13 +44,35 @@ class PendingParcels extends React.Component<{}, State> {
             <Container className="pending-parcels">
                 <div className="d-flex align-items-end">
                     <h1 className="d-inline mr-auto">Pending Parcels</h1>
-                    <div className="d-inline"><h3>Total Pending Parcels <span className="blue-color">{pendingParcels.length}</span></h3></div>
+                    <div className="d-inline"><span className="total-parcel-big">Total {pendingParcels.length} Pending Parcels</span></div>
+                    <div className="d-inline"><span className="total-parcel-small">Total {pendingParcels.length}</span></div>
                 </div>
                 <div className="filter-container mt-3">
                     <div className="type-filter">
-                        <span onClick={this.toggleChangeShardStateFilter}><input checked={isChangeShardStateFilterOn} type="checkbox" className="form-check-input" />ChangeShardSate</span>
-                        <span onClick={this.togglePaymentFilter}><input checked={isPaymentFilterOn} type="checkbox" className="form-check-input" />Payment</span>
-                        <span onClick={this.toggleSetRegularKeyFilter}><input checked={isSetRegularKeyFilterOn} type="checkbox" className="form-check-input" />SetRegularKey</span>
+                        <Row>
+                            <Col md={4}>
+                                <span className="filter-item" onClick={this.toggleChangeShardStateFilter}>
+                                    <input checked={isChangeShardStateFilterOn} type="checkbox" className="filter-input" />
+                                    <span className="filter-text">ChangeShardSate</span>
+                                </span>
+                            </Col>
+                            <Col md={4}>
+                                <div>
+                                    <span className="filter-item" onClick={this.togglePaymentFilter}>
+                                        <input checked={isPaymentFilterOn} type="checkbox" className="filter-input" />
+                                        <span className="filter-text">Payment</span>
+                                    </span>
+                                </div>
+                            </Col>
+                            <Col md={4}>
+                                <div>
+                                    <span className="filter-item" onClick={this.toggleSetRegularKeyFilter}>
+                                        <input checked={isSetRegularKeyFilterOn} type="checkbox" className="filter-input" />
+                                        <span className="filter-text">SetRegularKey</span>
+                                    </span>
+                                </div>
+                            </Col>
+                        </Row>
                     </div>
                 </div>
                 <PendingParcelTable pendingParcels={filteredPendingParcel} />

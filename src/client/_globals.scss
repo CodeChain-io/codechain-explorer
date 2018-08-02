@@ -165,6 +165,16 @@
     padding-right: 50px;
     color: $primary-color;
   }
+  @media (max-width: 550px) {
+    .number-view {
+      padding-left: 5px;
+      padding-right: 5px;
+      @include small-text;
+    }
+    .page-btn {
+      @include small-text;
+    }
+  }
 }
 
 .btn.disabled {
