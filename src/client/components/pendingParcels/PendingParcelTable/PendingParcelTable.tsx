@@ -80,7 +80,7 @@ class PendingParcelTable extends React.Component<Prop, State> {
                                                 <td><ActionBadge parcel={pendingParcel.parcel} simple={true} /><HexString text={pendingParcel.parcel.hash} /></td>
                                                 <td><FontAwesome className={`filter ${isSenderFilterOn ? "" : "disable"}`} onClick={_.partial(this.toogleFilter, pendingParcel.parcel.sender)} name="filter" /><Link to={`/addr-platform/${PlatformAddress.fromAccountId(pendingParcel.parcel.sender).value}`}>{PlatformAddress.fromAccountId(pendingParcel.parcel.sender).value}</Link></td>
                                                 <td>{pendingParcel.parcel.fee.toLocaleString()}</td>
-                                                <td>{Type.isChangeShardStateDoc(pendingParcel.parcel.action) ? (pendingParcel.parcel.action as ChangeShardStateDoc).transactions.length : 0}</td>
+                                                <td>{Type.isChangeShardStateDoc(pendingParcel.parcel.action) ? (pendingParcel.parcel.action as ChangeShardStateDoc).transactions.length.toLocaleString() : 0}</td>
                                                 <td>{moment.unix(pendingParcel.timestamp).fromNow()}</td>
                                                 <td>?</td>
                                             </tr>
