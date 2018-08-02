@@ -31,7 +31,7 @@ class ParcelTable extends React.Component<Prop, State> {
     public render() {
         const { parcels } = this.props;
         const { currentPage, itemPerPage } = this.state;
-        const maxPage = Math.floor(parcels.length / (itemPerPage + 1)) + 1;
+        const maxPage = Math.floor(Math.max(0, parcels.length - 1) / itemPerPage) + 1;
         return (
             <div className="parcel-table">
                 <div>

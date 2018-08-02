@@ -43,7 +43,7 @@ class PendingParcelTable extends React.Component<Prop, State> {
         const { currentPage, itemPerPage, isSenderFilterOn } = this.state;
         const filteredParcel = this.filterListBySender(pendingParcels);
         const sortedParcels = this.sortListBySortType(filteredParcel);
-        const maxPage = Math.floor(filteredParcel.length / (itemPerPage + 1)) + 1;
+        const maxPage = Math.floor(Math.max(0, filteredParcel.length - 1) / itemPerPage) + 1;
         return (
             <div className="pending-parcel-table">
                 <div>

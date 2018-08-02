@@ -29,7 +29,7 @@ class TransactionTable extends React.Component<Prop, State> {
     public render() {
         const { transactions } = this.props;
         const { currentPage, itemPerPage } = this.state;
-        const maxPage = Math.floor(transactions.length / (itemPerPage + 1)) + 1;
+        const maxPage = Math.floor(Math.max(0, transactions.length - 1) / itemPerPage) + 1;
         return (
             <div className="transaction-table">
                 <div>

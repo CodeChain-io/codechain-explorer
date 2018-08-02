@@ -29,7 +29,7 @@ class BlockTable extends React.Component<Prop, State> {
     public render() {
         const { blocks } = this.props;
         const { currentPage, itemPerPage } = this.state;
-        const maxPage = Math.floor(blocks.length / (itemPerPage + 1)) + 1;
+        const maxPage = Math.floor(Math.max(0, blocks.length - 1) / itemPerPage) + 1;
         return (
             <div className="block-table">
                 <div>
