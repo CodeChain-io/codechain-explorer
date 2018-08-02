@@ -166,9 +166,21 @@
     color: $primary-color;
   }
   @media (max-width: 550px) {
+    & {
+      width: 100%;
+      ul {
+        width: 100%;
+        display: flex
+      }
+      li:nth-child(3) {
+        flex-grow: 1;
+      }
+    }
     .number-view {
       padding-left: 5px;
       padding-right: 5px;
+      line-height: 26px;
+      text-align: center;
       @include small-text;
     }
     .page-btn {
