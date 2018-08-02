@@ -24,9 +24,9 @@ const LatestBlocks = (props: Props) => {
                     <tr>
                         <th style={{ width: '15%' }}>No.</th>
                         <th style={{ width: '15%' }}>Parcels</th>
-                        <th style={{ width: '40%' }}>Author</th>
+                        <th style={{ width: '35%' }}>Author</th>
                         <th style={{ width: '15%' }}>Reward</th>
-                        <th style={{ width: '15%' }}>Age</th>
+                        <th style={{ width: '20%' }}>Age</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -34,10 +34,10 @@ const LatestBlocks = (props: Props) => {
                         _.map(_.reverse(_.values(blocksByNumber)), block => {
                             return (
                                 <tr key={`home-block-num-${block.hash}`}>
-                                    <td scope="row"><Link to={`/block/${block.number}`}>{block.number}</Link></td>
-                                    <td>{block.parcels.length}</td>
+                                    <td scope="row"><Link to={`/block/${block.number}`}>{block.number.toLocaleString()}</Link></td>
+                                    <td>{block.parcels.length.toLocaleString()}</td>
                                     <td><Link to={`/addr-platform/${PlatformAddress.fromAccountId(block.author).value}`}>{PlatformAddress.fromAccountId(block.author).value}</Link></td>
-                                    <td>{10000}</td>
+                                    <td>{(10000).toLocaleString()}</td>
                                     <td>{moment.unix(block.timestamp).fromNow()}</td>
                                 </tr>
                             );

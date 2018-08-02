@@ -158,3 +158,18 @@
   margin-top: 2px;
   margin-bottom: 2px;
 }
+
+.pager {
+  .number-view {
+    padding-left: 50px;
+    padding-right: 50px;
+    color: $primary-color;
+  }
+}
+
+.btn.disabled {
+  background-color: #F2F2F2 !important;
+  opacity: 1;
+  border: none;
+  color: $dark-color !important;
+}

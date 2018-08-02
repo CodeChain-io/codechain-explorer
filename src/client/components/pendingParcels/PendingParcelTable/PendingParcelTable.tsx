@@ -6,9 +6,10 @@ import * as FontAwesome from "react-fontawesome";
 
 import "./PendingParcelTable.scss";
 import { PendingParcelDoc, Type, ChangeShardStateDoc } from "../../../../db/DocType";
-import HexString from "../../util/HexString/HexString";
 import { Link } from "react-router-dom";
 import { PlatformAddress } from "codechain-sdk/lib/key/classes";
+import { ActionBadge } from "../../../utils/ActionBadge/ActionBadge";
+import HexString from "../../util/HexString/HexString";
 
 interface Prop {
     pendingParcels: PendingParcelDoc[];
@@ -60,15 +61,15 @@ class PendingParcelTable extends React.Component<Prop, State> {
                         </div>
                     </div>
                     <div>
-                        <Table striped={true}>
+                        <Table striped={true} className="data-table">
                             <thead>
                                 <tr>
-                                    <th>Hash</th>
-                                    <th>Signer</th>
-                                    <th className="sort-header" onClick={_.partial(this.handleSortButton, 0)}>Fee{this.getSortButton(0)}</th>
-                                    <th className="sort-header" onClick={_.partial(this.handleSortButton, 1)}>Txs{this.getSortButton(1)}</th>
-                                    <th className="sort-header" onClick={_.partial(this.handleSortButton, 2)}>Pending duration{this.getSortButton(2)}</th>
-                                    <th>Estimated ...</th>
+                                    <th style={{ width: '20%' }}>Hash</th>
+                                    <th style={{ width: '20%' }}>Signer</th>
+                                    <th style={{ width: '10%' }} className="sort-header" onClick={_.partial(this.handleSortButton, 0)}>Fee{this.getSortButton(0)}</th>
+                                    <th style={{ width: '10%' }} className="sort-header" onClick={_.partial(this.handleSortButton, 1)}>Txs{this.getSortButton(1)}</th>
+                                    <th style={{ width: '20%' }} className="sort-header" onClick={_.partial(this.handleSortButton, 2)}>Pending duration{this.getSortButton(2)}</th>
+                                    <th style={{ width: '20%' }}>Estimated ...</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -76,9 +77,9 @@ class PendingParcelTable extends React.Component<Prop, State> {
                                     _.map(sortedParcels.slice((currentPage - 1) * itemPerPage, (currentPage - 1) * itemPerPage + itemPerPage), (pendingParcel, index) => {
                                         return (
                                             <tr key={`pending-parcel-${pendingParcel.parcel.hash}`}>
-                                                <td><span className={`type-circle ${Type.isChangeShardStateDoc(pendingParcel.parcel.action) ? "change-shard-state-type" : (Type.isPaymentDoc(pendingParcel.parcel.action) ? "payment-type" : "set-regular-key-type")}`}>&nbsp;</span><HexString link={`/parcel/0x${pendingParcel.parcel.hash}`} text={pendingParcel.parcel.hash} /></td>
+                                                <td><ActionBadge parcel={pendingParcel.parcel} simple={true} /><HexString text={pendingParcel.parcel.hash} /></td>
                                                 <td><FontAwesome className={`filter ${isSenderFilterOn ? "" : "disable"}`} onClick={_.partial(this.toogleFilter, pendingParcel.parcel.sender)} name="filter" /><Link to={`/addr-platform/${PlatformAddress.fromAccountId(pendingParcel.parcel.sender).value}`}>{PlatformAddress.fromAccountId(pendingParcel.parcel.sender).value}</Link></td>
-                                                <td>{pendingParcel.parcel.fee}</td>
+                                                <td>{pendingParcel.parcel.fee.toLocaleString()}</td>
                                                 <td>{Type.isChangeShardStateDoc(pendingParcel.parcel.action) ? (pendingParcel.parcel.action as ChangeShardStateDoc).transactions.length : 0}</td>
                                                 <td>{moment.unix(pendingParcel.timestamp).fromNow()}</td>
                                                 <td>?</td>
@@ -90,25 +91,24 @@ class PendingParcelTable extends React.Component<Prop, State> {
                         </Table>
                     </div>
                     <div className="d-flex mt-3">
-                        <div className="d-inline mr-auto">
-                            Found {pendingParcels.length} Parcels
-                        </div>
-                        <div className="d-inline">
+                        <div className="d-inline ml-auto pager">
                             <ul className="list-inline">
-                                <li className={`list-inline-item page-btn ${currentPage === 1 ? "disable" : ""}`} onClick={this.moveFirst}>
-                                    &lt;&lt;
-                                </li>
-                                <li className={`list-inline-item page-btn ${currentPage === 1 ? "disable" : ""}`} onClick={this.moveBefore}>
-                                    &lt; Prev
+                                <li className="list-inline-item">
+                                    <button className={`btn btn-primary page-btn ${currentPage === 1 ? "disabled" : ""}`} type="button" onClick={this.moveFirst}>&lt;&lt;</button>
                                 </li>
                                 <li className="list-inline-item">
-                                    {currentPage} of {maxPage}
+                                    <button className={`btn btn-primary page-btn ${currentPage === 1 ? "disabled" : ""}`} type="button" onClick={this.moveBefore}>&lt; Prev</button>
                                 </li>
-                                <li className={`list-inline-item page-btn ${currentPage === maxPage ? "disable" : ""}`} onClick={_.partial(this.moveNext, maxPage)}>
-                                    Next &gt;
+                                <li className="list-inline-item">
+                                    <div className="number-view">
+                                        {currentPage} of {maxPage}
+                                    </div>
                                 </li>
-                                <li className={`list-inline-item page-btn ${currentPage === maxPage ? "disable" : ""}`} onClick={_.partial(this.moveLast, maxPage)}>
-                                    &gt;&gt;
+                                <li className="list-inline-item">
+                                    <button className={`btn btn-primary page-btn ${currentPage === maxPage ? "disabled" : ""}`} type="button" onClick={_.partial(this.moveNext, maxPage)}>Next &gt;</button>
+                                </li>
+                                <li className="list-inline-item">
+                                    <button className={`btn btn-primary page-btn ${currentPage === maxPage ? "disabled" : ""}`} type="button" onClick={_.partial(this.moveLast, maxPage)}>&gt;&gt;</button>
                                 </li>
                             </ul>
                         </div>
@@ -205,7 +205,7 @@ class PendingParcelTable extends React.Component<Prop, State> {
     }
 
     private handleOptionChange = (event: any) => {
-        const selected = event.target.value;
+        const selected = parseInt(event.target.value, 10);
         this.setState({ itemPerPage: selected, currentPage: 1 });
     }
 }

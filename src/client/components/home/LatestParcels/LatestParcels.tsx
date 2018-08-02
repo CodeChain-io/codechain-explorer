@@ -26,9 +26,9 @@ const LatestParcels = (props: Props) => {
                     <tr>
                         <th style={{ width: '20%' }}>Type</th>
                         <th style={{ width: '25%' }}>Hash</th>
-                        <th style={{ width: '25%' }}>Signer</th>
+                        <th style={{ width: '20%' }}>Signer</th>
                         <th style={{ width: '15%' }}>Fee</th>
-                        <th style={{ width: '15%' }}>Age</th>
+                        <th style={{ width: '20%' }}>Age</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -40,7 +40,7 @@ const LatestParcels = (props: Props) => {
                                         <td><ActionBadge parcel={parcel} /></td>
                                         <td scope="row"><HexString link={`/parcel/0x${parcel.hash}`} text={parcel.hash} /></td>
                                         <td><Link to={`/addr-platform/${PlatformAddress.fromAccountId(parcel.sender).value}`}>{PlatformAddress.fromAccountId(parcel.sender).value}</Link></td>
-                                        <td>{parcel.fee}</td>
+                                        <td>{parcel.fee.toLocaleString()}</td>
                                         <td>{moment.unix(block.timestamp).fromNow()}</td>
                                     </tr>
                                 );

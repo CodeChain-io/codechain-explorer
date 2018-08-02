@@ -24,10 +24,10 @@ const LatestTransactions = (props: Props) => {
                 <thead>
                     <tr>
                         <th style={{ width: '20%' }}>Type</th>
-                        <th style={{ width: '25%' }}>Hash</th>
+                        <th style={{ width: '20%' }}>Hash</th>
                         <th style={{ width: '25%' }}>Assets</th>
                         <th style={{ width: '15%' }}>Amount</th>
-                        <th style={{ width: '15%' }}>Age</th>
+                        <th style={{ width: '20%' }}>Age</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -43,7 +43,7 @@ const LatestTransactions = (props: Props) => {
                                             <td>{Type.isAssetMintTransactionDoc(transaction) ?
                                                 <span><img className="icon" src={Type.getMetadata((transaction as AssetMintTransactionDoc).data.metadata).icon_url} /><HexString link={`/asset/${(transaction as AssetMintTransactionDoc).data.output.assetType}`} text={(transaction as AssetMintTransactionDoc).data.output.assetType} /></span>
                                                 : (Type.isAssetTransferTransactionDoc(transaction) ? <span><img className="icon" src={Type.getMetadata((transaction as AssetTransferTransactionDoc).data.inputs[0].prevOut.assetScheme.metadata).icon_url} /><HexString link={`/asset/0x${(transaction as AssetTransferTransactionDoc).data.inputs[0].prevOut.assetType}`} text={(transaction as AssetTransferTransactionDoc).data.inputs[0].prevOut.assetType} /></span> : "")}</td>
-                                            <td>{Type.isAssetMintTransactionDoc(transaction) ? (transaction as AssetMintTransactionDoc).data.output.amount : (Type.isAssetTransferTransactionDoc(transaction) ? _.sumBy((transaction as AssetTransferTransactionDoc).data.inputs, (input) => input.prevOut.amount) : "")}</td>
+                                            <td>{Type.isAssetMintTransactionDoc(transaction) ? ((transaction as AssetMintTransactionDoc).data.output.amount ? ((transaction as AssetMintTransactionDoc).data.output.amount as number).toLocaleString() : 0) : (Type.isAssetTransferTransactionDoc(transaction) ? _.sumBy((transaction as AssetTransferTransactionDoc).data.inputs, (input) => input.prevOut.amount) : "").toLocaleString()}</td>
                                             <td>{moment.unix(block.timestamp).fromNow()}</td>
                                         </tr>
                                     );

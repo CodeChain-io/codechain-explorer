@@ -5,6 +5,7 @@ import { ParcelDoc } from "../../../db/DocType";
 interface Props {
     parcel: ParcelDoc;
     className?: string;
+    simple?: boolean;
 }
 const getBadgeClassNameByAction = (action: string) => {
     switch (action) {
@@ -31,6 +32,6 @@ const getActionString = (action: string) => {
 }
 
 export const ActionBadge = (props: Props) => {
-    const { className, parcel } = props;
-    return <span className={className}><FontAwesome className={getBadgeClassNameByAction(parcel.action.action)} name="square" /> {getActionString(parcel.action.action)}</span>
+    const { className, parcel, simple } = props;
+    return <span className={className}><FontAwesome className={getBadgeClassNameByAction(parcel.action.action)} name="square" /> {simple ? "" : getActionString(parcel.action.action)}</span>
 }

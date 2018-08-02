@@ -43,7 +43,7 @@ class Header extends React.Component<{}, State> {
                                 <DropdownToggle nav={true} caret={true}>
                                     Explorer
                                 </DropdownToggle>
-                                <DropdownMenu right={true}>
+                                <DropdownMenu right={false}>
                                     <IndexLinkContainer to="/blocks">
                                         <DropdownItem>
                                             Latest Blocks

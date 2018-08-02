@@ -52,9 +52,9 @@ class BlockTable extends React.Component<Prop, State> {
                                 <tr>
                                     <th style={{ width: '15%' }}>No.</th>
                                     <th style={{ width: '15%' }}>Parcels</th>
-                                    <th style={{ width: '40%' }}>Author</th>
+                                    <th style={{ width: '35%' }}>Author</th>
                                     <th style={{ width: '15%' }}>Reward</th>
-                                    <th style={{ width: '15%' }}>Age</th>
+                                    <th style={{ width: '20%' }}>Age</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -62,10 +62,10 @@ class BlockTable extends React.Component<Prop, State> {
                                     _.map(blocks.slice((currentPage - 1) * itemPerPage, (currentPage - 1) * itemPerPage + itemPerPage), (block) => {
                                         return (
                                             <tr key={`block-${block.hash}`}>
-                                                <td scope="row"><Link to={`/block/${block.number}`}>{block.number}</Link></td>
-                                                <td>{block.parcels.length}</td>
+                                                <td scope="row"><Link to={`/block/${block.number}`}>{block.number.toLocaleString()}</Link></td>
+                                                <td>{block.parcels.length.toLocaleString()}</td>
                                                 <td><Link to={`/addr-platform/${PlatformAddress.fromAccountId(block.author).value}`}>{PlatformAddress.fromAccountId(block.author).value}</Link></td>
-                                                <td>{10000}</td>
+                                                <td>{(10000).toLocaleString()}</td>
                                                 <td>{moment.unix(block.timestamp).fromNow()}</td>
                                             </tr>
                                         );
@@ -75,22 +75,24 @@ class BlockTable extends React.Component<Prop, State> {
                         </Table>
                     </div>
                     <div className="d-flex mt-3">
-                        <div className="d-inline ml-auto">
+                        <div className="d-inline ml-auto pager">
                             <ul className="list-inline">
-                                <li className={`list-inline-item page-btn ${currentPage === 1 ? "disable" : ""}`} onClick={this.moveFirst}>
-                                    &lt;&lt;
-                                </li>
-                                <li className={`list-inline-item page-btn ${currentPage === 1 ? "disable" : ""}`} onClick={this.moveBefore}>
-                                    &lt; Prev
+                                <li className="list-inline-item">
+                                    <button className={`btn btn-primary page-btn ${currentPage === 1 ? "disabled" : ""}`} type="button" onClick={this.moveFirst}>&lt;&lt;</button>
                                 </li>
                                 <li className="list-inline-item">
-                                    {currentPage} of {maxPage}
+                                    <button className={`btn btn-primary page-btn ${currentPage === 1 ? "disabled" : ""}`} type="button" onClick={this.moveBefore}>&lt; Prev</button>
                                 </li>
-                                <li className={`list-inline-item page-btn ${currentPage === maxPage ? "disable" : ""}`} onClick={_.partial(this.moveNext, maxPage)}>
-                                    Next &gt;
+                                <li className="list-inline-item">
+                                    <div className="number-view">
+                                        {currentPage} of {maxPage}
+                                    </div>
                                 </li>
-                                <li className={`list-inline-item page-btn ${currentPage === maxPage ? "disable" : ""}`} onClick={_.partial(this.moveLast, maxPage)}>
-                                    &gt;&gt;
+                                <li className="list-inline-item">
+                                    <button className={`btn btn-primary page-btn ${currentPage === maxPage ? "disabled" : ""}`} type="button" onClick={_.partial(this.moveNext, maxPage)}>Next &gt;</button>
+                                </li>
+                                <li className="list-inline-item">
+                                    <button className={`btn btn-primary page-btn ${currentPage === maxPage ? "disabled" : ""}`} type="button" onClick={_.partial(this.moveLast, maxPage)}>&gt;&gt;</button>
                                 </li>
                             </ul>
                         </div>
@@ -132,7 +134,7 @@ class BlockTable extends React.Component<Prop, State> {
     }
 
     private handleOptionChange = (event: any) => {
-        const selected = event.target.value;
+        const selected = parseInt(event.target.value, 10);
         this.setState({ itemPerPage: selected, currentPage: 1 });
     }
 }

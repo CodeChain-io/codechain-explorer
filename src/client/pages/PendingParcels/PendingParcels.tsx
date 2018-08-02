@@ -48,10 +48,9 @@ class PendingParcels extends React.Component<{}, State> {
                 </div>
                 <div className="filter-container mt-3">
                     <div className="type-filter">
-                        <span>Type Filter</span>
-                        <span onClick={this.toggleChangeShardStateFilter} className={`filter-btn change-shard-state-btn ${isChangeShardStateFilterOn ? "" : "disable"}`}>changeShardSate</span>
-                        <span onClick={this.togglePaymentFilter} className={`filter-btn payment-btn ${isPaymentFilterOn ? "" : "disable"}`}>payment</span>
-                        <span onClick={this.toggleSetRegularKeyFilter} className={`filter-btn set-regular-key-btn ${isSetRegularKeyFilterOn ? "" : "disable"}`}>setRegularKey</span>
+                        <span onClick={this.toggleChangeShardStateFilter}><input checked={isChangeShardStateFilterOn} type="checkbox" className="form-check-input" />ChangeShardSate</span>
+                        <span onClick={this.togglePaymentFilter}><input checked={isPaymentFilterOn} type="checkbox" className="form-check-input" />Payment</span>
+                        <span onClick={this.toggleSetRegularKeyFilter}><input checked={isSetRegularKeyFilterOn} type="checkbox" className="form-check-input" />SetRegularKey</span>
                     </div>
                 </div>
                 <PendingParcelTable pendingParcels={filteredPendingParcel} />

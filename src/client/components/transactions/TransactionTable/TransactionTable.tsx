@@ -51,10 +51,10 @@ class TransactionTable extends React.Component<Prop, State> {
                             <thead>
                                 <tr>
                                     <th style={{ width: '20%' }}>Type</th>
-                                    <th style={{ width: '25%' }}>Hash</th>
+                                    <th style={{ width: '20%' }}>Hash</th>
                                     <th style={{ width: '25%' }}>Assets</th>
                                     <th style={{ width: '15%' }}>Amount</th>
-                                    <th style={{ width: '15%' }}>Age</th>
+                                    <th style={{ width: '20%' }}>Age</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -67,7 +67,7 @@ class TransactionTable extends React.Component<Prop, State> {
                                                 <td>{Type.isAssetMintTransactionDoc(transaction) ?
                                                     <HexString link={`/asset/${(transaction as AssetMintTransactionDoc).data.output.assetType}`} text={(transaction as AssetMintTransactionDoc).data.output.assetType} />
                                                     : (Type.isAssetTransferTransactionDoc(transaction) ? <HexString link={`/asset/0x${(transaction as AssetTransferTransactionDoc).data.inputs[0].prevOut.assetType}`} text={(transaction as AssetTransferTransactionDoc).data.inputs[0].prevOut.assetType} /> : "")}</td>
-                                                <td>{Type.isAssetMintTransactionDoc(transaction) ? (transaction as AssetMintTransactionDoc).data.output.amount : (Type.isAssetTransferTransactionDoc(transaction) ? _.sumBy((transaction as AssetTransferTransactionDoc).data.inputs, (input) => input.prevOut.amount) : "")}</td>
+                                                <td>{Type.isAssetMintTransactionDoc(transaction) ? ((transaction as AssetMintTransactionDoc).data.output.amount ? ((transaction as AssetMintTransactionDoc).data.output.amount as number).toLocaleString() : 0) : (Type.isAssetTransferTransactionDoc(transaction) ? _.sumBy((transaction as AssetTransferTransactionDoc).data.inputs, (input) => input.prevOut.amount) : "").toLocaleString()}</td>
                                                 <td>{moment.unix(transaction.data.timestamp).fromNow()}</td>
                                             </tr>
                                         );
@@ -77,22 +77,24 @@ class TransactionTable extends React.Component<Prop, State> {
                         </Table>
                     </div>
                     <div className="d-flex mt-3">
-                        <div className="d-inline ml-auto">
+                        <div className="d-inline ml-auto pager">
                             <ul className="list-inline">
-                                <li className={`list-inline-item page-btn ${currentPage === 1 ? "disable" : ""}`} onClick={this.moveFirst}>
-                                    &lt;&lt;
-                                </li>
-                                <li className={`list-inline-item page-btn ${currentPage === 1 ? "disable" : ""}`} onClick={this.moveBefore}>
-                                    &lt; Prev
+                                <li className="list-inline-item">
+                                    <button className={`btn btn-primary page-btn ${currentPage === 1 ? "disabled" : ""}`} type="button" onClick={this.moveFirst}>&lt;&lt;</button>
                                 </li>
                                 <li className="list-inline-item">
-                                    {currentPage} of {maxPage}
+                                    <button className={`btn btn-primary page-btn ${currentPage === 1 ? "disabled" : ""}`} type="button" onClick={this.moveBefore}>&lt; Prev</button>
                                 </li>
-                                <li className={`list-inline-item page-btn ${currentPage === maxPage ? "disable" : ""}`} onClick={_.partial(this.moveNext, maxPage)}>
-                                    Next &gt;
+                                <li className="list-inline-item">
+                                    <div className="number-view">
+                                        {currentPage} of {maxPage}
+                                    </div>
                                 </li>
-                                <li className={`list-inline-item page-btn ${currentPage === maxPage ? "disable" : ""}`} onClick={_.partial(this.moveLast, maxPage)}>
-                                    &gt;&gt;
+                                <li className="list-inline-item">
+                                    <button className={`btn btn-primary page-btn ${currentPage === maxPage ? "disabled" : ""}`} type="button" onClick={_.partial(this.moveNext, maxPage)}>Next &gt;</button>
+                                </li>
+                                <li className="list-inline-item">
+                                    <button className={`btn btn-primary page-btn ${currentPage === maxPage ? "disabled" : ""}`} type="button" onClick={_.partial(this.moveLast, maxPage)}>&gt;&gt;</button>
                                 </li>
                             </ul>
                         </div>
@@ -134,7 +136,7 @@ class TransactionTable extends React.Component<Prop, State> {
     }
 
     private handleOptionChange = (event: any) => {
-        const selected = event.target.value;
+        const selected = parseInt(event.target.value, 10);
         this.setState({ itemPerPage: selected, currentPage: 1 });
     }
 }
