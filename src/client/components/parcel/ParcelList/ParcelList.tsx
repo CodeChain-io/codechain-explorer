@@ -1,7 +1,7 @@
 import * as React from "react";
 import * as moment from "moment";
 
-import "./BlockParcelList.scss"
+import "./ParcelList.scss"
 import HexString from "../../util/HexString/HexString";
 import { Row, Col } from "reactstrap";
 import * as arrow from "./img/arrow.png";
@@ -12,9 +12,11 @@ import { ActionBadge } from "../../../utils/ActionBadge/ActionBadge";
 
 interface Props {
     parcels: ParcelDoc[];
+    address?: string;
+    fullScreen: boolean;
 }
 
-const ParcelObjectByType = (parcel: ParcelDoc) => {
+const ParcelObjectByType = (parcel: ParcelDoc, address?: string) => {
     if (Type.isPaymentDoc(parcel.action)) {
         return ([
             <Row key="payment-amount">
@@ -30,7 +32,11 @@ const ParcelObjectByType = (parcel: ParcelDoc) => {
                     <Row>
                         <Col md="5">
                             <div className="sender-receiver-container">
-                                <Link to={`/addr-platform/${PlatformAddress.fromAccountId(parcel.sender).value}`}>{PlatformAddress.fromAccountId(parcel.sender).value}</Link>
+                                {
+                                    address && address === PlatformAddress.fromAccountId(parcel.sender).value ?
+                                        `${PlatformAddress.fromAccountId(parcel.sender).value.slice(0, 15)}...`
+                                        : <Link to={`/addr-platform/${PlatformAddress.fromAccountId(parcel.sender).value}`}>{PlatformAddress.fromAccountId(parcel.sender).value.slice(0, 15)}...</Link>
+                                }
                             </div>
                         </Col>
                         <Col md="2" className="text-center">
@@ -38,7 +44,11 @@ const ParcelObjectByType = (parcel: ParcelDoc) => {
                         </Col>
                         <Col md="5">
                             <div className="sender-receiver-container">
-                                <Link to={`/addr-platform/${PlatformAddress.fromAccountId((parcel.action as PaymentDoc).receiver).value}`}>{PlatformAddress.fromAccountId((parcel.action as PaymentDoc).receiver).value}</Link>
+                                {
+                                    address && address === PlatformAddress.fromAccountId((parcel.action as PaymentDoc).receiver).value ?
+                                        `${PlatformAddress.fromAccountId((parcel.action as PaymentDoc).receiver).value.slice(0, 15)}...`
+                                        : <Link to={`/addr-platform/${PlatformAddress.fromAccountId((parcel.action as PaymentDoc).receiver).value}`}>{PlatformAddress.fromAccountId((parcel.action as PaymentDoc).receiver).value.slice(0, 15)}...</Link>
+                                }
                             </div>
                         </Col>
                     </Row>
@@ -66,17 +76,17 @@ const ParcelObjectByType = (parcel: ParcelDoc) => {
     return null;
 }
 
-const BlockParcelList = (props: Props) => {
-    const { parcels } = props;
+const ParcelList = (props: Props) => {
+    const { parcels, address, fullScreen } = props;
     return <div className="block-parcel-list">
         <Row className="mb-3">
-            <Col lg="9">
+            <Col lg={fullScreen ? "12" : "9"}>
                 <h2>Parcels</h2>
                 <hr className="heading-hr" />
             </Col>
         </Row>
         <Row>
-            <Col lg="9">
+            <Col lg={fullScreen ? "12" : "9"}>
                 {
                     parcels.map((parcel, i: number) => {
                         const hash = parcel.hash;
@@ -115,7 +125,11 @@ const BlockParcelList = (props: Props) => {
                                         Signer
                                     </Col>
                                     <Col md="9">
-                                        <Link to={`/addr-platform/${PlatformAddress.fromAccountId(parcel.sender).value}`}>{PlatformAddress.fromAccountId(parcel.sender).value}</Link>
+                                        {
+                                            address && address === PlatformAddress.fromAccountId(parcel.sender).value ?
+                                                PlatformAddress.fromAccountId(parcel.sender).value :
+                                                <Link to={`/addr-platform/${PlatformAddress.fromAccountId(parcel.sender).value}`}>{PlatformAddress.fromAccountId(parcel.sender).value}</Link>
+                                        }
                                     </Col>
                                 </Row>
                                 <hr />
@@ -128,7 +142,7 @@ const BlockParcelList = (props: Props) => {
                                     </Col>
                                 </Row>
                                 <hr />
-                                {ParcelObjectByType(parcel)}
+                                {ParcelObjectByType(parcel, address)}
                             </div>
                         </div>
                     })
@@ -138,4 +152,4 @@ const BlockParcelList = (props: Props) => {
     </div >
 };
 
-export default BlockParcelList;
+export default ParcelList;

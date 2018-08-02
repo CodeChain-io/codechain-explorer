@@ -4,7 +4,7 @@ import { Container } from "reactstrap";
 import { RequestBlocks } from "../../request";
 import "./Blocks.scss";
 import { BlockDoc } from "../../../db/DocType";
-import BlockTable from "../../components/blocks/BlockTable/BlockTable";
+import BlockTable from "../../components/block/BlockTable/BlockTable";
 
 interface State {
     blocks: BlockDoc[];

@@ -6,7 +6,7 @@ import { Container, Col, Row } from "reactstrap";
 
 import { RequestBlock } from "../../request";
 import BlockDetails from "../../components/block/BlockDetails/BlockDetails";
-import BlockParcelList from "../../components/block/BlockParcelList/BlockParcelList";
+import ParcelList from "../../components/parcel/ParcelList/ParcelList";
 
 import "./Block.scss";
 import { BlockDoc } from "../../../db/DocType";
@@ -76,7 +76,7 @@ class Block extends React.Component<Props, State> {
                     </Col>
                 </Row>
                 <BlockDetails block={block} />
-                <BlockParcelList parcels={block.parcels.slice(0, this.itemPerPage * page)} />
+                <ParcelList parcels={block.parcels.slice(0, this.itemPerPage * page)} fullScreen={false} />
                 {
                     this.itemPerPage * page < block.parcels.length ?
                         <div className="mt-3">

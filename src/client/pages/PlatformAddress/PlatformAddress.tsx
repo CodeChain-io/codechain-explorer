@@ -7,9 +7,9 @@ import { U256 } from "codechain-sdk/lib/core/classes"
 import { RequestPlatformAddressAccount, RequestPlatformAddressParcels, RequestPlatformAddressAssets } from "../../request";
 import RequestPlatformAddressBlocks from "../../request/RequestPlatformAddressBlocks";
 import AccountDetails from "../../components/platformAddress/AccountDetails/AccountDetails";
-import BlockList from "../../components/platformAddress/BlockList/BlockList";
-import AssetList from "../../components/platformAddress/AssetList/AssetList";
-import ParcelList from "../../components/platformAddress/ParcelList/ParcelList";
+import BlockList from "../../components/block/BlockList/BlockList";
+import AssetList from "../../components/asset/AssetList/AssetList";
+import ParcelList from "../../components/parcel/ParcelList/ParcelList";
 import { ParcelDoc, AssetBundleDoc, BlockDoc } from "../../../db/DocType";
 
 import "./PlatformAddress.scss"
@@ -92,7 +92,7 @@ class Address extends React.Component<Props, State> {
                 {
                     parcels.length > 0 ?
                         <div>
-                            <ParcelList address={address} parcels={parcels.slice(0, this.itemPerPage * parcelPage)} />
+                            <ParcelList address={address} fullScreen={true} parcels={parcels.slice(0, this.itemPerPage * parcelPage)} />
                             {
                                 this.itemPerPage * parcelPage < parcels.length ?
                                     <div className="mt-3">

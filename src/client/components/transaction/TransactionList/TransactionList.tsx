@@ -4,21 +4,23 @@ import * as moment from "moment";
 
 import { Row, Col } from "reactstrap";
 
-import "./AssetTransactionList.scss"
+import "./TransactionList.scss"
 import HexString from "../../util/HexString/HexString";
 
 import * as arrow from "./img/arrow.png";
 import { TransactionDoc, Type, AssetMintTransactionDoc, AssetTransferTransactionDoc } from "../../../../db/DocType";
-import { H256 } from "codechain-sdk/lib/core/classes";
 import { Link } from "react-router-dom";
 import { PlatformAddress, AssetTransferAddress } from "codechain-sdk/lib/key/classes";
+import { H256 } from "codechain-sdk/lib/core/classes";
 import { TypeBadge } from "../../../utils/TypeBadge/TypeBadge";
 
 interface Props {
-    assetType: H256,
+    owner?: string;
+    fullScreen: boolean,
+    assetType?: H256,
     transactions: TransactionDoc[];
 }
-const TransactionObjectByType = (transaction: TransactionDoc, type: H256) => {
+const TransactionObjectByType = (transaction: TransactionDoc, assetType?: H256, owner?: string) => {
     if (Type.isAssetMintTransactionDoc(transaction)) {
         const transactionDoc = transaction as AssetMintTransactionDoc;
         return (
@@ -28,7 +30,8 @@ const TransactionObjectByType = (transaction: TransactionDoc, type: H256) => {
                         AssetType
                     </Col>
                     <Col md="9">
-                        <img src={Type.getMetadata(transactionDoc.data.metadata).icon_url} className="icon mr-2" />{type.value === transactionDoc.data.output.assetType ? <HexString text={transactionDoc.data.output.assetType} /> : <HexString link={`/asset/0x${transactionDoc.data.output.assetType}`} text={transactionDoc.data.output.assetType} />}
+                        <img src={Type.getMetadata(transactionDoc.data.metadata).icon_url} className="icon mr-2" />
+                        {assetType && assetType.value === transactionDoc.data.output.assetType ? <HexString text={transactionDoc.data.output.assetType} /> : <HexString link={`/asset/0x${transactionDoc.data.output.assetType}`} text={transactionDoc.data.output.assetType} />}
                     </Col>
                 </Row>,
                 <hr key="line3" />,
@@ -61,7 +64,11 @@ const TransactionObjectByType = (transaction: TransactionDoc, type: H256) => {
                     <Col md="9">
                         {
                             transactionDoc.data.output.owner ?
-                                <Link to={`/addr-asset/${AssetTransferAddress.fromPublicKeyHash(new H256(transactionDoc.data.output.owner)).value}`}>{AssetTransferAddress.fromPublicKeyHash(new H256(transactionDoc.data.output.owner)).value}</Link>
+                                (
+                                    owner && owner === AssetTransferAddress.fromPublicKeyHash(new H256(transactionDoc.data.output.owner)).value ?
+                                        AssetTransferAddress.fromPublicKeyHash(new H256(transactionDoc.data.output.owner)).value
+                                        : <Link to={`/addr-asset/${AssetTransferAddress.fromPublicKeyHash(new H256(transactionDoc.data.output.owner)).value}`}>{AssetTransferAddress.fromPublicKeyHash(new H256(transactionDoc.data.output.owner)).value}</Link>
+                                )
                                 : "Unknown"
                         }
                     </Col>
@@ -96,11 +103,11 @@ const TransactionObjectByType = (transaction: TransactionDoc, type: H256) => {
                             {
                                 _.map(transactionDoc.data.inputs, (input, i) => {
                                     return (
-                                        <div key={`input-${i}`} className="mt-2 mb-2 data-set input-output-container">
+                                        <div key={`input-${i}`} className={`mt-2 mb-2 data-set input-output-container ${owner && AssetTransferAddress.fromPublicKeyHash(new H256(input.prevOut.owner)).value === owner ? "input-highlight" : ""}`}>
                                             <Row>
                                                 <Col md="0" />
                                                 <Col md="12">
-                                                    <img src={Type.getMetadata(input.prevOut.assetScheme.metadata).icon_url} className="icon mr-2" /> {type.value === input.prevOut.assetType ? <HexString text={input.prevOut.assetType} /> : <HexString link={`/asset/0x${input.prevOut.assetType}`} text={input.prevOut.assetType} />}
+                                                    <img src={Type.getMetadata(input.prevOut.assetScheme.metadata).icon_url} className="icon mr-2" /> {assetType && assetType.value === input.prevOut.assetType ? <HexString text={input.prevOut.assetType} /> : <HexString link={`/asset/0x${input.prevOut.assetType}`} text={input.prevOut.assetType} />}
                                                 </Col>
                                             </Row>
                                             <Row>
@@ -109,7 +116,11 @@ const TransactionObjectByType = (transaction: TransactionDoc, type: H256) => {
                                                 </Col>
                                                 <Col md="8">{
                                                     input.prevOut.owner ?
-                                                        <Link to={`/addr-asset/${AssetTransferAddress.fromPublicKeyHash(new H256(input.prevOut.owner)).value}`}>{AssetTransferAddress.fromPublicKeyHash(new H256(input.prevOut.owner)).value}</Link>
+                                                        (
+                                                            owner && owner === AssetTransferAddress.fromPublicKeyHash(new H256(input.prevOut.owner)).value ?
+                                                                AssetTransferAddress.fromPublicKeyHash(new H256(input.prevOut.owner)).value.slice(0, 10)
+                                                                : <Link to={`/addr-asset/${AssetTransferAddress.fromPublicKeyHash(new H256(input.prevOut.owner)).value}`}>{AssetTransferAddress.fromPublicKeyHash(new H256(input.prevOut.owner)).value.slice(0, 10)}</Link>
+                                                        )
                                                         : "Unknown"
                                                 }
                                                 </Col>
@@ -135,11 +146,11 @@ const TransactionObjectByType = (transaction: TransactionDoc, type: H256) => {
                             {
                                 _.map(transactionDoc.data.outputs, (output, i) => {
                                     return (
-                                        <div key={`output-${i}`} className="mt-2 mb-2 data-set input-output-container">
+                                        <div key={`output-${i}`} className={`mt-2 mb-2 data-set input-output-container ${owner && AssetTransferAddress.fromPublicKeyHash(new H256(output.owner)).value === owner ? "output-highlight" : ""}`}>
                                             <Row>
                                                 <Col md="0" />
                                                 <Col md="12">
-                                                    <img src={Type.getMetadata(output.assetScheme.metadata).icon_url} className="icon mr-2" /> {type.value === output.assetType ? <HexString text={output.assetType} /> : <HexString link={`/asset/0x${output.assetType}`} text={output.assetType} />}
+                                                    <img src={Type.getMetadata(output.assetScheme.metadata).icon_url} className="icon mr-2" /> {assetType && assetType.value === output.assetType ? <HexString text={output.assetType} /> : <HexString link={`/asset/0x${output.assetType}`} text={output.assetType} />}
                                                 </Col>
                                             </Row>
                                             <Row>
@@ -149,7 +160,11 @@ const TransactionObjectByType = (transaction: TransactionDoc, type: H256) => {
                                                 <Col md="8">
                                                     {
                                                         output.owner ?
-                                                            <Link to={`/addr-asset/${AssetTransferAddress.fromPublicKeyHash(new H256(output.owner)).value}`}>{AssetTransferAddress.fromPublicKeyHash(new H256(output.owner)).value}</Link>
+                                                            (
+                                                                owner && owner === AssetTransferAddress.fromPublicKeyHash(new H256(output.owner)).value ?
+                                                                    AssetTransferAddress.fromPublicKeyHash(new H256(output.owner)).value.slice(0, 10)
+                                                                    : <Link to={`/addr-asset/${AssetTransferAddress.fromPublicKeyHash(new H256(output.owner)).value}`}>{AssetTransferAddress.fromPublicKeyHash(new H256(output.owner)).value.slice(0, 10)}</Link>
+                                                            )
                                                             : "Unknown"
                                                     }
                                                 </Col>
@@ -176,17 +191,17 @@ const TransactionObjectByType = (transaction: TransactionDoc, type: H256) => {
     return null;
 }
 
-const AssetTransactionList = (props: Props) => {
-    const { transactions, assetType } = props;
-    return <div className="asset-transaction-list mt-4">
+const TransactionList = (props: Props) => {
+    const { transactions, assetType, fullScreen, owner } = props;
+    return <div className="parcel-transaction-list">
         <Row className="mb-3">
-            <Col>
+            <Col lg={fullScreen ? "12" : "9"}>
                 <h2>Transactions</h2>
                 <hr className="heading-hr" />
             </Col>
         </Row>
         <Row>
-            <Col>
+            <Col lg={fullScreen ? "12" : "9"}>
                 {
                     transactions.map((transaction, i: number) => {
                         const hash = transaction.data.hash;
@@ -220,7 +235,7 @@ const AssetTransactionList = (props: Props) => {
                                     </Col>
                                 </Row>
                                 <hr />
-                                {TransactionObjectByType(transaction, assetType)}
+                                {TransactionObjectByType(transaction, assetType, owner)}
                             </div>
                         </div>
                     })
@@ -230,4 +245,4 @@ const AssetTransactionList = (props: Props) => {
     </div>
 };
 
-export default AssetTransactionList;
+export default TransactionList;

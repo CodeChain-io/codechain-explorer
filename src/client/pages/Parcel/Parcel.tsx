@@ -8,7 +8,7 @@ import { RequestParcel, RequestPendingParcel } from "../../request";
 import ParcelDetails from "../../components/parcel/ParcelDetails/ParcelDetails";
 
 import "./Parcel.scss";
-import ParcelTransactionList from "../../components/parcel/ParcelTransactionList/ParcelTransactionList";
+import TransactionList from "../../components/transaction/TransactionList/TransactionList";
 import { ParcelDoc, Type, ChangeShardStateDoc, PendingParcelDoc } from "../../../db/DocType";
 import HexString from "../../components/util/HexString/HexString";
 import { ActionBadge } from "../../utils/ActionBadge/ActionBadge";
@@ -94,7 +94,7 @@ class Parcel extends React.Component<Props, State> {
             return (
                 [
                     <div key="parcel-transaction" className="mt-3">
-                        <ParcelTransactionList transactions={(parcel.action as ChangeShardStateDoc).transactions.slice(0, page * this.itemPerPage)} />
+                        <TransactionList fullScreen={false} transactions={(parcel.action as ChangeShardStateDoc).transactions.slice(0, page * this.itemPerPage)} />
                         {
                             page * this.itemPerPage < (parcel.action as ChangeShardStateDoc).transactions.length ?
                                 <div className="mt-3">

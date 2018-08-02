@@ -4,7 +4,7 @@ import { Container } from "reactstrap";
 import { RequestParcels } from "../../request";
 import "./Parcels.scss";
 import { ParcelDoc } from "../../../db/DocType";
-import ParcelTable from "../../components/parcels/ParcelTable/ParcelTable";
+import ParcelTable from "../../components/parcel/ParcelTable/ParcelTable";
 
 interface State {
     parcels: ParcelDoc[];

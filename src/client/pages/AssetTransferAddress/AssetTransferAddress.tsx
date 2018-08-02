@@ -8,8 +8,8 @@ import { TransactionDoc, AssetBundleDoc } from "../../../db/DocType";
 
 import "./AssetTransferAddress.scss";
 import AddressDetails from "../../components/assetTransferAddress/AddressDetails/AddressDetails";
-import AssetList from "../../components/assetTransferAddress/AssetList/AssetList";
-import TransactionList from "../../components/assetTransferAddress/TransactionList/TransactionList";
+import AssetList from "../../components/asset/AssetList/AssetList";
+import TransactionList from "../../components/transaction/TransactionList/TransactionList";
 
 interface Props {
     match: match<{ address: string }>;
@@ -79,7 +79,7 @@ class AssetTransferAddress extends React.Component<Props, State> {
                 {
                     transactions.length > 0 ?
                         <div>
-                            <TransactionList owner={address} transactions={transactions.slice(0, this.itemPerPage * page)} />
+                            <TransactionList owner={address} fullScreen={true} transactions={transactions.slice(0, this.itemPerPage * page)} />
                             {
                                 this.itemPerPage * page < transactions.length ?
                                     <div className="mt-3">

@@ -6,7 +6,7 @@ import { Container, Row, Col } from "reactstrap";
 import { RequestAssetScheme } from "../../request";
 import AssetDetails from "../../components/asset/AssetDetails/AssetDetails";
 import RequestAssetTransactions from "../../request/RequestAssetTransactions";
-import AssetTransactionList from "../../components/asset/AssetTransactionList/AssetTransactionList";
+import TransactionList from "../../components/transaction/TransactionList/TransactionList";
 import { TransactionDoc, AssetSchemeDoc, Type } from "../../../db/DocType";
 
 import "./Asset.scss"
@@ -75,7 +75,7 @@ class Asset extends React.Component<Props, State> {
                 {
                     transactions.length !== 0 ?
                         <div>
-                            <AssetTransactionList assetType={new H256(assetType)} transactions={transactions.slice(0, this.itemPerPage * page)} />
+                            <TransactionList assetType={new H256(assetType)} fullScreen={false} transactions={transactions.slice(0, this.itemPerPage * page)} />
                             {
                                 this.itemPerPage * page < transactions.length ?
                                     <div className="mt-3">

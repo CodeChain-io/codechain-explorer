@@ -4,7 +4,7 @@ import { Container } from "reactstrap";
 import { RequestTransactions } from "../../request";
 import "./Transactions.scss";
 import { TransactionDoc } from "../../../db/DocType";
-import TransactionTable from "../../components/transactions/TransactionTable/TransactionTable";
+import TransactionTable from "../../components/transaction/TransactionTable/TransactionTable";
 
 interface State {
     transactions: TransactionDoc[];
