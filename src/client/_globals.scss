@@ -40,6 +40,10 @@
   color: $asset-mint-transaction-primary-color;
 }
 
+.small-text {
+  @include small-text;
+}
+
 .data-set {
   &>.row {
     padding-top: 7px;
@@ -194,4 +198,12 @@
   opacity: 1;
   border: none;
   color: $dark-color !important;
+}
+
+.top-30-margin {
+  margin-top: 30px;
+}
+
+.top-20-margin {
+  margin-top: 20px;
 }

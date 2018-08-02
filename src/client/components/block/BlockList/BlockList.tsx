@@ -11,69 +11,108 @@ import { BlockDoc } from "../../../../db/DocType";
 import { Link } from "react-router-dom";
 import { PlatformAddress } from "codechain-sdk/lib/key/classes";
 
-interface OwnProps {
+interface Props {
     blocks: BlockDoc[]
 }
 
-const BlockList = (prop: OwnProps) => {
-    return <div className="block-list mt-4">
-        <Row className="mb-3">
-            <Col>
-                <h2>Authored Blocks</h2>
-                <hr className="heading-hr" />
-            </Col>
-        </Row>
-        <Row>
-            <Col>
-                {
-                    _.map(prop.blocks, (block, index) => {
-                        return (
-                            <div key={`block-list-${index}`} className="card-list-item mb-3" >
-                                <div className="card-list-item-header">
-                                    <Row>
-                                        <Col md="3">
-                                            <Link to={`/block/${block.number}`}><span className="title">#{block.number}</span></Link>
+interface State {
+    page: number;
+}
+
+class BlockList extends React.Component<Props, State> {
+    private itemPerPage = 3;
+    constructor(props: Props) {
+        super(props);
+        this.state = {
+            page: 1,
+        };
+    }
+
+    public componentWillReceiveProps() {
+        this.setState({ page: 1 });
+    }
+
+    public render() {
+        const { page } = this.state;
+        const { blocks } = this.props;
+        const loadedBlocks = blocks.slice(0, this.itemPerPage * page);
+        return <div className="block-list mt-4">
+            <Row className="mb-3">
+                <Col>
+                    <h2>Authored Blocks</h2>
+                    <hr className="heading-hr" />
+                </Col>
+            </Row>
+            <Row>
+                <Col>
+                    {
+                        _.map(loadedBlocks, (block, index) => {
+                            return (
+                                <div key={`block-list-${index}`} className="card-list-item mb-3" >
+                                    <div className="card-list-item-header">
+                                        <Row>
+                                            <Col md="3">
+                                                <Link to={`/block/${block.number}`}><span className="title">#{block.number}</span></Link>
+                                            </Col>
+                                            <Col md="9">
+                                                <span className="timestamp float-right">{moment.unix(block.timestamp).format("YYYY-MM-DD HH:mm:ssZ")}</span>
+                                            </Col>
+                                        </Row>
+                                    </div>
+                                    <div className="card-list-item-body data-set">
+                                        <Row>
+                                            <Col md="2">
+                                                Hash
                                         </Col>
-                                        <Col md="9">
-                                            <span className="timestamp float-right">{moment.unix(block.timestamp).format("YYYY-MM-DD HH:mm:ssZ")}</span>
+                                            <Col md="10">
+                                                <HexString link={`/block/0x${block.hash}`} text={block.hash} />
+                                            </Col>
+                                        </Row>
+                                        <hr />
+                                        <Row>
+                                            <Col md="2">
+                                                Author
                                         </Col>
-                                    </Row>
+                                            <Col md="10">
+                                                {PlatformAddress.fromAccountId(block.author).value}
+                                            </Col>
+                                        </Row>
+                                        <hr />
+                                        <Row>
+                                            <Col md="2">
+                                                Reward
+                                        </Col>
+                                            <Col md="10">
+                                                3000 CCC
+                                        </Col>
+                                        </Row>
+                                    </div>
                                 </div>
-                                <div className="card-list-item-body data-set">
-                                    <Row>
-                                        <Col md="2">
-                                            Hash
-                                        </Col>
-                                        <Col md="10">
-                                            <HexString link={`/block/0x${block.hash}`} text={block.hash} />
-                                        </Col>
-                                    </Row>
-                                    <hr />
-                                    <Row>
-                                        <Col md="2">
-                                            Author
-                                        </Col>
-                                        <Col md="10">
-                                            {PlatformAddress.fromAccountId(block.author).value}
-                                        </Col>
-                                    </Row>
-                                    <hr />
-                                    <Row>
-                                        <Col md="2">
-                                            Reward
-                                        </Col>
-                                        <Col md="10">
-                                            3000 CCC
-                                        </Col>
-                                    </Row>
-                                </div>
+                            )
+                        })
+                    }
+                </Col>
+            </Row>
+            {
+                this.itemPerPage * page < blocks.length ?
+                    <Row>
+                        <Col>
+                            <div className="margin-20-top">
+                                <button className="btn btn-primary w-100" onClick={this.loadMore}>
+                                    Load Parcels
+                            </button>
                             </div>
-                        )
-                    })
-                }
-            </Col>
-        </Row>
-    </div>
+                        </Col>
+                    </Row>
+                    : null
+            }
+        </div>
+    }
+
+    private loadMore = (e: any) => {
+        e.preventDefault();
+        this.setState({ page: this.state.page + 1 })
+    }
 };
 
 export default BlockList;

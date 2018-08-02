@@ -26,15 +26,12 @@ interface State {
     parcelResult?: ParcelResult;
     notExistedInBlock: boolean;
     notExistedInPendingParcel: boolean;
-    page: number;
 }
 
 class Parcel extends React.Component<Props, State> {
-    private itemPerPage = 3;
     constructor(props: Props) {
         super(props);
         this.state = {
-            page: 1,
             notExistedInBlock: false,
             notExistedInPendingParcel: false
         };
@@ -44,13 +41,13 @@ class Parcel extends React.Component<Props, State> {
         const { match: { params: { hash } } } = this.props;
         const { match: { params: { hash: nextHash } } } = props;
         if (nextHash !== hash) {
-            this.setState({ parcelResult: undefined, page: 1, notExistedInBlock: false, notExistedInPendingParcel: false });
+            this.setState({ parcelResult: undefined, notExistedInBlock: false, notExistedInPendingParcel: false });
         }
     }
 
     public render() {
         const { match: { params: { hash } } } = this.props;
-        const { parcelResult, page, notExistedInBlock, notExistedInPendingParcel } = this.state;
+        const { parcelResult, notExistedInBlock, notExistedInPendingParcel } = this.state;
         if (!parcelResult) {
             if (!notExistedInBlock) {
                 return <RequestParcel hash={hash}
@@ -84,38 +81,22 @@ class Parcel extends React.Component<Props, State> {
                 </Col>
             </Row>
             <ParcelDetails parcel={parcelResult.parcel} />
-            {this.showTransactionList(parcelResult.parcel, page)}
+            {this.showTransactionList(parcelResult.parcel)}
         </Container>
         )
     }
 
-    private showTransactionList = (parcel: ParcelDoc, page: number) => {
+    private showTransactionList = (parcel: ParcelDoc) => {
         if (Type.isChangeShardStateDoc(parcel.action)) {
             return (
                 [
                     <div key="parcel-transaction" className="mt-3">
-                        <TransactionList fullScreen={false} transactions={(parcel.action as ChangeShardStateDoc).transactions.slice(0, page * this.itemPerPage)} />
-                        {
-                            page * this.itemPerPage < (parcel.action as ChangeShardStateDoc).transactions.length ?
-                                <div className="mt-3">
-                                    <div className="load-more-btn mx-auto">
-                                        <a href="#" onClick={this.loadMore}>
-                                            <h3>Load Transactions</h3>
-                                        </a>
-                                    </div>
-                                </div>
-                                : null
-                        }
+                        <TransactionList fullScreen={false} transactions={(parcel.action as ChangeShardStateDoc).transactions} />
                     </div>
                 ]
             )
         }
         return null;
-    }
-
-    private loadMore = (e: any) => {
-        e.preventDefault();
-        this.setState({ page: this.state.page + 1 })
     }
 
     private onPendingParcel = (pendingParcel: PendingParcelDoc) => {

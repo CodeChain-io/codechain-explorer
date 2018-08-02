@@ -21,27 +21,25 @@ interface State {
     transactions: TransactionDoc[];
     assetScheme?: AssetSchemeDoc;
     notFound: boolean;
-    page: number;
 }
 
 class Asset extends React.Component<Props, State> {
-    private itemPerPage = 3;
     constructor(props: Props) {
         super(props);
-        this.state = { notFound: false, transactions: [], page: 1 };
+        this.state = { notFound: false, transactions: [] };
     }
 
     public componentWillReceiveProps(props: Props) {
         const { match: { params: { assetType } } } = this.props;
         const { match: { params: { assetType: nextType } } } = props;
         if (nextType !== assetType) {
-            this.setState({ ...this.state, assetScheme: undefined, transactions: [], page: 1 });
+            this.setState({ ...this.state, assetScheme: undefined, transactions: [] });
         }
     }
 
     public render() {
         const { match: { params: { assetType } } } = this.props;
-        const { notFound, assetScheme, transactions, page } = this.state;
+        const { notFound, assetScheme, transactions } = this.state;
 
         if (!assetScheme) {
             return <RequestAssetScheme assetType={assetType} onAssetScheme={this.onAssetScheme} onAssetSchemeNotExist={this.onAssetSchemeNotFound} onError={this.onError} />;
@@ -75,27 +73,12 @@ class Asset extends React.Component<Props, State> {
                 {
                     transactions.length !== 0 ?
                         <div>
-                            <TransactionList assetType={new H256(assetType)} fullScreen={false} transactions={transactions.slice(0, this.itemPerPage * page)} />
-                            {
-                                this.itemPerPage * page < transactions.length ?
-                                    <div className="mt-3">
-                                        <div className="load-more-btn mx-auto">
-                                            <a href="#" onClick={this.loadMore}>
-                                                <h3>Load Transactions</h3>
-                                            </a>
-                                        </div>
-                                    </div>
-                                    : null
-                            }
+                            <TransactionList assetType={new H256(assetType)} fullScreen={false} transactions={transactions} />
                         </div>
                         : <RequestAssetTransactions assetType={assetType} onTransactions={this.onTransactionList} onError={this.onError} />
                 }
             </Container>
         )
-    }
-    private loadMore = (e: any) => {
-        e.preventDefault();
-        this.setState({ page: this.state.page + 1 })
     }
 
     private onAssetScheme = (assetScheme: AssetSchemeDoc) => {

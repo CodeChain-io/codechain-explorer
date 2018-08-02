@@ -7,25 +7,27 @@ import { AssetBundleDoc, Type } from "../../../../db/DocType";
 import { Link } from "react-router-dom";
 
 interface OwnProps {
-    assetBundles: AssetBundleDoc[]
+    assetBundles: AssetBundleDoc[];
+    fullScreen: boolean;
 }
 
 const AssetList = (prop: OwnProps) => {
+    const { fullScreen } = prop;
     return <div className="asset-list mt-4">
         <Row>
-            <Col lg="9">
+            <Col lg={fullScreen ? "12" : "9"}>
                 <h2>Assets</h2>
                 <hr className="heading-hr mb-3" />
             </Col>
         </Row>
         <Row>
-            <Col lg="9">
+            <Col lg={fullScreen ? "12" : "9"}>
                 <Row>
                     {
                         _.map(prop.assetBundles, (assetBundle, index) => {
                             const metadata = Type.getMetadata(assetBundle.assetScheme.metadata);
                             return (
-                                <Col key={`asset-item-${index}`} lg="4" md="4" sm="6" className="mb-3">
+                                <Col key={`asset-item-${index}`} lg={fullScreen ? "3" : "4"} md="4" sm="6" className="mb-3">
                                     <div className="asset-item d-flex">
                                         <div className="d-inline-block">
                                             <img src={metadata.icon_url} className="icon" />

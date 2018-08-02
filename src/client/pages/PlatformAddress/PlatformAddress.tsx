@@ -26,29 +26,26 @@ interface State {
     blocks: BlockDoc[],
     parcels: ParcelDoc[],
     assetBundles: AssetBundleDoc[],
-    requested: boolean,
-    blockPage: number,
-    parcelPage: number
+    requested: boolean
 }
 
 class Address extends React.Component<Props, State> {
-    private itemPerPage = 3;
     constructor(props: Props) {
         super(props);
-        this.state = { blocks: [], parcels: [], assetBundles: [], requested: false, blockPage: 1, parcelPage: 1 };
+        this.state = { blocks: [], parcels: [], assetBundles: [], requested: false };
     }
 
     public componentWillReceiveProps(props: Props) {
         const { match: { params: { address } } } = this.props;
         const { match: { params: { address: nextAddress } } } = props;
         if (nextAddress !== address) {
-            this.setState({ account: undefined, blocks: [], parcels: [], requested: false, blockPage: 1, parcelPage: 1 });
+            this.setState({ account: undefined, blocks: [], parcels: [], requested: false });
         }
     }
 
     public render() {
         const { match: { params: { address } } } = this.props;
-        const { account, blocks, assetBundles, parcels, requested, blockPage, parcelPage } = this.state;
+        const { account, blocks, assetBundles, parcels, requested } = this.state;
         if (!account) {
             return <RequestPlatformAddressAccount address={address} onAccount={this.onAccount} onError={this.onError} onAccountNotExist={this.onAccountNotExist} />;
         }
@@ -86,55 +83,25 @@ class Address extends React.Component<Props, State> {
                 <AccountDetails account={account} />
                 {
                     assetBundles.length > 0 ?
-                        <AssetList assetBundles={assetBundles} />
+                        <AssetList assetBundles={assetBundles} fullScreen={true} />
                         : null
                 }
                 {
                     parcels.length > 0 ?
                         <div>
-                            <ParcelList address={address} fullScreen={true} parcels={parcels.slice(0, this.itemPerPage * parcelPage)} />
-                            {
-                                this.itemPerPage * parcelPage < parcels.length ?
-                                    <div className="mt-3">
-                                        <div className="load-more-btn mx-auto">
-                                            <a href="#" onClick={this.loadMoreParcels}>
-                                                <h3>Load Parcels</h3>
-                                            </a>
-                                        </div>
-                                    </div>
-                                    : null
-                            }
+                            <ParcelList address={address} fullScreen={true} parcels={parcels} />
                         </div>
                         : null
                 }
                 {
                     blocks.length > 0 ?
                         <div>
-                            <BlockList blocks={blocks.slice(0, this.itemPerPage * blockPage)} />
-                            {
-                                this.itemPerPage * blockPage < blocks.length ?
-                                    <div className="mt-3">
-                                        <div className="load-more-btn mx-auto">
-                                            <a href="#" onClick={this.loadMoreBlocks}>
-                                                <h3>Load Blocks</h3>
-                                            </a>
-                                        </div>
-                                    </div>
-                                    : null
-                            }
+                            <BlockList blocks={blocks} />
                         </div>
                         : null
                 }
             </Container>
         )
-    }
-    private loadMoreParcels = (e: any) => {
-        e.preventDefault();
-        this.setState({ parcelPage: this.state.parcelPage + 1 })
-    }
-    private loadMoreBlocks = (e: any) => {
-        e.preventDefault();
-        this.setState({ blockPage: this.state.blockPage + 1 })
     }
     private onParcels = (parcels: ParcelDoc[]) => {
         this.setState({ parcels });
