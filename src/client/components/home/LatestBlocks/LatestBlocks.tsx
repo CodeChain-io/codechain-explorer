@@ -41,7 +41,7 @@ const LatestBlocks = (props: Props) => {
                                     <td>{moment.unix(block.timestamp).fromNow()}</td>
                                 </tr>
                             );
-                        })
+                        }).slice(0, 10)
                     }
                 </tbody>
             </Table>
