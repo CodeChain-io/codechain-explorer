@@ -12,7 +12,7 @@ import { TransactionDoc, Type, AssetMintTransactionDoc, AssetTransferTransaction
 import { Link } from "react-router-dom";
 import { PlatformAddress, AssetTransferAddress } from "codechain-sdk/lib/key/classes";
 import { H256 } from "codechain-sdk/lib/core/classes";
-import { TypeBadge } from "../../../utils/TypeBadge/TypeBadge";
+import { TypeBadge } from "../../util/TypeBadge/TypeBadge";
 
 interface Props {
     owner?: string;

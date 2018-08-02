@@ -13,7 +13,7 @@ import { TransactionDoc } from "../../../db/DocType";
 import RequestPendingTransaction from "../../request/RequestPendingTransaction";
 import { PendingTransactionDoc } from "../../../db/DocType";
 import HexString from "../../components/util/HexString/HexString";
-import { TypeBadge } from "../../utils/TypeBadge/TypeBadge";
+import { TypeBadge } from "../../components/util/TypeBadge/TypeBadge";
 
 interface Props {
     match: match<{ hash: string }>;

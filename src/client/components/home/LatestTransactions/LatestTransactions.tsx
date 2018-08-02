@@ -7,7 +7,7 @@ import "./LatestTransactions.scss";
 import HexString from "../../util/HexString/HexString";
 import { BlockDoc, Type, ChangeShardStateDoc, AssetMintTransactionDoc, AssetTransferTransactionDoc } from "../../../../db/DocType";
 import { Link } from "react-router-dom";
-import { TypeBadge } from "../../../utils/TypeBadge/TypeBadge";
+import { TypeBadge } from "../../util/TypeBadge/TypeBadge";
 
 interface Props {
     blocksByNumber: {

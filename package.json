@@ -35,6 +35,8 @@
         "fork-ts-checker-webpack-plugin": "^0.2.8",
         "fs-extra": "3.0.1",
         "html-webpack-plugin": "2.29.0",
+        "identicon.js": "^2.3.2",
+        "imurmurhash": "^0.1.4",
         "jest": "22.1.4",
         "moment": "^2.22.2",
         "node-sass": "^4.9.1",

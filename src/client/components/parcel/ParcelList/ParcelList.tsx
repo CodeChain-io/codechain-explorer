@@ -10,7 +10,7 @@ import * as arrow from "./img/arrow.png";
 import { ParcelDoc, Type, PaymentDoc, ChangeShardStateDoc, SetRegularKeyDoc } from "../../../../db/DocType";
 import { PlatformAddress } from "codechain-sdk/lib/key/classes";
 import { Link } from "react-router-dom";
-import { ActionBadge } from "../../../utils/ActionBadge/ActionBadge";
+import { ActionBadge } from "../../util/ActionBadge/ActionBadge";
 
 interface Props {
     parcels: ParcelDoc[];

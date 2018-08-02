@@ -72,8 +72,8 @@ class Asset extends React.Component<Props, State> {
                 <AssetDetails assetType={assetType} assetScheme={assetScheme} />
                 {
                     transactions.length !== 0 ?
-                        <div>
-                            <TransactionList assetType={new H256(assetType)} fullScreen={false} transactions={transactions} />
+                        <div className="mt-4">
+                            <TransactionList assetType={new H256(assetType)} fullScreen={true} transactions={transactions} />
                         </div>
                         : <RequestAssetTransactions assetType={assetType} onTransactions={this.onTransactionList} onError={this.onError} />
                 }

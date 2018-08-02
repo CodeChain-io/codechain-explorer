@@ -1,6 +1,6 @@
 import * as React from "react";
 import * as FontAwesome from "react-fontawesome";
-import { TransactionDoc } from "../../../db/DocType";
+import { TransactionDoc } from "../../../../db/DocType";
 
 interface Props {
     transaction: TransactionDoc;

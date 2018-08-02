@@ -6,7 +6,7 @@ import { Table } from "reactstrap";
 import "./TransactionTable.scss";
 import { TransactionDoc, Type, AssetMintTransactionDoc, AssetTransferTransactionDoc } from "../../../../db/DocType";
 import HexString from "../../util/HexString/HexString";
-import { TypeBadge } from "../../../utils/TypeBadge/TypeBadge";
+import { TypeBadge } from "../../util/TypeBadge/TypeBadge";
 
 interface Prop {
     transactions: TransactionDoc[];

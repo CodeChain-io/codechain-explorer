@@ -8,7 +8,7 @@ import HexString from "../../util/HexString/HexString";
 import { BlockDoc } from "../../../../db/DocType";
 import { Link } from "react-router-dom";
 import { PlatformAddress } from "codechain-sdk/lib/key/classes";
-import { ActionBadge } from "../../../utils/ActionBadge/ActionBadge";
+import { ActionBadge } from "../../util/ActionBadge/ActionBadge";
 
 interface Props {
     blocksByNumber: {

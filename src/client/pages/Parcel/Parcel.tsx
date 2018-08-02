@@ -11,7 +11,7 @@ import "./Parcel.scss";
 import TransactionList from "../../components/transaction/TransactionList/TransactionList";
 import { ParcelDoc, Type, ChangeShardStateDoc, PendingParcelDoc } from "../../../db/DocType";
 import HexString from "../../components/util/HexString/HexString";
-import { ActionBadge } from "../../utils/ActionBadge/ActionBadge";
+import { ActionBadge } from "../../components/util/ActionBadge/ActionBadge";
 
 interface Props {
     match: match<{ hash: string }>;

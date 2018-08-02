@@ -1,6 +1,6 @@
 import * as React from "react";
 import * as FontAwesome from "react-fontawesome";
-import { ParcelDoc } from "../../../db/DocType";
+import { ParcelDoc } from "../../../../db/DocType";
 
 interface Props {
     parcel: ParcelDoc;
