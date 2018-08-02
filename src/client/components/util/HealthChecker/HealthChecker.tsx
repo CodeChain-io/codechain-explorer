@@ -3,26 +3,33 @@ import * as FontAwesome from "react-fontawesome";
 
 import { RequestPing } from "../../../request";
 
+import "./HealthChecker.scss";
+
 interface State {
     isNodeAlive?: boolean;
 }
 
-class HealthChecker extends React.Component<{}, State> {
+interface Props {
+    isSimple?: boolean;
+}
+
+class HealthChecker extends React.Component<Props, State> {
     constructor(props: {}) {
         super(props);
         this.state = {};
     }
 
     public render() {
+        const { isSimple } = this.props;
         const { isNodeAlive } = this.state;
         if (isNodeAlive === undefined) {
-            return <div>Status <FontAwesome name="circle" /><RequestPing onPong={this.onPong} onError={this.onError} /></div>
+            return <div className="status">{isSimple ? "" : "Status"} <FontAwesome name="circle" /><RequestPing onPong={this.onPong} onError={this.onError} /></div>
         }
         return (
-            <div>
+            <div className="status">
                 {
-                    isNodeAlive ? <div className="text-success">Status <FontAwesome name="circle" /></div>
-                        : <div className="text-danger">Status <FontAwesome name="circle" /></div>
+                    isNodeAlive ? <div>{isSimple ? "" : "Status"} <span className="text-success"><FontAwesome name="circle" /></span></div>
+                        : <div>{isSimple ? "" : "Status"} <span className="text-danger"><FontAwesome name="circle" /></span></div>
                 }
                 <RequestPing repeat={5000} onPong={this.onPong} onError={this.onError} />
             </div>

@@ -59,7 +59,6 @@ class Header extends React.Component<{}, State> {
                                             Latest Transactions
                                         </DropdownItem>
                                     </IndexLinkContainer>
-                                    <DropdownItem divider={true} />
                                     <IndexLinkContainer to="/parcels-pending">
                                         <DropdownItem>
                                             Pending Parcels
@@ -67,6 +66,11 @@ class Header extends React.Component<{}, State> {
                                     </IndexLinkContainer>
                                 </DropdownMenu>
                             </UncontrolledDropdown>
+                            <NavItem>
+                                <NavLink className="health-checker">
+                                    <HealthChecker />
+                                </NavLink>
+                            </NavItem>
                             {
                                 /*
                                 <IndexLinkContainer to="/node_info">
@@ -91,11 +95,6 @@ class Header extends React.Component<{}, State> {
                                 </UncontrolledDropdown>
                                 */
                             }
-                        </Nav>
-                        <Nav>
-                            <NavItem>
-                                <HealthChecker />
-                            </NavItem>
                         </Nav>
                     </Collapse>
                 </Container>

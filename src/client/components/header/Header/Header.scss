@@ -1,3 +1,5 @@
+@import "../../../mixins.scss";
+@import "../../../variables.scss";
 .header {
   background-color: #3A3FAB;
   position: fixed;
@@ -10,11 +12,41 @@
     margin-right: 5px;
   }
   .nav-link {
+    color: white !important;
     cursor: pointer;
+  }
+  .dropdown-menu {
+    .dropdown-item {
+      color: $dark-color;
+      &:hover {
+        background-color: inherit;
+      }
+    }
+    a.active {
+      background-color: white;
+    }
+  }
+  @include respond-below(md) {
+    .dropdown-menu {
+      background-color: $primary-color;
+      border: none;
+      .dropdown-item {
+        color: white !important;
+        &:hover {
+          background-color: inherit;
+        }
+      }
+      a.active {
+        background-color: $primary-color;
+      }
+    }
   }
   .loading-bar {
     background-color: #F2B04C;
     height: 5px;
     position: absolute;
+  }
+  .health-checker {
+    cursor: inherit;
   }
 }
