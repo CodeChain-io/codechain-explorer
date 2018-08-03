@@ -124,7 +124,7 @@ class Address extends React.Component<Props, State> {
         this.setState({ requested: true });
     }
     private onAccountNotExist = () => {
-        // TODO
+        this.setState({notFound: true});
     }
     private onAccount = (account: { nonce: U256, balance: U256 }) => {
         this.setState({ account });
