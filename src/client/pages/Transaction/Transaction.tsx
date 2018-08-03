@@ -3,6 +3,7 @@ import * as FontAwesome from "react-fontawesome";
 import * as moment from "moment";
 import { match } from "react-router";
 import { Container, Row, Col } from "reactstrap";
+import { Error } from "../../components/error/Error/Error";
 
 import { RequestTransaction } from "../../request";
 import TransactionDetails from "../../components/transaction/TransactionDetails/TransactionDetails";
@@ -59,7 +60,11 @@ class Transaction extends React.Component<Props, State> {
             } else if (!notExistedInPendingParcel) {
                 return <RequestPendingTransaction hash={hash} onError={this.onError} onPendingTransaction={this.onPendingTransaction} onPendingTransactionNotExist={this.onPendingTransactionNotExist} />
             } else {
-                return <div>{hash} not found.</div>
+                return (
+                    <div>
+                        <Error content={hash} title="Invalid transaction" />
+                    </div>
+                )
             }
         }
         return (

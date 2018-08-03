@@ -2,6 +2,7 @@ import * as React from "react";
 import * as FontAwesome from "react-fontawesome";
 import { match } from "react-router";
 import { Container, Row, Col } from "reactstrap";
+import { Error } from "../../components/error/Error/Error";
 
 import { RequestAssetScheme } from "../../request";
 import AssetDetails from "../../components/asset/AssetDetails/AssetDetails";
@@ -46,7 +47,11 @@ class Asset extends React.Component<Props, State> {
             return <RequestAssetScheme assetType={assetType} onAssetScheme={this.onAssetScheme} onAssetSchemeNotExist={this.onAssetSchemeNotFound} onError={this.onError} />;
         }
         if (notFound) {
-            return <div>{assetType} not found.</div>
+            return (
+                <div>
+                    <Error content={assetType} title="Invalid asset" />
+                </div>
+            )
         }
         return (
             <Container className="asset">

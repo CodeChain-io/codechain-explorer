@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Container } from "reactstrap";
+import { Error } from "../../components/error/Error/Error";
 
 import "./NotFound.scss";
 
@@ -15,10 +15,9 @@ class NotFound extends React.Component<Props> {
     public render() {
         const { location } = this.props;
         return (
-            <Container className="not-found">
-                <h1>404 Not Found</h1>
-                <h3>Invalid path : {location.pathname}</h3>
-            </Container>
+            <div>
+                <Error content={location.pathname} title="Invalid URL" />
+            </div>
         );
     }
 }

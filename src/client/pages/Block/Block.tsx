@@ -3,6 +3,7 @@ import * as moment from "moment";
 import * as FontAwesome from "react-fontawesome";
 import { match } from "react-router";
 import { Container, Col, Row } from "reactstrap";
+import { Error } from "../../components/error/Error/Error";
 
 import { RequestBlock } from "../../request";
 import BlockDetails from "../../components/block/BlockDetails/BlockDetails";
@@ -42,11 +43,15 @@ class Block extends React.Component<Props, State> {
         const { match: { params: { id } } } = this.props;
         const { block, notFound } = this.state;
 
+        if (notFound) {
+            return (
+                <div>
+                    <Error content={id.toString()} title="Invalid block" />
+                </div>
+            )
+        }
         if (!block) {
             return <RequestBlock id={id} onBlock={this.onBlock} onError={this.onError} onBlockNotExist={this.onBlockNotExist} />;
-        }
-        if (notFound) {
-            return <div>{id} not found.</div>
         }
         return (
             <Container className="block">
@@ -79,14 +84,16 @@ class Block extends React.Component<Props, State> {
     }
 
     private onBlockNotExist = () => {
-        // TODO
+        this.setState({ notFound: true });
     }
 
     private onBlock = (block: BlockDoc) => {
         this.setState({ block });
     };
 
-    private onError = () => ({});
+    private onError = (e: any) => {
+        console.log(e);
+    };
 }
 
 export default Block;

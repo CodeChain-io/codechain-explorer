@@ -2,6 +2,7 @@ import * as React from "react";
 import * as FontAwesome from "react-fontawesome"
 import { match } from "react-router";
 import { Container, Row, Col } from "reactstrap";
+import { Error } from "../../components/error/Error/Error";
 
 import { U256 } from "codechain-sdk/lib/core/classes"
 import { RequestPlatformAddressAccount, RequestPlatformAddressParcels, RequestPlatformAddressAssets } from "../../request";
@@ -27,26 +28,34 @@ interface State {
     blocks: BlockDoc[],
     parcels: ParcelDoc[],
     assetBundles: AssetBundleDoc[],
-    requested: boolean
+    requested: boolean,
+    notFound: boolean
 }
 
 class Address extends React.Component<Props, State> {
     constructor(props: Props) {
         super(props);
-        this.state = { blocks: [], parcels: [], assetBundles: [], requested: false };
+        this.state = { blocks: [], parcels: [], assetBundles: [], requested: false, notFound: false };
     }
 
     public componentWillReceiveProps(props: Props) {
         const { match: { params: { address } } } = this.props;
         const { match: { params: { address: nextAddress } } } = props;
         if (nextAddress !== address) {
-            this.setState({ account: undefined, blocks: [], parcels: [], requested: false });
+            this.setState({ account: undefined, blocks: [], parcels: [], requested: false, notFound: false });
         }
     }
 
     public render() {
         const { match: { params: { address } } } = this.props;
-        const { account, blocks, assetBundles, parcels, requested } = this.state;
+        const { account, blocks, assetBundles, parcels, requested, notFound } = this.state;
+        if (notFound) {
+            return (
+                <div>
+                    <Error content={address} title="Invalid address" />
+                </div>
+            )
+        }
         if (!account) {
             return <RequestPlatformAddressAccount address={address} onAccount={this.onAccount} onError={this.onError} onAccountNotExist={this.onAccountNotExist} />;
         }
