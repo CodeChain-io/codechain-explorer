@@ -9,7 +9,8 @@ import * as Autosuggest from "react-autosuggest";
 import "./Search.scss";
 import { RequestBlock, RequestParcel, RequestTransaction, RequestAssetScheme, RequestPlatformAddressAccount, RequestPendingParcel, RequestPendingTransaction, RequestAssetTransferAddressTransactions, RequestAssetBundlesByName } from "../../../request";
 import { BlockDoc, ParcelDoc, TransactionDoc, AssetSchemeDoc, PendingParcelDoc, PendingTransactionDoc, AssetBundleDoc, Type } from "../../../../db/DocType";
-import { U256 } from "codechain-sdk/lib/core/classes";
+import { U256, H256 } from "codechain-sdk/lib/core/classes";
+import { ImageLoader } from "../../util/ImageLoader/ImageLoader";
 
 interface State {
     inputValue: string;
@@ -198,8 +199,12 @@ class Search extends React.Component<Props, State> {
 
     private renderSuggestion = (suggestion: AssetBundleDoc) => (
         <div>
-            <img className="icon" src={Type.getMetadata(suggestion.assetScheme.metadata).icon_url} />
-            {Type.getMetadata(suggestion.assetScheme.metadata).name}
+            {
+                Type.getMetadata(suggestion.assetScheme.metadata).icon_url ?
+                    <ImageLoader className="icon" size={20} url={Type.getMetadata(suggestion.assetScheme.metadata).icon_url} />
+                    : <ImageLoader className="icon" size={20} data={new H256(suggestion.asset.assetType).value} />
+            }
+            <span className="name">{Type.getMetadata(suggestion.assetScheme.metadata).name}</span>
         </div>
     );
 

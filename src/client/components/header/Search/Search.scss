@@ -44,9 +44,11 @@
     list-style-type: none;
     @include ellipsis-block;
     .icon {
-      width: 25px;
-      height: 25px;
+      vertical-align: top;
       margin-right: 10px;
+    }
+    .name {
+      vertical-align: top;
     }
   }
   .react-autosuggest__suggestion {

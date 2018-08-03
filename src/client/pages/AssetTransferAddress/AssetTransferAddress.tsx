@@ -10,6 +10,7 @@ import "./AssetTransferAddress.scss";
 import AddressDetails from "../../components/assetTransferAddress/AddressDetails/AddressDetails";
 import AssetList from "../../components/asset/AssetList/AssetList";
 import TransactionList from "../../components/transaction/TransactionList/TransactionList";
+import { ImageLoader } from "../../components/util/ImageLoader/ImageLoader";
 
 interface Props {
     match: match<{ address: string }>;
@@ -52,7 +53,7 @@ class AssetTransferAddress extends React.Component<Props, State> {
                     <Col>
                         <div className="title-container d-flex">
                             <div className="d-inline-block left-container">
-                                <img src="tmp" className="icon" />
+                                <ImageLoader size={65} data={address} />
                             </div>
                             <div className="d-inline-block right-container">
                                 <h1>Asset Transfer Address</h1>

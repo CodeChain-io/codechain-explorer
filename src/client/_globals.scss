@@ -54,10 +54,6 @@
     &>[class*="col-"]:nth-child(2) {
       @include data-font;
       @include ellipsis-block;
-      .icon {
-        width: 18px;
-        height: 18px;
-      }
     }
   }
   hr {
@@ -103,8 +99,6 @@
     @include data-font;
     .icon {
       margin-right: 5px;
-      width: 18px;
-      height: 18px;
     }
   }
   thead {

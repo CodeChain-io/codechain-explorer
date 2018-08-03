@@ -10,6 +10,7 @@ import { Script, H256 } from "codechain-sdk/lib/core/classes";
 import { Buffer } from "buffer";
 import { Link } from "react-router-dom";
 import { PlatformAddress, AssetTransferAddress } from "codechain-sdk/lib/key/classes";
+import { ImageLoader } from "../../util/ImageLoader/ImageLoader";
 
 interface Props {
     transaction: TransactionDoc;
@@ -62,7 +63,11 @@ const getTransactionInfoByType = (transaction: TransactionDoc) => {
                                                     AssetType
                                                 </Col>
                                                 <Col md="9">
-                                                    <img src={Type.getMetadata(input.prevOut.assetScheme.metadata).icon_url} className="icon mr-2" /><HexString link={`/asset/0x${input.prevOut.assetType}`} text={input.prevOut.assetType} />
+                                                    {
+                                                        Type.getMetadata(input.prevOut.assetScheme.metadata).icon_url ?
+                                                            <span><ImageLoader size={18} url={Type.getMetadata(input.prevOut.assetScheme.metadata).icon_url} /><HexString link={`/asset/0x${input.prevOut.assetType}`} text={input.prevOut.assetType} /></span>
+                                                            : <span><ImageLoader size={18} data={input.prevOut.assetType} /><HexString link={`/asset/0x${input.prevOut.assetType}`} text={input.prevOut.assetType} /></span>
+                                                    }
                                                 </Col>
                                             </Row>
                                             <hr />
@@ -150,7 +155,12 @@ const getTransactionInfoByType = (transaction: TransactionDoc) => {
                                                     AssetType
                                                 </Col>
                                                 <Col md="9">
-                                                    <img src={Type.getMetadata(output.assetScheme.metadata).icon_url} className="icon mr-2" /><HexString link={`/asset/0x${output.assetType}`} text={output.assetType} />
+                                                    {
+                                                        Type.getMetadata(output.assetScheme.metadata).icon_url ?
+                                                            <ImageLoader size={18} url={Type.getMetadata(output.assetScheme.metadata).icon_url} className="mr-2" />
+                                                            : <ImageLoader size={18} data={output.assetType} className="mr-2" />
+                                                    }
+                                                    <HexString link={`/asset/0x${output.assetType}`} text={output.assetType} />
                                                 </Col>
                                             </Row>
                                             <hr />
@@ -244,7 +254,12 @@ const getTransactionInfoByType = (transaction: TransactionDoc) => {
                                 AssetType
                             </Col>
                             <Col md="9">
-                                <img src={Type.getMetadata(transactionDoc.data.metadata).icon_url} className="icon mr-2" /> <HexString link={`/asset/0x${transactionDoc.data.output.assetType}`} text={transactionDoc.data.output.assetType} />
+                                {
+                                    Type.getMetadata(transactionDoc.data.metadata).icon_url ? 
+                                    <ImageLoader url={Type.getMetadata(transactionDoc.data.metadata).icon_url} size={18} className="mr-2" /> 
+                                    : <ImageLoader data={transactionDoc.data.output.assetType} size={18} className="mr-2" />
+                                }
+                                <HexString link={`/asset/0x${transactionDoc.data.output.assetType}`} text={transactionDoc.data.output.assetType} />
                             </Col>
                         </Row>
                         <hr />

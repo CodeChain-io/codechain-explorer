@@ -7,6 +7,7 @@ import "./TransactionTable.scss";
 import { TransactionDoc, Type, AssetMintTransactionDoc, AssetTransferTransactionDoc } from "../../../../db/DocType";
 import HexString from "../../util/HexString/HexString";
 import { TypeBadge } from "../../util/TypeBadge/TypeBadge";
+import { ImageLoader } from "../../util/ImageLoader/ImageLoader";
 
 interface Prop {
     transactions: TransactionDoc[];
@@ -64,9 +65,28 @@ class TransactionTable extends React.Component<Prop, State> {
                                             <tr key={`transaction-${transaction.data.hash}`}>
                                                 <td><TypeBadge transaction={transaction} /></td>
                                                 <td scope="row"><HexString link={`/tx/0x${transaction.data.hash}`} text={transaction.data.hash} /></td>
-                                                <td>{Type.isAssetMintTransactionDoc(transaction) ?
-                                                    <HexString link={`/asset/${(transaction as AssetMintTransactionDoc).data.output.assetType}`} text={(transaction as AssetMintTransactionDoc).data.output.assetType} />
-                                                    : (Type.isAssetTransferTransactionDoc(transaction) ? <HexString link={`/asset/0x${(transaction as AssetTransferTransactionDoc).data.inputs[0].prevOut.assetType}`} text={(transaction as AssetTransferTransactionDoc).data.inputs[0].prevOut.assetType} /> : "")}</td>
+                                                <td>{
+                                                    Type.isAssetMintTransactionDoc(transaction) ?
+                                                        <span>
+                                                            {
+                                                                Type.getMetadata((transaction as AssetMintTransactionDoc).data.metadata).icon_url ?
+                                                                    <ImageLoader className="mr-2" url={Type.getMetadata((transaction as AssetMintTransactionDoc).data.metadata).icon_url} size={18} />
+                                                                    : <ImageLoader className="mr-2" data={(transaction as AssetMintTransactionDoc).data.output.assetType} size={18} />
+                                                            }
+                                                            <HexString link={`/asset/${(transaction as AssetMintTransactionDoc).data.output.assetType}`} text={(transaction as AssetMintTransactionDoc).data.output.assetType} />
+                                                        </span>
+                                                        : (Type.isAssetTransferTransactionDoc(transaction) ?
+                                                            <span>
+                                                                {
+                                                                    Type.getMetadata((transaction as AssetTransferTransactionDoc).data.inputs[0].prevOut.assetScheme.metadata).icon_url ?
+                                                                        <ImageLoader className="mr-2" url={Type.getMetadata((transaction as AssetTransferTransactionDoc).data.inputs[0].prevOut.assetScheme.metadata).icon_url} size={18} />
+                                                                        : <ImageLoader className="mr-2" data={(transaction as AssetTransferTransactionDoc).data.inputs[0].prevOut.assetType} size={18} />
+                                                                }
+                                                                <HexString link={`/asset/0x${(transaction as AssetTransferTransactionDoc).data.inputs[0].prevOut.assetType}`} text={(transaction as AssetTransferTransactionDoc).data.inputs[0].prevOut.assetType} />
+                                                            </span>
+                                                            : "")
+                                                }
+                                                </td>
                                                 <td>{Type.isAssetMintTransactionDoc(transaction) ? ((transaction as AssetMintTransactionDoc).data.output.amount ? ((transaction as AssetMintTransactionDoc).data.output.amount as number).toLocaleString() : 0) : (Type.isAssetTransferTransactionDoc(transaction) ? _.sumBy((transaction as AssetTransferTransactionDoc).data.inputs, (input) => input.prevOut.amount) : "").toLocaleString()}</td>
                                                 <td>{moment.unix(transaction.data.timestamp).fromNow()}</td>
                                             </tr>

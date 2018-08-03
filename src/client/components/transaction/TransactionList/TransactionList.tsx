@@ -13,6 +13,7 @@ import { Link } from "react-router-dom";
 import { PlatformAddress, AssetTransferAddress } from "codechain-sdk/lib/key/classes";
 import { H256 } from "codechain-sdk/lib/core/classes";
 import { TypeBadge } from "../../util/TypeBadge/TypeBadge";
+import { ImageLoader } from "../../util/ImageLoader/ImageLoader";
 
 interface Props {
     owner?: string;
@@ -115,7 +116,11 @@ class TransactionList extends React.Component<Props, State> {
                             AssetType
                         </Col>
                         <Col md="9">
-                            <img src={Type.getMetadata(transactionDoc.data.metadata).icon_url} className="icon mr-2" />
+                            {
+                                Type.getMetadata(transactionDoc.data.metadata).icon_url ?
+                                    <ImageLoader url={Type.getMetadata(transactionDoc.data.metadata).icon_url} className="icon mr-2" size={18} />
+                                    : <ImageLoader data={transactionDoc.data.output.assetType} className="icon mr-2" size={18} />
+                            }
                             {assetType && assetType.value === transactionDoc.data.output.assetType ? <HexString text={transactionDoc.data.output.assetType} /> : <HexString link={`/asset/0x${transactionDoc.data.output.assetType}`} text={transactionDoc.data.output.assetType} />}
                         </Col>
                     </Row>,
@@ -192,7 +197,12 @@ class TransactionList extends React.Component<Props, State> {
                                                 <Row>
                                                     <Col md="0" />
                                                     <Col md="12">
-                                                        <img src={Type.getMetadata(input.prevOut.assetScheme.metadata).icon_url} className="icon mr-2" /> {assetType && assetType.value === input.prevOut.assetType ? <HexString text={input.prevOut.assetType} /> : <HexString link={`/asset/0x${input.prevOut.assetType}`} text={input.prevOut.assetType} />}
+                                                        {
+                                                            Type.getMetadata(input.prevOut.assetScheme.metadata).icon_url ?
+                                                                <ImageLoader url={Type.getMetadata(input.prevOut.assetScheme.metadata).icon_url} className="icon mr-2" size={18} />
+                                                                : <ImageLoader data={input.prevOut.assetType} className="icon mr-2" size={18} />
+                                                        }
+                                                        {assetType && assetType.value === input.prevOut.assetType ? <HexString text={input.prevOut.assetType} /> : <HexString link={`/asset/0x${input.prevOut.assetType}`} text={input.prevOut.assetType} />}
                                                     </Col>
                                                 </Row>
                                                 <Row>
@@ -235,7 +245,12 @@ class TransactionList extends React.Component<Props, State> {
                                                 <Row>
                                                     <Col md="0" />
                                                     <Col md="12">
-                                                        <img src={Type.getMetadata(output.assetScheme.metadata).icon_url} className="icon mr-2" /> {assetType && assetType.value === output.assetType ? <HexString text={output.assetType} /> : <HexString link={`/asset/0x${output.assetType}`} text={output.assetType} />}
+                                                        {
+                                                            Type.getMetadata(output.assetScheme.metadata).icon_url ?
+                                                                <ImageLoader url={Type.getMetadata(output.assetScheme.metadata).icon_url} className="icon mr-2" size={18} />
+                                                                : <ImageLoader data={output.assetType} className="icon mr-2" size={18} />
+                                                        }
+                                                        {assetType && assetType.value === output.assetType ? <HexString text={output.assetType} /> : <HexString link={`/asset/0x${output.assetType}`} text={output.assetType} />}
                                                     </Col>
                                                 </Row>
                                                 <Row>

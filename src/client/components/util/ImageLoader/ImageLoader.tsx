@@ -1,6 +1,6 @@
 import * as React from "react";
 const Identicon = require("identicon.js");
-const MurmurHash3 = require('imurmurhash');
+const sha256 = require('js-sha256');
 
 interface Props {
     data?: string;
@@ -10,15 +10,18 @@ interface Props {
 }
 export const ImageLoader = (props: Props) => {
     const { className, data, url, size } = props;
-    const hashData = MurmurHash3(data).result();
-    const identiconData = new Identicon(`${hashData}${hashData}${hashData}`, size).toString();
+    const hash = sha256.create();
     if (data) {
-        return <img className={className} width={size} height={size} src={`data:image/png;base64,${identiconData}`} />
+        hash.update(data);
+        const identiconData = new Identicon(hash.hex(), size).toString();
+        return <img className={className} style={{ verticalAlign: "middle", width: size, height: size }} src={`data:image/png;base64,${identiconData}`} />
+    } else {
+        hash.update(url);
+        const identiconData = new Identicon(hash.hex(), size).toString();
+        return (
+            <object className={className} style={{ verticalAlign: "middle", width: size, height: size }} data={url} type="image/png">
+                <img src={`data:image/png;base64,${identiconData}`} />
+            </object>
+        )
     }
-
-    return (
-        <object className={className} style={{ width: size, height: size }} data={`data:image/png;base64,${identiconData}`} type="image/png">
-            <img style={{ width: size, height: size }} className={className} src={url} />
-        </object>
-    )
 }

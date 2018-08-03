@@ -5,6 +5,7 @@ import { Row, Col } from "reactstrap";
 import "./AssetList.scss";
 import { AssetBundleDoc, Type } from "../../../../db/DocType";
 import { Link } from "react-router-dom";
+import { ImageLoader } from "../../util/ImageLoader/ImageLoader";
 
 interface OwnProps {
     assetBundles: AssetBundleDoc[];
@@ -30,7 +31,11 @@ const AssetList = (prop: OwnProps) => {
                                 <Col key={`asset-item-${index}`} lg={fullScreen ? "3" : "4"} md="4" sm="6" className="mb-3">
                                     <div className="asset-item d-flex">
                                         <div className="d-inline-block">
-                                            <img src={metadata.icon_url} className="icon" />
+                                            {
+                                                metadata.icon_url ?
+                                                    <ImageLoader size={50} url={metadata.icon_url} className="icon" />
+                                                    : <ImageLoader size={50} data={assetBundle.asset.assetType} className="icon" />
+                                            }
                                         </div>
                                         <div className="d-inline-block d-flex align-items-center asset-text-container">
                                             <div>

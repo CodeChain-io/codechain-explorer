@@ -12,6 +12,7 @@ import { TransactionDoc, AssetSchemeDoc, Type } from "../../../db/DocType";
 import "./Asset.scss"
 import { H256 } from "codechain-sdk/lib/core/H256";
 import HexString from "../../components/util/HexString/HexString";
+import { ImageLoader } from "../../components/util/ImageLoader/ImageLoader";
 
 interface Props {
     match: match<{ assetType: string }>;
@@ -53,7 +54,11 @@ class Asset extends React.Component<Props, State> {
                     <Col>
                         <div className="title-container d-flex">
                             <div className="d-inline-block left-container">
-                                <img src={Type.getMetadata(assetScheme.metadata).icon_url} className="icon" />
+                                {
+                                    Type.getMetadata(assetScheme.metadata).icon_url ?
+                                        <ImageLoader size={65} url={Type.getMetadata(assetScheme.metadata).icon_url} />
+                                        : <ImageLoader size={65} data={new H256(assetType).value} />
+                                }
                             </div>
                             <div className="d-inline-block right-container">
                                 <h1>Asset</h1>
