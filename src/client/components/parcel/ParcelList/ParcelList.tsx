@@ -146,8 +146,8 @@ class ParcelList extends React.Component<Props, State> {
                                 <div className="sender-receiver-container">
                                     {
                                         address && address === PlatformAddress.fromAccountId(parcel.sender).value ?
-                                            `${PlatformAddress.fromAccountId(parcel.sender).value.slice(0, 15)}...`
-                                            : <Link to={`/addr-platform/${PlatformAddress.fromAccountId(parcel.sender).value}`}>{PlatformAddress.fromAccountId(parcel.sender).value.slice(0, 15)}...</Link>
+                                            `${PlatformAddress.fromAccountId(parcel.sender).value}`
+                                            : <Link to={`/addr-platform/${PlatformAddress.fromAccountId(parcel.sender).value}`}>{PlatformAddress.fromAccountId(parcel.sender).value}</Link>
                                     }
                                 </div>
                             </Col>
@@ -158,8 +158,8 @@ class ParcelList extends React.Component<Props, State> {
                                 <div className="sender-receiver-container">
                                     {
                                         address && address === PlatformAddress.fromAccountId((parcel.action as PaymentDoc).receiver).value ?
-                                            `${PlatformAddress.fromAccountId((parcel.action as PaymentDoc).receiver).value.slice(0, 15)}...`
-                                            : <Link to={`/addr-platform/${PlatformAddress.fromAccountId((parcel.action as PaymentDoc).receiver).value}`}>{PlatformAddress.fromAccountId((parcel.action as PaymentDoc).receiver).value.slice(0, 15)}...</Link>
+                                            `${PlatformAddress.fromAccountId((parcel.action as PaymentDoc).receiver).value}`
+                                            : <Link to={`/addr-platform/${PlatformAddress.fromAccountId((parcel.action as PaymentDoc).receiver).value}`}>{PlatformAddress.fromAccountId((parcel.action as PaymentDoc).receiver).value}</Link>
                                     }
                                 </div>
                             </Col>
