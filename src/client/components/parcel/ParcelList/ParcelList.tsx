@@ -15,7 +15,6 @@ import { ActionBadge } from "../../util/ActionBadge/ActionBadge";
 interface Props {
     parcels: ParcelDoc[];
     address?: string;
-    fullScreen: boolean;
 }
 
 interface State {
@@ -37,11 +36,11 @@ class ParcelList extends React.Component<Props, State> {
 
     public render() {
         const { page } = this.state;
-        const { parcels, address, fullScreen } = this.props;
+        const { parcels, address } = this.props;
         const loadedParcels = parcels.slice(0, this.itemPerPage * page);
         return <div className="block-parcel-list">
-            <Row className="mb-3">
-                <Col lg={fullScreen ? "12" : "9"}>
+            <Row>
+                <Col>
                     <div className="d-flex justify-content-between align-items-end">
                         <h2>Parcels</h2>
                         <span>{parcels.length} parcels in this block</span>
@@ -50,11 +49,11 @@ class ParcelList extends React.Component<Props, State> {
                 </Col>
             </Row>
             <Row>
-                <Col lg={fullScreen ? "12" : "9"}>
+                <Col>
                     {
                         loadedParcels.map((parcel, i: number) => {
                             const hash = parcel.hash;
-                            return <div key={`block-parcel-${hash}`} className="card-list-item mb-3">
+                            return <div key={`block-parcel-${hash}`} className="card-list-item mt-small">
                                 <div className="card-list-item-header">
                                     <Row>
                                         <Col md="3">
@@ -116,8 +115,8 @@ class ParcelList extends React.Component<Props, State> {
             {
                 this.itemPerPage * page < parcels.length ?
                     <Row>
-                        <Col lg={fullScreen ? "12" : "9"}>
-                            <div className="margin-20-top">
+                        <Col>
+                            <div className="mt-small">
                                 <button className="btn btn-primary w-100" onClick={this.loadMore}>
                                     Load Parcels
                             </button>

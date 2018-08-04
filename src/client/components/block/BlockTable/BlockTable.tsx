@@ -74,7 +74,7 @@ class BlockTable extends React.Component<Prop, State> {
                             </tbody>
                         </Table>
                     </div>
-                    <div className="d-flex mt-3">
+                    <div className="d-flex mt-small">
                         <div className="d-inline ml-auto pager">
                             <ul className="list-inline">
                                 <li className="list-inline-item">

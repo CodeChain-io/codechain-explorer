@@ -69,7 +69,7 @@ class Transaction extends React.Component<Props, State> {
         }
         return (
             <Container className="transaction">
-                <Row className="mb-2">
+                <Row>
                     <Col md="8" xl="7">
                         <div className="d-flex title-container">
                             <h1 className="d-inline-block align-self-center">Transaction</h1>
@@ -78,8 +78,8 @@ class Transaction extends React.Component<Props, State> {
                         </div>
                     </Col>
                 </Row>
-                <Row className="mb-4">
-                    <Col md="8" xl="7" className="hash-container d-flex mb-3 mb-md-0">
+                <Row>
+                    <Col md="8" xl="7" className="hash-container d-flex">
                         <div className="d-inline-block hash">
                             <HexString text={transactionResult.transaction.data.hash} />
                         </div>
@@ -88,7 +88,9 @@ class Transaction extends React.Component<Props, State> {
                         </div>
                     </Col>
                 </Row>
-                <TransactionDetails transaction={transactionResult.transaction} />
+                <div className="mt-large">
+                    <TransactionDetails transaction={transactionResult.transaction} />
+                </div>
             </Container>
         )
     }

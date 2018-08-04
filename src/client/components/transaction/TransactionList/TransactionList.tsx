@@ -17,7 +17,6 @@ import { ImageLoader } from "../../util/ImageLoader/ImageLoader";
 
 interface Props {
     owner?: string;
-    fullScreen: boolean,
     assetType?: H256,
     transactions: TransactionDoc[];
 }
@@ -40,21 +39,21 @@ class TransactionList extends React.Component<Props, State> {
 
     public render() {
         const { page } = this.state;
-        const { transactions, assetType, fullScreen, owner } = this.props;
+        const { transactions, assetType, owner } = this.props;
         const loadedTransactions = transactions.slice(0, this.itemPerPage * page);
         return <div className="parcel-transaction-list">
-            <Row className="mb-3">
-                <Col lg={fullScreen ? "12" : "9"}>
+            <Row>
+                <Col>
                     <h2>Transactions</h2>
                     <hr className="heading-hr" />
                 </Col>
             </Row>
             <Row>
-                <Col lg={fullScreen ? "12" : "9"}>
+                <Col>
                     {
                         loadedTransactions.map((transaction, i: number) => {
                             const hash = transaction.data.hash;
-                            return <div key={`parcel-transaction-${hash}`} className="card-list-item mb-3">
+                            return <div key={`parcel-transaction-${hash}`} className="card-list-item mt-small">
                                 <div className="card-list-item-header">
                                     <Row>
                                         <Col md="3">
@@ -94,8 +93,8 @@ class TransactionList extends React.Component<Props, State> {
             {
                 this.itemPerPage * page < transactions.length ?
                     <Row>
-                        <Col lg={fullScreen ? "12" : "9"}>
-                            <div className="margin-20-top">
+                        <Col>
+                            <div className="mt-small">
                                 <button className="btn btn-primary w-100" onClick={this.loadMore}>
                                     Load Transactions
                                 </button>
@@ -193,7 +192,7 @@ class TransactionList extends React.Component<Props, State> {
                                 {
                                     _.map(transactionDoc.data.inputs, (input, i) => {
                                         return (
-                                            <div key={`input-${i}`} className={`mt-2 mb-2 data-set input-output-container ${owner && AssetTransferAddress.fromPublicKeyHash(new H256(input.prevOut.owner)).value === owner ? "input-highlight" : ""}`}>
+                                            <div key={`input-${i}`} className={`data-set input-output-container ${owner && AssetTransferAddress.fromPublicKeyHash(new H256(input.prevOut.owner)).value === owner ? "input-highlight" : ""}`}>
                                                 <Row>
                                                     <Col md="0" />
                                                     <Col md="12">
@@ -235,13 +234,13 @@ class TransactionList extends React.Component<Props, State> {
                                 }
                             </Col>
                             <Col md="2" className="text-center">
-                                <img src={arrow} alt="Arrow" className="mt-0 mt-md-5" />
+                                <img src={arrow} alt="Arrow" className="arrow" />
                             </Col>
                             <Col md="5">
                                 {
                                     _.map(transactionDoc.data.outputs, (output, i) => {
                                         return (
-                                            <div key={`output-${i}`} className={`mt-2 mb-2 data-set input-output-container ${owner && AssetTransferAddress.fromPublicKeyHash(new H256(output.owner)).value === owner ? "output-highlight" : ""}`}>
+                                            <div key={`output-${i}`} className={`data-set input-output-container ${owner && AssetTransferAddress.fromPublicKeyHash(new H256(output.owner)).value === owner ? "output-highlight" : ""}`}>
                                                 <Row>
                                                     <Col md="0" />
                                                     <Col md="12">

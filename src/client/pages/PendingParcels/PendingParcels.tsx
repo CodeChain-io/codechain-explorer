@@ -47,7 +47,7 @@ class PendingParcels extends React.Component<{}, State> {
                     <div className="d-inline"><span className="total-parcel-big">Total {pendingParcels.length} Pending Parcels</span></div>
                     <div className="d-inline"><span className="total-parcel-small">Total {pendingParcels.length}</span></div>
                 </div>
-                <div className="filter-container mt-3">
+                <div className="filter-container mt-large">
                     <div className="type-filter">
                         <Row>
                             <Col md={4}>

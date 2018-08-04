@@ -1,6 +1,7 @@
 import * as React from "react";
 import * as moment from "moment";
 import * as FontAwesome from "react-fontawesome";
+import * as _ from "lodash";
 import { match } from "react-router";
 import { Container, Col, Row } from "reactstrap";
 import { Error } from "../../components/error/Error/Error";
@@ -10,7 +11,7 @@ import BlockDetails from "../../components/block/BlockDetails/BlockDetails";
 import ParcelList from "../../components/parcel/ParcelList/ParcelList";
 
 import "./Block.scss";
-import { BlockDoc } from "../../../db/DocType";
+import { BlockDoc, Type, ChangeShardStateDoc } from "../../../db/DocType";
 import { Link } from "react-router-dom";
 import HexString from "../../components/util/HexString/HexString";
 
@@ -55,7 +56,7 @@ class Block extends React.Component<Props, State> {
         }
         return (
             <Container className="block">
-                <Row className="mb-2">
+                <Row>
                     <Col md="8" xl="7">
                         <div className="d-flex align-items-end title-container">
                             <h1 className="d-inline-block mr-auto">Block <span className="block-number">#{block.number}</span></h1>
@@ -63,8 +64,8 @@ class Block extends React.Component<Props, State> {
                         </div>
                     </Col>
                 </Row>
-                <Row className="mb-4">
-                    <Col md="8" xl="7" className="hash-container d-flex mb-3 mb-md-0">
+                <Row>
+                    <Col md="8" xl="7" className="hash-container d-flex">
                         <div className="d-inline-block hash">
                             <HexString text={block.hash} />
                         </div>
@@ -72,13 +73,77 @@ class Block extends React.Component<Props, State> {
                             <FontAwesome name="copy" />
                         </div>
                     </Col>
-                    <Col md="3" xl="2" className="d-flex align-items-center justify-content-between offset-md-1 offset-xl-3">
+                    <Col md="3" xl="2" className="d-flex align-items-center justify-content-between offset-md-1 offset-xl-3 mt-2 mt-md-0">
                         <Link to={block.number !== 0 ? `/block/${block.number - 1}` : "#"}><button type="button" className={`btn btn-primary ${block.number === 0 ? "disabled" : ""}`}>&lt; Prev</button></Link>
                         <Link to={`/block/${block.number + 1}`}><button type="button" className="btn btn-primary">Next &gt;</button></Link>
                     </Col>
                 </Row>
-                <BlockDetails block={block} />
-                <ParcelList parcels={block.parcels} fullScreen={false} />
+                <Row className="mt-large">
+                    <Col lg="9">
+                        <BlockDetails block={block} />
+                    </Col>
+                    <Col lg="3">
+                        <div className="right-panel-item mt-3 mt-lg-0">
+                            <h2># of Parcel types</h2>
+                            <hr />
+                            <div className="d-flex align-items-center">
+                                <FontAwesome className="square payment-action-text-color" name="square" />
+                                <span className="mr-auto item-name">Payment</span>
+                                <span>{_.filter(block.parcels, (parcel) => Type.isPaymentDoc(parcel.action)).length}</span>
+                            </div>
+                            <hr />
+                            <div className="d-flex align-items-center">
+                                <FontAwesome className="square change-shard-state-action-text-color" name="square" />
+                                <span className="mr-auto item-name">ChangeShardState</span>
+                                <span>{_.filter(block.parcels, (parcel) => Type.isChangeShardStateDoc(parcel.action)).length}</span>
+                            </div>
+                            <hr />
+                            <div className="d-flex align-items-center">
+                                <FontAwesome className="square set-regular-key-action-text-color" name="square" />
+                                <span className="mr-auto item-name">SetRegularKey</span>
+                                <span>{_.filter(block.parcels, (parcel) => Type.isSetRegularKeyDoc(parcel.action)).length}</span>
+                            </div>
+                        </div>
+                        <div className="right-panel-item mt-small">
+                            <h2># of Transaction types</h2>
+                            <hr />
+                            <div className="d-flex align-items-center">
+                                <FontAwesome className="square asset-transfer-transaction-text-color" name="square" />
+                                <span className="mr-auto item-name">Transfer</span>
+                                <span>
+                                    {_.reduce(block.parcels, (memo, parcel) => {
+                                        if (Type.isChangeShardStateDoc(parcel.action)) {
+                                            const transactions = (parcel.action as ChangeShardStateDoc).transactions;
+                                            const assetTransferTransaction = _.filter(transactions, (tx) => Type.isAssetTransferTransactionDoc(tx)).length;
+                                            return assetTransferTransaction + memo;
+                                        } else {
+                                            return memo;
+                                        }
+                                    }, 0)}</span>
+                            </div>
+                            <hr />
+                            <div className="d-flex align-items-center">
+                                <FontAwesome className="square asset-mint-transaction-text-color" name="square" />
+                                <span className="mr-auto item-name">Mint</span>
+                                <span>
+                                    {_.reduce(block.parcels, (memo, parcel) => {
+                                        if (Type.isChangeShardStateDoc(parcel.action)) {
+                                            const transactions = (parcel.action as ChangeShardStateDoc).transactions;
+                                            const assetTransferTransaction = _.filter(transactions, (tx) => Type.isAssetMintTransactionDoc(tx)).length;
+                                            return assetTransferTransaction + memo;
+                                        } else {
+                                            return memo;
+                                        }
+                                    }, 0)}</span>
+                            </div>
+                        </div>
+                    </Col>
+                </Row>
+                <Row className="mt-large">
+                    <Col lg="9">
+                        <ParcelList parcels={block.parcels} />
+                    </Col>
+                </Row>
             </Container>
         );
     }

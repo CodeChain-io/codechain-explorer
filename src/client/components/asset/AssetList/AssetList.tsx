@@ -9,26 +9,24 @@ import { ImageLoader } from "../../util/ImageLoader/ImageLoader";
 
 interface OwnProps {
     assetBundles: AssetBundleDoc[];
-    fullScreen: boolean;
 }
 
 const AssetList = (prop: OwnProps) => {
-    const { fullScreen } = prop;
-    return <div className="asset-list mt-4">
+    return <div className="asset-list">
         <Row>
-            <Col lg={fullScreen ? "12" : "9"}>
+            <Col>
                 <h2>Assets</h2>
-                <hr className="heading-hr mb-3" />
+                <hr className="heading-hr" />
             </Col>
         </Row>
         <Row>
-            <Col lg={fullScreen ? "12" : "9"}>
+            <Col>
                 <Row>
                     {
                         _.map(prop.assetBundles, (assetBundle, index) => {
                             const metadata = Type.getMetadata(assetBundle.assetScheme.metadata);
                             return (
-                                <Col key={`asset-item-${index}`} lg={fullScreen ? "3" : "4"} md="4" sm="6" className="mb-3">
+                                <Col key={`asset-item-${index}`} lg="3" md="4" sm="6" className="mt-small">
                                     <div className="asset-item d-flex">
                                         <div className="d-inline-block">
                                             {
@@ -40,7 +38,7 @@ const AssetList = (prop: OwnProps) => {
                                         <div className="d-inline-block d-flex align-items-center asset-text-container">
                                             <div>
                                                 <Link to={`/asset/0x${assetBundle.asset.assetType}`}>
-                                                    <h3 className="mb-0">{metadata.name}</h3>
+                                                    <h3>{metadata.name}</h3>
                                                 </Link>
                                                 <div>
                                                     <span>x {assetBundle.asset.amount}</span>

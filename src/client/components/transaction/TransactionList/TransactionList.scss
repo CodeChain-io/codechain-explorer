@@ -5,11 +5,22 @@
     background-color: $background-gray;
     padding-left: 8px;
     padding-right: 8px;
+    margin-top: 6px;
+    margin-bottom: 6px;
   }
   .input-highlight {
     background-color: #F9B7A9;
   }
   .output-highlight {
     background-color: #C1EED4;
+  }
+  .arrow {
+    margin-top: 45px;
+    @include respond-below(sm) {
+      & {
+        margin-top: 6px;
+        margin-bottom: 0px;
+      }
+    }
   }
 }

@@ -50,7 +50,7 @@ const LatestParcels = (props: Props) => {
                 </tbody>
             </Table>
             {
-                <div className="mt-3">
+                <div className="mt-small">
                     <Link to={"/parcels"}>
                         <button type="button" className="btn btn-primary w-100">
                             <span>View all parcels</span>

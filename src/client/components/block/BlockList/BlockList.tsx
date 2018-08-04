@@ -36,8 +36,8 @@ class BlockList extends React.Component<Props, State> {
         const { page } = this.state;
         const { blocks } = this.props;
         const loadedBlocks = blocks.slice(0, this.itemPerPage * page);
-        return <div className="block-list mt-4">
-            <Row className="mb-3">
+        return <div className="block-list mt-large">
+            <Row>
                 <Col>
                     <h2>Authored Blocks</h2>
                     <hr className="heading-hr" />
@@ -48,7 +48,7 @@ class BlockList extends React.Component<Props, State> {
                     {
                         _.map(loadedBlocks, (block, index) => {
                             return (
-                                <div key={`block-list-${index}`} className="card-list-item mb-3" >
+                                <div key={`block-list-${index}`} className="card-list-item mt-small" >
                                     <div className="card-list-item-header">
                                         <Row>
                                             <Col md="3">
@@ -97,7 +97,7 @@ class BlockList extends React.Component<Props, State> {
                 this.itemPerPage * page < blocks.length ?
                     <Row>
                         <Col>
-                            <div className="margin-20-top">
+                            <div className="mt-small">
                                 <button className="btn btn-primary w-100" onClick={this.loadMore}>
                                     Load Parcels
                             </button>

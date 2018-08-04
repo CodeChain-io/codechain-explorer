@@ -194,10 +194,33 @@
   color: $dark-color !important;
 }
 
-.top-30-margin {
+.mt-large {
   margin-top: 30px;
 }
 
-.top-20-margin {
+.mt-small {
   margin-top: 20px;
+}
+
+.mb-large {
+  margin-bottom: 30px;
+}
+
+.mb-small {
+  margin-bottom: 20px;
+}
+
+.right-panel-item {
+  background-color: $background-gray;
+  padding: 12px;
+  .square {
+    margin-right: 10px;
+  }
+  .item-name {
+    @include heading-font;
+  }
+  hr {
+    margin-top: 8px;
+    margin-bottom: 8px;
+  }
 }

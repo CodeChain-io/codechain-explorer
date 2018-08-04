@@ -66,7 +66,7 @@ class Parcel extends React.Component<Props, State> {
             }
         }
         return (<Container className="parcel">
-            <Row className="mb-2">
+            <Row>
                 <Col md="8" xl="7">
                     <div className="d-flex title-container">
                         <h1 className="d-inline-block align-self-center">Parcel</h1>
@@ -75,8 +75,8 @@ class Parcel extends React.Component<Props, State> {
                     </div>
                 </Col>
             </Row>
-            <Row className="mb-4">
-                <Col md="8" xl="7" className="hash-container d-flex mb-3 mb-md-0">
+            <Row>
+                <Col md="8" xl="7" className="hash-container d-flex">
                     <div className="d-inline-block hash">
                         <HexString text={parcelResult.parcel.hash} />
                     </div>
@@ -85,8 +85,14 @@ class Parcel extends React.Component<Props, State> {
                     </div>
                 </Col>
             </Row>
-            <ParcelDetails parcel={parcelResult.parcel} />
-            {this.showTransactionList(parcelResult.parcel)}
+            <div className="mt-large">
+                <ParcelDetails parcel={parcelResult.parcel} />
+            </div>
+            <Row>
+                <Col lg="9">
+                    {this.showTransactionList(parcelResult.parcel)}
+                </Col>
+            </Row>
         </Container>
         )
     }
@@ -95,8 +101,8 @@ class Parcel extends React.Component<Props, State> {
         if (Type.isChangeShardStateDoc(parcel.action)) {
             return (
                 [
-                    <div key="parcel-transaction" className="mt-3">
-                        <TransactionList fullScreen={false} transactions={(parcel.action as ChangeShardStateDoc).transactions} />
+                    <div key="parcel-transaction" className="mt-large">
+                        <TransactionList transactions={(parcel.action as ChangeShardStateDoc).transactions} />
                     </div>
                 ]
             )

@@ -21,8 +21,8 @@ const getTransactionInfoByType = (transaction: TransactionDoc) => {
         const transactionDoc = transaction as AssetTransferTransactionDoc;
         return (
             [
-                <Row key="details" className="mb-4">
-                    <Col lg="12" className="mb-3 mb-lg-0">
+                <Row key="details">
+                    <Col lg="12">
                         <div className="data-set">
                             <Row>
                                 <Col md="3">
@@ -49,13 +49,13 @@ const getTransactionInfoByType = (transaction: TransactionDoc) => {
                     {
                         _.map(transactionDoc.data.inputs, (input, index) => {
                             return ([
-                                <Row key={`transaction-header-table-input-title-${index}`}>
+                                <Row key={`transaction-header-table-input-title-${index}`} className="mt-large">
                                     <Col lg="12">
-                                        <h2>Input #{index}</h2>
+                                        <h3>Input #{index}</h3>
                                         <hr className="heading-hr" />
                                     </Col>
                                 </Row>,
-                                <Row key={`transaction-header-table-input-detail-${index}`} className="mb-4">
+                                <Row key={`transaction-header-table-input-detail-${index}`}>
                                     <Col lg="12">
                                         <div className="data-set">
                                             <Row>
@@ -141,13 +141,13 @@ const getTransactionInfoByType = (transaction: TransactionDoc) => {
                     {
                         _.map(transactionDoc.data.outputs, (output, index) => {
                             return ([
-                                <Row key={`transaction-header-table-output-title-${index}`}>
+                                <Row key={`transaction-header-table-output-title-${index}`} className="mt-large">
                                     <Col lg="12">
-                                        <h2>Output #{index}</h2>
+                                        <h3>Output #{index}</h3>
                                         <hr className="heading-hr" />
                                     </Col>
                                 </Row>,
-                                <Row key={`transaction-header-table-output-details-${index}`} className="mb-4">
+                                <Row key={`transaction-header-table-output-details-${index}`}>
                                     <Col lg="12">
                                         <div className="data-set">
                                             <Row>
@@ -217,7 +217,7 @@ const getTransactionInfoByType = (transaction: TransactionDoc) => {
         const transactionDoc = transaction as AssetMintTransactionDoc;
         const metadata = Type.getMetadata(transactionDoc.data.metadata);
         return ([
-            <Row key="details" className="mb-4">
+            <Row key="details">
                 <Col lg="12">
                     <div className="data-set">
                         <Row>
@@ -255,9 +255,9 @@ const getTransactionInfoByType = (transaction: TransactionDoc) => {
                             </Col>
                             <Col md="9">
                                 {
-                                    Type.getMetadata(transactionDoc.data.metadata).icon_url ? 
-                                    <ImageLoader url={Type.getMetadata(transactionDoc.data.metadata).icon_url} size={18} className="mr-2" /> 
-                                    : <ImageLoader data={transactionDoc.data.output.assetType} size={18} className="mr-2" />
+                                    Type.getMetadata(transactionDoc.data.metadata).icon_url ?
+                                        <ImageLoader url={Type.getMetadata(transactionDoc.data.metadata).icon_url} size={18} className="mr-2" />
+                                        : <ImageLoader data={transactionDoc.data.output.assetType} size={18} className="mr-2" />
                                 }
                                 <HexString link={`/asset/0x${transactionDoc.data.output.assetType}`} text={transactionDoc.data.output.assetType} />
                             </Col>
@@ -298,7 +298,7 @@ const getTransactionInfoByType = (transaction: TransactionDoc) => {
                 </Col>
             </Row>,
             <Row key="metadata">
-                <Col lg="12">
+                <Col lg="12" className="mt-large">
                     <h2>Metadata</h2>
                     <hr className="heading-hr" />
                 </Col>

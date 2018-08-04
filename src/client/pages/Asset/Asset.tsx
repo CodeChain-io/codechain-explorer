@@ -55,7 +55,7 @@ class Asset extends React.Component<Props, State> {
         }
         return (
             <Container className="asset">
-                <Row className="mb-4">
+                <Row>
                     <Col>
                         <div className="title-container d-flex">
                             <div className="d-inline-block left-container">
@@ -79,11 +79,13 @@ class Asset extends React.Component<Props, State> {
                         </div>
                     </Col>
                 </Row>
-                <AssetDetails assetType={assetType} assetScheme={assetScheme} />
+                <div className="mt-large">
+                    <AssetDetails assetType={assetType} assetScheme={assetScheme} />
+                </div>
                 {
                     transactions.length !== 0 ?
-                        <div className="mt-4">
-                            <TransactionList assetType={new H256(assetType)} fullScreen={true} transactions={transactions} />
+                        <div className="mt-large">
+                            <TransactionList assetType={new H256(assetType)} transactions={transactions} />
                         </div>
                         : <RequestAssetTransactions assetType={assetType} onTransactions={this.onTransactionList} onError={this.onError} />
                 }

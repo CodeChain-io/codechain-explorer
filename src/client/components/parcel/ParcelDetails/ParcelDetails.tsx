@@ -86,7 +86,7 @@ const ParcelDetails = (props: Props) => {
             </Col>
         </Row>
         <Row>
-            <Col lg={Type.isChangeShardStateDoc(parcel.action) ? "9" : "12"} className="mb-3 mb-lg-0">
+            <Col lg={Type.isChangeShardStateDoc(parcel.action) ? "9" : "12"}>
                 <div className="data-set">
                     <Row>
                         <Col md="3">
@@ -152,7 +152,7 @@ const ParcelDetails = (props: Props) => {
             {
                 Type.isChangeShardStateDoc(parcel.action) ?
                     <Col lg="3">
-                        <div className="right-panel-item">
+                        <div className="right-panel-item mt-3 mt-lg-0">
                             <h2># of Transaction types</h2>
                             <hr />
                             <div className="d-flex align-items-center">

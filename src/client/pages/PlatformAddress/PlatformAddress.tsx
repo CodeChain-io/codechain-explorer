@@ -70,7 +70,7 @@ class Address extends React.Component<Props, State> {
         }
         return (
             <Container className="platform-address">
-                <Row className="mb-4">
+                <Row>
                     <Col>
                         <div className="title-container d-flex">
                             <div className="d-inline-block left-container">
@@ -90,22 +90,26 @@ class Address extends React.Component<Props, State> {
                         </div>
                     </Col>
                 </Row>
-                <AccountDetails account={account} />
+                <div className="mt-large">
+                    <AccountDetails account={account} />
+                </div>
                 {
                     assetBundles.length > 0 ?
-                        <AssetList assetBundles={assetBundles} fullScreen={true} />
+                        <div className="mt-large">
+                            <AssetList assetBundles={assetBundles} />
+                        </div>
                         : null
                 }
                 {
                     parcels.length > 0 ?
-                        <div>
-                            <ParcelList address={address} fullScreen={true} parcels={parcels} />
+                        <div className="mt-large">
+                            <ParcelList address={address} parcels={parcels} />
                         </div>
                         : null
                 }
                 {
                     blocks.length > 0 ?
-                        <div>
+                        <div className="mt-large">
                             <BlockList blocks={blocks} />
                         </div>
                         : null
@@ -124,7 +128,7 @@ class Address extends React.Component<Props, State> {
         this.setState({ requested: true });
     }
     private onAccountNotExist = () => {
-        this.setState({notFound: true});
+        this.setState({ notFound: true });
     }
     private onAccount = (account: { nonce: U256, balance: U256 }) => {
         this.setState({ account });

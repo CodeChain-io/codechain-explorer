@@ -1,10 +1,12 @@
 import * as React from "react";
 import * as FontAwesome from "react-fontawesome";
+import * as _ from "lodash";
+
 import { match } from "react-router";
 import { Container, Row, Col } from "reactstrap";
 
 import { RequestAssetTransferAddressUTXO, RequestAssetTransferAddressTransactions } from "../../request";
-import { TransactionDoc, AssetBundleDoc } from "../../../db/DocType";
+import { TransactionDoc, AssetBundleDoc, Type } from "../../../db/DocType";
 
 import "./AssetTransferAddress.scss";
 import AddressDetails from "../../components/assetTransferAddress/AddressDetails/AddressDetails";
@@ -49,7 +51,7 @@ class AssetTransferAddress extends React.Component<Props, State> {
         }
         return (
             <Container className="asset-transfer-address">
-                <Row className="mb-4">
+                <Row>
                     <Col>
                         <div className="title-container d-flex">
                             <div className="d-inline-block left-container">
@@ -69,19 +71,49 @@ class AssetTransferAddress extends React.Component<Props, State> {
                         </div>
                     </Col>
                 </Row>
-                <AddressDetails utxo={utxo} transactions={transactions} />
-                {
-                    utxo.length > 0 ?
-                        <AssetList assetBundles={utxo} fullScreen={false} />
-                        : null
-                }
-                {
-                    transactions.length > 0 ?
-                        <div>
-                            <TransactionList owner={address} fullScreen={false} transactions={transactions} />
+                <Row className="mt-large">
+                    <Col lg="9">
+                        <AddressDetails utxo={utxo} transactions={transactions} />
+                    </Col>
+                    <Col lg="3">
+                        <div className="right-panel-item mt-3 mt-lg-0">
+                            <h2># of Transaction types</h2>
+                            <hr />
+                            <div className="d-flex align-items-center">
+                                <FontAwesome className="square asset-transfer-transaction-text-color" name="square" />
+                                <span className="mr-auto item-name">Transfer</span>
+                                <span>
+                                    {_.filter(transactions, (tx) => Type.isAssetTransferTransactionDoc(tx)).length
+                                    }</span>
+                            </div>
+                            <hr />
+                            <div className="d-flex align-items-center">
+                                <FontAwesome className="square asset-mint-transaction-text-color" name="square" />
+                                <span className="mr-auto item-name">Mint</span>
+                                <span>
+                                    {_.filter(transactions, (tx) => Type.isAssetMintTransactionDoc(tx)).length}</span>
+                            </div>
                         </div>
-                        : null
-                }
+                    </Col>
+                </Row>
+                <Row>
+                    <Col lg="9">
+                        {
+                            utxo.length > 0 ?
+                                <div className="mt-large">
+                                    <AssetList assetBundles={utxo} />
+                                </div>
+                                : null
+                        }
+                        {
+                            transactions.length > 0 ?
+                                <div className="mt-large">
+                                    <TransactionList owner={address} transactions={transactions} />
+                                </div>
+                                : null
+                        }
+                    </Col>
+                </Row>
             </Container>
         )
     }

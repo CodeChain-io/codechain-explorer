@@ -1,6 +1,5 @@
 import * as React from "react";
 import * as _ from "lodash";
-import * as FontAwesome from "react-fontawesome";
 
 import { Col, Row } from "reactstrap";
 
@@ -18,15 +17,15 @@ class BlockDetails extends React.Component<OwnProps> {
     public render() {
         const { block } = this.props;
         return (
-            <div className="block-details mb-4">
+            <div className="block-details">
                 <Row>
-                    <Col lg="9">
+                    <Col>
                         <h2>Details</h2>
                         <hr className="heading-hr" />
                     </Col>
                 </Row>
                 <Row>
-                    <Col lg="9" className="mb-3 mb-lg-0">
+                    <Col>
                         <div className="data-set">
                             <Row>
                                 <Col md="3">
@@ -128,62 +127,6 @@ class BlockDetails extends React.Component<OwnProps> {
                                 </Col>
                             </Row>
                             <hr />
-                        </div>
-                    </Col>
-                    <Col lg="3">
-                        <div className="right-panel-item mb-3">
-                            <h2># of Parcel types</h2>
-                            <hr />
-                            <div className="d-flex align-items-center">
-                                <FontAwesome className="square payment-action-text-color" name="square" />
-                                <span className="mr-auto item-name">Payment</span>
-                                <span>{_.filter(block.parcels, (parcel) => Type.isPaymentDoc(parcel.action)).length}</span>
-                            </div>
-                            <hr />
-                            <div className="d-flex align-items-center">
-                                <FontAwesome className="square change-shard-state-action-text-color" name="square" />
-                                <span className="mr-auto item-name">ChangeShardState</span>
-                                <span>{_.filter(block.parcels, (parcel) => Type.isChangeShardStateDoc(parcel.action)).length}</span>
-                            </div>
-                            <hr />
-                            <div className="d-flex align-items-center">
-                                <FontAwesome className="square set-regular-key-action-text-color" name="square" />
-                                <span className="mr-auto item-name">SetRegularKey</span>
-                                <span>{_.filter(block.parcels, (parcel) => Type.isSetRegularKeyDoc(parcel.action)).length}</span>
-                            </div>
-                        </div>
-                        <div className="right-panel-item">
-                            <h2># of Transaction types</h2>
-                            <hr />
-                            <div className="d-flex align-items-center">
-                                <FontAwesome className="square asset-transfer-transaction-text-color" name="square" />
-                                <span className="mr-auto item-name">Transfer</span>
-                                <span>
-                                    {_.reduce(block.parcels, (memo, parcel) => {
-                                        if (Type.isChangeShardStateDoc(parcel.action)) {
-                                            const transactions = (parcel.action as ChangeShardStateDoc).transactions;
-                                            const assetTransferTransaction = _.filter(transactions, (tx) => Type.isAssetTransferTransactionDoc(tx)).length;
-                                            return assetTransferTransaction + memo;
-                                        } else {
-                                            return memo;
-                                        }
-                                    }, 0)}</span>
-                            </div>
-                            <hr />
-                            <div className="d-flex align-items-center">
-                                <FontAwesome className="square asset-mint-transaction-text-color" name="square" />
-                                <span className="mr-auto item-name">Mint</span>
-                                <span>
-                                    {_.reduce(block.parcels, (memo, parcel) => {
-                                        if (Type.isChangeShardStateDoc(parcel.action)) {
-                                            const transactions = (parcel.action as ChangeShardStateDoc).transactions;
-                                            const assetTransferTransaction = _.filter(transactions, (tx) => Type.isAssetMintTransactionDoc(tx)).length;
-                                            return assetTransferTransaction + memo;
-                                        } else {
-                                            return memo;
-                                        }
-                                    }, 0)}</span>
-                            </div>
                         </div>
                     </Col>
                 </Row>
