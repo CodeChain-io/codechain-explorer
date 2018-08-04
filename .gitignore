@@ -22,3 +22,6 @@ yarn-error.log*
 
 # db folder in client
 client/db
+
+# dotenv
+.env

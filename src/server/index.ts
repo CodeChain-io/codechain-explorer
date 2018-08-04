@@ -1,6 +1,7 @@
 import * as yargs from "yargs";
 
 import * as web from "./web";
+import config from "./config";
 
 export interface ServerConfig {
     httpPort: number;
@@ -15,8 +16,6 @@ export interface ServerConfig {
 const main = () => {
     const configDir = "NODE_CONFIG_DIR";
     process.env[configDir] = process.env[configDir] || (`${__dirname}/config/`);
-    const config = require("config") as ServerConfig;
-
     const _ = yargs.command({
         command: "*",
         handler: () => {
