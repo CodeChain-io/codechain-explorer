@@ -73,7 +73,7 @@ class TransactionTable extends React.Component<Prop, State> {
                                                                     <ImageLoader className="mr-2" url={Type.getMetadata((transaction as AssetMintTransactionDoc).data.metadata).icon_url} size={18} />
                                                                     : <ImageLoader className="mr-2" data={(transaction as AssetMintTransactionDoc).data.output.assetType} size={18} />
                                                             }
-                                                            <HexString link={`/asset/${(transaction as AssetMintTransactionDoc).data.output.assetType}`} text={(transaction as AssetMintTransactionDoc).data.output.assetType} />
+                                                            <HexString link={`/asset/0x${(transaction as AssetMintTransactionDoc).data.output.assetType}`} text={(transaction as AssetMintTransactionDoc).data.output.assetType} />
                                                         </span>
                                                         : (Type.isAssetTransferTransactionDoc(transaction) ?
                                                             <span>

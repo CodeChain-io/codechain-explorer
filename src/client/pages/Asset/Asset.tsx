@@ -69,7 +69,7 @@ class Asset extends React.Component<Props, State> {
                                 <h1>Asset</h1>
                                 <div className="hash-container d-flex">
                                     <div className="d-inline-block hash">
-                                        <HexString text={assetType} />
+                                        <HexString text={new H256(assetType).value} />
                                     </div>
                                     <div className="d-inline-block copy text-center">
                                         <FontAwesome name="copy" />

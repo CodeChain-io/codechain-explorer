@@ -48,7 +48,7 @@ const LatestTransactions = (props: Props) => {
                                                             ? <ImageLoader size={18} className="icon" url={Type.getMetadata((transaction as AssetMintTransactionDoc).data.metadata).icon_url} />
                                                             : <ImageLoader size={18} className="icon" data={(transaction as AssetMintTransactionDoc).data.output.assetType} />
                                                     }
-                                                    <HexString link={`/asset/${(transaction as AssetMintTransactionDoc).data.output.assetType}`} text={(transaction as AssetMintTransactionDoc).data.output.assetType} />
+                                                    <HexString link={`/asset/0x${(transaction as AssetMintTransactionDoc).data.output.assetType}`} text={(transaction as AssetMintTransactionDoc).data.output.assetType} />
                                                 </span>
                                                 : (Type.isAssetTransferTransactionDoc(transaction) ?
                                                     <span>
