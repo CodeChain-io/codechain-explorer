@@ -73,6 +73,18 @@ h3 {
   font-size: 1rem;
 }
 
+@include respond-below(md) {
+  h1 {
+    font-size: 1.5rem;
+  }
+  h2 {
+    font-size: 1.2rem;
+  }
+  h3 {
+    font-size: 1rem;
+  }
+}
+
 // Override bootstrap style
 .btn-primary,
 .btn-primary:active,
