@@ -213,8 +213,8 @@ class TransactionList extends React.Component<Props, State> {
                                                         input.prevOut.owner ?
                                                             (
                                                                 owner && owner === AssetTransferAddress.fromPublicKeyHash(new H256(input.prevOut.owner)).value ?
-                                                                    AssetTransferAddress.fromPublicKeyHash(new H256(input.prevOut.owner)).value.slice(0, 10)
-                                                                    : <Link to={`/addr-asset/${AssetTransferAddress.fromPublicKeyHash(new H256(input.prevOut.owner)).value}`}>{AssetTransferAddress.fromPublicKeyHash(new H256(input.prevOut.owner)).value.slice(0, 10)}</Link>
+                                                                    AssetTransferAddress.fromPublicKeyHash(new H256(input.prevOut.owner)).value
+                                                                    : <Link to={`/addr-asset/${AssetTransferAddress.fromPublicKeyHash(new H256(input.prevOut.owner)).value}`}>{AssetTransferAddress.fromPublicKeyHash(new H256(input.prevOut.owner)).value}</Link>
                                                             )
                                                             : "Unknown"
                                                     }
@@ -262,8 +262,8 @@ class TransactionList extends React.Component<Props, State> {
                                                             output.owner ?
                                                                 (
                                                                     owner && owner === AssetTransferAddress.fromPublicKeyHash(new H256(output.owner)).value ?
-                                                                        AssetTransferAddress.fromPublicKeyHash(new H256(output.owner)).value.slice(0, 10)
-                                                                        : <Link to={`/addr-asset/${AssetTransferAddress.fromPublicKeyHash(new H256(output.owner)).value}`}>{AssetTransferAddress.fromPublicKeyHash(new H256(output.owner)).value.slice(0, 10)}</Link>
+                                                                        AssetTransferAddress.fromPublicKeyHash(new H256(output.owner)).value
+                                                                        : <Link to={`/addr-asset/${AssetTransferAddress.fromPublicKeyHash(new H256(output.owner)).value}`}>{AssetTransferAddress.fromPublicKeyHash(new H256(output.owner)).value}</Link>
                                                                 )
                                                                 : "Unknown"
                                                         }
