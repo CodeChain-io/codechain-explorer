@@ -1,6 +1,4 @@
 import * as React from "react";
-import * as _ from "lodash";
-import * as FontAwesome from "react-fontawesome";
 
 import { Col, Row } from "reactstrap";
 
@@ -83,13 +81,13 @@ const ParcelDetails = (props: Props) => {
 
     return <div className="parcel-details">
         <Row>
-            <Col lg={Type.isChangeShardStateDoc(parcel.action) ? "9" : "12"}>
+            <Col>
                 <h2>Details</h2>
                 <hr className="heading-hr" />
             </Col>
         </Row>
         <Row>
-            <Col lg={Type.isChangeShardStateDoc(parcel.action) ? "9" : "12"}>
+            <Col>
                 <div className="data-set">
                     <Row>
                         <Col md="3">
@@ -170,30 +168,6 @@ const ParcelDetails = (props: Props) => {
                     }
                 </div>
             </Col>
-            {
-                Type.isChangeShardStateDoc(parcel.action) ?
-                    <Col lg="3">
-                        <div className="right-panel-item mt-3 mt-lg-0">
-                            <h2># of Transaction types</h2>
-                            <hr />
-                            <div className="d-flex align-items-center">
-                                <FontAwesome className="square asset-transfer-transaction-text-color" name="square" />
-                                <span className="mr-auto item-name">Transfer</span>
-                                <span>
-                                    {_.filter((parcel.action as ChangeShardStateDoc).transactions, (tx) => Type.isAssetTransferTransactionDoc(tx)).length
-                                    }</span>
-                            </div>
-                            <hr />
-                            <div className="d-flex align-items-center">
-                                <FontAwesome className="square asset-mint-transaction-text-color" name="square" />
-                                <span className="mr-auto item-name">Mint</span>
-                                <span>
-                                    {_.filter((parcel.action as ChangeShardStateDoc).transactions, (tx) => Type.isAssetMintTransactionDoc(tx)).length}</span>
-                            </div>
-                        </div>
-                    </Col>
-                    : null
-            }
         </Row>
     </div>
 };

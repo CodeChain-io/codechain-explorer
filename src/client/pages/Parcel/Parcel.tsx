@@ -1,5 +1,7 @@
 import * as React from "react";
 import * as moment from "moment";
+import * as FontAwesome from "react-fontawesome";
+import * as _ from "lodash";
 import { match } from "react-router";
 import { Container, Row, Col } from "reactstrap";
 import { Error } from "../../components/error/Error/Error";
@@ -81,9 +83,40 @@ class Parcel extends React.Component<Props, State> {
                     <CopyButton className="d-inline-block" copyString={`0x${parcelResult.parcel.hash}`} />
                 </Col>
             </Row>
-            <div className="mt-large">
-                <ParcelDetails parcel={parcelResult.parcel} status={parcelResult.status} />
-            </div>
+            <Row className="mt-large">
+                <Col lg={Type.isChangeShardStateDoc(parcelResult.parcel.action) ? "9" : "12"}>
+                    <ParcelDetails parcel={parcelResult.parcel} status={parcelResult.status} />
+                </Col>
+                {
+                    Type.isChangeShardStateDoc(parcelResult.parcel.action) ?
+                        <Col lg="3">
+                            <div className="right-panel-item mt-3 mt-lg-0">
+                                <h2># of Transaction types</h2>
+                                <hr />
+                                <div className="d-flex align-items-center">
+                                    <FontAwesome className="square asset-transfer-transaction-text-color" name="square" />
+                                    <span className="mr-auto item-name">Transfer</span>
+                                    <span>
+                                        {
+                                            _.filter((parcelResult.parcel.action as ChangeShardStateDoc).transactions, (tx) => Type.isAssetTransferTransactionDoc(tx)).length
+                                        }
+                                    </span>
+                                </div>
+                                <hr />
+                                <div className="d-flex align-items-center">
+                                    <FontAwesome className="square asset-mint-transaction-text-color" name="square" />
+                                    <span className="mr-auto item-name">Mint</span>
+                                    <span>
+                                        {
+                                            _.filter((parcelResult.parcel.action as ChangeShardStateDoc).transactions, (tx) => Type.isAssetMintTransactionDoc(tx)).length
+                                        }
+                                    </span>
+                                </div>
+                            </div>
+                        </Col>
+                        : null
+                }
+            </Row>
             <Row>
                 <Col lg="9">
                     {this.showTransactionList(parcelResult.parcel)}
