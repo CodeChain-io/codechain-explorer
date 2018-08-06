@@ -42,7 +42,7 @@ class Blocks extends React.Component<Props, State> {
         const { location: { search } } = this.props;
         const { location: { search: nextSearch } } = props;
         if (nextSearch !== search) {
-            this.setState({ blocks: [], isBlockRequested: false, totalBlockCount: undefined, redirect: false, redirectPage: undefined, redirectItemsPerPage: undefined });
+            this.setState({ blocks: [], isBlockRequested: false, redirect: false, redirectPage: undefined, redirectItemsPerPage: undefined });
         }
     }
 
