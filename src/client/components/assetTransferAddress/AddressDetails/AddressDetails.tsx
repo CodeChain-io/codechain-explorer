@@ -35,7 +35,7 @@ const AddressDetails = (prop: OwnProps) => {
                             # of Assets
                         </Col>
                         <Col md="9">
-                            {utxo.length}
+                            {utxo.length.toLocaleString()}
                         </Col>
                     </Row>
                     <hr />
@@ -44,7 +44,7 @@ const AddressDetails = (prop: OwnProps) => {
                             # of Transactions
                         </Col>
                         <Col md="9">
-                            {transactions.length}
+                            {transactions.length.toLocaleString()}
                         </Col>
                     </Row>
                     <hr />

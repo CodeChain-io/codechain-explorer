@@ -3,6 +3,7 @@ import { U256 } from "codechain-sdk/lib/core/classes";
 import { Row, Col } from "reactstrap";
 
 import "./AccountDetails.scss";
+import { CommaNumberString } from "../../util/CommaNumberString/CommaNumberString";
 
 interface OwnProps {
     account: {
@@ -28,7 +29,7 @@ const AccountDetails = (prop: OwnProps) => {
                             Balance
                         </Col>
                         <Col md="9">
-                            {account.balance.value.toString()}
+                            <CommaNumberString text={account.balance.value.toString()} />
                         </Col>
                     </Row>
                     <hr />
@@ -37,7 +38,7 @@ const AccountDetails = (prop: OwnProps) => {
                             Nonce
                         </Col>
                         <Col md="9">
-                            {account.nonce.value.toString()}
+                            <CommaNumberString text={account.nonce.value.toString()} />
                         </Col>
                     </Row>
                     <hr />

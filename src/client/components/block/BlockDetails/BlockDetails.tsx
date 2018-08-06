@@ -108,7 +108,7 @@ class BlockDetails extends React.Component<OwnProps> {
                                     # of Parcels
                                 </Col>
                                 <Col md="9">
-                                    {block.parcels.length}
+                                    {block.parcels.length.toLocaleString()}
                                 </Col>
                             </Row>
                             <hr />
@@ -123,7 +123,7 @@ class BlockDetails extends React.Component<OwnProps> {
                                         } else {
                                             return memo;
                                         }
-                                    }, 0)}
+                                    }, 0).toLocaleString()}
                                 </Col>
                             </Row>
                             <hr />

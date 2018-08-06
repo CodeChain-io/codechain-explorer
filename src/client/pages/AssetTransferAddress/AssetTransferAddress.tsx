@@ -82,7 +82,7 @@ class AssetTransferAddress extends React.Component<Props, State> {
                                 <FontAwesome className="square asset-transfer-transaction-text-color" name="square" />
                                 <span className="mr-auto item-name">Transfer</span>
                                 <span>
-                                    {_.filter(transactions, (tx) => Type.isAssetTransferTransactionDoc(tx)).length
+                                    {_.filter(transactions, (tx) => Type.isAssetTransferTransactionDoc(tx)).length.toLocaleString()
                                     }</span>
                             </div>
                             <hr />
@@ -90,7 +90,7 @@ class AssetTransferAddress extends React.Component<Props, State> {
                                 <FontAwesome className="square asset-mint-transaction-text-color" name="square" />
                                 <span className="mr-auto item-name">Mint</span>
                                 <span>
-                                    {_.filter(transactions, (tx) => Type.isAssetMintTransactionDoc(tx)).length}</span>
+                                    {_.filter(transactions, (tx) => Type.isAssetMintTransactionDoc(tx)).length.toLocaleString()}</span>
                             </div>
                         </div>
                     </Col>

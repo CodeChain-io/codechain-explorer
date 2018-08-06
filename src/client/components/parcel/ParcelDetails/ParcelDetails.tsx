@@ -9,6 +9,7 @@ import { Link } from "react-router-dom";
 import { PlatformAddress } from "codechain-sdk/lib/key/classes";
 import { ActionBadge } from "../../util/ActionBadge/ActionBadge";
 import { StatusBadge } from "../../util/StatusBadge/StatusBadge";
+import { CommaNumberString } from "../../util/CommaNumberString/CommaNumberString";
 
 interface Props {
     parcel: ParcelDoc;
@@ -41,7 +42,7 @@ const getElementByType = (parcel: ParcelDoc) => {
                     Amount
                 </Col>
                 <Col md="9">
-                    {(parcel.action as PaymentDoc).amount}
+                    <CommaNumberString text={(parcel.action as PaymentDoc).amount} />
                 </Col>
             </Row>,
             <hr key="line3" />
@@ -67,7 +68,7 @@ const getElementByType = (parcel: ParcelDoc) => {
                         # of Transactions
                     </Col>
                     <Col md="9">
-                        {(parcel.action as ChangeShardStateDoc).transactions.length}
+                        {(parcel.action as ChangeShardStateDoc).transactions.length.toLocaleString()}
                     </Col>
                 </Row >,
                 <hr key="line" />
@@ -114,7 +115,7 @@ const ParcelDetails = (props: Props) => {
                             Parcel Index
                         </Col>
                         <Col md="9">
-                            {parcel.parcelIndex}
+                            {parcel.parcelIndex ? parcel.parcelIndex.toLocaleString() : 0}
                         </Col>
                     </Row>
                     <hr />
@@ -123,7 +124,7 @@ const ParcelDetails = (props: Props) => {
                             Network ID
                         </Col>
                         <Col md="9">
-                            {parcel.networkId}
+                            {parcel.networkId.toLocaleString()}
                         </Col>
                     </Row>
                     <hr />
@@ -132,7 +133,7 @@ const ParcelDetails = (props: Props) => {
                             Nonce
                         </Col>
                         <Col md="9">
-                            {parcel.nonce}
+                            <CommaNumberString text={parcel.nonce} />
                         </Col>
                     </Row>
                     <hr />
@@ -150,7 +151,7 @@ const ParcelDetails = (props: Props) => {
                             Fee
                         </Col>
                         <Col md="9">
-                            {parcel.fee}
+                            <CommaNumberString text={parcel.fee} />
                         </Col>
                     </Row>
                     <hr />

@@ -79,7 +79,7 @@ const AssetDetails = (prop: OwnProps) => {
                             Total Supply
                         </Col>
                         <Col md="9">
-                            {prop.assetScheme.amount}
+                            {prop.assetScheme.amount ? prop.assetScheme.amount.toLocaleString() : 0}
                         </Col>
                     </Row>
                     <hr />

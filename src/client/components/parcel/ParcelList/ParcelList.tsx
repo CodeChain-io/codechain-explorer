@@ -11,6 +11,7 @@ import { ParcelDoc, Type, PaymentDoc, ChangeShardStateDoc, SetRegularKeyDoc } fr
 import { PlatformAddress } from "codechain-sdk/lib/key/classes";
 import { Link } from "react-router-dom";
 import { ActionBadge } from "../../util/ActionBadge/ActionBadge";
+import { CommaNumberString } from "../../util/CommaNumberString/CommaNumberString";
 
 interface Props {
     parcels: ParcelDoc[];
@@ -101,7 +102,7 @@ class ParcelList extends React.Component<Props, State> {
                                             Fee
                                         </Col>
                                         <Col md="9">
-                                            {parcel.fee}
+                                            <CommaNumberString text={parcel.fee} />
                                         </Col>
                                     </Row>
                                     <hr />
@@ -135,7 +136,7 @@ class ParcelList extends React.Component<Props, State> {
                         Amount
                     </Col>
                     <Col md="9">
-                        {(parcel.action as PaymentDoc).amount}
+                        <CommaNumberString text={(parcel.action as PaymentDoc).amount} />
                     </Col>
                 </Row>,
                 <Row key="payment-sender-receiver">
@@ -171,12 +172,12 @@ class ParcelList extends React.Component<Props, State> {
                     # of Txs
                 </Col>
                 <Col md="9">
-                    {(parcel.action as ChangeShardStateDoc).transactions.length}
+                    {(parcel.action as ChangeShardStateDoc).transactions.length.toLocaleString()}
                     <div className="small-text">
-                        <FontAwesome name="square" className="asset-transfer-transaction-text-color" /> Transfer: {_.filter((parcel.action as ChangeShardStateDoc).transactions, (tx) => Type.isAssetTransferTransactionDoc(tx)).length}
+                        <FontAwesome name="square" className="asset-transfer-transaction-text-color" /> Transfer: {_.filter((parcel.action as ChangeShardStateDoc).transactions, (tx) => Type.isAssetTransferTransactionDoc(tx)).length.toLocaleString()}
                     </div>
                     <div className="small-text">
-                        <FontAwesome name="square" className="asset-mint-transaction-text-color" /> Mint: {_.filter((parcel.action as ChangeShardStateDoc).transactions, (tx) => Type.isAssetMintTransactionDoc(tx)).length}
+                        <FontAwesome name="square" className="asset-mint-transaction-text-color" /> Mint: {_.filter((parcel.action as ChangeShardStateDoc).transactions, (tx) => Type.isAssetMintTransactionDoc(tx)).length.toLocaleString()}
                     </div>
                 </Col>
             </Row>

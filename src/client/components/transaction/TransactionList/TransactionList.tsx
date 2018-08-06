@@ -129,7 +129,7 @@ class TransactionList extends React.Component<Props, State> {
                             Amount
                                 </Col>
                         <Col md="9">
-                            {transactionDoc.data.output.amount}
+                            {transactionDoc.data.output.amount ? transactionDoc.data.output.amount.toLocaleString() : 0}
                         </Col>
                     </Row>,
                     <hr key="line1" />,
@@ -173,7 +173,7 @@ class TransactionList extends React.Component<Props, State> {
                             # of Input
                         </Col>
                         <Col md="9">
-                            {transactionDoc.data.inputs.length}
+                            {transactionDoc.data.inputs.length.toLocaleString()}
                         </Col>
                     </Row>,
                     <hr key="line1" />,
@@ -182,7 +182,7 @@ class TransactionList extends React.Component<Props, State> {
                             # of Output
                         </Col>
                         <Col md="9">
-                            {transactionDoc.data.outputs.length}
+                            {transactionDoc.data.outputs.length.toLocaleString()}
                         </Col>
                     </Row>,
                     <hr key="line2" />,
@@ -225,7 +225,7 @@ class TransactionList extends React.Component<Props, State> {
                                                         Amount
                                                         </Col>
                                                     <Col md="8">
-                                                        {input.prevOut.amount}
+                                                        {input.prevOut.amount.toLocaleString()}
                                                     </Col>
                                                 </Row>
                                             </div>
@@ -274,7 +274,7 @@ class TransactionList extends React.Component<Props, State> {
                                                         Amount
                                                         </Col>
                                                     <Col md="8">
-                                                        {output.amount}
+                                                        {output.amount.toLocaleString()}
                                                     </Col>
                                                 </Row>
                                             </div>

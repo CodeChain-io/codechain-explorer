@@ -41,7 +41,7 @@ const AssetList = (prop: OwnProps) => {
                                                     {metadata.name}
                                                 </Link>
                                                 <div>
-                                                    <span>x {assetBundle.asset.amount}</span>
+                                                    <span>x {assetBundle.asset.amount.toLocaleString()}</span>
                                                 </div>
                                             </div>
                                         </div>

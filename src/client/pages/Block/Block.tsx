@@ -88,19 +88,19 @@ class Block extends React.Component<Props, State> {
                             <div className="d-flex align-items-center">
                                 <FontAwesome className="square payment-action-text-color" name="square" />
                                 <span className="mr-auto item-name">Payment</span>
-                                <span>{_.filter(block.parcels, (parcel) => Type.isPaymentDoc(parcel.action)).length}</span>
+                                <span>{_.filter(block.parcels, (parcel) => Type.isPaymentDoc(parcel.action)).length.toLocaleString()}</span>
                             </div>
                             <hr />
                             <div className="d-flex align-items-center">
                                 <FontAwesome className="square change-shard-state-action-text-color" name="square" />
                                 <span className="mr-auto item-name">ChangeShardState</span>
-                                <span>{_.filter(block.parcels, (parcel) => Type.isChangeShardStateDoc(parcel.action)).length}</span>
+                                <span>{_.filter(block.parcels, (parcel) => Type.isChangeShardStateDoc(parcel.action)).length.toLocaleString()}</span>
                             </div>
                             <hr />
                             <div className="d-flex align-items-center">
                                 <FontAwesome className="square set-regular-key-action-text-color" name="square" />
                                 <span className="mr-auto item-name">SetRegularKey</span>
-                                <span>{_.filter(block.parcels, (parcel) => Type.isSetRegularKeyDoc(parcel.action)).length}</span>
+                                <span>{_.filter(block.parcels, (parcel) => Type.isSetRegularKeyDoc(parcel.action)).length.toLocaleString()}</span>
                             </div>
                         </div>
                         <div className="right-panel-item mt-small">
@@ -118,7 +118,7 @@ class Block extends React.Component<Props, State> {
                                         } else {
                                             return memo;
                                         }
-                                    }, 0)}</span>
+                                    }, 0).toLocaleString()}</span>
                             </div>
                             <hr />
                             <div className="d-flex align-items-center">
@@ -133,7 +133,7 @@ class Block extends React.Component<Props, State> {
                                         } else {
                                             return memo;
                                         }
-                                    }, 0)}</span>
+                                    }, 0).toLocaleString()}</span>
                             </div>
                         </div>
                     </Col>

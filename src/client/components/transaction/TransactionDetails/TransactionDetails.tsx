@@ -50,7 +50,7 @@ const getTransactionInfoByType = (transaction: TransactionDoc, status: string) =
                                     NetworkID
                                 </Col>
                                 <Col md="9">
-                                    {transactionDoc.data.networkId}
+                                    {transactionDoc.data.networkId.toLocaleString()}
                                 </Col>
                             </Row>
                             <hr />
@@ -59,7 +59,7 @@ const getTransactionInfoByType = (transaction: TransactionDoc, status: string) =
                                     Nonce
                                 </Col>
                                 <Col md="9">
-                                    {transactionDoc.data.nonce}
+                                    {transactionDoc.data.nonce.toLocaleString()}
                                 </Col>
                             </Row>
                             <hr />
@@ -77,7 +77,7 @@ const getTransactionInfoByType = (transaction: TransactionDoc, status: string) =
                                     # of Input
                                 </Col>
                                 <Col md="9">
-                                    {transactionDoc.data.inputs.length}
+                                    {transactionDoc.data.inputs.length.toLocaleString()}
                                 </Col>
                             </Row>
                             <hr />
@@ -86,7 +86,7 @@ const getTransactionInfoByType = (transaction: TransactionDoc, status: string) =
                                     # of Output
                                 </Col>
                                 <Col md="9">
-                                    {transactionDoc.data.outputs.length}
+                                    {transactionDoc.data.outputs.length.toLocaleString()}
                                 </Col>
                             </Row>
                             <hr />
@@ -134,7 +134,7 @@ const getTransactionInfoByType = (transaction: TransactionDoc, status: string) =
                                                     Amount
                                                 </Col>
                                                 <Col md="9">
-                                                    {input.prevOut.amount}
+                                                    {input.prevOut.amount.toLocaleString()}
                                                 </Col>
                                             </Row>
                                             <hr />
@@ -174,7 +174,7 @@ const getTransactionInfoByType = (transaction: TransactionDoc, status: string) =
                                                     Prev Tx Index
                                                 </Col>
                                                 <Col md="9">
-                                                    {input.prevOut.index}
+                                                    {input.prevOut.index.toLocaleString()}
                                                 </Col>
                                             </Row>
                                             <hr />
@@ -226,7 +226,7 @@ const getTransactionInfoByType = (transaction: TransactionDoc, status: string) =
                                                     Amount
                                                 </Col>
                                                 <Col md="9">
-                                                    {output.amount}
+                                                    {output.amount.toLocaleString()}
                                                 </Col>
                                             </Row>
                                             <hr />
@@ -354,7 +354,7 @@ const getTransactionInfoByType = (transaction: TransactionDoc, status: string) =
                                 Amount
                             </Col>
                             <Col md="9">
-                                {transactionDoc.data.output.amount}
+                                {transactionDoc.data.output.amount ? transactionDoc.data.output.amount.toLocaleString() : 0}
                             </Col>
                         </Row>
                         <hr />
