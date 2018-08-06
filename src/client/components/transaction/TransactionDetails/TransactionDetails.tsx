@@ -41,7 +41,7 @@ const getTransactionInfoByType = (transaction: TransactionDoc, status: string) =
                                     Parcel Hash
                                 </Col>
                                 <Col md="9">
-                                    Not Implemented
+                                    <HexString text={transactionDoc.data.parcelHash} link={`/parcel/0x${transactionDoc.data.parcelHash}`} />
                                 </Col>
                             </Row>
                             <hr />
@@ -274,6 +274,15 @@ const getTransactionInfoByType = (transaction: TransactionDoc, status: string) =
                             </Col>
                             <Col md="9">
                                 <TypeBadge transaction={transaction} />
+                            </Col>
+                        </Row>
+                        <hr />
+                        <Row>
+                            <Col md="3">
+                                Parcel Hash
+                            </Col>
+                            <Col md="9">
+                                <HexString text={transactionDoc.data.parcelHash} link={`/parcel/0x${transactionDoc.data.parcelHash}`} />
                             </Col>
                         </Row>
                         <hr />
