@@ -173,7 +173,7 @@ class Blocks extends React.Component<Props, State> {
 
     private handleOptionChange = (event: any) => {
         const selected = parseInt(event.target.value, 10);
-        this.setState({ redirectItemsPerPage: selected, redirect: true });
+        this.setState({ redirectItemsPerPage: selected, redirect: true, redirectPage: 1 });
     }
 
     private onTotalBlockCount = (totalBlockCount: number) => {
