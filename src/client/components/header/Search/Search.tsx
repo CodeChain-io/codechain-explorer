@@ -57,11 +57,12 @@ class Search extends React.Component<Props, State> {
             onChange: this.updateInputValue
         };
         return <Form inline={true} onSubmit={this.handleSumbit} className={`search-form d-flex ${this.props.className}`}>
-            <FormGroup className="mb-0 search-form-group">
-                <div className="w-100">
-                    {/*
-                    <Input className={`search-input ${requestCount === 0 && status === "notFound" && !redirectTo ? "is-invalid" : ""}`} value={inputValue} onChange={this.updateInputValue} type="text" placeholder="Block / Parcel / Tx / Asset / Address" />
-                    */}
+            <FormGroup className="mb-0 search-form-group d-flex">
+                {
+                    status === "notFound" ?
+                        <FontAwesome name="exclamation-triangle" className="not-found text-danger" /> : null
+                }
+                <div className="search-input d-inline-block">
                     <Autosuggest
                         suggestions={suggestions}
                         onSuggestionsFetchRequested={this.onSuggestionsFetchRequested}
