@@ -14,8 +14,6 @@ export interface ServerConfig {
 }
 
 const main = () => {
-    const configDir = "NODE_CONFIG_DIR";
-    process.env[configDir] = process.env[configDir] || (`${__dirname}/config/`);
     const _ = yargs.command({
         command: "*",
         handler: () => {

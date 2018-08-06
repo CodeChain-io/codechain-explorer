@@ -16,8 +16,6 @@ export interface WorkerConfig {
 }
 
 const app = () => {
-    const nodeConfigDir = "NODE_CONFIG_DIR";
-    process.env[nodeConfigDir] = process.env[nodeConfigDir] || (`${__dirname}/config/`);
     const elasticSearchAgent = new ElasticSearchAgent(config.elasticSearch.host);
     const codeChainAgent = new CodeChainAgent(config.codeChain.host);
     const worker = new BlockSyncWorker(config, codeChainAgent, elasticSearchAgent);

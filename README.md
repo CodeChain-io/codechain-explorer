@@ -37,15 +37,19 @@ Use yarn package manager to install packages
 - Client developed by react framework
 ### Worker
 Run CodeChain-worker for indexing data to ElasticSearch
-* You can change ElasticSearch and CodeChain host URL in "/worker/config/default.json"
 ```
 # yarn run start-worker
+
+// You can change ElasticSearch and CodeChain host URL using environment variables.
+# CODECHAIN_HOST=127.0.0.1:8080 ELASTICSERACH_HOST=127.0.0.1:9200 yarn run start-worker
 ```
 ### Server
 Run CodeChain-explorer server
-* You can change ElasticSearch and CodeChain host URL in "/server/config/default.json"
 ```
 # yarn run start-server
+
+// You can change ElasticSearch and CodeChain host URL in environment variables.
+# CODECHAIN_HOST=127.0.0.1:8080 ELASTICSERACH_HOST=127.0.0.1:9200 yarn run start-server
 ```
 ### Client
 Run CodeChain-explorer client in development mode
@@ -59,6 +63,9 @@ Run CodeChain-explorer client in development mode
 ### Running worker, server, client at once
 ```
 # yarn run start
+
+// You can chage each host URL with environment variables.
+# CODECHAIN_HOST=127.0.0.1:8080 ELASTICSERACH_HOST=127.0.0.1:9200 REACT_APP_SERVER_HOST=127.0.0.1:8081 yarn run start
 ```
 ## Running for production
 ### Build
