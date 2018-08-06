@@ -38,7 +38,7 @@ const AssetList = (prop: OwnProps) => {
                                         <div className="d-inline-block d-flex align-items-center asset-text-container">
                                             <div>
                                                 <Link to={`/asset/0x${assetBundle.asset.assetType}`}>
-                                                    <h3>{metadata.name}</h3>
+                                                    {metadata.name}
                                                 </Link>
                                                 <div>
                                                     <span>x {assetBundle.asset.amount}</span>
