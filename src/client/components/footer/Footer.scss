@@ -1,5 +1,43 @@
+@import "../../mixins.scss";
+@import "../../variables.scss";
 .footer {
-  background-color: #EAEBF4;
-  padding: 16px;
-  height: 100px;
+  background-color: $background-gray;
+  padding-top: 25px;
+  padding-bottom: 15px;
+  .logo {
+    width: 130px;
+    height: 40px;
+  }
+  .gitter-icon {
+    width: 17px;
+    height: 25px;
+  }
+  .home-link-list {
+    padding: 0;
+    list-style-type: none;
+    margin: 0;
+    li {
+      @include small-text;
+      margin-bottom: 5px;
+      a {
+        color: $dark-color;
+      }
+    }
+  }
+  .copyright {
+    margin-top: 5px;
+    @include small-text;
+  }
+  .link-list {
+    @include respond-above(lg) {
+      float: right !important;
+    }
+    li {
+      font-size: 2rem;
+      margin-left: 10px;
+      a {
+        color: $dark-color;
+      }
+    }
+  }
 }
