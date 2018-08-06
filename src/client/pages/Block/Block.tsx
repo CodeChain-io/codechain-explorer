@@ -47,7 +47,7 @@ class Block extends React.Component<Props, State> {
         if (notFound) {
             return (
                 <div>
-                    <Error content={id.toString()} title="Invalid block" />
+                    <Error content={id.toString()} title="The block does not exist." />
                 </div>
             )
         }

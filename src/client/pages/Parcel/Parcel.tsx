@@ -60,7 +60,7 @@ class Parcel extends React.Component<Props, State> {
             } else {
                 return (
                     <div>
-                        <Error content={hash} title="Invalid parcel" />
+                        <Error content={hash} title="The parcel does not exist." />
                     </div>
                 )
             }

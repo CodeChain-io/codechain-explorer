@@ -62,7 +62,7 @@ class Transaction extends React.Component<Props, State> {
             } else {
                 return (
                     <div>
-                        <Error content={hash} title="Invalid transaction" />
+                        <Error content={hash} title="The transaction does not exist." />
                     </div>
                 )
             }

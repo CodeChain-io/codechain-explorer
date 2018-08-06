@@ -52,7 +52,7 @@ class Address extends React.Component<Props, State> {
         if (notFound) {
             return (
                 <div>
-                    <Error content={address} title="Invalid address" />
+                    <Error content={address} title="The address does not exist." />
                 </div>
             )
         }

@@ -49,7 +49,7 @@ class Asset extends React.Component<Props, State> {
         if (notFound) {
             return (
                 <div>
-                    <Error content={assetType} title="Invalid asset" />
+                    <Error content={assetType} title="The asset does not exist." />
                 </div>
             )
         }

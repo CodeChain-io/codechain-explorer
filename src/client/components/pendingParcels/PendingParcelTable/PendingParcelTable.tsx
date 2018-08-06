@@ -68,8 +68,8 @@ class PendingParcelTable extends React.Component<Prop, State> {
                                     <th style={{ width: '20%' }}>Signer</th>
                                     <th style={{ width: '10%' }} className="sort-header" onClick={_.partial(this.handleSortButton, 0)}>Fee{this.getSortButton(0)}</th>
                                     <th style={{ width: '10%' }} className="sort-header" onClick={_.partial(this.handleSortButton, 1)}>Txs{this.getSortButton(1)}</th>
-                                    <th style={{ width: '20%' }} className="sort-header" onClick={_.partial(this.handleSortButton, 2)}>Pending duration{this.getSortButton(2)}</th>
-                                    <th style={{ width: '20%' }}>Estimated ...</th>
+                                    <th style={{ width: '20%' }} className="sort-header" onClick={_.partial(this.handleSortButton, 2)}>Pending Period{this.getSortButton(2)}</th>
+                                    <th style={{ width: '20%' }}>Estimated Confirmation Period</th>
                                 </tr>
                             </thead>
                             <tbody>
