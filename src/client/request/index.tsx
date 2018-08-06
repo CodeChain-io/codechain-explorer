@@ -18,6 +18,7 @@ import RequestTransactions from "./RequestTransactions";
 import RequestPendingParcel from "./RequestPendingParcel";
 import RequestPendingTransaction from "./RequestPendingTransaction";
 import RequestAssetBundlesByName from "./RequestAssetBundlesByName";
+import RequestTotalBlockCount from "./RequestTotalBlockCount";
 
 export { RequestPing };
 export { RequestParcel };
@@ -39,3 +40,4 @@ export { RequestTransactions };
 export { RequestPendingParcel };
 export { RequestPendingTransaction };
 export { RequestAssetBundlesByName };
+export { RequestTotalBlockCount };

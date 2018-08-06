@@ -63,17 +63,28 @@ export function createApiRouter(context: ServerContext, useCors = false) {
     });
 
     router.get("/blocks", async (req, res, next) => {
+        const { page, itemsPerPage } = req.query;
         try {
-            const blocks = await context.db.getBlocks();
+            const blocks = await context.db.getBlocks(page, itemsPerPage);
             res.send(blocks);
         } catch (e) {
             next(e);
         }
     });
 
-    router.get("/parcels/pending", async (req, res, next) => {
+    router.get("/blocks/totalCount", async (req, res, next) => {
         try {
-            const pendingParcels = await context.db.getCurrentPendingParcels();
+            const countOfBlocks = await context.db.getTotalBlockCount();
+            res.send(JSON.stringify(countOfBlocks));
+        } catch (e) {
+            next(e);
+        }
+    });
+
+    router.get("/parcels/pending", async (req, res, next) => {
+        const { page, itemsPerPage } = req.query;
+        try {
+            const pendingParcels = await context.db.getCurrentPendingParcels(page, itemsPerPage);
             res.send(pendingParcels);
         } catch (e) {
             next(e);
@@ -109,8 +120,9 @@ export function createApiRouter(context: ServerContext, useCors = false) {
     });
 
     router.get("/parcels", async (req, res, next) => {
+        const { page, itemsPerPage } = req.query;
         try {
-            const parcels = await context.db.getParcels();
+            const parcels = await context.db.getParcels(page, itemsPerPage);
             res.send(parcels);
         } catch (e) {
             next(e);
@@ -132,8 +144,9 @@ export function createApiRouter(context: ServerContext, useCors = false) {
     });
 
     router.get("/txs", async (req, res, next) => {
+        const { page, itemsPerPage } = req.query;
         try {
-            const transactions = await context.db.getTransactions();
+            const transactions = await context.db.getTransactions(page, itemsPerPage);
             res.send(transactions);
         } catch (e) {
             next(e);

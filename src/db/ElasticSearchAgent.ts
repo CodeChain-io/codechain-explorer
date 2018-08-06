@@ -1,4 +1,4 @@
-import { Client, SearchResponse, DeleteDocumentResponse } from "elasticsearch";
+import { Client, SearchResponse, DeleteDocumentResponse, CountResponse } from "elasticsearch";
 import { Block, H256, H160, SignedParcel } from "codechain-sdk/lib/core/classes";
 import * as _ from "lodash";
 import { BlockDoc, ParcelDoc, Type, AssetTransferTransactionDoc, AssetMintTransactionDoc, Converter, TransactionDoc, AssetDoc, AssetSchemeDoc, AssetBundleDoc, PendingParcelDoc, PendingTransactionDoc } from "./DocType";
@@ -65,14 +65,15 @@ export class ElasticSearchAgent {
         });
     }
 
-    public getBlocks = async (): Promise<BlockDoc[]> => {
+    public getBlocks = async (page: number = 1, itemsPerPage: number = 5): Promise<BlockDoc[]> => {
         return this.search({
             sort: [
                 {
                     "number": { order: "desc" }
                 }
             ],
-            "size": 10000,
+            from: (page - 1) * itemsPerPage,
+            size: itemsPerPage,
             query: {
                 "bool": {
                     "must": [
@@ -86,6 +87,15 @@ export class ElasticSearchAgent {
             }
             return _.map(response.hits.hits, hit => hit._source);
         });
+    }
+
+    public getTotalBlockCount = async (): Promise<number> => {
+        const count = await this.count({
+            "query": {
+                "term": { "isRetracted": false }
+            }
+        });
+        return count.count;
     }
 
     public getBlockByHash = async (hash: H256): Promise<BlockDoc | null> => {
@@ -150,10 +160,10 @@ export class ElasticSearchAgent {
         return parcels[0];
     }
 
-    public getParcels = async (): Promise<ParcelDoc[]> => {
+    public getParcels = async (page: number = 1, itemsPerPage: number = 5): Promise<ParcelDoc[]> => {
         return await this.searchParcels({
             "match_all": {}
-        });
+        }, (page - 1) * itemsPerPage, itemsPerPage);
     }
 
     public getTransaction = async (hash: H256): Promise<TransactionDoc | null> => {
@@ -174,13 +184,13 @@ export class ElasticSearchAgent {
         return transactions[0];
     }
 
-    public getTransactions = async (): Promise<TransactionDoc[]> => {
+    public getTransactions = async (page: number = 1, itemsPerPage: number = 5): Promise<TransactionDoc[]> => {
         return await this.searchTransactions({
             "match_all": {}
         },
             {
                 "number": { "order": "desc" }
-            });
+            }, (page - 1) * itemsPerPage, itemsPerPage);
     }
 
     public getAssetTransferTransactions = async (assetType: H256): Promise<AssetTransferTransactionDoc[]> => {
@@ -412,7 +422,7 @@ export class ElasticSearchAgent {
                     "fuzziness": 3
                 }
             }
-        }, {}, 10);
+        }, {}, 0, 10);
         if (transactions.length === 0) {
             return [];
         }
@@ -432,8 +442,15 @@ export class ElasticSearchAgent {
         });
     }
 
-    public getCurrentPendingParcels = async (): Promise<PendingParcelDoc[]> => {
+    public getCurrentPendingParcels = async (page: number = 1, itemsPerPage: number = 5): Promise<PendingParcelDoc[]> => {
         const response = await this.searchPendinParcel({
+            sort: [
+                {
+                    "timestamp": { order: "desc" }
+                }
+            ],
+            from: (page - 1) * itemsPerPage,
+            size: itemsPerPage,
             "query": {
                 "bool": {
                     "must": [
@@ -618,14 +635,15 @@ export class ElasticSearchAgent {
         });
     }
 
-    private searchParcels = async (query: any): Promise<ParcelDoc[]> => {
+    private searchParcels = async (query: any, from: number = 0, size: number = 10000): Promise<ParcelDoc[]> => {
         const response = await this.search({
             "sort": [
                 {
                     "number": { "order": "desc" }
                 }
             ],
-            "size": 10000,
+            "from": from,
+            "size": size,
             "_source": false,
             "query": {
                 "bool": {
@@ -654,12 +672,13 @@ export class ElasticSearchAgent {
             .value();
     }
 
-    private searchTransactions = async (query: any, sort: any, limit?: number): Promise<TransactionDoc[]> => {
+    private searchTransactions = async (query: any, sort: any, from: number = 0, size: number = 10000): Promise<TransactionDoc[]> => {
         const response = await this.search({
             "sort": [
                 sort
             ],
-            "size": limit || 10000,
+            "from": from,
+            "size": size,
             "_source": false,
             "query": {
                 "bool": {
@@ -712,6 +731,14 @@ export class ElasticSearchAgent {
 
     private search = async (body: any): Promise<SearchResponse<any>> => {
         return this.client.search({
+            index: "block",
+            type: "_doc",
+            body
+        });
+    }
+
+    private count = async (body: any): Promise<CountResponse> => {
+        return this.client.count({
             index: "block",
             type: "_doc",
             body

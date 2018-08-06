@@ -5,6 +5,8 @@ import { apiRequest, ApiError } from "./ApiRequest";
 import { BlockDoc } from "../../db/DocType";
 
 interface OwnProps {
+    page: number;
+    itemsPerPage: number;
     onBlocks: (blocks: BlockDoc[]) => void;
     onError: (e: ApiError) => void;
 }
@@ -17,8 +19,8 @@ type Props = OwnProps & DispatchProps;
 
 class RequestBlocksInternal extends React.Component<Props> {
     public componentWillMount() {
-        const { onError, onBlocks, dispatch } = this.props;
-        apiRequest({ path: `blocks`, dispatch, showProgressBar: true }).then((response: any) => {
+        const { onError, onBlocks, dispatch, page, itemsPerPage } = this.props;
+        apiRequest({ path: `blocks?page=${page}&itemsPerPage=${itemsPerPage}`, dispatch, showProgressBar: true }).then((response: any) => {
             onBlocks(response);
         }).catch(onError);
     }
