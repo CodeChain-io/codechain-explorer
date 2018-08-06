@@ -77,3 +77,8 @@ Build CodeChain-explorer with following script. You can get optimized, uglified 
 ```
 # REACT_APP_SERVER_HOST=127.0.0.1:8080 yarn run build
 ```
+## Tools
+### Delete all indices in the elasticsearch
+```
+# yarn run clear-index
+```
