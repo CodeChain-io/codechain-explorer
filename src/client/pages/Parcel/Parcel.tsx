@@ -11,7 +11,6 @@ import "./Parcel.scss";
 import TransactionList from "../../components/transaction/TransactionList/TransactionList";
 import { ParcelDoc, Type, ChangeShardStateDoc, PendingParcelDoc } from "../../../db/DocType";
 import HexString from "../../components/util/HexString/HexString";
-import { ActionBadge } from "../../components/util/ActionBadge/ActionBadge";
 import CopyButton from "../../components/util/CopyButton/CopyButton";
 
 interface Props {
@@ -69,8 +68,7 @@ class Parcel extends React.Component<Props, State> {
             <Row>
                 <Col md="8" xl="7">
                     <div className="d-flex title-container">
-                        <h1 className="d-inline-block align-self-center">Parcel</h1>
-                        <ActionBadge className="align-self-center ml-3 mr-auto" parcel={parcelResult.parcel} />
+                        <h1 className="d-inline-block align-self-center mr-auto">Parcel</h1>
                         <span className="timestamp align-self-end">{moment.unix(parcelResult.parcel.timestamp).format("YYYY-MM-DD HH:mm:ssZ")}</span>
                     </div>
                 </Col>
@@ -84,7 +82,7 @@ class Parcel extends React.Component<Props, State> {
                 </Col>
             </Row>
             <div className="mt-large">
-                <ParcelDetails parcel={parcelResult.parcel} />
+                <ParcelDetails parcel={parcelResult.parcel} status={parcelResult.status} />
             </div>
             <Row>
                 <Col lg="9">

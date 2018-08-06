@@ -13,7 +13,6 @@ import { TransactionDoc } from "../../../db/DocType";
 import RequestPendingTransaction from "../../request/RequestPendingTransaction";
 import { PendingTransactionDoc } from "../../../db/DocType";
 import HexString from "../../components/util/HexString/HexString";
-import { TypeBadge } from "../../components/util/TypeBadge/TypeBadge";
 import CopyButton from "../../components/util/CopyButton/CopyButton";
 
 interface Props {
@@ -86,7 +85,7 @@ class Transaction extends React.Component<Props, State> {
                     </Col>
                 </Row>
                 <div className="mt-large">
-                    <TransactionDetails transaction={transactionResult.transaction} />
+                    <TransactionDetails transaction={transactionResult.transaction} status={transactionResult.status} />
                 </div>
             </Container>
         )

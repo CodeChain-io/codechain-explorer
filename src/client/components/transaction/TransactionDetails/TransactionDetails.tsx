@@ -11,12 +11,15 @@ import { Buffer } from "buffer";
 import { Link } from "react-router-dom";
 import { PlatformAddress, AssetTransferAddress } from "codechain-sdk/lib/key/classes";
 import { ImageLoader } from "../../util/ImageLoader/ImageLoader";
+import { TypeBadge } from "../../util/TypeBadge/TypeBadge";
+import { StatusBadge } from "../../util/StatusBadge/StatusBadge";
 
 interface Props {
     transaction: TransactionDoc;
+    status: string;
 }
 
-const getTransactionInfoByType = (transaction: TransactionDoc) => {
+const getTransactionInfoByType = (transaction: TransactionDoc, status: string) => {
     if (Type.isAssetTransferTransactionDoc(transaction)) {
         const transactionDoc = transaction as AssetTransferTransactionDoc;
         return (
@@ -24,6 +27,24 @@ const getTransactionInfoByType = (transaction: TransactionDoc) => {
                 <Row key="details">
                     <Col lg="12">
                         <div className="data-set">
+                            <Row>
+                                <Col md="3">
+                                    Action
+                                </Col>
+                                <Col md="9">
+                                    <TypeBadge transaction={transaction} />
+                                </Col>
+                            </Row>
+                            <hr />
+                            <Row>
+                                <Col md="3">
+                                    Parcel Hash
+                                </Col>
+                                <Col md="9">
+                                    Not Implemented
+                                </Col>
+                            </Row>
+                            <hr />
                             <Row>
                                 <Col md="3">
                                     NetworkID
@@ -39,6 +60,33 @@ const getTransactionInfoByType = (transaction: TransactionDoc) => {
                                 </Col>
                                 <Col md="9">
                                     {transactionDoc.data.nonce}
+                                </Col>
+                            </Row>
+                            <hr />
+                            <Row>
+                                <Col md="3">
+                                    Status
+                                </Col>
+                                <Col md="9">
+                                    <StatusBadge status={status} />
+                                </Col>
+                            </Row>
+                            <hr />
+                            <Row>
+                                <Col md="3">
+                                    # of Input
+                                </Col>
+                                <Col md="9">
+                                    {transactionDoc.data.inputs.length}
+                                </Col>
+                            </Row>
+                            <hr />
+                            <Row>
+                                <Col md="3">
+                                    # of Output
+                                </Col>
+                                <Col md="9">
+                                    {transactionDoc.data.outputs.length}
                                 </Col>
                             </Row>
                             <hr />
@@ -65,8 +113,8 @@ const getTransactionInfoByType = (transaction: TransactionDoc) => {
                                                 <Col md="9">
                                                     {
                                                         Type.getMetadata(input.prevOut.assetScheme.metadata).icon_url ?
-                                                            <span><ImageLoader size={18} url={Type.getMetadata(input.prevOut.assetScheme.metadata).icon_url} /><HexString link={`/asset/0x${input.prevOut.assetType}`} text={input.prevOut.assetType} /></span>
-                                                            : <span><ImageLoader size={18} data={input.prevOut.assetType} /><HexString link={`/asset/0x${input.prevOut.assetType}`} text={input.prevOut.assetType} /></span>
+                                                            <span><ImageLoader className="mr-2" size={18} url={Type.getMetadata(input.prevOut.assetScheme.metadata).icon_url} /><HexString link={`/asset/0x${input.prevOut.assetType}`} text={input.prevOut.assetType} /></span>
+                                                            : <span><ImageLoader className="mr-2" size={18} data={input.prevOut.assetType} /><HexString link={`/asset/0x${input.prevOut.assetType}`} text={input.prevOut.assetType} /></span>
                                                     }
                                                 </Col>
                                             </Row>
@@ -222,10 +270,19 @@ const getTransactionInfoByType = (transaction: TransactionDoc) => {
                     <div className="data-set">
                         <Row>
                             <Col md="3">
-                                Registrar
+                                Action
                             </Col>
                             <Col md="9">
-                                {transactionDoc.data.registrar ? <Link to={`/addr-platform/${PlatformAddress.fromAccountId(transactionDoc.data.registrar).value}`}>{PlatformAddress.fromAccountId(transactionDoc.data.registrar).value}</Link> : "None"}
+                                <TypeBadge transaction={transaction} />
+                            </Col>
+                        </Row>
+                        <hr />
+                        <Row>
+                            <Col md="3">
+                                NetworkID
+                                </Col>
+                            <Col md="9">
+                                {transactionDoc.data.networkId}
                             </Col>
                         </Row>
                         <hr />
@@ -240,12 +297,32 @@ const getTransactionInfoByType = (transaction: TransactionDoc) => {
                         <hr />
                         <Row>
                             <Col md="3">
-                                Owner
+                                Status
                             </Col>
                             <Col md="9">
-                                {
-                                    transactionDoc.data.output.owner ? <Link to={`/addr-asset/${AssetTransferAddress.fromPublicKeyHash(new H256(transactionDoc.data.output.owner)).value}`}>{AssetTransferAddress.fromPublicKeyHash(new H256(transactionDoc.data.output.owner)).value}</Link> : "Unknown"
-                                }
+                                <StatusBadge status={status} />
+                            </Col>
+                        </Row>
+                        <hr />
+                        <Row>
+                            <Col md="3">
+                                LockScriptHash
+                            </Col>
+                            <Col md="9">
+                                {transactionDoc.data.output.lockScriptHash === "f42a65ea518ba236c08b261c34af0521fa3cd1aa505e1c18980919cb8945f8f3" ? "P2PKH" : <HexString text={transactionDoc.data.output.lockScriptHash} />}
+                            </Col>
+                        </Row>
+                        <hr />
+                        <Row>
+                            <Col md="3">
+                                Parameters
+                            </Col>
+                            <Col md="9">
+                                <div className="text-area">
+                                    {_.map(transactionDoc.data.output.parameters, (parameter, i) => {
+                                        return <div key={`transaction-heder-param-${i}`}>{Buffer.from(parameter).toString("hex")}</div>
+                                    })}
+                                </div>
                             </Col>
                         </Row>
                         <hr />
@@ -274,23 +351,21 @@ const getTransactionInfoByType = (transaction: TransactionDoc) => {
                         <hr />
                         <Row>
                             <Col md="3">
-                                LockScriptHash
+                                Registrar
                             </Col>
                             <Col md="9">
-                                {transactionDoc.data.output.lockScriptHash === "f42a65ea518ba236c08b261c34af0521fa3cd1aa505e1c18980919cb8945f8f3" ? "P2PKH" : <HexString text={transactionDoc.data.output.lockScriptHash} />}
+                                {transactionDoc.data.registrar ? <Link to={`/addr-platform/${PlatformAddress.fromAccountId(transactionDoc.data.registrar).value}`}>{PlatformAddress.fromAccountId(transactionDoc.data.registrar).value}</Link> : "None"}
                             </Col>
                         </Row>
                         <hr />
                         <Row>
                             <Col md="3">
-                                Parameters
+                                Owner
                             </Col>
                             <Col md="9">
-                                <div className="text-area">
-                                    {_.map(transactionDoc.data.output.parameters, (parameter, i) => {
-                                        return <div key={`transaction-heder-param-${i}`}>{Buffer.from(parameter).toString("hex")}</div>
-                                    })}
-                                </div>
+                                {
+                                    transactionDoc.data.output.owner ? <Link to={`/addr-asset/${AssetTransferAddress.fromPublicKeyHash(new H256(transactionDoc.data.output.owner)).value}`}>{AssetTransferAddress.fromPublicKeyHash(new H256(transactionDoc.data.output.owner)).value}</Link> : "Unknown"
+                                }
                             </Col>
                         </Row>
                         <hr />
@@ -357,7 +432,7 @@ const getTransactionInfoByType = (transaction: TransactionDoc) => {
 }
 
 const TransactionDetails = (props: Props) => {
-    const { transaction } = props;
+    const { transaction, status } = props;
 
     return <div className="transaction-details">
         <Row>
@@ -367,7 +442,7 @@ const TransactionDetails = (props: Props) => {
             </Col>
         </Row>
         {
-            getTransactionInfoByType(transaction)
+            getTransactionInfoByType(transaction, status)
         }
     </div>
 };

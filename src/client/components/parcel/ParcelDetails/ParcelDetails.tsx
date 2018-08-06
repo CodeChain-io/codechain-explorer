@@ -9,9 +9,12 @@ import HexString from "../../util/HexString/HexString";
 import { ParcelDoc, Type, PaymentDoc, SetRegularKeyDoc, ChangeShardStateDoc } from "../../../../db/DocType";
 import { Link } from "react-router-dom";
 import { PlatformAddress } from "codechain-sdk/lib/key/classes";
+import { ActionBadge } from "../../util/ActionBadge/ActionBadge";
+import { StatusBadge } from "../../util/StatusBadge/StatusBadge";
 
 interface Props {
     parcel: ParcelDoc;
+    status: string;
 }
 
 const getElementByType = (parcel: ParcelDoc) => {
@@ -76,7 +79,7 @@ const getElementByType = (parcel: ParcelDoc) => {
 }
 
 const ParcelDetails = (props: Props) => {
-    const { parcel } = props;
+    const { parcel, status } = props;
 
     return <div className="parcel-details">
         <Row>
@@ -88,6 +91,15 @@ const ParcelDetails = (props: Props) => {
         <Row>
             <Col lg={Type.isChangeShardStateDoc(parcel.action) ? "9" : "12"}>
                 <div className="data-set">
+                    <Row>
+                        <Col md="3">
+                            Action
+                        </Col>
+                        <Col md="9">
+                            <ActionBadge parcel={parcel} />
+                        </Col>
+                    </Row>
+                    <hr />
                     <Row>
                         <Col md="3">
                             Block No.
@@ -141,6 +153,15 @@ const ParcelDetails = (props: Props) => {
                         </Col>
                         <Col md="9">
                             {parcel.fee}
+                        </Col>
+                    </Row>
+                    <hr />
+                    <Row>
+                        <Col md="3">
+                            Status
+                        </Col>
+                        <Col md="9">
+                            <StatusBadge status={status} />
                         </Col>
                     </Row>
                     <hr />
