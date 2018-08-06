@@ -72,8 +72,7 @@ class Transaction extends React.Component<Props, State> {
                 <Row>
                     <Col md="8" xl="7">
                         <div className="d-flex title-container">
-                            <h1 className="d-inline-block align-self-center">Transaction</h1>
-                            <TypeBadge className="align-self-center ml-3 mr-auto" transaction={transactionResult.transaction} />
+                            <h1 className="d-inline-block align-self-center mr-auto">Transaction</h1>
                             <span className="timestamp align-self-end">{moment.unix(transactionResult.transaction.data.timestamp).format("YYYY-MM-DD HH:mm:ssZ")}</span>
                         </div>
                     </Col>
