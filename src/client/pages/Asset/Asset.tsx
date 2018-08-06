@@ -1,5 +1,4 @@
 import * as React from "react";
-import * as FontAwesome from "react-fontawesome";
 import { match } from "react-router";
 import { Container, Row, Col } from "reactstrap";
 import { Error } from "../../components/error/Error/Error";
@@ -14,6 +13,7 @@ import "./Asset.scss"
 import { H256 } from "codechain-sdk/lib/core/H256";
 import HexString from "../../components/util/HexString/HexString";
 import { ImageLoader } from "../../components/util/ImageLoader/ImageLoader";
+import CopyButton from "../../components/util/CopyButton/CopyButton";
 
 interface Props {
     match: match<{ assetType: string }>;
@@ -71,9 +71,7 @@ class Asset extends React.Component<Props, State> {
                                     <div className="d-inline-block hash">
                                         <HexString text={new H256(assetType).value} />
                                     </div>
-                                    <div className="d-inline-block copy text-center">
-                                        <FontAwesome name="copy" />
-                                    </div>
+                                    <CopyButton className="d-inline-block" copyString={`0x${new H256(assetType).value}`} />
                                 </div>
                             </div>
                         </div>

@@ -1,5 +1,4 @@
 import * as React from "react";
-import * as FontAwesome from "react-fontawesome";
 import * as moment from "moment";
 import { match } from "react-router";
 import { Container, Row, Col } from "reactstrap";
@@ -13,6 +12,7 @@ import TransactionList from "../../components/transaction/TransactionList/Transa
 import { ParcelDoc, Type, ChangeShardStateDoc, PendingParcelDoc } from "../../../db/DocType";
 import HexString from "../../components/util/HexString/HexString";
 import { ActionBadge } from "../../components/util/ActionBadge/ActionBadge";
+import CopyButton from "../../components/util/CopyButton/CopyButton";
 
 interface Props {
     match: match<{ hash: string }>;
@@ -80,9 +80,7 @@ class Parcel extends React.Component<Props, State> {
                     <div className="d-inline-block hash">
                         <HexString text={parcelResult.parcel.hash} />
                     </div>
-                    <div className="d-inline-block copy text-center">
-                        <FontAwesome name="copy" />
-                    </div>
+                    <CopyButton className="d-inline-block" copyString={`0x${parcelResult.parcel.hash}`} />
                 </Col>
             </Row>
             <div className="mt-large">

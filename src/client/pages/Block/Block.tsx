@@ -14,6 +14,7 @@ import "./Block.scss";
 import { BlockDoc, Type, ChangeShardStateDoc } from "../../../db/DocType";
 import { Link } from "react-router-dom";
 import HexString from "../../components/util/HexString/HexString";
+import CopyButton from "../../components/util/CopyButton/CopyButton";
 
 interface State {
     block?: BlockDoc;
@@ -69,9 +70,7 @@ class Block extends React.Component<Props, State> {
                         <div className="d-inline-block hash">
                             <HexString text={block.hash} />
                         </div>
-                        <div className="d-inline-block copy text-center">
-                            <FontAwesome name="copy" />
-                        </div>
+                        <CopyButton className="d-inline-block" copyString={`0x${block.hash}`} />
                     </Col>
                     <Col md="3" xl="2" className="d-flex align-items-center justify-content-between offset-md-1 offset-xl-3 mt-2 mt-md-0">
                         <Link to={block.number !== 0 ? `/block/${block.number - 1}` : "#"}><button type="button" className={`btn btn-primary ${block.number === 0 ? "disabled" : ""}`}>&lt; Prev</button></Link>

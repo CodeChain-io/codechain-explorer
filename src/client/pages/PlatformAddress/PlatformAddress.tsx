@@ -1,5 +1,4 @@
 import * as React from "react";
-import * as FontAwesome from "react-fontawesome"
 import { match } from "react-router";
 import { Container, Row, Col } from "reactstrap";
 import { Error } from "../../components/error/Error/Error";
@@ -15,6 +14,7 @@ import { ParcelDoc, AssetBundleDoc, BlockDoc } from "../../../db/DocType";
 
 import "./PlatformAddress.scss"
 import { ImageLoader } from "../../components/util/ImageLoader/ImageLoader";
+import CopyButton from "../../components/util/CopyButton/CopyButton";
 
 interface Props {
     match: match<{ address: string }>;
@@ -82,9 +82,7 @@ class Address extends React.Component<Props, State> {
                                     <div className="d-inline-block hash">
                                         <span>{address}</span>
                                     </div>
-                                    <div className="d-inline-block copy text-center">
-                                        <FontAwesome name="copy" />
-                                    </div>
+                                    <CopyButton className="d-inline-block" copyString={address} />
                                 </div>
                             </div>
                         </div>

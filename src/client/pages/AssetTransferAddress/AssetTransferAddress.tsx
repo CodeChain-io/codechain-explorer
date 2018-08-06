@@ -13,6 +13,7 @@ import AddressDetails from "../../components/assetTransferAddress/AddressDetails
 import AssetList from "../../components/asset/AssetList/AssetList";
 import TransactionList from "../../components/transaction/TransactionList/TransactionList";
 import { ImageLoader } from "../../components/util/ImageLoader/ImageLoader";
+import CopyButton from "../../components/util/CopyButton/CopyButton";
 
 interface Props {
     match: match<{ address: string }>;
@@ -63,9 +64,7 @@ class AssetTransferAddress extends React.Component<Props, State> {
                                     <div className="d-inline-block hash">
                                         <span>{address}</span>
                                     </div>
-                                    <div className="d-inline-block copy text-center">
-                                        <FontAwesome name="copy" />
-                                    </div>
+                                    <CopyButton className="d-inline-block" copyString={address} />
                                 </div>
                             </div>
                         </div>
@@ -117,6 +116,7 @@ class AssetTransferAddress extends React.Component<Props, State> {
             </Container>
         )
     }
+
     private onTransactions = (transactions: TransactionDoc[]) => {
         this.setState({ transactions });
     }
