@@ -32,6 +32,7 @@ export interface ParcelDoc {
     /* custom field for indexing */
     sender: string;
     timestamp: number;
+    isRetracted: boolean;
 }
 
 export type ActionDoc = ChangeShardStateDoc | PaymentDoc | SetRegularKeyDoc | CreateShardDoc
@@ -79,28 +80,6 @@ export interface AssetDoc {
     transactionOutputIndex: number;
 }
 
-/*
-const fromAsset = (asset: Asset): AssetDoc => {
-    return {
-        assetType: asset.assetType.value,
-        lockScriptHash: asset.lockScriptHash.value,
-        parameters: asset.parameters,
-        amount: asset.amount,
-        transactionHash: asset.outPoint.transactionHash.value,
-        transactionOutputIndex: asset.outPoint.index
-    }
-}
-
-const fromAssetScheme = (assetScheme: AssetScheme) => {
-    return {
-        metadata: assetScheme.metadata,
-        registrar: assetScheme.registrar,
-        amount: assetScheme.amount,
-        networkId: assetScheme.networkId
-    }
-}
-*/
-
 export interface AssetMintTransactionDoc {
     type: string;
     data: {
@@ -121,7 +100,11 @@ export interface AssetMintTransactionDoc {
         timestamp: number;
         assetName: string;
         parcelHash: string;
+        blockNumber: number;
+        parcelIndex: number;
+        transactionIndex: number;
     };
+    isRetracted: boolean;
 }
 
 export interface AssetTransferTransactionDoc {
@@ -136,7 +119,11 @@ export interface AssetTransferTransactionDoc {
         /* custom field for indexing */
         timestamp: number;
         parcelHash: string;
+        blockNumber: number;
+        parcelIndex: number;
+        transactionIndex: number;
     };
+    isRetracted: boolean;
 }
 
 export interface AssetTransferInputDoc {
@@ -234,7 +221,7 @@ const fromAssetTransferOutput = async (currentTransactions: Transaction[], asset
     }
 }
 
-const fromTransaction = async (currentTransactions: Transaction[], transaction: Transaction, elasticSearchAgent: ElasticSearchAgent, timestamp: number, parcel?: SignedParcel): Promise<TransactionDoc> => {
+const fromTransaction = async (currentTransactions: Transaction[], transaction: Transaction, elasticSearchAgent: ElasticSearchAgent, timestamp: number, parcel?: SignedParcel, transactionIndex: number = 0): Promise<TransactionDoc> => {
     if (transaction instanceof AssetMintTransaction) {
         const transactionJson = transaction.toJSON();
         const metadata = getMetadata(transactionJson.data.metadata);
@@ -255,8 +242,12 @@ const fromTransaction = async (currentTransactions: Transaction[], transaction: 
                 hash: transactionJson.data.hash,
                 timestamp,
                 assetName: metadata.name || "",
-                parcelHash: parcel ? parcel.hash().value : ""
-            }
+                parcelHash: parcel ? parcel.hash().value : "",
+                blockNumber: parcel ? parcel.blockNumber || 0 : 0,
+                parcelIndex: parcel ? parcel.parcelIndex || 0 : 0,
+                transactionIndex
+            },
+            isRetracted: false
         }
     } else if (transaction instanceof AssetTransferTransaction) {
         const transactionJson = transaction.toJSON();
@@ -273,8 +264,12 @@ const fromTransaction = async (currentTransactions: Transaction[], transaction: 
                 nonce: transactionJson.data.nonce,
                 hash: transactionJson.data.hash,
                 timestamp,
-                parcelHash: parcel ? parcel.hash().value : ""
-            }
+                parcelHash: parcel ? parcel.hash().value : "",
+                blockNumber: parcel ? parcel.blockNumber || 0 : 0,
+                parcelIndex: parcel ? parcel.parcelIndex || 0 : 0,
+                transactionIndex
+            },
+            isRetracted: false
         };
     }
     throw new Error("Unexpected transaction");
@@ -285,7 +280,7 @@ const fromAction = async (currentActions: Action[], action: Action, elasticSearc
         const actionJson = action.toJSON();
         const currentTransactions = _.chain(currentActions).filter(currentAction => currentAction instanceof ChangeShardState)
             .flatMap(currentAction => (currentAction as ChangeShardState).transactions).value()
-        const transactionDocs = await Promise.all(_.map(action.transactions, transaction => fromTransaction(currentTransactions, transaction, elasticSearchAgent, timestamp, parcel)));
+        const transactionDocs = await Promise.all(_.map(action.transactions, (transaction, i) => fromTransaction(currentTransactions, transaction, elasticSearchAgent, timestamp, parcel, i)));
         return {
             action: actionJson.action,
             transactions: transactionDocs
@@ -326,11 +321,12 @@ const fromParcel = async (currentParcels: SignedParcel[], parcel: SignedParcel, 
         sig: parcelJson.sig,
         hash: parcelJson.hash,
         action,
-        timestamp
+        timestamp,
+        isRetracted: false
     }
 }
 
-export const fromBlock = async (block: Block, elasticSearchAgent: ElasticSearchAgent): Promise<BlockDoc> => {
+const fromBlock = async (block: Block, elasticSearchAgent: ElasticSearchAgent): Promise<BlockDoc> => {
     const blockJson = block.toJSON();
     const parcelDocs = await Promise.all(_.map(block.parcels, parcel => fromParcel(block.parcels, parcel, elasticSearchAgent, block.timestamp)));
 
@@ -351,7 +347,7 @@ export const fromBlock = async (block: Block, elasticSearchAgent: ElasticSearchA
     }
 }
 
-export const fromPendingParcel = async (otherPendingParcels: SignedParcel[], parcel: SignedParcel, elasticSearchAgent: ElasticSearchAgent): Promise<PendingParcelDoc> => {
+const fromPendingParcel = async (otherPendingParcels: SignedParcel[], parcel: SignedParcel, elasticSearchAgent: ElasticSearchAgent): Promise<PendingParcelDoc> => {
     const parcelDoc = await fromParcel(otherPendingParcels, parcel, elasticSearchAgent, 0);
     return {
         parcel: parcelDoc,
@@ -427,5 +423,7 @@ export let Type = {
 
 export let Converter = {
     fromBlock,
-    fromPendingParcel
+    fromPendingParcel,
+    fromParcel,
+    fromTransaction
 }
