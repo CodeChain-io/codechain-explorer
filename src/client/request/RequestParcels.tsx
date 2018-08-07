@@ -5,6 +5,8 @@ import { apiRequest, ApiError } from "./ApiRequest";
 import { ParcelDoc } from "../../db/DocType";
 
 interface OwnProps {
+    page: number;
+    itemsPerPage: number;
     onParcels: (parcels: ParcelDoc[]) => void;
     onError: (e: ApiError) => void;
 }
@@ -17,8 +19,8 @@ type Props = OwnProps & DispatchProps;
 
 class RequestParcelsInternal extends React.Component<Props> {
     public componentWillMount() {
-        const { onError, onParcels, dispatch } = this.props;
-        apiRequest({ path: `parcels`, dispatch, showProgressBar: true }).then((response: any) => {
+        const { onError, onParcels, dispatch, page, itemsPerPage } = this.props;
+        apiRequest({ path: `parcels?page=${page}&itemsPerPage=${itemsPerPage}`, dispatch, showProgressBar: true }).then((response: any) => {
             onParcels(response);
         }).catch(onError);
     }

@@ -81,6 +81,15 @@ export function createApiRouter(context: ServerContext, useCors = false) {
         }
     });
 
+    router.get("/parcels/totalCount", async (req, res, next) => {
+        try {
+            const countOfBlocks = await context.db.getTotalParcelCount();
+            res.send(JSON.stringify(countOfBlocks));
+        } catch (e) {
+            next(e);
+        }
+    });
+
     router.get("/parcels/pending", async (req, res, next) => {
         const { page, itemsPerPage } = req.query;
         try {
@@ -148,6 +157,15 @@ export function createApiRouter(context: ServerContext, useCors = false) {
         try {
             const transactions = await context.db.getTransactions(page, itemsPerPage);
             res.send(transactions);
+        } catch (e) {
+            next(e);
+        }
+    });
+
+    router.get("/txs/totalCount", async (req, res, next) => {
+        try {
+            const countOfBlocks = await context.db.getTotalTransactionCount();
+            res.send(JSON.stringify(countOfBlocks));
         } catch (e) {
             next(e);
         }

@@ -21,6 +21,8 @@ export class ElasticSearchAgent implements QueryBlock, QueryParcel, QueryTransac
     public updateBlock: (hash: H256, partial: any) => Promise<any>;
     public searchBlock: (body: any) => Promise<SearchResponse<any>>;
     public countBlock: (body: any) => Promise<CountResponse>;
+    public countParcel: (body: any) => Promise<CountResponse>;
+    public countTransaction: (body: any) => Promise<CountResponse>;
     public getParcel: (hash: H256) => Promise<ParcelDoc | null>;
     public getParcels: (page?: number, itemsPerPage?: number) => Promise<ParcelDoc[]>;
     public getParcelsByAccountId: (accountId: H160) => Promise<ParcelDoc[]>;
@@ -51,6 +53,8 @@ export class ElasticSearchAgent implements QueryBlock, QueryParcel, QueryTransac
     public indexPendingParcel: (otherPendingParcels: SignedParcel[], pendingParcel: SignedParcel) => Promise<any>;
     public revialPendingParcel: (hash: H256) => Promise<void>;
     public checkIndexOrCreate: () => Promise<void>;
+    public getTotalParcelCount: () => Promise<number>;
+    public getTotalTransactionCount: () => Promise<number>;
 
     constructor(host: string) {
         this.client = new Client({

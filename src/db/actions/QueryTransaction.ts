@@ -2,7 +2,7 @@ import * as _ from "lodash";
 import { H256, H160, Transaction, SignedParcel } from "codechain-sdk/lib/core/classes";
 import { TransactionDoc, AssetTransferTransactionDoc, AssetMintTransactionDoc, AssetBundleDoc, Type, AssetDoc, AssetSchemeDoc, Converter } from "../DocType";
 import { BaseAction } from "./BaseAction";
-import { Client, SearchResponse } from "elasticsearch";
+import { Client, SearchResponse, CountResponse } from "elasticsearch";
 import { ElasticSearchAgent } from "../ElasticSearchAgent";
 
 export class QueryTransaction implements BaseAction {
@@ -44,6 +44,15 @@ export class QueryTransaction implements BaseAction {
             }
         });
         return _.map(response.hits.hits, hit => hit._source);
+    }
+
+    public async getTotalTransactionCount(): Promise<number> {
+        const count = await this.countTransaction({
+            "query": {
+                "term": { "isRetracted": false }
+            }
+        });
+        return count.count;
     }
 
     public async getAssetTransferTransactions(assetType: H256): Promise<AssetTransferTransactionDoc[]> {
@@ -302,6 +311,14 @@ export class QueryTransaction implements BaseAction {
             body: {
                 doc: partial
             }
+        });
+    }
+
+    public async countTransaction(body: any): Promise<CountResponse> {
+        return this.client.count({
+            index: "transaction",
+            type: "_doc",
+            body
         });
     }
 }

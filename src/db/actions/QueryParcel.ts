@@ -3,7 +3,7 @@ import { ParcelDoc, Converter } from "../DocType";
 import { H256, H160, SignedParcel } from "codechain-sdk/lib/core/classes";
 import { BaseAction } from "./BaseAction";
 import { ElasticSearchAgent } from "../ElasticSearchAgent";
-import { Client, SearchResponse } from "elasticsearch";
+import { Client, SearchResponse, CountResponse } from "elasticsearch";
 
 export class QueryParcel implements BaseAction {
     public agent: ElasticSearchAgent;
@@ -47,6 +47,15 @@ export class QueryParcel implements BaseAction {
             }
         });
         return _.map(response.hits.hits, hit => hit._source);
+    }
+
+    public async getTotalParcelCount(): Promise<number> {
+        const count = await this.countParcel({
+            "query": {
+                "term": { "isRetracted": false }
+            }
+        });
+        return count.count;
     }
 
     public async getParcelsByAccountId(accountId: H160): Promise<ParcelDoc[]> {
@@ -111,6 +120,14 @@ export class QueryParcel implements BaseAction {
             body: {
                 doc: partial
             }
+        });
+    }
+
+    public async countParcel(body: any): Promise<CountResponse> {
+        return this.client.count({
+            index: "parcel",
+            type: "_doc",
+            body
         });
     }
 }

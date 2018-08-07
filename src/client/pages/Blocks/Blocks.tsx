@@ -2,8 +2,7 @@ import * as React from "react";
 import * as _ from "lodash";
 import * as moment from "moment";
 import { Redirect } from "react-router";
-import { Table } from "reactstrap";
-import { Container } from "reactstrap";
+import { Container, Table } from "reactstrap";
 import { BlockDoc } from "../../../db/DocType";
 import { Link } from "react-router-dom";
 import { PlatformAddress } from "codechain-sdk/lib/key/classes";
@@ -13,7 +12,7 @@ import "./Blocks.scss";
 interface State {
     blocks: BlockDoc[];
     totalBlockCount?: number;
-    isBlockRequested: false;
+    isBlockRequested: boolean;
     redirect: boolean;
     redirectPage?: number;
     redirectItemsPerPage?: number;
@@ -42,7 +41,7 @@ class Blocks extends React.Component<Props, State> {
         const { location: { search } } = this.props;
         const { location: { search: nextSearch } } = props;
         if (nextSearch !== search) {
-            this.setState({ blocks: [], isBlockRequested: false, redirect: false, redirectPage: undefined, redirectItemsPerPage: undefined });
+            this.setState({ isBlockRequested: false, redirect: false, redirectPage: undefined, redirectItemsPerPage: undefined });
         }
     }
 
@@ -181,10 +180,11 @@ class Blocks extends React.Component<Props, State> {
     }
 
     private onBlocks = (blocks: BlockDoc[]) => {
-        this.setState({ blocks });
+        this.setState({ blocks, isBlockRequested: true });
     }
 
     private onError = (error: any) => {
+        this.setState({ blocks: [], isBlockRequested: true });
         console.log(error);
     }
 }
