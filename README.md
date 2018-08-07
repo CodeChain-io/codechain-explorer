@@ -1,6 +1,6 @@
 # CodeChain Explorer [![Gitter](https://badges.gitter.im/CodeChain-io/codechain-explorer.svg)](https://gitter.im/CodeChain-io/codechain-explorer?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
 
-CodeChain explorer is a simple, easy to use, open-source visualization tool for viewing activity on the underlying blockchain network.
+CodeChain explorer is a simple, easy to use, an open-source visualization tool for viewing activity on the underlying blockchain network.
 
 ## Table of Contents
 * [Install](https://github.com/CodeChain-io/codechain-explorer#install)
@@ -40,7 +40,7 @@ Run CodeChain-worker for indexing data to ElasticSearch
 ```
 # yarn run start-worker
 
-// You can change ElasticSearch and CodeChain host URL using environment variables.
+// You can change ElasticSearch and CodeChain host URL using an environment variables.
 # CODECHAIN_HOST=127.0.0.1:8080 ELASTICSERACH_HOST=127.0.0.1:9200 yarn run start-worker
 ```
 ### Server
@@ -48,16 +48,15 @@ Run CodeChain-explorer server
 ```
 # yarn run start-server
 
-// You can change ElasticSearch and CodeChain host URL in environment variables.
+// You can change ElasticSearch and CodeChain host URL using an environment variables.
 # CODECHAIN_HOST=127.0.0.1:8080 ELASTICSERACH_HOST=127.0.0.1:9200 yarn run start-server
 ```
 ### Client
 Run CodeChain-explorer client in development mode
 ```
 # yarn run start-client
-```
-* You can change Server host using environment variable
-```
+
+// You can change the server host using an environment variable
 # REACT_APP_SERVER_HOST=127.0.0.1:8080 yarn run start-client
 ```
 ### Running worker, server, client at once
@@ -73,7 +72,7 @@ Build CodeChain-explorer with following script. You can get optimized, uglified 
 ```
 # yarn run build
 ```
-* You can change Server host using environment variable
+* You can change the server host using an environment variable
 ```
 # REACT_APP_SERVER_HOST=127.0.0.1:8080 yarn run build
 ```
