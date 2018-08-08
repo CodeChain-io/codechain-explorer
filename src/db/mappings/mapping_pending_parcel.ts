@@ -4,13 +4,7 @@ export const getMappingPendingParcel = () => {
     return {
         "properties": {
             "status": {
-                "type": "text",
-                "fields": {
-                    "keyword": {
-                        "type": "keyword",
-                        "ignore_above": 256
-                    }
-                }
+                "type": "keyword",
             },
             "timestamp": {
                 "type": "long"

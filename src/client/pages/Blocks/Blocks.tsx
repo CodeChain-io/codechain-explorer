@@ -55,7 +55,7 @@ class Blocks extends React.Component<Props, State> {
         if (redirect) {
             return <Redirect push={true} to={`/blocks?page=${redirectPage || currentPage}&itemsPerPage=${redirectItemsPerPage || itemsPerPage}`} />;
         }
-        if (!totalBlockCount) {
+        if (totalBlockCount === undefined) {
             return <RequestTotalBlockCount onBlockTotalCount={this.onTotalBlockCount} onError={this.onError} />;
         }
         const maxPage = Math.floor(Math.max(0, totalBlockCount - 1) / itemsPerPage) + 1;

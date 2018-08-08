@@ -91,10 +91,23 @@ export function createApiRouter(context: ServerContext, useCors = false) {
     });
 
     router.get("/parcels/pending", async (req, res, next) => {
-        const { page, itemsPerPage } = req.query;
+        const { page, itemsPerPage, actionFilters, signerFiter, sorting, orderBy } = req.query;
+        console.log(req.query)
+        const parsedActionFilters = actionFilters ? actionFilters.split(",") : [];
         try {
-            const pendingParcels = await context.db.getCurrentPendingParcels(page, itemsPerPage);
+            const pendingParcels = await context.db.getCurrentPendingParcels(page, itemsPerPage, parsedActionFilters, signerFiter, sorting, orderBy);
             res.send(pendingParcels);
+        } catch (e) {
+            next(e);
+        }
+    });
+
+    router.get("/parcels/pending/totalCount", async (req, res, next) => {
+        const { actionFilters, signerFiter } = req.query;
+        const parsedActionFilters = actionFilters ? actionFilters.split(",") : [];
+        try {
+            const count = await context.db.getTotalPendingParcelCount(parsedActionFilters, signerFiter);
+            res.send(JSON.stringify(count));
         } catch (e) {
             next(e);
         }

@@ -59,7 +59,7 @@ class Parcels extends React.Component<Props, State> {
         if (redirect) {
             return <Redirect push={true} to={`/parcels?page=${redirectPage || currentPage}&itemsPerPage=${redirectItemsPerPage || itemsPerPage}`} />;
         }
-        if (!totalParcelCount) {
+        if (totalParcelCount === undefined) {
             return <RequestTotalParcelCount onParcelTotalCount={this.onTotalParcelCount} onError={this.onError} />;
         }
         const maxPage = Math.floor(Math.max(0, totalParcelCount - 1) / itemsPerPage) + 1;

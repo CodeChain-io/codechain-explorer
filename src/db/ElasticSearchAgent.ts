@@ -43,7 +43,7 @@ export class ElasticSearchAgent implements QueryBlock, QueryParcel, QueryTransac
     public retractTransaction: (transactionHash: H256) => Promise<void>;
     public indexTransaction: (currentTransactions: Transaction[], transaction: Transaction, timestamp: number, parcel: SignedParcel, transactionIndex: number) => Promise<any>;
     public updateTransaction: (hash: H256, partial: any) => Promise<any>;
-    public getCurrentPendingParcels: (page?: number, itemsPerPage?: number) => Promise<PendingParcelDoc[]>;
+    public getCurrentPendingParcels: (page?: number, itemsPerPage?: number, actionFilters?: string[], signerFilter?: string, sorting?: string, orderBy?: string) => Promise<PendingParcelDoc[]>;
     public getPendingParcel: (hash: H256) => Promise<PendingParcelDoc | null>;
     public getPendingTransaction: (hash: H256) => Promise<PendingTransactionDoc | null>;
     public getDeadPendingParcels: () => Promise<PendingParcelDoc[]>;
@@ -55,6 +55,8 @@ export class ElasticSearchAgent implements QueryBlock, QueryParcel, QueryTransac
     public checkIndexOrCreate: () => Promise<void>;
     public getTotalParcelCount: () => Promise<number>;
     public getTotalTransactionCount: () => Promise<number>;
+    public countPendingParcel: (body: any) => Promise<CountResponse>;
+    public getTotalPendingParcelCount: (actionFilters: string[], signerFilter?: string) => Promise<number>;
 
     constructor(host: string) {
         this.client = new Client({

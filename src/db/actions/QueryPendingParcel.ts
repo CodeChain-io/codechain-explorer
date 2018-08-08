@@ -1,7 +1,7 @@
 import * as _ from "lodash";
 import { PendingParcelDoc, PendingTransactionDoc, TransactionDoc, Converter, Type, ChangeShardStateDoc } from "../DocType";
 import { H256, SignedParcel } from "codechain-sdk/lib/core/classes";
-import { SearchResponse, Client, DeleteDocumentResponse } from "elasticsearch";
+import { SearchResponse, Client, DeleteDocumentResponse, CountResponse } from "elasticsearch";
 import { BaseAction } from "./BaseAction";
 import { ElasticSearchAgent } from "../ElasticSearchAgent";
 
@@ -9,18 +9,47 @@ export class QueryPendingParcel implements BaseAction {
     public agent: ElasticSearchAgent;
     public client: Client;
 
-    public async getCurrentPendingParcels(page: number = 1, itemsPerPage: number = 5): Promise<PendingParcelDoc[]> {
+    public async getCurrentPendingParcels(page: number = 1, itemsPerPage: number = 5, actionFilters: string[] = [], signerFilter: string, sorting: string = "pendingPeriod", orderBy: string = "desc"): Promise<PendingParcelDoc[]> {
+        let sortQuery;
+        switch (sorting) {
+            case "pendingPeriod":
+                sortQuery = [
+                    { "timestamp": { "order": orderBy } }
+                ];
+                break;
+            case "txs":
+                sortQuery = [
+                    { "parcel.countOfTransaction": { "order": orderBy } },
+                    { "timestamp": { "order": "desc" } }
+                ];
+                break;
+            case "fee":
+                sortQuery = [
+                    { "parcel.fee": { "order": orderBy } },
+                    { "timestamp": { "order": "desc" } }
+                ];
+                break;
+        }
+        let query;
+        if (signerFilter) {
+            query = [
+                { "term": { "status": "pending" } },
+                { "terms": { "parcel.action.action": actionFilters } },
+                { "term": { "parcel.sender": signerFilter } }
+            ]
+        } else {
+            query = [
+                { "term": { "status": "pending" } },
+                { "terms": { "parcel.action.action": actionFilters } }
+            ]
+        }
         const response = await this.searchPendinParcel({
-            "sort": [
-                { "timestamp": { "order": "desc" } }
-            ],
+            "sort": sortQuery,
             "from": (page - 1) * itemsPerPage,
             "size": itemsPerPage,
             "query": {
                 "bool": {
-                    "must": [
-                        { "term": { "status": "pending" } }
-                    ]
+                    "must": query
                 }
             }
         });
@@ -28,6 +57,30 @@ export class QueryPendingParcel implements BaseAction {
             return [];
         }
         return _.map(response.hits.hits, hit => hit._source);
+    }
+
+    public async getTotalPendingParcelCount(actionFilters: string[], signerFilter?: string): Promise<number> {
+        let query;
+        if (signerFilter) {
+            query = [
+                { "term": { "status": "pending" } },
+                { "terms": { "parcel.action.action": actionFilters } },
+                { "term": { "parcel.sender": signerFilter } }
+            ]
+        } else {
+            query = [
+                { "term": { "status": "pending" } },
+                { "terms": { "parcel.action.action": actionFilters } }
+            ]
+        }
+        const count = await this.countPendingParcel({
+            "query": {
+                "bool": {
+                    "must": query
+                }
+            }
+        });
+        return count.count;
     }
 
     public async getPendingParcel(hash: H256): Promise<PendingParcelDoc | null> {
@@ -145,6 +198,14 @@ export class QueryPendingParcel implements BaseAction {
                     "status": "pending"
                 }
             }
+        });
+    }
+
+    public async countPendingParcel(body: any): Promise<CountResponse> {
+        return this.client.count({
+            index: "pending_parcel",
+            type: "_doc",
+            body
         });
     }
 }

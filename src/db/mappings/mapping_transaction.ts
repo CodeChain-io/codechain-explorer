@@ -4,13 +4,7 @@ export const getMappingTransaction = () => {
             "data": {
                 "properties": {
                     "parcelHash": {
-                        "type": "text",
-                        "fields": {
-                            "keyword": {
-                                "type": "keyword",
-                                "ignore_above": 256
-                            }
-                        }
+                        "type": "keyword",
                     },
                     "blockNumber": {
                         "type": "long"
@@ -22,13 +16,7 @@ export const getMappingTransaction = () => {
                         "type": "long"
                     },
                     "hash": {
-                        "type": "text",
-                        "fields": {
-                            "keyword": {
-                                "type": "keyword",
-                                "ignore_above": 256
-                            }
-                        }
+                        "type": "keyword",
                     },
                     "inputs": {
                         "properties": {
@@ -38,13 +26,7 @@ export const getMappingTransaction = () => {
                                         "type": "long"
                                     },
                                     "type": {
-                                        "type": "text",
-                                        "fields": {
-                                            "keyword": {
-                                                "type": "keyword",
-                                                "ignore_above": 256
-                                            }
-                                        }
+                                        "type": "keyword",
                                     }
                                 }
                             },
@@ -54,13 +36,7 @@ export const getMappingTransaction = () => {
                                         "type": "long"
                                     },
                                     "type": {
-                                        "type": "text",
-                                        "fields": {
-                                            "keyword": {
-                                                "type": "keyword",
-                                                "ignore_above": 256
-                                            }
-                                        }
+                                        "type": "keyword",
                                     }
                                 }
                             },
@@ -70,33 +46,15 @@ export const getMappingTransaction = () => {
                                         "type": "long"
                                     },
                                     "assetType": {
-                                        "type": "text",
-                                        "fields": {
-                                            "keyword": {
-                                                "type": "keyword",
-                                                "ignore_above": 256
-                                            }
-                                        }
+                                        "type": "keyword",
                                     },
                                     "assetScheme": {
                                         "properties": {
                                             "metadata": {
-                                                "type": "text",
-                                                "fields": {
-                                                    "keyword": {
-                                                        "type": "keyword",
-                                                        "ignore_above": 1000
-                                                    }
-                                                }
+                                                "type": "text"
                                             },
                                             "registrar": {
-                                                "type": "text",
-                                                "fields": {
-                                                    "keyword": {
-                                                        "type": "keyword",
-                                                        "ignore_above": 256
-                                                    }
-                                                }
+                                                "type": "keyword",
                                             },
                                             "amount": {
                                                 "type": "long"
@@ -110,44 +68,20 @@ export const getMappingTransaction = () => {
                                         "type": "long"
                                     },
                                     "owner": {
-                                        "type": "text",
-                                        "fields": {
-                                            "keyword": {
-                                                "type": "keyword",
-                                                "ignore_above": 256
-                                            }
-                                        }
+                                        "type": "keyword",
                                     },
                                     "transactionHash": {
-                                        "type": "text",
-                                        "fields": {
-                                            "keyword": {
-                                                "type": "keyword",
-                                                "ignore_above": 256
-                                            }
-                                        }
+                                        "type": "keyword",
                                     }
                                 }
                             }
                         }
                     },
                     "metadata": {
-                        "type": "text",
-                        "fields": {
-                            "keyword": {
-                                "type": "keyword",
-                                "ignore_above": 1000
-                            }
-                        }
+                        "type": "text"
                     },
                     "assetName": {
-                        "type": "text",
-                        "fields": {
-                            "keyword": {
-                                "type": "keyword",
-                                "ignore_above": 256
-                            }
-                        }
+                        "type": "keyword",
                     },
                     "networkId": {
                         "type": "long"
@@ -158,22 +92,10 @@ export const getMappingTransaction = () => {
                     "output": {
                         "properties": {
                             "owner": {
-                                "type": "text",
-                                "fields": {
-                                    "keyword": {
-                                        "type": "keyword",
-                                        "ignore_above": 256
-                                    }
-                                }
+                                "type": "keyword",
                             },
                             "lockScriptHash": {
-                                "type": "text",
-                                "fields": {
-                                    "keyword": {
-                                        "type": "keyword",
-                                        "ignore_above": 256
-                                    }
-                                }
+                                "type": "keyword",
                             },
                             "parameters": {
                                 "properties": {
@@ -181,13 +103,7 @@ export const getMappingTransaction = () => {
                                         "type": "long"
                                     },
                                     "type": {
-                                        "type": "text",
-                                        "fields": {
-                                            "keyword": {
-                                                "type": "keyword",
-                                                "ignore_above": 256
-                                            }
-                                        }
+                                        "type": "keyword",
                                     }
                                 }
                             },
@@ -195,58 +111,28 @@ export const getMappingTransaction = () => {
                                 "type": "long"
                             },
                             "assetType": {
-                                "type": "text",
-                                "fields": {
-                                    "keyword": {
-                                        "type": "keyword",
-                                        "ignore_above": 256
-                                    }
-                                }
+                                "type": "keyword",
                             }
                         }
                     },
                     "outputs": {
                         "properties": {
                             "owner": {
-                                "type": "text",
-                                "fields": {
-                                    "keyword": {
-                                        "type": "keyword",
-                                        "ignore_above": 256
-                                    }
-                                }
+                                "type": "keyword",
                             },
                             "amount": {
                                 "type": "long"
                             },
                             "assetType": {
-                                "type": "text",
-                                "fields": {
-                                    "keyword": {
-                                        "type": "keyword",
-                                        "ignore_above": 256
-                                    }
-                                }
+                                "type": "keyword",
                             },
                             "assetScheme": {
                                 "properties": {
                                     "metadata": {
-                                        "type": "text",
-                                        "fields": {
-                                            "keyword": {
-                                                "type": "keyword",
-                                                "ignore_above": 1000
-                                            }
-                                        }
+                                        "type": "text"
                                     },
                                     "registrar": {
-                                        "type": "text",
-                                        "fields": {
-                                            "keyword": {
-                                                "type": "keyword",
-                                                "ignore_above": 256
-                                            }
-                                        }
+                                        "type": "keyword",
                                     },
                                     "amount": {
                                         "type": "long"
@@ -257,13 +143,7 @@ export const getMappingTransaction = () => {
                                 }
                             },
                             "lockScriptHash": {
-                                "type": "text",
-                                "fields": {
-                                    "keyword": {
-                                        "type": "keyword",
-                                        "ignore_above": 256
-                                    }
-                                }
+                                "type": "keyword",
                             },
                             "parameters": {
                                 "properties": {
@@ -271,13 +151,7 @@ export const getMappingTransaction = () => {
                                         "type": "long"
                                     },
                                     "type": {
-                                        "type": "text",
-                                        "fields": {
-                                            "keyword": {
-                                                "type": "keyword",
-                                                "ignore_above": 256
-                                            }
-                                        }
+                                        "type": "keyword",
                                     }
                                 }
                             }
@@ -287,24 +161,12 @@ export const getMappingTransaction = () => {
                         "type": "long"
                     },
                     "registrar": {
-                        "type": "text",
-                        "fields": {
-                            "keyword": {
-                                "type": "keyword",
-                                "ignore_above": 256
-                            }
-                        }
+                        "type": "keyword",
                     }
                 }
             },
             "type": {
-                "type": "text",
-                "fields": {
-                    "keyword": {
-                        "type": "keyword",
-                        "ignore_above": 256
-                    }
-                }
+                "type": "keyword",
             },
             "isRetracted": {
                 "type": "boolean"

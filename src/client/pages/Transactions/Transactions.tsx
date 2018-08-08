@@ -57,7 +57,7 @@ class Transactions extends React.Component<Props, State> {
         if (redirect) {
             return <Redirect push={true} to={`/txs?page=${redirectPage || currentPage}&itemsPerPage=${redirectItemsPerPage || itemsPerPage}`} />;
         }
-        if (!totalTransactionCount) {
+        if (totalTransactionCount === undefined) {
             return <RequestTotalTransactionCount onTransactionTotalCount={this.onTotalTransactionCount} onError={this.onError} />;
         }
         const maxPage = Math.floor(Math.max(0, totalTransactionCount - 1) / itemsPerPage) + 1;

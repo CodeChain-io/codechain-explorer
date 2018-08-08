@@ -32,6 +32,7 @@ export interface ParcelDoc {
     /* custom field for indexing */
     sender: string;
     timestamp: number;
+    countOfTransaction: number;
     isRetracted: boolean;
 }
 
@@ -322,6 +323,7 @@ const fromParcel = async (currentParcels: SignedParcel[], parcel: SignedParcel, 
         hash: parcelJson.hash,
         action,
         timestamp,
+        countOfTransaction: parcel.unsigned.action instanceof ChangeShardState ? parcel.unsigned.action.transactions.length : 0,
         isRetracted: false
     }
 }

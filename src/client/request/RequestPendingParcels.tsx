@@ -5,6 +5,12 @@ import { apiRequest, ApiError } from "./ApiRequest";
 import { PendingParcelDoc } from "../../db/DocType";
 
 interface OwnProps {
+    actionFilters: string[];
+    signerFiter?: string;
+    sorting: string;
+    orderBy: string;
+    page: number;
+    itmesPerPage: number;
     onPendingParcels: (parcels: PendingParcelDoc[]) => void;
     onError: (e: ApiError) => void;
 }
@@ -17,8 +23,15 @@ type Props = OwnProps & DispatchProps;
 
 class RequestPendingParcelsInternal extends React.Component<Props> {
     public componentWillMount() {
-        const { onPendingParcels, onError, dispatch } = this.props;
-        apiRequest({ path: `parcels/pending`, dispatch, showProgressBar: true }).then((response: any) => {
+        const { onPendingParcels, onError, dispatch, actionFilters, signerFiter, sorting, orderBy, page, itmesPerPage } = this.props;
+        if (actionFilters.length === 0) {
+            onPendingParcels([]);
+        }
+        let path = `parcels/pending?page=${page}&itemsPerPage=${itmesPerPage}&actionFilters=${actionFilters.join(",")}&sorting=${sorting}&orderBy=${orderBy}`
+        if (signerFiter) {
+            path += `&signerFiter=${signerFiter}`;
+        }
+        apiRequest({ path, dispatch, showProgressBar: true }).then((response: any) => {
             onPendingParcels(response);
         }).catch(onError);
     }

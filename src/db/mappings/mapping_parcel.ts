@@ -6,100 +6,49 @@ export const getMappingParcel = () => {
             "action": {
                 "properties": {
                     "action": {
-                        "type": "text",
-                        "fields": {
-                            "keyword": {
-                                "type": "keyword",
-                                "ignore_above": 256
-                            }
-                        }
+                        "type": "keyword",
                     },
                     "receiver": {
-                        "type": "text",
-                        "fields": {
-                            "keyword": {
-                                "type": "keyword",
-                                "ignore_above": 256
-                            }
-                        }
+                        "type": "keyword",
                     },
                     "transactions": getMappingTransaction(),
                     "value": {
-                        "type": "text",
-                        "fields": {
-                            "keyword": {
-                                "type": "keyword",
-                                "ignore_above": 256
-                            }
-                        }
+                        "type": "keyword",
                     }
                 }
             },
             "blockHash": {
-                "type": "text",
-                "fields": {
-                    "keyword": {
-                        "type": "keyword",
-                        "ignore_above": 256
-                    }
-                }
+                "type": "keyword",
             },
             "sender": {
-                "type": "text",
-                "fields": {
-                    "keyword": {
-                        "type": "keyword",
-                        "ignore_above": 256
-                    }
-                }
+                "type": "keyword",
             },
             "timestamp": {
+                "type": "long"
+            },
+            "countOfTransaction": {
                 "type": "long"
             },
             "blockNumber": {
                 "type": "long"
             },
             "fee": {
-                "type": "text",
-                "fields": {
-                    "keyword": {
-                        "type": "keyword",
-                        "ignore_above": 256
-                    }
-                }
+                "type": "keyword",
             },
             "hash": {
-                "type": "text",
-                "fields": {
-                    "keyword": {
-                        "type": "keyword",
-                        "ignore_above": 256
-                    }
-                }
+                "type": "keyword",
             },
             "networkId": {
                 "type": "long"
             },
             "nonce": {
-                "type": "text",
-                "fields": {
-                    "keyword": {
-                        "type": "keyword",
-                        "ignore_above": 256
-                    }
-                }
+                "type": "keyword",
             },
             "parcelIndex": {
                 "type": "long"
             },
             "sig": {
-                "type": "text",
-                "fields": {
-                    "keyword": {
-                        "type": "keyword",
-                        "ignore_above": 256
-                    }
-                }
+                "type": "keyword",
             },
             "isRetracted": {
                 "type": "boolean"
