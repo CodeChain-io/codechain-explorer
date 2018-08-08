@@ -1,6 +1,7 @@
 import * as React from "react";
 import * as FontAwesome from "react-fontawesome";
 import * as _ from "lodash";
+import * as QRCode from "qrcode.react"
 
 import { match } from "react-router";
 import { Container, Row, Col } from "reactstrap";
@@ -67,7 +68,15 @@ class AssetTransferAddress extends React.Component<Props, State> {
                                     <CopyButton className="d-inline-block" copyString={address} />
                                 </div>
                             </div>
+                            <div className="d-inline-block qrcode-container">
+                                <QRCode size={65} value={address} />
+                            </div>
                         </div>
+                    </Col>
+                </Row>
+                <Row className="big-size-qr text-center">
+                    <Col>
+                        <QRCode size={120} value={address} />
                     </Col>
                 </Row>
                 <Row className="mt-large">

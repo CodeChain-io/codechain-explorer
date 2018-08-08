@@ -9,6 +9,7 @@
     "author": "CodeChain Team <codechain@kodebox.io>",
     "license": "UNLICENSED",
     "dependencies": {
+        "@types/qrcode.react": "^0.8.1",
         "@types/react-autosuggest": "^9.3.4",
         "@types/react-copy-to-clipboard": "^4.2.6",
         "@types/react-fontawesome": "^1.6.3",
@@ -45,6 +46,7 @@
         "postcss-flexbugs-fixes": "3.2.0",
         "postcss-loader": "2.0.8",
         "promise": "8.0.1",
+        "qrcode.react": "^0.8.0",
         "raf": "3.4.0",
         "react": "^16.3.2",
         "react-autosuggest": "^9.3.4",

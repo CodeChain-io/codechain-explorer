@@ -12,10 +12,26 @@
       margin-right: 10px;
     }
     .right-container {
-      max-width: 700px;
+      max-width: 680px;
       flex-grow: 1;
       overflow: hidden;
       vertical-align: top;
+    }
+    .qrcode-container {
+      margin-left: 5px;
+      vertical-align: top;
+    }
+  }
+  .big-size-qr {
+    padding-top: 30px;
+    display: none;
+  }
+  @include respond-below(sm) {
+    .big-size-qr {
+      display: block;
+    }
+    .qrcode-container {
+      display: none !important;
     }
   }
 }

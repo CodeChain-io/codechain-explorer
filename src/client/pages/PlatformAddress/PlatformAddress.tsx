@@ -2,6 +2,7 @@ import * as React from "react";
 import { match } from "react-router";
 import { Container, Row, Col } from "reactstrap";
 import { Error } from "../../components/error/Error/Error";
+import * as QRCode from "qrcode.react"
 
 import { U256 } from "codechain-sdk/lib/core/classes"
 import { RequestPlatformAddressAccount, RequestPlatformAddressParcels, RequestPlatformAddressAssets } from "../../request";
@@ -85,9 +86,15 @@ class Address extends React.Component<Props, State> {
                                     <CopyButton className="d-inline-block" copyString={address} />
                                 </div>
                             </div>
+                            <div className="d-inline-block qrcode-container">
+                                <QRCode size={65} value={address} />
+                            </div>
                         </div>
                     </Col>
                 </Row>
+                <div className="big-size-qr text-center">
+                    <QRCode size={120} value={address} />
+                </div>
                 <div className="mt-large">
                     <AccountDetails account={account} />
                 </div>
