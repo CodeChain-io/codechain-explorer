@@ -8,6 +8,7 @@ import HexString from "../../util/HexString/HexString";
 import { BlockDoc, Type, ChangeShardStateDoc } from "../../../../db/DocType";
 import { PlatformAddress } from "codechain-sdk/lib/key/classes";
 import { Link } from "react-router-dom";
+import { CommaNumberString } from "../../util/CommaNumberString/CommaNumberString";
 
 interface OwnProps {
     block: BlockDoc;
@@ -77,7 +78,7 @@ class BlockDetails extends React.Component<OwnProps> {
                                     Score
                                 </Col>
                                 <Col md="9">
-                                    {block.score}
+                                    <CommaNumberString text={block.score} />
                                 </Col>
                             </Row>
                             <hr />
