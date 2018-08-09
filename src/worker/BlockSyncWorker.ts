@@ -80,7 +80,7 @@ export class BlockSyncWorker {
         // Update pending parcel status
         const pendingParcelHashList = _.map(pendingParcels, (p) => p.hash().value);
         const removedPendingParcels = _.filter(indexedParcels, indexedParcel => !_.includes(pendingParcelHashList, indexedParcel.parcel.hash));
-        Promise.all(_.map(removedPendingParcels, async (removedPendingParcel) => {
+        await Promise.all(_.map(removedPendingParcels, async (removedPendingParcel) => {
             const blockedParcel = await this.elasticSearchAgent.getParcel(new H256(removedPendingParcel.parcel.hash));
             if (blockedParcel) {
                 return this.elasticSearchAgent.removePendingParcel(new H256(removedPendingParcel.parcel.hash));
@@ -92,7 +92,7 @@ export class BlockSyncWorker {
         // Index new pending parcel
         const indexedPendingParcelHashList = _.map(indexedParcels, (p) => p.parcel.hash);
         const newPendingParcels = _.filter(pendingParcels, pendingParcel => !_.includes(indexedPendingParcelHashList, pendingParcel.hash().value));
-        Promise.all(_.map(newPendingParcels, async (pendingParcel) => {
+        await Promise.all(_.map(newPendingParcels, async (pendingParcel) => {
             return this.elasticSearchAgent.indexPendingParcel(newPendingParcels, pendingParcel);
         }));
 
@@ -100,7 +100,7 @@ export class BlockSyncWorker {
         const deadPendingParcels = await this.elasticSearchAgent.getDeadPendingParcels();
         const deadPendingParcelHashList = _.map(deadPendingParcels, (p) => p.parcel.hash);
         const revivalPendingParcels = _.filter(pendingParcels, pendingParcel => _.includes(deadPendingParcelHashList, pendingParcel.hash().value));
-        Promise.all(_.map(revivalPendingParcels, async (revivalPendingParcel) => {
+        await Promise.all(_.map(revivalPendingParcels, async (revivalPendingParcel) => {
             return this.elasticSearchAgent.revialPendingParcel(revivalPendingParcel.hash());
         }));
         console.log("================ sync done ===================\n");
@@ -124,7 +124,7 @@ export class BlockSyncWorker {
 
     private indexingNewBlock = async (nextBlock: Block) => {
         await this.elasticSearchAgent.indexBlock(nextBlock);
-        Promise.all(_.map(nextBlock.parcels, (parcel) => this.elasticSearchAgent.indexParcel(nextBlock.parcels, parcel, nextBlock.timestamp)));
+        await Promise.all(_.map(nextBlock.parcels, (parcel) => this.elasticSearchAgent.indexParcel(nextBlock.parcels, parcel, nextBlock.timestamp)));
 
         const indexTransactionJobs = [];
         _.each(nextBlock.parcels, parcel => {
@@ -135,15 +135,15 @@ export class BlockSyncWorker {
                 });
             }
         });
-        Promise.all(indexTransactionJobs);
+        await Promise.all(indexTransactionJobs);
     }
 
     private retractBlock = async (lastSynchronizedBlock: BlockDoc) => {
         await this.elasticSearchAgent.retractBlock(new H256(lastSynchronizedBlock.hash));
-        Promise.all(_.map(lastSynchronizedBlock.parcels, async (parcel) => await this.elasticSearchAgent.retractParcel(new H256(parcel.hash))));
+        await Promise.all(_.map(lastSynchronizedBlock.parcels, async (parcel) => await this.elasticSearchAgent.retractParcel(new H256(parcel.hash))));
 
         const transactions = _.chain(lastSynchronizedBlock.parcels).filter(parcel => Type.isChangeShardStateDoc(parcel.action))
             .flatMap(parcel => (parcel.action as ChangeShardStateDoc).transactions).value()
-        Promise.all(_.map(transactions, async (transaction) => await this.elasticSearchAgent.retractTransaction(new H256(transaction.data.hash))));
+        await Promise.all(_.map(transactions, async (transaction) => await this.elasticSearchAgent.retractTransaction(new H256(transaction.data.hash))));
     }
 }
