@@ -44,7 +44,7 @@ const LatestTransactions = (props: Props) => {
                                             <td>{Type.isAssetMintTransactionDoc(transaction) ?
                                                 <span>
                                                     {
-                                                        Type.getMetadata((transaction as AssetMintTransactionDoc).data.metadata)
+                                                        Type.getMetadata((transaction as AssetMintTransactionDoc).data.metadata).icon_url
                                                             ? <ImageLoader size={18} className="icon" url={Type.getMetadata((transaction as AssetMintTransactionDoc).data.metadata).icon_url} />
                                                             : <ImageLoader size={18} className="icon" data={(transaction as AssetMintTransactionDoc).data.output.assetType} />
                                                     }
@@ -53,7 +53,7 @@ const LatestTransactions = (props: Props) => {
                                                 : (Type.isAssetTransferTransactionDoc(transaction) ?
                                                     <span>
                                                         {
-                                                            Type.getMetadata((transaction as AssetTransferTransactionDoc).data.inputs[0].prevOut.assetScheme.metadata)
+                                                            Type.getMetadata((transaction as AssetTransferTransactionDoc).data.inputs[0].prevOut.assetScheme.metadata).icon_url
                                                                 ? <ImageLoader size={18} className="icon" url={Type.getMetadata((transaction as AssetTransferTransactionDoc).data.inputs[0].prevOut.assetScheme.metadata).icon_url} />
                                                                 : <ImageLoader size={18} className="icon" data={(transaction as AssetTransferTransactionDoc).data.inputs[0].prevOut.assetType} />
                                                         }
