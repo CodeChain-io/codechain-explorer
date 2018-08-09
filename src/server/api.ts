@@ -92,7 +92,6 @@ export function createApiRouter(context: ServerContext, useCors = false) {
 
     router.get("/parcels/pending", async (req, res, next) => {
         const { page, itemsPerPage, actionFilters, signerFiter, sorting, orderBy } = req.query;
-        console.log(req.query)
         const parsedActionFilters = actionFilters ? actionFilters.split(",") : [];
         try {
             const pendingParcels = await context.db.getCurrentPendingParcels(page, itemsPerPage, parsedActionFilters, signerFiter, sorting, orderBy);
