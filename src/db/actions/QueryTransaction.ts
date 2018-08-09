@@ -254,7 +254,7 @@ export class QueryTransaction implements BaseAction {
                 "bool": {
                     "must": [
                         { "term": { "isRetracted": false } },
-                        { "term": { "data.assetName": { "query": name, "fuzziness": 3 } } }
+                        { "match": { "data.assetName": { "query": name, "fuzziness": 3 } } }
                     ]
                 }
             }
