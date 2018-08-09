@@ -2,7 +2,7 @@ import * as React from "react";
 import * as _ from "lodash";
 import * as moment from "moment";
 import * as FontAwesome from "react-fontawesome";
-import { Container, Row, Col, Table } from "reactstrap";
+import { Container, Table } from "reactstrap";
 import { Redirect } from "react-router";
 
 import { RequestPendingParcels, RequestTotalPendingParcelCount } from "../../request";
@@ -100,30 +100,24 @@ class PendingParcels extends React.Component<Props, State> {
                 </div>
                 <div className="filter-container mt-large">
                     <div className="type-filter">
-                        <Row>
-                            <Col md={4}>
-                                <span className="filter-item" onClick={this.toggleChangeShardStateFilter}>
-                                    <input readOnly={true} checked={isChangeShardStateFilterOn} type="checkbox" className="filter-input" />
-                                    <span className="filter-text">ChangeShardSate</span>
-                                </span>
-                            </Col>
-                            <Col md={4}>
-                                <div>
-                                    <span className="filter-item" onClick={this.togglePaymentFilter}>
-                                        <input readOnly={true} checked={isPaymentFilterOn} type="checkbox" className="filter-input" />
-                                        <span className="filter-text">Payment</span>
-                                    </span>
-                                </div>
-                            </Col>
-                            <Col md={4}>
-                                <div>
-                                    <span className="filter-item" onClick={this.toggleSetRegularKeyFilter}>
-                                        <input readOnly={true} checked={isSetRegularKeyFilterOn} type="checkbox" className="filter-input" />
-                                        <span className="filter-text">SetRegularKey</span>
-                                    </span>
-                                </div>
-                            </Col>
-                        </Row>
+                        <div className="d-md-inline mr-4">
+                            <span className="filter-item" onClick={this.toggleChangeShardStateFilter}>
+                                <input readOnly={true} checked={isChangeShardStateFilterOn} type="checkbox" className="filter-input" />
+                                <span className="filter-text">ChangeShardState</span>
+                            </span>
+                        </div>
+                        <div className="d-md-inline mr-4">
+                            <span className="filter-item" onClick={this.togglePaymentFilter}>
+                                <input readOnly={true} checked={isPaymentFilterOn} type="checkbox" className="filter-input" />
+                                <span className="filter-text">Payment</span>
+                            </span>
+                        </div>
+                        <div className="d-md-inline">
+                            <span className="filter-item" onClick={this.toggleSetRegularKeyFilter}>
+                                <input readOnly={true} checked={isSetRegularKeyFilterOn} type="checkbox" className="filter-input" />
+                                <span className="filter-text">SetRegularKey</span>
+                            </span>
+                        </div>
                     </div>
                 </div>
                 <div className="pending-parcel-table">
