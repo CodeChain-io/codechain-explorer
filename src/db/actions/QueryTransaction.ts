@@ -239,7 +239,7 @@ export class QueryTransaction implements BaseAction {
         if (response.hits.total === 0) {
             return null;
         }
-        return response.hits.hits[0]._source;
+        return Type.getAssetSchemeDoc(response.hits.hits[0]._source);
     }
 
     public async getAssetBundlesByAssetName(name: string): Promise<AssetBundleDoc[]> {
