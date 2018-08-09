@@ -1,6 +1,7 @@
 import * as React from "react";
 import * as moment from "moment";
-import * as FontAwesome from "react-fontawesome";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faSquare } from "@fortawesome/free-solid-svg-icons";
 import * as _ from "lodash";
 import { match } from "react-router";
 import { Container, Col, Row } from "reactstrap";
@@ -86,19 +87,19 @@ class Block extends React.Component<Props, State> {
                             <h2># of Parcel types</h2>
                             <hr />
                             <div className="d-flex align-items-center">
-                                <FontAwesome className="square payment-action-text-color" name="square" />
+                                <FontAwesomeIcon className="square payment-action-text-color" icon={faSquare} />
                                 <span className="mr-auto item-name">Payment</span>
                                 <span>{_.filter(block.parcels, (parcel) => Type.isPaymentDoc(parcel.action)).length.toLocaleString()}</span>
                             </div>
                             <hr />
                             <div className="d-flex align-items-center">
-                                <FontAwesome className="square change-shard-state-action-text-color" name="square" />
+                                <FontAwesomeIcon className="square change-shard-state-action-text-color" icon={faSquare} />
                                 <span className="mr-auto item-name">ChangeShardState</span>
                                 <span>{_.filter(block.parcels, (parcel) => Type.isChangeShardStateDoc(parcel.action)).length.toLocaleString()}</span>
                             </div>
                             <hr />
                             <div className="d-flex align-items-center">
-                                <FontAwesome className="square set-regular-key-action-text-color" name="square" />
+                                <FontAwesomeIcon className="square set-regular-key-action-text-color" icon={faSquare} />
                                 <span className="mr-auto item-name">SetRegularKey</span>
                                 <span>{_.filter(block.parcels, (parcel) => Type.isSetRegularKeyDoc(parcel.action)).length.toLocaleString()}</span>
                             </div>
@@ -107,7 +108,7 @@ class Block extends React.Component<Props, State> {
                             <h2># of Transaction types</h2>
                             <hr />
                             <div className="d-flex align-items-center">
-                                <FontAwesome className="square asset-transfer-transaction-text-color" name="square" />
+                                <FontAwesomeIcon className="square asset-transfer-transaction-text-color" icon={faSquare} />
                                 <span className="mr-auto item-name">Transfer</span>
                                 <span>
                                     {_.reduce(block.parcels, (memo, parcel) => {
@@ -122,7 +123,7 @@ class Block extends React.Component<Props, State> {
                             </div>
                             <hr />
                             <div className="d-flex align-items-center">
-                                <FontAwesome className="square asset-mint-transaction-text-color" name="square" />
+                                <FontAwesomeIcon className="square asset-mint-transaction-text-color" icon={faSquare} />
                                 <span className="mr-auto item-name">Mint</span>
                                 <span>
                                     {_.reduce(block.parcels, (memo, parcel) => {

@@ -1,9 +1,9 @@
 import * as React from "react";
 import { Container, Row, Col } from "reactstrap";
-import * as FontAwesome from "react-fontawesome";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faGithub, faGitter, faTwitter, faFacebookSquare } from "@fortawesome/free-brands-svg-icons"
 import "./Footer.scss";
 import * as Logo from "./img/logo.png";
-import * as GitterIcon from "./img/gitter.png";
 
 const Footer = () => {
     return <div className="footer">
@@ -22,10 +22,10 @@ const Footer = () => {
                 </Col>
                 <Col lg="3">
                     <ul className="list-inline link-list">
-                        <li className="list-inline-item"><a href="https://github.com/CodeChain-io/codechain" target="_blank"><FontAwesome name="github" /></a></li>
-                        <li className="list-inline-item"><a href="https://gitter.im/CodeChain-io/codechain" target="_blank"><img src={GitterIcon} className="gitter-icon" /></a></li>
-                        <li className="list-inline-item"><a href="https://twitter.com/codechain_io" target="_blank"><FontAwesome name="twitter" /></a></li>
-                        <li className="list-inline-item"><a href="https://www.facebook.com/codechain/" target="_blank"><FontAwesome name="facebook-square" /></a></li>
+                        <li className="list-inline-item"><a href="https://github.com/CodeChain-io/codechain" target="_blank"><FontAwesomeIcon icon={faGithub} /></a></li>
+                        <li className="list-inline-item"><a href="https://gitter.im/CodeChain-io/codechain" target="_blank"><FontAwesomeIcon icon={faGitter} /></a></li>
+                        <li className="list-inline-item"><a href="https://twitter.com/codechain_io" target="_blank"><FontAwesomeIcon icon={faTwitter} /></a></li>
+                        <li className="list-inline-item"><a href="https://www.facebook.com/codechain/" target="_blank"><FontAwesomeIcon icon={faFacebookSquare} /></a></li>
                     </ul>
                 </Col>
             </Row>

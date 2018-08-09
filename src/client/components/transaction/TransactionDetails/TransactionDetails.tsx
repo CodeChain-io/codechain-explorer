@@ -47,6 +47,15 @@ const getTransactionInfoByType = (transaction: TransactionDoc, status: string) =
                             <hr />
                             <Row>
                                 <Col md="3">
+                                    Transaction Index
+                                </Col>
+                                <Col md="9">
+                                    {transactionDoc.data.transactionIndex.toLocaleString()}
+                                </Col>
+                            </Row>
+                            <hr />
+                            <Row>
+                                <Col md="3">
                                     NetworkID
                                 </Col>
                                 <Col md="9">

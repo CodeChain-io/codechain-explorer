@@ -1,6 +1,7 @@
 import * as React from "react";
 import * as moment from "moment";
-import * as FontAwesome from "react-fontawesome";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faSquare } from "@fortawesome/free-solid-svg-icons";
 import * as _ from "lodash";
 import { match } from "react-router";
 import { Container, Row, Col } from "reactstrap";
@@ -94,7 +95,7 @@ class Parcel extends React.Component<Props, State> {
                                 <h2># of Transaction types</h2>
                                 <hr />
                                 <div className="d-flex align-items-center">
-                                    <FontAwesome className="square asset-transfer-transaction-text-color" name="square" />
+                                    <FontAwesomeIcon className="square asset-transfer-transaction-text-color" icon={faSquare} />
                                     <span className="mr-auto item-name">Transfer</span>
                                     <span>
                                         {
@@ -104,7 +105,7 @@ class Parcel extends React.Component<Props, State> {
                                 </div>
                                 <hr />
                                 <div className="d-flex align-items-center">
-                                    <FontAwesome className="square asset-mint-transaction-text-color" name="square" />
+                                    <FontAwesomeIcon className="square asset-mint-transaction-text-color" icon={faSquare} />
                                     <span className="mr-auto item-name">Mint</span>
                                     <span>
                                         {

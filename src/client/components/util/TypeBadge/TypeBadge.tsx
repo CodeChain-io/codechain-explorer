@@ -1,5 +1,6 @@
 import * as React from "react";
-import * as FontAwesome from "react-fontawesome";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faSquare } from "@fortawesome/free-solid-svg-icons";
 import { TransactionDoc } from "../../../../db/DocType";
 
 interface Props {
@@ -27,5 +28,5 @@ const getTypeString = (type: string) => {
 
 export const TypeBadge = (props: Props) => {
     const { className, transaction } = props;
-    return <span className={className}><FontAwesome className={getBadgeBackgroundColorClassByType(transaction.type)} name="square" /> {getTypeString(transaction.type)}</span>
+    return <span className={className}><FontAwesomeIcon className={getBadgeBackgroundColorClassByType(transaction.type)} icon={faSquare} /> {getTypeString(transaction.type)}</span>
 }

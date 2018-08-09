@@ -1,7 +1,8 @@
 import * as React from "react";
 import * as _ from "lodash";
 import * as moment from "moment";
-import * as FontAwesome from "react-fontawesome";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faFilter, faCaretUp, faCaretDown, faAngleDoubleLeft, faAngleLeft, faAngleDoubleRight, faAngleRight } from "@fortawesome/free-solid-svg-icons";
 import { Container, Table } from "reactstrap";
 import { Redirect } from "react-router";
 
@@ -153,7 +154,7 @@ class PendingParcels extends React.Component<Props, State> {
                                             return (
                                                 <tr key={`pending-parcel-${pendingParcel.parcel.hash}`}>
                                                     <td><ActionBadge parcel={pendingParcel.parcel} simple={true} /><HexString text={pendingParcel.parcel.hash} link={`/parcel/0x${pendingParcel.parcel.hash}`} /></td>
-                                                    <td><FontAwesome className={`filter ${isSenderFilterOn ? "" : "disable"}`} onClick={_.partial(this.toogleFilter, pendingParcel.parcel.sender)} name="filter" /><Link to={`/addr-platform/${PlatformAddress.fromAccountId(pendingParcel.parcel.sender).value}`}>{PlatformAddress.fromAccountId(pendingParcel.parcel.sender).value}</Link></td>
+                                                    <td><span onClick={_.partial(this.toogleFilter, pendingParcel.parcel.sender)}><FontAwesomeIcon className={`filter ${isSenderFilterOn ? "" : "disable"}`} icon={faFilter} /></span><Link to={`/addr-platform/${PlatformAddress.fromAccountId(pendingParcel.parcel.sender).value}`}>{PlatformAddress.fromAccountId(pendingParcel.parcel.sender).value}</Link></td>
                                                     <td>{pendingParcel.parcel.fee.toLocaleString()}</td>
                                                     <td>{Type.isChangeShardStateDoc(pendingParcel.parcel.action) ? (pendingParcel.parcel.action as ChangeShardStateDoc).transactions.length.toLocaleString() : 0}</td>
                                                     <td>{moment.unix(pendingParcel.timestamp).fromNow()}</td>
@@ -169,10 +170,10 @@ class PendingParcels extends React.Component<Props, State> {
                             <div className="d-inline ml-auto pager">
                                 <ul className="list-inline">
                                     <li className="list-inline-item">
-                                        <button className={`btn btn-primary page-btn ${currentPage === 1 ? "disabled" : ""}`} type="button" onClick={_.partial(this.moveFirst, currentPage)}>&lt;&lt;</button>
+                                        <button className={`btn btn-primary page-btn ${currentPage === 1 ? "disabled" : ""}`} type="button" onClick={_.partial(this.moveFirst, currentPage)}><FontAwesomeIcon icon={faAngleDoubleLeft} /></button>
                                     </li>
                                     <li className="list-inline-item">
-                                        <button className={`btn btn-primary page-btn ${currentPage === 1 ? "disabled" : ""}`} type="button" onClick={_.partial(this.moveBefore, currentPage)}>&lt; Prev</button>
+                                        <button className={`btn btn-primary page-btn ${currentPage === 1 ? "disabled" : ""}`} type="button" onClick={_.partial(this.moveBefore, currentPage)}><FontAwesomeIcon icon={faAngleLeft} /> Prev</button>
                                     </li>
                                     <li className="list-inline-item">
                                         <div className="number-view">
@@ -180,10 +181,10 @@ class PendingParcels extends React.Component<Props, State> {
                                         </div>
                                     </li>
                                     <li className="list-inline-item">
-                                        <button className={`btn btn-primary page-btn ${currentPage === maxPage ? "disabled" : ""}`} type="button" onClick={_.partial(this.moveNext, currentPage, maxPage)}>Next &gt;</button>
+                                        <button className={`btn btn-primary page-btn ${currentPage === maxPage ? "disabled" : ""}`} type="button" onClick={_.partial(this.moveNext, currentPage, maxPage)}>Next <FontAwesomeIcon icon={faAngleRight} /></button>
                                     </li>
                                     <li className="list-inline-item">
-                                        <button className={`btn btn-primary page-btn ${currentPage === maxPage ? "disabled" : ""}`} type="button" onClick={_.partial(this.moveLast, currentPage, maxPage)}>&gt;&gt;</button>
+                                        <button className={`btn btn-primary page-btn ${currentPage === maxPage ? "disabled" : ""}`} type="button" onClick={_.partial(this.moveLast, currentPage, maxPage)}><FontAwesomeIcon icon={faAngleDoubleRight} /></button>
                                     </li>
                                 </ul>
                             </div>
@@ -284,8 +285,8 @@ class PendingParcels extends React.Component<Props, State> {
             <div className={`d-inline sort-btn ${this.state.currentSortType !== sortType ? "disable" : ""}`}>
                 {
                     this.state.currentSortType === sortType ?
-                        (this.state.isASC ? <FontAwesome name="caret-up" /> : <FontAwesome name="caret-down" />)
-                        : <FontAwesome name="caret-down" />
+                        (this.state.isASC ? <FontAwesomeIcon icon={faCaretUp} /> : <FontAwesomeIcon icon={faCaretDown} />)
+                        : <FontAwesomeIcon icon={faCaretDown} />
                 }
             </div>
         )

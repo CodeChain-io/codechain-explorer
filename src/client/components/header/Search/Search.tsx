@@ -1,6 +1,7 @@
 import * as React from "react";
 import * as _ from "lodash";
-import * as FontAwesome from "react-fontawesome";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faExclamationTriangle, faSearch } from '@fortawesome/free-solid-svg-icons'
 import { Form, FormGroup, Button } from "reactstrap";
 import LoadingBar from "react-redux-loading-bar";
 import { Redirect } from "react-router";
@@ -60,7 +61,7 @@ class Search extends React.Component<Props, State> {
             <FormGroup className="mb-0 search-form-group d-flex">
                 {
                     status === "notFound" ?
-                        <FontAwesome name="exclamation-triangle" className="not-found text-danger" /> : null
+                        <FontAwesomeIcon icon={faExclamationTriangle} className="not-found text-danger" /> : null
                 }
                 <div className="search-input d-inline-block">
                     <Autosuggest
@@ -74,7 +75,7 @@ class Search extends React.Component<Props, State> {
                     <LoadingBar scope="searchBar" className="search-loading-bar" />
                 </div>
             </FormGroup>
-            <Button className="btn btn-primary search-summit" type="submit"><span className="search-big">Search</span><span className="search-small"><FontAwesome name="search" /></span></Button>
+            <Button className="btn btn-primary search-summit" type="submit"><span className="search-big">Search</span><span className="search-small"><FontAwesomeIcon icon={faSearch} /></span></Button>
             {
                 status === "search" ?
                     <div>

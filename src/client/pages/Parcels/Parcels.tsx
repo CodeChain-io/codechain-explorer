@@ -3,6 +3,8 @@ import * as _ from "lodash";
 import * as moment from "moment";
 import { Container, Table } from "reactstrap";
 import { Redirect } from "react-router";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faAngleDoubleLeft, faAngleLeft, faAngleDoubleRight, faAngleRight } from "@fortawesome/free-solid-svg-icons";
 
 import { RequestParcels, RequestTotalParcelCount } from "../../request";
 import "./Parcels.scss";
@@ -118,10 +120,10 @@ class Parcels extends React.Component<Props, State> {
                             <div className="d-inline ml-auto pager">
                                 <ul className="list-inline">
                                     <li className="list-inline-item">
-                                        <button className={`btn btn-primary page-btn ${currentPage === 1 ? "disabled" : ""}`} type="button" onClick={_.partial(this.moveFirst, currentPage)}>&lt;&lt;</button>
+                                        <button className={`btn btn-primary page-btn ${currentPage === 1 ? "disabled" : ""}`} type="button" onClick={_.partial(this.moveFirst, currentPage)}><FontAwesomeIcon icon={faAngleDoubleLeft} /></button>
                                     </li>
                                     <li className="list-inline-item">
-                                        <button className={`btn btn-primary page-btn ${currentPage === 1 ? "disabled" : ""}`} type="button" onClick={_.partial(this.moveBefore, currentPage)}>&lt; Prev</button>
+                                        <button className={`btn btn-primary page-btn ${currentPage === 1 ? "disabled" : ""}`} type="button" onClick={_.partial(this.moveBefore, currentPage)}><FontAwesomeIcon icon={faAngleLeft} /> Prev</button>
                                     </li>
                                     <li className="list-inline-item">
                                         <div className="number-view">
@@ -129,10 +131,10 @@ class Parcels extends React.Component<Props, State> {
                                         </div>
                                     </li>
                                     <li className="list-inline-item">
-                                        <button className={`btn btn-primary page-btn ${currentPage === maxPage ? "disabled" : ""}`} type="button" onClick={_.partial(this.moveNext, currentPage, maxPage)}>Next &gt;</button>
+                                        <button className={`btn btn-primary page-btn ${currentPage === maxPage ? "disabled" : ""}`} type="button" onClick={_.partial(this.moveNext, currentPage, maxPage)}>Next <FontAwesomeIcon icon={faAngleRight} /></button>
                                     </li>
                                     <li className="list-inline-item">
-                                        <button className={`btn btn-primary page-btn ${currentPage === maxPage ? "disabled" : ""}`} type="button" onClick={_.partial(this.moveLast, currentPage, maxPage)}>&gt;&gt;</button>
+                                        <button className={`btn btn-primary page-btn ${currentPage === maxPage ? "disabled" : ""}`} type="button" onClick={_.partial(this.moveLast, currentPage, maxPage)}><FontAwesomeIcon icon={faAngleDoubleRight} /></button>
                                     </li>
                                 </ul>
                             </div>

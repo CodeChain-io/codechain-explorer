@@ -1,6 +1,7 @@
 import * as React from "react";
 import * as moment from "moment";
-import * as FontAwesome from "react-fontawesome";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faSquare } from '@fortawesome/free-solid-svg-icons'
 import * as _ from "lodash";
 
 import "./ParcelList.scss"
@@ -174,10 +175,10 @@ class ParcelList extends React.Component<Props, State> {
                 <Col md="9">
                     {(parcel.action as ChangeShardStateDoc).transactions.length.toLocaleString()}
                     <div className="small-text">
-                        <FontAwesome name="square" className="asset-transfer-transaction-text-color" /> Transfer: {_.filter((parcel.action as ChangeShardStateDoc).transactions, (tx) => Type.isAssetTransferTransactionDoc(tx)).length.toLocaleString()}
+                        <FontAwesomeIcon icon={faSquare} className="asset-transfer-transaction-text-color" /> Transfer: {_.filter((parcel.action as ChangeShardStateDoc).transactions, (tx) => Type.isAssetTransferTransactionDoc(tx)).length.toLocaleString()}
                     </div>
                     <div className="small-text">
-                        <FontAwesome name="square" className="asset-mint-transaction-text-color" /> Mint: {_.filter((parcel.action as ChangeShardStateDoc).transactions, (tx) => Type.isAssetMintTransactionDoc(tx)).length.toLocaleString()}
+                        <FontAwesomeIcon icon={faSquare} className="asset-mint-transaction-text-color" /> Mint: {_.filter((parcel.action as ChangeShardStateDoc).transactions, (tx) => Type.isAssetMintTransactionDoc(tx)).length.toLocaleString()}
                     </div>
                 </Col>
             </Row>

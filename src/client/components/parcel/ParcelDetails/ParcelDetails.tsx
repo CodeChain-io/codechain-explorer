@@ -55,7 +55,9 @@ const getElementByType = (parcel: ParcelDoc) => {
                         Key
                     </Col>
                     <Col md="9">
-                        <HexString text={(parcel.action as SetRegularKeyDoc).key} />
+                        <div className="text-area">
+                            <HexString text={(parcel.action as SetRegularKeyDoc).key} />
+                        </div>
                     </Col>
                 </Row >,
                 <hr key="line" />

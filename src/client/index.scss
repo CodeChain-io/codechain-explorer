@@ -25,9 +25,14 @@ a {
 #page {
   min-height: 100vh;
   #content {
-    padding-top: 104px;
+    padding-top: 53px;
     min-height: calc(100vh - 100px);
     overflow: auto;
+    @include respond-below(md) {
+      & {
+        padding-top: 104px;
+      }
+    }
   }
 }
 
