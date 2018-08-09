@@ -177,6 +177,9 @@ class Search extends React.Component<Props, State> {
     }
 
     private updateInputValue = (e: any, value: any) => {
+        if (value.newValue === "") {
+            this.setState({ status: "wait" });
+        }
         this.setState({
             inputValue: value.newValue
         });
