@@ -39,7 +39,10 @@ class BlockList extends React.Component<Props, State> {
         return <div className="block-list mt-large">
             <Row>
                 <Col>
-                    <h2>Authored Blocks</h2>
+                    <div className="d-flex justify-content-between align-items-end">
+                        <h2>Authored Blocks</h2>
+                        <span>Total {blocks.length} blocks</span>
+                    </div>
                     <hr className="heading-hr" />
                 </Col>
             </Row>

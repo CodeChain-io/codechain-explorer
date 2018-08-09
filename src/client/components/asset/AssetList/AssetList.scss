@@ -15,7 +15,7 @@
       &>div {
         overflow: hidden;
       }
-      h3 {
+      .asset-name {
         @include ellipsis-block;
       }
     }

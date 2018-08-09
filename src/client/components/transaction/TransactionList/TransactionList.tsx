@@ -44,7 +44,10 @@ class TransactionList extends React.Component<Props, State> {
         return <div className="parcel-transaction-list">
             <Row>
                 <Col>
-                    <h2>Transactions</h2>
+                    <div className="d-flex justify-content-between align-items-end">
+                        <h2>Transactions</h2>
+                        <span>Total {transactions.length} transactions</span>
+                    </div>
                     <hr className="heading-hr" />
                 </Col>
             </Row>

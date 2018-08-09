@@ -15,7 +15,10 @@ const AssetList = (prop: OwnProps) => {
     return <div className="asset-list">
         <Row>
             <Col>
-                <h2>Assets</h2>
+                <div className="d-flex justify-content-between align-items-end">
+                    <h2>Assets</h2>
+                    <span>Total {prop.assetBundles.length} assets</span>
+                </div>
                 <hr className="heading-hr" />
             </Col>
         </Row>
@@ -38,7 +41,7 @@ const AssetList = (prop: OwnProps) => {
                                         <div className="d-inline-block d-flex align-items-center asset-text-container">
                                             <div>
                                                 <Link to={`/asset/0x${assetBundle.asset.assetType}`}>
-                                                    {metadata.name}
+                                                    <div className="asset-name">{metadata.name ? metadata.name : assetBundle.asset.assetType}</div>
                                                 </Link>
                                                 <div>
                                                     <span>x {assetBundle.asset.amount.toLocaleString()}</span>

@@ -44,7 +44,7 @@ class ParcelList extends React.Component<Props, State> {
                 <Col>
                     <div className="d-flex justify-content-between align-items-end">
                         <h2>Parcels</h2>
-                        <span>{parcels.length} parcels in this block</span>
+                        <span>Total {parcels.length} parcels</span>
                     </div>
                     <hr className="heading-hr" />
                 </Col>
