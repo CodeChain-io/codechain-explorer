@@ -84,18 +84,3 @@ h3 {
     font-size: 1rem;
   }
 }
-
-// Override bootstrap style
-.btn-primary,
-.btn-primary:active,
-.btn-primary:visited,
-.btn-primary:focus {
-  border-color: $primary-color;
-  background-color: white;
-  color: $primary-color;
-}
-
-.btn-primary:hover {
-  background-color: $primary-color;
-  border-color: $primary-color;
-}
