@@ -1,7 +1,7 @@
 @import "../../../mixins.scss";
 @import "../../../variables.scss";
 .header {
-  background-color: #3A3FAB;
+  background-color: $primary-color;
   position: fixed;
   top: 0;
   width: 100%;
@@ -14,12 +14,15 @@
   .nav-link {
     color: white !important;
     cursor: pointer;
+    &:hover {
+      color: $header-text-color !important;
+    }
   }
   .dropdown-menu {
     .dropdown-item {
       color: $dark-color;
       &:hover {
-        background-color: inherit;
+        background-color: $background-gray;
       }
     }
     a.active {
@@ -34,6 +37,7 @@
         color: white !important;
         &:hover {
           background-color: inherit;
+          color: $header-text-color !important;
         }
       }
       a.active {
@@ -48,5 +52,9 @@
   }
   .health-checker {
     cursor: inherit;
+    color: white !important;
+    &:hover {
+      color: white !important;
+    }
   }
 }
