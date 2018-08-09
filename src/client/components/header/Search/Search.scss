@@ -1,7 +1,6 @@
 @import "../../../mixins.scss";
 @import "../../../variables.scss";
 .search-form {
-  padding-bottom: 16px;
   width: 400px;
   @media (max-width: 400px) {
     & {

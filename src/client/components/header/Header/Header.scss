@@ -57,4 +57,16 @@
       color: white !important;
     }
   }
+  .search-for-small-screen {
+    display: none;
+    padding-bottom: 16px;
+  }
+  @include respond-below(md) {
+    .search-for-small-screen {
+      display: flex;
+    }
+    .search-for-large-screen {
+      display: none;
+    }
+  }
 }

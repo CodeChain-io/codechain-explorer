@@ -96,10 +96,15 @@ class Header extends React.Component<{}, State> {
                                 */
                             }
                         </Nav>
+                        <Nav>
+                            <NavItem className="search-for-large-screen">
+                                <Search />
+                            </NavItem>
+                        </Nav>
                     </Collapse>
                 </Container>
             </Navbar>
-            <Container className="searchbar-container d-flex">
+            <Container className="searchbar-container search-for-small-screen">
                 <Search className="ml-auto" />
             </Container>
             <LoadingBar className="loading-bar" />
