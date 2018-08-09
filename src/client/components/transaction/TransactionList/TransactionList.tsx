@@ -19,6 +19,8 @@ interface Props {
     owner?: string;
     assetType?: H256,
     transactions: TransactionDoc[];
+    loadMoreAction?: () => void;
+    totalCount: number;
 }
 
 interface State {
@@ -33,20 +35,22 @@ class TransactionList extends React.Component<Props, State> {
             page: 1,
         };
     }
-    public componentWillReceiveProps() {
-        this.setState({ page: 1 });
-    }
 
     public render() {
         const { page } = this.state;
-        const { transactions, assetType, owner } = this.props;
-        const loadedTransactions = transactions.slice(0, this.itemPerPage * page);
+        const { transactions, assetType, owner, loadMoreAction, totalCount } = this.props;
+        let loadedTransactions;
+        if (loadMoreAction) {
+            loadedTransactions = transactions;
+        } else {
+            loadedTransactions = transactions.slice(0, this.itemPerPage * page);
+        }
         return <div className="parcel-transaction-list">
             <Row>
                 <Col>
                     <div className="d-flex justify-content-between align-items-end">
                         <h2>Transactions</h2>
-                        <span>Total {transactions.length} transactions</span>
+                        <span>Total {totalCount} transactions</span>
                     </div>
                     <hr className="heading-hr" />
                 </Col>
@@ -94,7 +98,7 @@ class TransactionList extends React.Component<Props, State> {
                 </Col>
             </Row>
             {
-                this.itemPerPage * page < transactions.length ?
+                loadMoreAction || this.itemPerPage * page < transactions.length ?
                     <Row>
                         <Col>
                             <div className="mt-small">
@@ -295,7 +299,11 @@ class TransactionList extends React.Component<Props, State> {
 
     private loadMore = (e: any) => {
         e.preventDefault();
-        this.setState({ page: this.state.page + 1 })
+        if (this.props.loadMoreAction) {
+            this.props.loadMoreAction();
+        } else {
+            this.setState({ page: this.state.page + 1 })
+        }
     }
 };
 

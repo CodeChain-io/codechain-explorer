@@ -17,6 +17,8 @@ import { CommaNumberString } from "../../util/CommaNumberString/CommaNumberStrin
 interface Props {
     parcels: ParcelDoc[];
     address?: string;
+    loadMoreAction?: () => void;
+    totalCount: number;
 }
 
 interface State {
@@ -32,20 +34,21 @@ class ParcelList extends React.Component<Props, State> {
         };
     }
 
-    public componentWillReceiveProps() {
-        this.setState({ page: 1 });
-    }
-
     public render() {
         const { page } = this.state;
-        const { parcels, address } = this.props;
-        const loadedParcels = parcels.slice(0, this.itemPerPage * page);
+        const { parcels, address, loadMoreAction, totalCount } = this.props;
+        let loadedParcels;
+        if (loadMoreAction) {
+            loadedParcels = parcels;
+        } else {
+            loadedParcels = parcels.slice(0, this.itemPerPage * page);
+        }
         return <div className="block-parcel-list">
             <Row>
                 <Col>
                     <div className="d-flex justify-content-between align-items-end">
                         <h2>Parcels</h2>
-                        <span>Total {parcels.length} parcels</span>
+                        <span>Total {totalCount} parcels</span>
                     </div>
                     <hr className="heading-hr" />
                 </Col>
@@ -115,7 +118,7 @@ class ParcelList extends React.Component<Props, State> {
                 </Col>
             </Row>
             {
-                this.itemPerPage * page < parcels.length ?
+                loadMoreAction || this.itemPerPage * page < parcels.length ?
                     <Row>
                         <Col>
                             <div className="mt-small">
@@ -197,7 +200,11 @@ class ParcelList extends React.Component<Props, State> {
 
     private loadMore = (e: any) => {
         e.preventDefault();
-        this.setState({ page: this.state.page + 1 })
+        if (this.props.loadMoreAction) {
+            this.props.loadMoreAction();
+        } else {
+            this.setState({ page: this.state.page + 1 })
+        }
     }
 };
 

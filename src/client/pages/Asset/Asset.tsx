@@ -83,7 +83,7 @@ class Asset extends React.Component<Props, State> {
                 {
                     transactions.length !== 0 ?
                         <div className="mt-large">
-                            <TransactionList assetType={new H256(assetType)} transactions={transactions} />
+                            <TransactionList assetType={new H256(assetType)} transactions={transactions} totalCount={transactions.length} />
                         </div>
                         : <RequestAssetTransactions assetType={assetType} onTransactions={this.onTransactionList} onError={this.onError} />
                 }

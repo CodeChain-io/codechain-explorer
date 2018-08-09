@@ -12,7 +12,9 @@ import { Link } from "react-router-dom";
 import { PlatformAddress } from "codechain-sdk/lib/key/classes";
 
 interface Props {
-    blocks: BlockDoc[]
+    blocks: BlockDoc[];
+    loadMoreAction?: () => void;
+    totalCount: number;
 }
 
 interface State {
@@ -28,20 +30,21 @@ class BlockList extends React.Component<Props, State> {
         };
     }
 
-    public componentWillReceiveProps() {
-        this.setState({ page: 1 });
-    }
-
     public render() {
         const { page } = this.state;
-        const { blocks } = this.props;
-        const loadedBlocks = blocks.slice(0, this.itemPerPage * page);
+        const { blocks, totalCount, loadMoreAction } = this.props;
+        let loadedBlocks = blocks.slice(0, this.itemPerPage * page);
+        if (loadMoreAction) {
+            loadedBlocks = blocks;
+        } else {
+            loadedBlocks = blocks.slice(0, this.itemPerPage * page);
+        }
         return <div className="block-list mt-large">
             <Row>
                 <Col>
                     <div className="d-flex justify-content-between align-items-end">
                         <h2>Authored Blocks</h2>
-                        <span>Total {blocks.length} blocks</span>
+                        <span>Total {totalCount} blocks</span>
                     </div>
                     <hr className="heading-hr" />
                 </Col>
@@ -97,7 +100,7 @@ class BlockList extends React.Component<Props, State> {
                 </Col>
             </Row>
             {
-                this.itemPerPage * page < blocks.length ?
+                loadedBlocks || this.itemPerPage * page < blocks.length ?
                     <Row>
                         <Col>
                             <div className="mt-small">
@@ -114,7 +117,11 @@ class BlockList extends React.Component<Props, State> {
 
     private loadMore = (e: any) => {
         e.preventDefault();
-        this.setState({ page: this.state.page + 1 })
+        if (this.props.loadMoreAction) {
+            this.props.loadMoreAction();
+        } else {
+            this.setState({ page: this.state.page + 1 })
+        }
     }
 };
 

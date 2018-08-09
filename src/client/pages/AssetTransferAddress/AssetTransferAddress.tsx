@@ -110,14 +110,14 @@ class AssetTransferAddress extends React.Component<Props, State> {
                         {
                             utxo.length > 0 ?
                                 <div className="mt-large">
-                                    <AssetList assetBundles={utxo} />
+                                    <AssetList assetBundles={utxo} totalCount={utxo.length} />
                                 </div>
                                 : null
                         }
                         {
                             transactions.length > 0 ?
                                 <div className="mt-large">
-                                    <TransactionList owner={address} transactions={transactions} />
+                                    <TransactionList owner={address} transactions={transactions} totalCount={transactions.length} />
                                 </div>
                                 : null
                         }

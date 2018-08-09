@@ -101,21 +101,21 @@ class Address extends React.Component<Props, State> {
                 {
                     assetBundles.length > 0 ?
                         <div className="mt-large">
-                            <AssetList assetBundles={assetBundles} />
+                            <AssetList assetBundles={assetBundles} totalCount={assetBundles.length} />
                         </div>
                         : null
                 }
                 {
                     parcels.length > 0 ?
                         <div className="mt-large">
-                            <ParcelList address={address} parcels={parcels} />
+                            <ParcelList address={address} parcels={parcels} totalCount={parcels.length} />
                         </div>
                         : null
                 }
                 {
                     blocks.length > 0 ?
                         <div className="mt-large">
-                            <BlockList blocks={blocks} />
+                            <BlockList blocks={blocks} totalCount={blocks.length} />
                         </div>
                         : null
                 }

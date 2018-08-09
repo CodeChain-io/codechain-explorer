@@ -141,7 +141,7 @@ class Block extends React.Component<Props, State> {
                 </Row>
                 <Row className="mt-large">
                     <Col lg="9">
-                        <ParcelList parcels={block.parcels} />
+                        <ParcelList parcels={block.parcels} totalCount={block.parcels.length} />
                     </Col>
                 </Row>
             </Container>

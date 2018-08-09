@@ -132,7 +132,7 @@ class Parcel extends React.Component<Props, State> {
             return (
                 [
                     <div key="parcel-transaction" className="mt-large">
-                        <TransactionList transactions={(parcel.action as ChangeShardStateDoc).transactions} />
+                        <TransactionList transactions={(parcel.action as ChangeShardStateDoc).transactions} totalCount={(parcel.action as ChangeShardStateDoc).transactions.length} />
                     </div>
                 ]
             )
