@@ -194,6 +194,98 @@ const getTransactionInfoByType = (transaction: TransactionDoc, status: string) =
                         })
                     }
                 </div>,
+                <div key="burn">
+                    {
+                        _.map(transactionDoc.data.burns, (burn, index) => {
+                            return ([
+                                <Row key={`transaction-header-table-burn-title-${index}`} className="mt-large">
+                                    <Col lg="12">
+                                        <h3>Burn #{index}</h3>
+                                        <hr className="heading-hr" />
+                                    </Col>
+                                </Row>,
+                                <Row key={`transaction-header-table-burn-detail-${index}`}>
+                                    <Col lg="12">
+                                        <div className="data-set">
+                                            <Row>
+                                                <Col md="3">
+                                                    AssetType
+                                                </Col>
+                                                <Col md="9">
+                                                    {
+                                                        Type.getMetadata(burn.prevOut.assetScheme.metadata).icon_url ?
+                                                            <span><ImageLoader className="mr-2" size={18} url={Type.getMetadata(burn.prevOut.assetScheme.metadata).icon_url} /><HexString link={`/asset/0x${burn.prevOut.assetType}`} text={burn.prevOut.assetType} /></span>
+                                                            : <span><ImageLoader className="mr-2" size={18} data={burn.prevOut.assetType} /><HexString link={`/asset/0x${burn.prevOut.assetType}`} text={burn.prevOut.assetType} /></span>
+                                                    }
+                                                </Col>
+                                            </Row>
+                                            <hr />
+                                            <Row>
+                                                <Col md="3">
+                                                    Owner
+                                                </Col>
+                                                <Col md="9">
+                                                    {burn.prevOut.owner ? <Link to={`/addr-asset/${AssetTransferAddress.fromPublicKeyHash(new H256(burn.prevOut.owner)).value}`}>{AssetTransferAddress.fromPublicKeyHash(new H256(burn.prevOut.owner)).value}</Link>
+                                                        : "Unknown"}
+                                                </Col>
+                                            </Row>
+                                            <hr />
+                                            <Row>
+                                                <Col md="3">
+                                                    Amount
+                                                </Col>
+                                                <Col md="9">
+                                                    {burn.prevOut.amount.toLocaleString()}
+                                                </Col>
+                                            </Row>
+                                            <hr />
+                                            <Row>
+                                                <Col md="3">
+                                                    LockScript
+                                                </Col>
+                                                <Col md="9">
+                                                    <div className="text-area">
+                                                        {new Script(burn.lockScript).toTokens().join(" ")}
+                                                    </div>
+                                                </Col>
+                                            </Row>
+                                            <hr />
+                                            <Row>
+                                                <Col md="3">
+                                                    UnlockScript
+                                                </Col>
+                                                <Col md="9">
+                                                    <div className="text-area">
+                                                        {new Script(burn.unlockScript).toTokens().join(" ")}
+                                                    </div>
+                                                </Col>
+                                            </Row>
+                                            <hr />
+                                            <Row>
+                                                <Col md="3">
+                                                    Prev Tx
+                                                </Col>
+                                                <Col md="9">
+                                                    <HexString link={`/tx/0x${burn.prevOut.transactionHash}`} text={burn.prevOut.transactionHash} />
+                                                </Col>
+                                            </Row>
+                                            <hr />
+                                            <Row>
+                                                <Col md="3">
+                                                    Prev Tx Index
+                                                </Col>
+                                                <Col md="9">
+                                                    {burn.prevOut.index.toLocaleString()}
+                                                </Col>
+                                            </Row>
+                                            <hr />
+                                        </div>
+                                    </Col>
+                                </Row>
+                            ])
+                        })
+                    }
+                </div>,
                 <div key="output">
                     {
                         _.map(transactionDoc.data.outputs, (output, index) => {
