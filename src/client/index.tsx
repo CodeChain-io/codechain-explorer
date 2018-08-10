@@ -24,34 +24,37 @@ import Parcels from "./pages/Parcels/Parcels";
 import Transactions from "./pages/Transactions/Transactions";
 import Blocks from "./pages/Blocks/Blocks";
 import NotFound from "./pages/NotFound/NotFound";
+import ScrollToTop from "./components/util/ScrollToTop/ScrollToTop";
 
 ReactDOM.render(
-  <Provider store={store}>
-    <Router>
-        <div id="page">
-        <Header />
-        <div id="content">
-            <Switch>
-                <Route exact={true} path="/" component={Home} />
-                <Route path="/send_signed_parcel" component={SendSignedParcel} />
-                <Route path="/node_info" component={NodeInfo} />
-                <Route path="/block/:id" component={Block} />
-                <Route path="/parcel/:hash" component={Parcel} />
-                <Route path="/asset/:assetType" component={Asset} />
-                <Route path="/tx/:hash" component={Transaction} />
-                <Route path="/addr-platform/:address" component={PlatformAddress} />
-                <Route path="/addr-asset/:address" component={AssetTransferAddress} />
-                <Route path="/parcels-pending" component={PendingParcels} />
-                <Route path="/parcels" component={Parcels} />
-                <Route path="/txs" component={Transactions} />
-                <Route path="/blocks" component={Blocks} />
-                <Route component={NotFound} />
-            </Switch>
-        </div>
-        <Footer />
-        </div>
-    </Router >
-  </Provider >,
-  document.getElementById("root") as HTMLElement
+    <Provider store={store}>
+        <Router>
+            <ScrollToTop>
+                <div id="page">
+                    <Header />
+                    <div id="content">
+                        <Switch>
+                            <Route exact={true} path="/" component={Home} />
+                            <Route path="/send_signed_parcel" component={SendSignedParcel} />
+                            <Route path="/node_info" component={NodeInfo} />
+                            <Route path="/block/:id" component={Block} />
+                            <Route path="/parcel/:hash" component={Parcel} />
+                            <Route path="/asset/:assetType" component={Asset} />
+                            <Route path="/tx/:hash" component={Transaction} />
+                            <Route path="/addr-platform/:address" component={PlatformAddress} />
+                            <Route path="/addr-asset/:address" component={AssetTransferAddress} />
+                            <Route path="/parcels-pending" component={PendingParcels} />
+                            <Route path="/parcels" component={Parcels} />
+                            <Route path="/txs" component={Transactions} />
+                            <Route path="/blocks" component={Blocks} />
+                            <Route component={NotFound} />
+                        </Switch>
+                    </div>
+                    <Footer />
+                </div>
+            </ScrollToTop>
+        </Router >
+    </Provider >,
+    document.getElementById("root") as HTMLElement
 );
 RegisterServiceWorker();
