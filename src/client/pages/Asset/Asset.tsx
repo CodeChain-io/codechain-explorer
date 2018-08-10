@@ -3,7 +3,7 @@ import { match } from "react-router";
 import { Container, Row, Col } from "reactstrap";
 import { Error } from "../../components/error/Error/Error";
 
-import { RequestAssetScheme } from "../../request";
+import { RequestAssetScheme, RequestTotalAssetTransactionCount } from "../../request";
 import AssetDetails from "../../components/asset/AssetDetails/AssetDetails";
 import RequestAssetTransactions from "../../request/RequestAssetTransactions";
 import TransactionList from "../../components/transaction/TransactionList/TransactionList";
@@ -23,35 +23,40 @@ interface State {
     transactions: TransactionDoc[];
     assetScheme?: AssetSchemeDoc;
     notFound: boolean;
+    page: number;
+    totalTransactionCount: number;
+    loadTransaction: boolean;
+    noMoreTransaction: boolean;
 }
 
 class Asset extends React.Component<Props, State> {
+    private itemsPerPage = 3;
     constructor(props: Props) {
         super(props);
-        this.state = { notFound: false, transactions: [] };
+        this.state = { notFound: false, transactions: [], page: 1, totalTransactionCount: 0, loadTransaction: true, noMoreTransaction: false };
     }
 
     public componentWillReceiveProps(props: Props) {
         const { match: { params: { assetType } } } = this.props;
         const { match: { params: { assetType: nextType } } } = props;
         if (nextType !== assetType) {
-            this.setState({ ...this.state, assetScheme: undefined, transactions: [] });
+            this.setState({ ...this.state, assetScheme: undefined, transactions: [], page: 1, totalTransactionCount: 0, loadTransaction: true, noMoreTransaction: false });
         }
     }
 
     public render() {
         const { match: { params: { assetType } } } = this.props;
-        const { notFound, assetScheme, transactions } = this.state;
+        const { notFound, assetScheme, transactions, totalTransactionCount, page, loadTransaction, noMoreTransaction } = this.state;
 
-        if (!assetScheme) {
-            return <RequestAssetScheme assetType={assetType} onAssetScheme={this.onAssetScheme} onAssetSchemeNotExist={this.onAssetSchemeNotFound} onError={this.onError} />;
-        }
         if (notFound) {
             return (
                 <div>
                     <Error content={assetType} title="The asset does not exist." />
                 </div>
             )
+        }
+        if (!assetScheme) {
+            return <RequestAssetScheme assetType={assetType} onAssetScheme={this.onAssetScheme} onAssetSchemeNotExist={this.onAssetSchemeNotFound} onError={this.onError} />;
         }
         return (
             <Container className="asset">
@@ -81,14 +86,30 @@ class Asset extends React.Component<Props, State> {
                     <AssetDetails assetType={assetType} assetScheme={assetScheme} />
                 </div>
                 {
-                    transactions.length !== 0 ?
+                    <RequestTotalAssetTransactionCount assetType={assetType} onTotalCount={this.onTransactionTotalCount} onError={this.onError} />
+                }
+                {
+                    loadTransaction ?
+                        <RequestAssetTransactions assetType={assetType} onTransactions={this.onTransactionList} onError={this.onError} page={page} itemsPerPage={this.itemsPerPage} />
+                        : null
+                }
+                {
+                    totalTransactionCount !== 0 ?
                         <div className="mt-large">
-                            <TransactionList assetType={new H256(assetType)} transactions={transactions} totalCount={transactions.length} />
+                            <TransactionList assetType={new H256(assetType)} transactions={transactions} totalCount={totalTransactionCount} loadMoreAction={this.loadMoreAction} hideMoreButton={noMoreTransaction} />
                         </div>
-                        : <RequestAssetTransactions assetType={assetType} onTransactions={this.onTransactionList} onError={this.onError} />
+                        : null
                 }
             </Container>
         )
+    }
+
+    private loadMoreAction = () => {
+        this.setState({ loadTransaction: true, page: this.state.page + 1 });
+    }
+
+    private onTransactionTotalCount = (totalCount: number) => {
+        this.setState({ totalTransactionCount: totalCount });
     }
 
     private onAssetScheme = (assetScheme: AssetSchemeDoc) => {
@@ -96,12 +117,20 @@ class Asset extends React.Component<Props, State> {
     }
 
     private onTransactionList = (transactions: TransactionDoc[]) => {
-        this.setState({ transactions })
+        if (transactions.length < this.itemsPerPage) {
+            this.setState({ noMoreTransaction: true });
+        }
+        this.setState({ transactions: this.state.transactions.concat(transactions), loadTransaction: false });
     }
 
-    private onAssetSchemeNotFound = () => console.error("AssetScheme not found");
+    private onAssetSchemeNotFound = () => {
+        this.setState({ notFound: true, loadTransaction: false });
+    }
 
-    private onError = (e: any) => console.error(e);
+    private onError = (e: any) => {
+        console.log(e);
+        this.setState({ loadTransaction: false });
+    }
 }
 
 export default Asset;

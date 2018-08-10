@@ -5,6 +5,8 @@ import { apiRequest, ApiError } from "./ApiRequest";
 import { AssetBundleDoc } from "../../db/DocType";
 
 interface OwnProps {
+    lastTransactionHash?: string;
+    itemsPerPage: number;
     address: string;
     onUTXO: (utxo: AssetBundleDoc[]) => void;
     onError: (e: ApiError) => void;
@@ -18,8 +20,12 @@ type Props = OwnProps & DispatchProps;
 
 class RequestAssetTransferAddressUTXOInternal extends React.Component<Props> {
     public componentWillMount() {
-        const { address, onUTXO, onError, dispatch } = this.props;
-        apiRequest({ path: `addr-asset-utxo/${address}`, dispatch, showProgressBar: true }).then((response: AssetBundleDoc[]) => {
+        const { address, onUTXO, onError, dispatch, lastTransactionHash, itemsPerPage } = this.props;
+        let path = `addr-asset-utxo/${address}?itemsPerPage=${itemsPerPage}`;
+        if (lastTransactionHash) {
+            path += `&lastTransactionHash=${lastTransactionHash}`;
+        }
+        apiRequest({ path, dispatch, showProgressBar: true }).then((response: AssetBundleDoc[]) => {
             onUTXO(response);
         }).catch(onError);
     }

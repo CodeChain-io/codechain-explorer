@@ -15,7 +15,7 @@ export class ElasticSearchAgent implements QueryBlock, QueryParcel, QueryTransac
     public getBlock: (blockNumber: number) => Promise<BlockDoc | null>;
     public getBlocks: (page?: number, itemsPerPage?: number) => Promise<BlockDoc[]>;
     public getTotalBlockCount: () => Promise<number>;
-    public getBlocksByAccountId: (accountId: H160) => Promise<BlockDoc[]>;
+    public getBlocksByAccountId: (accountId: H160, page?: number, itemsPerPage?: number) => Promise<BlockDoc[]>;
     public retractBlock: (blockHash: H256) => Promise<void>;
     public indexBlock: (block: Block) => Promise<any>;
     public updateBlock: (hash: H256, partial: any) => Promise<any>;
@@ -25,18 +25,17 @@ export class ElasticSearchAgent implements QueryBlock, QueryParcel, QueryTransac
     public countTransaction: (body: any) => Promise<CountResponse>;
     public getParcel: (hash: H256) => Promise<ParcelDoc | null>;
     public getParcels: (page?: number, itemsPerPage?: number) => Promise<ParcelDoc[]>;
-    public getParcelsByAccountId: (accountId: H160) => Promise<ParcelDoc[]>;
+    public getParcelsByAccountId: (accountId: H160, page?: number, itemsPerPage?: number) => Promise<ParcelDoc[]>;
     public searchParcel: (body: any) => Promise<SearchResponse<any>>;
     public retractParcel: (parcelHash: H256) => Promise<void>;
     public indexParcel: (currentParcels: SignedParcel[], parcel: SignedParcel, timestamp: number) => Promise<any>;
     public updateParcel: (hash: H256, partial: any) => Promise<any>;
     public getTransaction: (hash: H256) => Promise<AssetMintTransactionDoc | AssetTransferTransactionDoc | null>;
     public getTransactions: (page?: number, itemsPerPage?: number) => Promise<TransactionDoc[]>;
-    public getAssetTransferTransactions: (assetType: H256) => Promise<AssetTransferTransactionDoc[]>;
-    public getAssetMintTransaction: (assetType: H256) => Promise<AssetMintTransactionDoc | null>;
-    public getTransactionsByPubKey: (pubKey: H256) => Promise<TransactionDoc[]>;
-    public getAssetBundlesByAccountId: (accountId: H160) => Promise<AssetBundleDoc[]>;
-    public getAssetsByPubKey: (pubKey: H160) => Promise<AssetDoc[]>;
+    public getTransactionsByAssetType: (assetType: H256, page?: number, itemsPerPage?: number) => Promise<TransactionDoc[]>;
+    public getTransactionsByPubKey: (pubKey: H256, page?: number, itemsPerPage?: number) => Promise<TransactionDoc[]>;
+    public getAssetBundlesByAccountId: (accountId: H160, page?: number, itemsPerPage?: number) => Promise<AssetBundleDoc[]>;
+    public getAssetsByPubKey: (pubKey: H160, lastBlockNumber?: number, lastParcelIndex?: number, lastTransactionIndex?: number, itemsPerPage?: number) => Promise<AssetDoc[]>;
     public getAssetScheme: (assetType: H256) => Promise<AssetSchemeDoc | null>;
     public getAssetBundlesByAssetName: (name: string) => Promise<AssetBundleDoc[]>;
     public searchTransaction: (body: any) => Promise<SearchResponse<any>>;
@@ -57,6 +56,11 @@ export class ElasticSearchAgent implements QueryBlock, QueryParcel, QueryTransac
     public getTotalTransactionCount: () => Promise<number>;
     public countPendingParcel: (body: any) => Promise<CountResponse>;
     public getTotalPendingParcelCount: (actionFilters: string[], signerFilter?: string) => Promise<number>;
+    public getTotalParcelCountByAccountId: (accountId: H160) => Promise<number>;
+    public getTotalTransactionCountByAssetType: (assetType: H256) => Promise<number>;
+    public getTotalTransactionCountByPubKey: (pubKey: H256) => Promise<number>;
+    public getTotalAssetBundleCountByAccountId: (accountId: H160) => Promise<number>;
+    public getTotalBlockCountByAccountId: (accountId: H160) => Promise<number>;
 
     constructor(host: string) {
         this.client = new Client({

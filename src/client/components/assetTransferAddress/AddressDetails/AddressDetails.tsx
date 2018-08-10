@@ -2,15 +2,13 @@ import * as React from "react";
 import { Row, Col } from "reactstrap";
 
 import "./AddressDetails.scss";
-import { AssetBundleDoc, TransactionDoc } from "../../../../db/DocType";
 
 interface OwnProps {
-    utxo: AssetBundleDoc[];
-    transactions: TransactionDoc[];
+    totalTransactionCount: number;
 }
 
 const AddressDetails = (prop: OwnProps) => {
-    const { utxo, transactions } = prop;
+    const { totalTransactionCount } = prop;
     return <div className="address-details">
         <Row>
             <Col>
@@ -32,19 +30,10 @@ const AddressDetails = (prop: OwnProps) => {
                     <hr />
                     <Row>
                         <Col md="3">
-                            # of Assets
-                        </Col>
-                        <Col md="9">
-                            {utxo.length.toLocaleString()}
-                        </Col>
-                    </Row>
-                    <hr />
-                    <Row>
-                        <Col md="3">
                             # of Transactions
                         </Col>
                         <Col md="9">
-                            {transactions.length.toLocaleString()}
+                            {totalTransactionCount.toLocaleString()}
                         </Col>
                     </Row>
                     <hr />

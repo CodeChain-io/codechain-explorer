@@ -55,19 +55,27 @@ export class QueryTransaction implements BaseAction {
         return count.count;
     }
 
-    public async getAssetTransferTransactions(assetType: H256): Promise<AssetTransferTransactionDoc[]> {
+    public async getTransactionsByAssetType(assetType: H256, page: number = 1, itemsPerPage: number = 3): Promise<TransactionDoc[]> {
         const response = await this.searchTransaction({
             "sort": [
                 { "data.blockNumber": { "order": "desc" } },
                 { "data.parcelIndex": { "order": "desc" } },
                 { "data.transactionIndex": { "order": "desc" } }
             ],
-            "size": 10000,
+            "from": (page - 1) * itemsPerPage,
+            "size": itemsPerPage,
             "query": {
                 "bool": {
                     "must": [
                         { "term": { "isRetracted": false } },
-                        { "term": { "data.outputs.assetType": assetType.value } }
+                        {
+                            "bool": {
+                                "should": [
+                                    { "term": { "data.outputs.assetType": assetType.value } },
+                                    { "term": { "data.output.assetType": assetType.value } }
+                                ]
+                            }
+                        }
                     ]
                 }
             }
@@ -75,32 +83,36 @@ export class QueryTransaction implements BaseAction {
         return _.map(response.hits.hits, hit => hit._source);
     }
 
-    public async getAssetMintTransaction(assetType: H256): Promise<AssetMintTransactionDoc | null> {
-        const response = await this.searchTransaction({
-            "size": 1,
+    public async getTotalTransactionCountByAssetType(assetType: H256): Promise<number> {
+        const count = await this.countTransaction({
             "query": {
                 "bool": {
                     "must": [
                         { "term": { "isRetracted": false } },
-                        { "term": { "data.output.assetType": assetType.value } }
+                        {
+                            "bool": {
+                                "should": [
+                                    { "term": { "data.outputs.assetType": assetType.value } },
+                                    { "term": { "data.output.assetType": assetType.value } }
+                                ]
+                            }
+                        }
                     ]
                 }
             }
         });
-        if (response.hits.total === 0) {
-            return null;
-        }
-        return response.hits.hits[0]._source;
+        return count.count;
     }
 
-    public async getTransactionsByPubKey(pubKey: H256): Promise<TransactionDoc[]> {
+    public async getTransactionsByPubKey(pubKey: H256, page: number = 1, itemsPerPage: number = 3): Promise<TransactionDoc[]> {
         const response = await this.searchTransaction({
             "sort": [
                 { "data.blockNumber": { "order": "desc" } },
                 { "data.parcelIndex": { "order": "desc" } },
                 { "data.transactionIndex": { "order": "desc" } }
             ],
-            "size": 10000,
+            "from": (page - 1) * itemsPerPage,
+            "size": itemsPerPage,
             "query": {
                 "bool": {
                     "must": [
@@ -121,14 +133,37 @@ export class QueryTransaction implements BaseAction {
         return _.map(response.hits.hits, hit => hit._source);
     }
 
-    public async getAssetBundlesByAccountId(accountId: H160): Promise<AssetBundleDoc[]> {
+    public async getTotalTransactionCountByPubKey(pubKey: H256): Promise<number> {
+        const count = await this.countTransaction({
+            "query": {
+                "bool": {
+                    "must": [
+                        { "term": { "isRetracted": false } },
+                        {
+                            "bool": {
+                                "should": [
+                                    { "term": { "data.outputs.owner": pubKey.value } },
+                                    { "term": { "data.inputs.owner": pubKey.value } },
+                                    { "term": { "data.output.owner": pubKey.value } }
+                                ]
+                            }
+                        }
+                    ]
+                }
+            }
+        });
+        return count.count;
+    }
+
+    public async getAssetBundlesByAccountId(accountId: H160, page: number = 1, itemsPerPage: number = 3): Promise<AssetBundleDoc[]> {
         const response = await this.searchTransaction({
             "sort": [
                 { "data.blockNumber": { "order": "desc" } },
                 { "data.parcelIndex": { "order": "desc" } },
                 { "data.transactionIndex": { "order": "desc" } }
             ],
-            "size": 10000,
+            "from": (page - 1) * itemsPerPage,
+            "size": itemsPerPage,
             "query": {
                 "bool": {
                     "must": [
@@ -158,14 +193,29 @@ export class QueryTransaction implements BaseAction {
         });
     }
 
-    public async getAssetsByPubKey(pubKey: H160): Promise<AssetDoc[]> {
+    public async getTotalAssetBundleCountByAccountId(accountId: H160): Promise<number> {
+        const count = await this.countTransaction({
+            "query": {
+                "bool": {
+                    "must": [
+                        { "term": { "isRetracted": false } },
+                        { "term": { "data.registrar": accountId.value } }
+                    ]
+                }
+            }
+        });
+        return count.count;
+    }
+
+    public async getAssetsByPubKey(pubKey: H160, lastBlockNumber: number = Number.MAX_VALUE, lastParcelIndex: number = Number.MAX_VALUE, lastTransactionIndex: number = Number.MAX_VALUE, itemsPerPage: number = 3): Promise<AssetDoc[]> {
         const response = await this.searchTransaction({
             "sort": [
                 { "data.blockNumber": { "order": "desc" } },
                 { "data.parcelIndex": { "order": "desc" } },
                 { "data.transactionIndex": { "order": "desc" } }
             ],
-            "size": 10000,
+            "search_after": [lastBlockNumber, lastParcelIndex, lastTransactionIndex],
+            "size": itemsPerPage,
             "query": {
                 "bool": {
                     "must": [

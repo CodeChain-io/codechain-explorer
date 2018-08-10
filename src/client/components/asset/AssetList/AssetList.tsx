@@ -10,7 +10,8 @@ import { ImageLoader } from "../../util/ImageLoader/ImageLoader";
 interface Props {
     assetBundles: AssetBundleDoc[];
     loadMoreAction?: () => void;
-    totalCount: number;
+    totalCount?: number;
+    hideMoreButton?: boolean;
 }
 
 interface State {
@@ -28,7 +29,7 @@ class AssetList extends React.Component<Props, State> {
 
     public render() {
         const { page } = this.state;
-        const { assetBundles, loadMoreAction, totalCount } = this.props;
+        const { assetBundles, loadMoreAction, totalCount, hideMoreButton } = this.props;
         let loadedAsset;
         if (loadMoreAction) {
             loadedAsset = assetBundles;
@@ -40,7 +41,11 @@ class AssetList extends React.Component<Props, State> {
                 <Col>
                     <div className="d-flex justify-content-between align-items-end">
                         <h2>Assets</h2>
-                        <span>Total {totalCount} assets</span>
+                        {
+                            totalCount !== undefined ?
+                                <span>Total {totalCount} assets</span>
+                                : null
+                        }
                     </div>
                     <hr className="heading-hr" />
                 </Col>
@@ -80,7 +85,7 @@ class AssetList extends React.Component<Props, State> {
                 </Col>
             </Row>
             {
-                loadMoreAction || this.itemPerPage * page < assetBundles.length ?
+                !hideMoreButton && (loadMoreAction || this.itemPerPage * page < assetBundles.length) ?
                     <Row>
                         <Col>
                             <div className="mt-small">

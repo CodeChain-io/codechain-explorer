@@ -21,6 +21,7 @@ interface Props {
     transactions: TransactionDoc[];
     loadMoreAction?: () => void;
     totalCount: number;
+    hideMoreButton?: boolean;
 }
 
 interface State {
@@ -38,7 +39,7 @@ class TransactionList extends React.Component<Props, State> {
 
     public render() {
         const { page } = this.state;
-        const { transactions, assetType, owner, loadMoreAction, totalCount } = this.props;
+        const { transactions, assetType, owner, loadMoreAction, totalCount, hideMoreButton } = this.props;
         let loadedTransactions;
         if (loadMoreAction) {
             loadedTransactions = transactions;
@@ -98,7 +99,7 @@ class TransactionList extends React.Component<Props, State> {
                 </Col>
             </Row>
             {
-                loadMoreAction || this.itemPerPage * page < transactions.length ?
+                !hideMoreButton && (loadMoreAction || this.itemPerPage * page < transactions.length) ?
                     <Row>
                         <Col>
                             <div className="mt-small">

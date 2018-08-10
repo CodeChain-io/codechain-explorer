@@ -22,6 +22,10 @@ import RequestTotalBlockCount from "./RequestTotalBlockCount";
 import RequestTotalParcelCount from "./RequestTotalParcelCount";
 import RequestTotalTransactionCount from "./RequestTotalTransactionCount";
 import RequestTotalPendingParcelCount from "./RequestTotalPendingParcelCount";
+import RequestTotalAssetTransactionCount from "./RequestTotalAssetTransactionCount";
+import RequestTotalPlatformAssetCount from "./RequestTotalPlatformAssetCount";
+import RequestTotalPlatformBlockCount from "./RequestTotalPlatformBlockCount";
+import RequestTotalPlatformParcelCount from "./RequestTotalPlatformParcelCount";
 
 export { RequestPing };
 export { RequestParcel };
@@ -47,3 +51,7 @@ export { RequestTotalBlockCount };
 export { RequestTotalParcelCount };
 export { RequestTotalTransactionCount };
 export { RequestTotalPendingParcelCount };
+export { RequestTotalAssetTransactionCount };
+export { RequestTotalPlatformAssetCount };
+export { RequestTotalPlatformBlockCount };
+export { RequestTotalPlatformParcelCount };

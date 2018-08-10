@@ -19,6 +19,7 @@ interface Props {
     address?: string;
     loadMoreAction?: () => void;
     totalCount: number;
+    hideMoreButton?: boolean;
 }
 
 interface State {
@@ -36,7 +37,7 @@ class ParcelList extends React.Component<Props, State> {
 
     public render() {
         const { page } = this.state;
-        const { parcels, address, loadMoreAction, totalCount } = this.props;
+        const { parcels, address, loadMoreAction, totalCount, hideMoreButton } = this.props;
         let loadedParcels;
         if (loadMoreAction) {
             loadedParcels = parcels;
@@ -118,7 +119,7 @@ class ParcelList extends React.Component<Props, State> {
                 </Col>
             </Row>
             {
-                loadMoreAction || this.itemPerPage * page < parcels.length ?
+                !hideMoreButton && (loadMoreAction || this.itemPerPage * page < parcels.length) ?
                     <Row>
                         <Col>
                             <div className="mt-small">

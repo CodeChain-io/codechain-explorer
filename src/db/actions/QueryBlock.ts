@@ -115,14 +115,15 @@ export class QueryBlock implements BaseAction {
         return count.count;
     }
 
-    public async getBlocksByAccountId(accountId: H160): Promise<BlockDoc[]> {
+    public async getBlocksByAccountId(accountId: H160, page: number = 1, itemsPerPage: number = 3): Promise<BlockDoc[]> {
         return this.searchBlock({
             "sort": [
                 {
                     "number": { "order": "desc" }
                 }
             ],
-            "size": 10000,
+            "from": (page - 1) * itemsPerPage,
+            "size": itemsPerPage,
             "query": {
                 "bool": {
                     "must": [
@@ -137,6 +138,20 @@ export class QueryBlock implements BaseAction {
             }
             return _.map(response.hits.hits, hit => hit._source);
         });
+    }
+
+    public async getTotalBlockCountByAccountId(accountId: H160): Promise<number> {
+        const count = await this.countBlock({
+            "query": {
+                "bool": {
+                    "must": [
+                        { "term": { "author": accountId.value } },
+                        { "term": { "isRetracted": false } }
+                    ]
+                }
+            }
+        });
+        return count.count;
     }
 
     public async retractBlock(blockHash: H256): Promise<void> {

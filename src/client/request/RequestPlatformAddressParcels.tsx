@@ -5,6 +5,8 @@ import { apiRequest, ApiError } from "./ApiRequest";
 import { ParcelDoc } from "../../db/DocType";
 
 interface OwnProps {
+    itemsPerPage: number;
+    page: number;
     address: string;
     onParcels: (parcels: ParcelDoc[]) => void;
     onError: (e: ApiError) => void;
@@ -18,8 +20,8 @@ type Props = OwnProps & DispatchProps;
 
 class RequestPlatformAddressParcelsInternal extends React.Component<Props> {
     public componentWillMount() {
-        const { address, onParcels, onError, dispatch } = this.props;
-        apiRequest({ path: `addr-platform-parcels/${address}`, dispatch, showProgressBar: true }).then((response: ParcelDoc[]) => {
+        const { address, onParcels, onError, dispatch, page, itemsPerPage } = this.props;
+        apiRequest({ path: `addr-platform-parcels/${address}?page=${page}&itemsPerPage=${itemsPerPage}`, dispatch, showProgressBar: true }).then((response: ParcelDoc[]) => {
             onParcels(response);
         }).catch(onError);
     }

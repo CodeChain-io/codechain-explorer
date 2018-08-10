@@ -1,14 +1,11 @@
 import * as React from "react";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faSquare } from "@fortawesome/free-solid-svg-icons";
-import * as _ from "lodash";
 import * as QRCode from "qrcode.react"
 
 import { match } from "react-router";
 import { Container, Row, Col } from "reactstrap";
 
 import { RequestAssetTransferAddressUTXO, RequestAssetTransferAddressTransactions } from "../../request";
-import { TransactionDoc, AssetBundleDoc, Type } from "../../../db/DocType";
+import { TransactionDoc, AssetBundleDoc } from "../../../db/DocType";
 
 import "./AssetTransferAddress.scss";
 import AddressDetails from "../../components/assetTransferAddress/AddressDetails/AddressDetails";
@@ -16,6 +13,7 @@ import AssetList from "../../components/asset/AssetList/AssetList";
 import TransactionList from "../../components/transaction/TransactionList/TransactionList";
 import { ImageLoader } from "../../components/util/ImageLoader/ImageLoader";
 import CopyButton from "../../components/util/CopyButton/CopyButton";
+import ReqeustTotalTransferTransactionCount from "../../request/RequestTotalTransferTransactionCount";
 
 interface Props {
     match: match<{ address: string }>;
@@ -24,34 +22,33 @@ interface Props {
 interface State {
     utxo: AssetBundleDoc[],
     transactions: TransactionDoc[],
-    requested: boolean
+    pageForTransactions: number;
+    loadUTXO: boolean;
+    loadTransaction: boolean;
+    totalTransactionCount: number;
+    noMoreUTXO: boolean;
+    noMoreTransaction: boolean;
 }
 
 class AssetTransferAddress extends React.Component<Props, State> {
+    private utxoItemsPerPage = 12;
+    private transactionItemsPerPage = 3;
     constructor(props: Props) {
         super(props);
-        this.state = { utxo: [], transactions: [], requested: false };
+        this.state = { utxo: [], transactions: [], pageForTransactions: 1, totalTransactionCount: 0, loadUTXO: true, loadTransaction: true, noMoreUTXO: false, noMoreTransaction: false };
     }
 
     public componentWillReceiveProps(props: Props) {
         const { match: { params: { address } } } = this.props;
         const { match: { params: { address: nextAddress } } } = props;
         if (nextAddress !== address) {
-            this.setState({ utxo: [], transactions: [], requested: false });
+            this.setState({ utxo: [], transactions: [], pageForTransactions: 1, totalTransactionCount: 0, loadUTXO: true, loadTransaction: true, noMoreUTXO: false, noMoreTransaction: false });
         }
     }
 
     public render() {
         const { match: { params: { address } } } = this.props;
-        const { utxo, transactions, requested } = this.state;
-        if (!requested) {
-            return (
-                <div>
-                    <RequestAssetTransferAddressUTXO address={address} onUTXO={this.onUTXO} onError={this.onError} />
-                    <RequestAssetTransferAddressTransactions address={address} onTransactions={this.onTransactions} onError={this.onError} />
-                </div>
-            )
-        }
+        const { utxo, transactions, pageForTransactions, loadTransaction, loadUTXO, totalTransactionCount, noMoreTransaction, noMoreUTXO } = this.state;
         return (
             <Container className="asset-transfer-address">
                 <Row>
@@ -61,7 +58,7 @@ class AssetTransferAddress extends React.Component<Props, State> {
                                 <ImageLoader size={65} data={address} />
                             </div>
                             <div className="d-inline-block right-container">
-                                <h1>Asset Transfer Address</h1>
+                                <h1>Asset Address</h1>
                                 <div className="hash-container d-flex">
                                     <div className="d-inline-block hash">
                                         <span>{address}</span>
@@ -81,43 +78,36 @@ class AssetTransferAddress extends React.Component<Props, State> {
                     </Col>
                 </Row>
                 <Row className="mt-large">
-                    <Col lg="9">
-                        <AddressDetails utxo={utxo} transactions={transactions} />
-                    </Col>
-                    <Col lg="3">
-                        <div className="right-panel-item mt-3 mt-lg-0">
-                            <h2># of Transaction types</h2>
-                            <hr />
-                            <div className="d-flex align-items-center">
-                                <FontAwesomeIcon className="square asset-transfer-transaction-text-color" icon={faSquare} />
-                                <span className="mr-auto item-name">Transfer</span>
-                                <span>
-                                    {_.filter(transactions, (tx) => Type.isAssetTransferTransactionDoc(tx)).length.toLocaleString()
-                                    }</span>
-                            </div>
-                            <hr />
-                            <div className="d-flex align-items-center">
-                                <FontAwesomeIcon className="square asset-mint-transaction-text-color" icon={faSquare} />
-                                <span className="mr-auto item-name">Mint</span>
-                                <span>
-                                    {_.filter(transactions, (tx) => Type.isAssetMintTransactionDoc(tx)).length.toLocaleString()}</span>
-                            </div>
-                        </div>
+                    <Col>
+                        <AddressDetails totalTransactionCount={totalTransactionCount} />
                     </Col>
                 </Row>
                 <Row>
-                    <Col lg="9">
+                    <Col>
+                        {
+                            loadUTXO ?
+                                <RequestAssetTransferAddressUTXO address={address} lastTransactionHash={utxo.length > 0 ? utxo[utxo.length - 1].asset.transactionHash : undefined} itemsPerPage={this.utxoItemsPerPage} onUTXO={this.onUTXO} onError={this.onError} />
+                                : null
+                        }
                         {
                             utxo.length > 0 ?
                                 <div className="mt-large">
-                                    <AssetList assetBundles={utxo} totalCount={utxo.length} />
+                                    <AssetList assetBundles={utxo} loadMoreAction={this.loadMoreUTXO} hideMoreButton={noMoreUTXO} />
                                 </div>
+                                : null
+                        }
+                        {
+                            <ReqeustTotalTransferTransactionCount address={address} onTotalCount={this.onTransactionTotalCount} onError={this.onError} />
+                        }
+                        {
+                            loadTransaction ?
+                                <RequestAssetTransferAddressTransactions address={address} page={pageForTransactions} itemsPerPage={this.transactionItemsPerPage} onTransactions={this.onTransactions} onError={this.onError} />
                                 : null
                         }
                         {
                             transactions.length > 0 ?
                                 <div className="mt-large">
-                                    <TransactionList owner={address} transactions={transactions} totalCount={transactions.length} />
+                                    <TransactionList owner={address} transactions={transactions} totalCount={totalTransactionCount} loadMoreAction={this.loadMoreTransaction} hideMoreButton={noMoreTransaction} />
                                 </div>
                                 : null
                         }
@@ -127,14 +117,36 @@ class AssetTransferAddress extends React.Component<Props, State> {
         )
     }
 
+    private loadMoreTransaction = () => {
+        this.setState({ loadTransaction: true, pageForTransactions: this.state.pageForTransactions + 1 });
+    }
+
+    private loadMoreUTXO = () => {
+        this.setState({ loadUTXO: true });
+    }
+
     private onTransactions = (transactions: TransactionDoc[]) => {
-        this.setState({ transactions });
+        if (transactions.length < this.transactionItemsPerPage) {
+            this.setState({ noMoreTransaction: true });
+        }
+        this.setState({ transactions: this.state.transactions.concat(transactions), loadTransaction: false });
     }
+
+    private onTransactionTotalCount = (totalCount: number) => {
+        this.setState({ totalTransactionCount: totalCount });
+    }
+
     private onUTXO = (utxo: AssetBundleDoc[]) => {
-        this.setState({ utxo });
-        this.setState({ requested: true });
+        if (utxo.length < this.utxoItemsPerPage) {
+            this.setState({ noMoreUTXO: true });
+        }
+        this.setState({ utxo: this.state.utxo.concat(utxo), loadUTXO: false });
     }
-    private onError = (e: any) => { console.error(e); }
+
+    private onError = (e: any) => {
+        console.log(e);
+        this.setState({ loadTransaction: false, loadUTXO: false });
+    }
 }
 
 export default AssetTransferAddress;

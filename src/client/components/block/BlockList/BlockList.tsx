@@ -15,6 +15,7 @@ interface Props {
     blocks: BlockDoc[];
     loadMoreAction?: () => void;
     totalCount: number;
+    hideMoreButton?: boolean;
 }
 
 interface State {
@@ -32,7 +33,7 @@ class BlockList extends React.Component<Props, State> {
 
     public render() {
         const { page } = this.state;
-        const { blocks, totalCount, loadMoreAction } = this.props;
+        const { blocks, totalCount, loadMoreAction, hideMoreButton } = this.props;
         let loadedBlocks = blocks.slice(0, this.itemPerPage * page);
         if (loadMoreAction) {
             loadedBlocks = blocks;
@@ -100,12 +101,12 @@ class BlockList extends React.Component<Props, State> {
                 </Col>
             </Row>
             {
-                loadedBlocks || this.itemPerPage * page < blocks.length ?
+                !hideMoreButton && (loadMoreAction || this.itemPerPage * page < blocks.length) ?
                     <Row>
                         <Col>
                             <div className="mt-small">
                                 <button className="btn btn-primary w-100" onClick={this.loadMore}>
-                                    Load Parcels
+                                    Load blocks
                             </button>
                             </div>
                         </Col>

@@ -86,7 +86,7 @@ class Search extends React.Component<Props, State> {
                         <RequestPlatformAddressAccount progressBarTarget="searchBar" address={inputValue} onAccount={this.onAccount} onAccountNotExist={this.onReqeustNotExist} onError={this.onError} />
                         <RequestPendingParcel progressBarTarget="searchBar" hash={inputValue} onPendingParcel={this.onPendingParcel} onPendingParcelNotExist={this.onReqeustNotExist} onError={this.onError} />
                         <RequestPendingTransaction progressBarTarget="searchBar" hash={inputValue} onPendingTransaction={this.onPendingTransaction} onPendingTransactionNotExist={this.onReqeustNotExist} onError={this.onError} />
-                        <RequestAssetTransferAddressTransactions progressBarTarget="searchBar" address={inputValue} onTransactions={this.onTransactionsForAssetTransferAddress} onError={this.onError} />
+                        <RequestAssetTransferAddressTransactions progressBarTarget="searchBar" page={1} itemsPerPage={1} address={inputValue} onTransactions={this.onTransactionsForAssetTransferAddress} onError={this.onError} />
                     </div>
                     : null
             }
