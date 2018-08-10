@@ -19,18 +19,429 @@ interface Props {
     status: string;
 }
 
-const getTransactionInfoByType = (transaction: TransactionDoc, status: string) => {
-    if (Type.isAssetTransferTransactionDoc(transaction)) {
-        const transactionDoc = transaction as AssetTransferTransactionDoc;
-        return (
-            [
+interface State {
+    pageForInput: number;
+    pageForOutput: number;
+    pageForBurn: number;
+}
+
+class TransactionDetails extends React.Component<Props, State> {
+    private itemsPerPage = 3;
+    constructor(props: Props) {
+        super(props);
+        this.state = {
+            pageForInput: 1,
+            pageForOutput: 1,
+            pageForBurn: 1,
+        };
+    }
+
+    public render() {
+        const { transaction, status } = this.props;
+        return <div className="transaction-details">
+            <Row>
+                <Col lg="12">
+                    <h2>Details</h2>
+                    <hr className="heading-hr" />
+                </Col>
+            </Row>
+            {
+                this.getTransactionInfoByType(transaction, status)
+            }
+        </div>
+    }
+
+    private getTransactionInfoByType = (transaction: TransactionDoc, status: string) => {
+        const { pageForBurn, pageForOutput, pageForInput } = this.state;
+        if (Type.isAssetTransferTransactionDoc(transaction)) {
+            const transactionDoc = transaction as AssetTransferTransactionDoc;
+            return (
+                [
+                    <Row key="details">
+                        <Col lg="12">
+                            <div className="data-set">
+                                <Row>
+                                    <Col md="3">
+                                        Action
+                                </Col>
+                                    <Col md="9">
+                                        <TypeBadge transaction={transaction} />
+                                    </Col>
+                                </Row>
+                                <hr />
+                                <Row>
+                                    <Col md="3">
+                                        Parcel Hash
+                                </Col>
+                                    <Col md="9">
+                                        <HexString text={transactionDoc.data.parcelHash} link={`/parcel/0x${transactionDoc.data.parcelHash}`} />
+                                    </Col>
+                                </Row>
+                                <hr />
+                                <Row>
+                                    <Col md="3">
+                                        Transaction Index
+                                </Col>
+                                    <Col md="9">
+                                        {transactionDoc.data.transactionIndex.toLocaleString()}
+                                    </Col>
+                                </Row>
+                                <hr />
+                                <Row>
+                                    <Col md="3">
+                                        NetworkID
+                                </Col>
+                                    <Col md="9">
+                                        {transactionDoc.data.networkId.toLocaleString()}
+                                    </Col>
+                                </Row>
+                                <hr />
+                                <Row>
+                                    <Col md="3">
+                                        Nonce
+                                </Col>
+                                    <Col md="9">
+                                        {transactionDoc.data.nonce.toLocaleString()}
+                                    </Col>
+                                </Row>
+                                <hr />
+                                <Row>
+                                    <Col md="3">
+                                        Status
+                                </Col>
+                                    <Col md="9">
+                                        <StatusBadge status={status} />
+                                    </Col>
+                                </Row>
+                                <hr />
+                                <Row>
+                                    <Col md="3">
+                                        # of Input
+                                </Col>
+                                    <Col md="9">
+                                        {transactionDoc.data.inputs.length.toLocaleString()}
+                                    </Col>
+                                </Row>
+                                <hr />
+                                <Row>
+                                    <Col md="3">
+                                        # of Output
+                                </Col>
+                                    <Col md="9">
+                                        {transactionDoc.data.outputs.length.toLocaleString()}
+                                    </Col>
+                                </Row>
+                                <hr />
+                            </div>
+                        </Col>
+                    </Row>,
+                    <div key="input">
+                        {
+                            _.map(transactionDoc.data.inputs.slice(0, this.itemsPerPage * pageForInput), (input, index) => {
+                                return ([
+                                    <Row key={`transaction-header-table-input-title-${index}`} className="mt-large">
+                                        <Col lg="12">
+                                            <h3>Input #{index}</h3>
+                                            <hr className="heading-hr" />
+                                        </Col>
+                                    </Row>,
+                                    <Row key={`transaction-header-table-input-detail-${index}`}>
+                                        <Col lg="12">
+                                            <div className="data-set">
+                                                <Row>
+                                                    <Col md="3">
+                                                        AssetType
+                                                </Col>
+                                                    <Col md="9">
+                                                        {
+                                                            Type.getMetadata(input.prevOut.assetScheme.metadata).icon_url ?
+                                                                <span><ImageLoader className="mr-2" size={18} url={Type.getMetadata(input.prevOut.assetScheme.metadata).icon_url} /><HexString link={`/asset/0x${input.prevOut.assetType}`} text={input.prevOut.assetType} /></span>
+                                                                : <span><ImageLoader className="mr-2" size={18} data={input.prevOut.assetType} /><HexString link={`/asset/0x${input.prevOut.assetType}`} text={input.prevOut.assetType} /></span>
+                                                        }
+                                                    </Col>
+                                                </Row>
+                                                <hr />
+                                                <Row>
+                                                    <Col md="3">
+                                                        Owner
+                                                </Col>
+                                                    <Col md="9">
+                                                        {input.prevOut.owner ? <Link to={`/addr-asset/${AssetTransferAddress.fromPublicKeyHash(new H256(input.prevOut.owner)).value}`}>{AssetTransferAddress.fromPublicKeyHash(new H256(input.prevOut.owner)).value}</Link>
+                                                            : "Unknown"}
+                                                    </Col>
+                                                </Row>
+                                                <hr />
+                                                <Row>
+                                                    <Col md="3">
+                                                        Amount
+                                                </Col>
+                                                    <Col md="9">
+                                                        {input.prevOut.amount.toLocaleString()}
+                                                    </Col>
+                                                </Row>
+                                                <hr />
+                                                <Row>
+                                                    <Col md="3">
+                                                        LockScript
+                                                </Col>
+                                                    <Col md="9">
+                                                        <div className="text-area">
+                                                            {new Script(input.lockScript).toTokens().join(" ")}
+                                                        </div>
+                                                    </Col>
+                                                </Row>
+                                                <hr />
+                                                <Row>
+                                                    <Col md="3">
+                                                        UnlockScript
+                                                </Col>
+                                                    <Col md="9">
+                                                        <div className="text-area">
+                                                            {new Script(input.unlockScript).toTokens().join(" ")}
+                                                        </div>
+                                                    </Col>
+                                                </Row>
+                                                <hr />
+                                                <Row>
+                                                    <Col md="3">
+                                                        Prev Tx
+                                                </Col>
+                                                    <Col md="9">
+                                                        <HexString link={`/tx/0x${input.prevOut.transactionHash}`} text={input.prevOut.transactionHash} />
+                                                    </Col>
+                                                </Row>
+                                                <hr />
+                                                <Row>
+                                                    <Col md="3">
+                                                        Prev Tx Index
+                                                </Col>
+                                                    <Col md="9">
+                                                        {input.prevOut.index.toLocaleString()}
+                                                    </Col>
+                                                </Row>
+                                                <hr />
+                                            </div>
+                                        </Col>
+                                    </Row>
+                                ])
+                            })
+                        }
+                        {
+                            this.itemsPerPage * pageForInput < transactionDoc.data.inputs.length ?
+                                <Row>
+                                    <Col>
+                                        <div className="mt-small">
+                                            <button className="btn btn-primary w-100" onClick={this.loadMoreInput}>
+                                                Load Input
+                                            </button>
+                                        </div>
+                                    </Col>
+                                </Row> : null
+                        }
+                    </div>,
+                    <div key="burn">
+                        {
+                            _.map(transactionDoc.data.burns.slice(0, this.itemsPerPage * pageForBurn), (burn, index) => {
+                                return ([
+                                    <Row key={`transaction-header-table-burn-title-${index}`} className="mt-large">
+                                        <Col lg="12">
+                                            <h3>Burn #{index}</h3>
+                                            <hr className="heading-hr" />
+                                        </Col>
+                                    </Row>,
+                                    <Row key={`transaction-header-table-burn-detail-${index}`}>
+                                        <Col lg="12">
+                                            <div className="data-set">
+                                                <Row>
+                                                    <Col md="3">
+                                                        AssetType
+                                                </Col>
+                                                    <Col md="9">
+                                                        {
+                                                            Type.getMetadata(burn.prevOut.assetScheme.metadata).icon_url ?
+                                                                <span><ImageLoader className="mr-2" size={18} url={Type.getMetadata(burn.prevOut.assetScheme.metadata).icon_url} /><HexString link={`/asset/0x${burn.prevOut.assetType}`} text={burn.prevOut.assetType} /></span>
+                                                                : <span><ImageLoader className="mr-2" size={18} data={burn.prevOut.assetType} /><HexString link={`/asset/0x${burn.prevOut.assetType}`} text={burn.prevOut.assetType} /></span>
+                                                        }
+                                                    </Col>
+                                                </Row>
+                                                <hr />
+                                                <Row>
+                                                    <Col md="3">
+                                                        Owner
+                                                </Col>
+                                                    <Col md="9">
+                                                        {burn.prevOut.owner ? <Link to={`/addr-asset/${AssetTransferAddress.fromPublicKeyHash(new H256(burn.prevOut.owner)).value}`}>{AssetTransferAddress.fromPublicKeyHash(new H256(burn.prevOut.owner)).value}</Link>
+                                                            : "Unknown"}
+                                                    </Col>
+                                                </Row>
+                                                <hr />
+                                                <Row>
+                                                    <Col md="3">
+                                                        Amount
+                                                </Col>
+                                                    <Col md="9">
+                                                        {burn.prevOut.amount.toLocaleString()}
+                                                    </Col>
+                                                </Row>
+                                                <hr />
+                                                <Row>
+                                                    <Col md="3">
+                                                        LockScript
+                                                </Col>
+                                                    <Col md="9">
+                                                        <div className="text-area">
+                                                            {new Script(burn.lockScript).toTokens().join(" ")}
+                                                        </div>
+                                                    </Col>
+                                                </Row>
+                                                <hr />
+                                                <Row>
+                                                    <Col md="3">
+                                                        UnlockScript
+                                                </Col>
+                                                    <Col md="9">
+                                                        <div className="text-area">
+                                                            {new Script(burn.unlockScript).toTokens().join(" ")}
+                                                        </div>
+                                                    </Col>
+                                                </Row>
+                                                <hr />
+                                                <Row>
+                                                    <Col md="3">
+                                                        Prev Tx
+                                                </Col>
+                                                    <Col md="9">
+                                                        <HexString link={`/tx/0x${burn.prevOut.transactionHash}`} text={burn.prevOut.transactionHash} />
+                                                    </Col>
+                                                </Row>
+                                                <hr />
+                                                <Row>
+                                                    <Col md="3">
+                                                        Prev Tx Index
+                                                </Col>
+                                                    <Col md="9">
+                                                        {burn.prevOut.index.toLocaleString()}
+                                                    </Col>
+                                                </Row>
+                                                <hr />
+                                            </div>
+                                        </Col>
+                                    </Row>
+                                ])
+                            })
+                        }
+                        {
+                            this.itemsPerPage * pageForBurn < transactionDoc.data.burns.length ?
+                                <Row>
+                                    <Col>
+                                        <div className="mt-small">
+                                            <button className="btn btn-primary w-100" onClick={this.loadMoreBurn}>
+                                                Load Burn
+                                            </button>
+                                        </div>
+                                    </Col>
+                                </Row> : null
+                        }
+                    </div>,
+                    <div key="output">
+                        {
+                            _.map(transactionDoc.data.outputs.slice(0, this.itemsPerPage * pageForOutput), (output, index) => {
+                                return ([
+                                    <Row key={`transaction-header-table-output-title-${index}`} className="mt-large">
+                                        <Col lg="12">
+                                            <h3>Output #{index}</h3>
+                                            <hr className="heading-hr" />
+                                        </Col>
+                                    </Row>,
+                                    <Row key={`transaction-header-table-output-details-${index}`}>
+                                        <Col lg="12">
+                                            <div className="data-set">
+                                                <Row>
+                                                    <Col md="3">
+                                                        AssetType
+                                                </Col>
+                                                    <Col md="9">
+                                                        {
+                                                            Type.getMetadata(output.assetScheme.metadata).icon_url ?
+                                                                <ImageLoader size={18} url={Type.getMetadata(output.assetScheme.metadata).icon_url} className="mr-2" />
+                                                                : <ImageLoader size={18} data={output.assetType} className="mr-2" />
+                                                        }
+                                                        <HexString link={`/asset/0x${output.assetType}`} text={output.assetType} />
+                                                    </Col>
+                                                </Row>
+                                                <hr />
+                                                <Row>
+                                                    <Col md="3">
+                                                        Owner
+                                                </Col>
+                                                    <Col md="9">{
+                                                        output.owner ? <Link to={`/addr-asset/${AssetTransferAddress.fromPublicKeyHash(new H256(output.owner)).value}`}>{AssetTransferAddress.fromPublicKeyHash(new H256(output.owner)).value}</Link> : "Unknown"
+                                                    }</Col>
+                                                </Row>
+                                                <hr />
+                                                <Row>
+                                                    <Col md="3">
+                                                        Amount
+                                                </Col>
+                                                    <Col md="9">
+                                                        {output.amount.toLocaleString()}
+                                                    </Col>
+                                                </Row>
+                                                <hr />
+                                                <Row>
+                                                    <Col md="3">
+                                                        LockScriptHash
+                                                </Col>
+                                                    <Col md="9">
+                                                        {output.lockScriptHash === "f42a65ea518ba236c08b261c34af0521fa3cd1aa505e1c18980919cb8945f8f3" ? "P2PKH" : <HexString text={output.lockScriptHash} />}
+                                                    </Col>
+                                                </Row>
+                                                <hr />
+                                                <Row>
+                                                    <Col md="3">
+                                                        Parameters
+                                                </Col>
+                                                    <Col md="9">
+                                                        <div className="text-area">
+                                                            {_.map(output.parameters, (parameter, i) => {
+                                                                return <div key={`transaction-paramter-${i}`}>{Buffer.from(parameter).toString("hex")}</div>
+                                                            })}
+                                                        </div>
+                                                    </Col>
+                                                </Row>
+                                                <hr />
+                                            </div>
+                                        </Col>
+                                    </Row>
+                                ])
+                            })
+                        }
+                        {
+                            this.itemsPerPage * pageForOutput < transactionDoc.data.outputs.length ?
+                                <Row>
+                                    <Col>
+                                        <div className="mt-small">
+                                            <button className="btn btn-primary w-100" onClick={this.loadMoreOutput}>
+                                                Load Output
+                                            </button>
+                                        </div>
+                                    </Col>
+                                </Row> : null
+                        }
+                    </div>
+                ]
+            );
+        } else if (Type.isAssetMintTransactionDoc(transaction)) {
+            const transactionDoc = transaction as AssetMintTransactionDoc;
+            const metadata = Type.getMetadata(transactionDoc.data.metadata);
+            return ([
                 <Row key="details">
                     <Col lg="12">
                         <div className="data-set">
                             <Row>
                                 <Col md="3">
                                     Action
-                                </Col>
+                            </Col>
                                 <Col md="9">
                                     <TypeBadge transaction={transaction} />
                                 </Col>
@@ -39,18 +450,9 @@ const getTransactionInfoByType = (transaction: TransactionDoc, status: string) =
                             <Row>
                                 <Col md="3">
                                     Parcel Hash
-                                </Col>
+                            </Col>
                                 <Col md="9">
                                     <HexString text={transactionDoc.data.parcelHash} link={`/parcel/0x${transactionDoc.data.parcelHash}`} />
-                                </Col>
-                            </Row>
-                            <hr />
-                            <Row>
-                                <Col md="3">
-                                    Transaction Index
-                                </Col>
-                                <Col md="9">
-                                    {transactionDoc.data.transactionIndex.toLocaleString()}
                                 </Col>
                             </Row>
                             <hr />
@@ -59,23 +461,23 @@ const getTransactionInfoByType = (transaction: TransactionDoc, status: string) =
                                     NetworkID
                                 </Col>
                                 <Col md="9">
-                                    {transactionDoc.data.networkId.toLocaleString()}
+                                    {transactionDoc.data.networkId}
                                 </Col>
                             </Row>
                             <hr />
                             <Row>
                                 <Col md="3">
                                     Nonce
-                                </Col>
+                            </Col>
                                 <Col md="9">
-                                    {transactionDoc.data.nonce.toLocaleString()}
+                                    {transactionDoc.data.nonce}
                                 </Col>
                             </Row>
                             <hr />
                             <Row>
                                 <Col md="3">
                                     Status
-                                </Col>
+                            </Col>
                                 <Col md="9">
                                     <StatusBadge status={status} />
                                 </Col>
@@ -83,478 +485,142 @@ const getTransactionInfoByType = (transaction: TransactionDoc, status: string) =
                             <hr />
                             <Row>
                                 <Col md="3">
-                                    # of Input
-                                </Col>
+                                    LockScriptHash
+                            </Col>
                                 <Col md="9">
-                                    {transactionDoc.data.inputs.length.toLocaleString()}
+                                    {transactionDoc.data.output.lockScriptHash === "f42a65ea518ba236c08b261c34af0521fa3cd1aa505e1c18980919cb8945f8f3" ? "P2PKH" : <HexString text={transactionDoc.data.output.lockScriptHash} />}
                                 </Col>
                             </Row>
                             <hr />
                             <Row>
                                 <Col md="3">
-                                    # of Output
-                                </Col>
+                                    Parameters
+                            </Col>
                                 <Col md="9">
-                                    {transactionDoc.data.outputs.length.toLocaleString()}
+                                    <div className="text-area">
+                                        {_.map(transactionDoc.data.output.parameters, (parameter, i) => {
+                                            return <div key={`transaction-heder-param-${i}`}>{Buffer.from(parameter).toString("hex")}</div>
+                                        })}
+                                    </div>
+                                </Col>
+                            </Row>
+                            <hr />
+                            <Row>
+                                <Col md="3">
+                                    AssetType
+                            </Col>
+                                <Col md="9">
+                                    {
+                                        Type.getMetadata(transactionDoc.data.metadata).icon_url ?
+                                            <ImageLoader url={Type.getMetadata(transactionDoc.data.metadata).icon_url} size={18} className="mr-2" />
+                                            : <ImageLoader data={transactionDoc.data.output.assetType} size={18} className="mr-2" />
+                                    }
+                                    <HexString link={`/asset/0x${transactionDoc.data.output.assetType}`} text={transactionDoc.data.output.assetType} />
+                                </Col>
+                            </Row>
+                            <hr />
+                            <Row>
+                                <Col md="3">
+                                    Amount
+                            </Col>
+                                <Col md="9">
+                                    {transactionDoc.data.output.amount ? transactionDoc.data.output.amount.toLocaleString() : 0}
+                                </Col>
+                            </Row>
+                            <hr />
+                            <Row>
+                                <Col md="3">
+                                    Registrar
+                            </Col>
+                                <Col md="9">
+                                    {transactionDoc.data.registrar ? <Link to={`/addr-platform/${PlatformAddress.fromAccountId(transactionDoc.data.registrar).value}`}>{PlatformAddress.fromAccountId(transactionDoc.data.registrar).value}</Link> : "None"}
+                                </Col>
+                            </Row>
+                            <hr />
+                            <Row>
+                                <Col md="3">
+                                    Owner
+                            </Col>
+                                <Col md="9">
+                                    {
+                                        transactionDoc.data.output.owner ? <Link to={`/addr-asset/${AssetTransferAddress.fromPublicKeyHash(new H256(transactionDoc.data.output.owner)).value}`}>{AssetTransferAddress.fromPublicKeyHash(new H256(transactionDoc.data.output.owner)).value}</Link> : "Unknown"
+                                    }
                                 </Col>
                             </Row>
                             <hr />
                         </div>
                     </Col>
                 </Row>,
-                <div key="input">
-                    {
-                        _.map(transactionDoc.data.inputs, (input, index) => {
-                            return ([
-                                <Row key={`transaction-header-table-input-title-${index}`} className="mt-large">
-                                    <Col lg="12">
-                                        <h3>Input #{index}</h3>
-                                        <hr className="heading-hr" />
-                                    </Col>
-                                </Row>,
-                                <Row key={`transaction-header-table-input-detail-${index}`}>
-                                    <Col lg="12">
-                                        <div className="data-set">
-                                            <Row>
-                                                <Col md="3">
-                                                    AssetType
-                                                </Col>
-                                                <Col md="9">
-                                                    {
-                                                        Type.getMetadata(input.prevOut.assetScheme.metadata).icon_url ?
-                                                            <span><ImageLoader className="mr-2" size={18} url={Type.getMetadata(input.prevOut.assetScheme.metadata).icon_url} /><HexString link={`/asset/0x${input.prevOut.assetType}`} text={input.prevOut.assetType} /></span>
-                                                            : <span><ImageLoader className="mr-2" size={18} data={input.prevOut.assetType} /><HexString link={`/asset/0x${input.prevOut.assetType}`} text={input.prevOut.assetType} /></span>
-                                                    }
-                                                </Col>
-                                            </Row>
-                                            <hr />
-                                            <Row>
-                                                <Col md="3">
-                                                    Owner
-                                                </Col>
-                                                <Col md="9">
-                                                    {input.prevOut.owner ? <Link to={`/addr-asset/${AssetTransferAddress.fromPublicKeyHash(new H256(input.prevOut.owner)).value}`}>{AssetTransferAddress.fromPublicKeyHash(new H256(input.prevOut.owner)).value}</Link>
-                                                        : "Unknown"}
-                                                </Col>
-                                            </Row>
-                                            <hr />
-                                            <Row>
-                                                <Col md="3">
-                                                    Amount
-                                                </Col>
-                                                <Col md="9">
-                                                    {input.prevOut.amount.toLocaleString()}
-                                                </Col>
-                                            </Row>
-                                            <hr />
-                                            <Row>
-                                                <Col md="3">
-                                                    LockScript
-                                                </Col>
-                                                <Col md="9">
-                                                    <div className="text-area">
-                                                        {new Script(input.lockScript).toTokens().join(" ")}
-                                                    </div>
-                                                </Col>
-                                            </Row>
-                                            <hr />
-                                            <Row>
-                                                <Col md="3">
-                                                    UnlockScript
-                                                </Col>
-                                                <Col md="9">
-                                                    <div className="text-area">
-                                                        {new Script(input.unlockScript).toTokens().join(" ")}
-                                                    </div>
-                                                </Col>
-                                            </Row>
-                                            <hr />
-                                            <Row>
-                                                <Col md="3">
-                                                    Prev Tx
-                                                </Col>
-                                                <Col md="9">
-                                                    <HexString link={`/tx/0x${input.prevOut.transactionHash}`} text={input.prevOut.transactionHash} />
-                                                </Col>
-                                            </Row>
-                                            <hr />
-                                            <Row>
-                                                <Col md="3">
-                                                    Prev Tx Index
-                                                </Col>
-                                                <Col md="9">
-                                                    {input.prevOut.index.toLocaleString()}
-                                                </Col>
-                                            </Row>
-                                            <hr />
-                                        </div>
-                                    </Col>
-                                </Row>
-                            ])
-                        })
-                    }
-                </div>,
-                <div key="burn">
-                    {
-                        _.map(transactionDoc.data.burns, (burn, index) => {
-                            return ([
-                                <Row key={`transaction-header-table-burn-title-${index}`} className="mt-large">
-                                    <Col lg="12">
-                                        <h3>Burn #{index}</h3>
-                                        <hr className="heading-hr" />
-                                    </Col>
-                                </Row>,
-                                <Row key={`transaction-header-table-burn-detail-${index}`}>
-                                    <Col lg="12">
-                                        <div className="data-set">
-                                            <Row>
-                                                <Col md="3">
-                                                    AssetType
-                                                </Col>
-                                                <Col md="9">
-                                                    {
-                                                        Type.getMetadata(burn.prevOut.assetScheme.metadata).icon_url ?
-                                                            <span><ImageLoader className="mr-2" size={18} url={Type.getMetadata(burn.prevOut.assetScheme.metadata).icon_url} /><HexString link={`/asset/0x${burn.prevOut.assetType}`} text={burn.prevOut.assetType} /></span>
-                                                            : <span><ImageLoader className="mr-2" size={18} data={burn.prevOut.assetType} /><HexString link={`/asset/0x${burn.prevOut.assetType}`} text={burn.prevOut.assetType} /></span>
-                                                    }
-                                                </Col>
-                                            </Row>
-                                            <hr />
-                                            <Row>
-                                                <Col md="3">
-                                                    Owner
-                                                </Col>
-                                                <Col md="9">
-                                                    {burn.prevOut.owner ? <Link to={`/addr-asset/${AssetTransferAddress.fromPublicKeyHash(new H256(burn.prevOut.owner)).value}`}>{AssetTransferAddress.fromPublicKeyHash(new H256(burn.prevOut.owner)).value}</Link>
-                                                        : "Unknown"}
-                                                </Col>
-                                            </Row>
-                                            <hr />
-                                            <Row>
-                                                <Col md="3">
-                                                    Amount
-                                                </Col>
-                                                <Col md="9">
-                                                    {burn.prevOut.amount.toLocaleString()}
-                                                </Col>
-                                            </Row>
-                                            <hr />
-                                            <Row>
-                                                <Col md="3">
-                                                    LockScript
-                                                </Col>
-                                                <Col md="9">
-                                                    <div className="text-area">
-                                                        {new Script(burn.lockScript).toTokens().join(" ")}
-                                                    </div>
-                                                </Col>
-                                            </Row>
-                                            <hr />
-                                            <Row>
-                                                <Col md="3">
-                                                    UnlockScript
-                                                </Col>
-                                                <Col md="9">
-                                                    <div className="text-area">
-                                                        {new Script(burn.unlockScript).toTokens().join(" ")}
-                                                    </div>
-                                                </Col>
-                                            </Row>
-                                            <hr />
-                                            <Row>
-                                                <Col md="3">
-                                                    Prev Tx
-                                                </Col>
-                                                <Col md="9">
-                                                    <HexString link={`/tx/0x${burn.prevOut.transactionHash}`} text={burn.prevOut.transactionHash} />
-                                                </Col>
-                                            </Row>
-                                            <hr />
-                                            <Row>
-                                                <Col md="3">
-                                                    Prev Tx Index
-                                                </Col>
-                                                <Col md="9">
-                                                    {burn.prevOut.index.toLocaleString()}
-                                                </Col>
-                                            </Row>
-                                            <hr />
-                                        </div>
-                                    </Col>
-                                </Row>
-                            ])
-                        })
-                    }
-                </div>,
-                <div key="output">
-                    {
-                        _.map(transactionDoc.data.outputs, (output, index) => {
-                            return ([
-                                <Row key={`transaction-header-table-output-title-${index}`} className="mt-large">
-                                    <Col lg="12">
-                                        <h3>Output #{index}</h3>
-                                        <hr className="heading-hr" />
-                                    </Col>
-                                </Row>,
-                                <Row key={`transaction-header-table-output-details-${index}`}>
-                                    <Col lg="12">
-                                        <div className="data-set">
-                                            <Row>
-                                                <Col md="3">
-                                                    AssetType
-                                                </Col>
-                                                <Col md="9">
-                                                    {
-                                                        Type.getMetadata(output.assetScheme.metadata).icon_url ?
-                                                            <ImageLoader size={18} url={Type.getMetadata(output.assetScheme.metadata).icon_url} className="mr-2" />
-                                                            : <ImageLoader size={18} data={output.assetType} className="mr-2" />
-                                                    }
-                                                    <HexString link={`/asset/0x${output.assetType}`} text={output.assetType} />
-                                                </Col>
-                                            </Row>
-                                            <hr />
-                                            <Row>
-                                                <Col md="3">
-                                                    Owner
-                                                </Col>
-                                                <Col md="9">{
-                                                    output.owner ? <Link to={`/addr-asset/${AssetTransferAddress.fromPublicKeyHash(new H256(output.owner)).value}`}>{AssetTransferAddress.fromPublicKeyHash(new H256(output.owner)).value}</Link> : "Unknown"
-                                                }</Col>
-                                            </Row>
-                                            <hr />
-                                            <Row>
-                                                <Col md="3">
-                                                    Amount
-                                                </Col>
-                                                <Col md="9">
-                                                    {output.amount.toLocaleString()}
-                                                </Col>
-                                            </Row>
-                                            <hr />
-                                            <Row>
-                                                <Col md="3">
-                                                    LockScriptHash
-                                                </Col>
-                                                <Col md="9">
-                                                    {output.lockScriptHash === "f42a65ea518ba236c08b261c34af0521fa3cd1aa505e1c18980919cb8945f8f3" ? "P2PKH" : <HexString text={output.lockScriptHash} />}
-                                                </Col>
-                                            </Row>
-                                            <hr />
-                                            <Row>
-                                                <Col md="3">
-                                                    Parameters
-                                                </Col>
-                                                <Col md="9">
-                                                    <div className="text-area">
-                                                        {_.map(output.parameters, (parameter, i) => {
-                                                            return <div key={`transaction-paramter-${i}`}>{Buffer.from(parameter).toString("hex")}</div>
-                                                        })}
-                                                    </div>
-                                                </Col>
-                                            </Row>
-                                            <hr />
-                                        </div>
-                                    </Col>
-                                </Row>
-                            ])
-                        })
-                    }
-                </div>
-            ]
-        );
-    } else if (Type.isAssetMintTransactionDoc(transaction)) {
-        const transactionDoc = transaction as AssetMintTransactionDoc;
-        const metadata = Type.getMetadata(transactionDoc.data.metadata);
-        return ([
-            <Row key="details">
-                <Col lg="12">
-                    <div className="data-set">
-                        <Row>
-                            <Col md="3">
-                                Action
+                <Row key="metadata">
+                    <Col lg="12" className="mt-large">
+                        <h2>Metadata</h2>
+                        <hr className="heading-hr" />
+                    </Col>
+                </Row>,
+                <Row key="metadata-detail">
+                    <Col lg="12">
+                        <div className="data-set">
+                            <Row>
+                                <Col md="3">
+                                    Name
                             </Col>
-                            <Col md="9">
-                                <TypeBadge transaction={transaction} />
-                            </Col>
-                        </Row>
-                        <hr />
-                        <Row>
-                            <Col md="3">
-                                Parcel Hash
-                            </Col>
-                            <Col md="9">
-                                <HexString text={transactionDoc.data.parcelHash} link={`/parcel/0x${transactionDoc.data.parcelHash}`} />
-                            </Col>
-                        </Row>
-                        <hr />
-                        <Row>
-                            <Col md="3">
-                                NetworkID
+                                <Col md="9">
+                                    {metadata.name ? metadata.name : "None"}
                                 </Col>
-                            <Col md="9">
-                                {transactionDoc.data.networkId}
+                            </Row>
+                            <hr />
+                            <Row>
+                                <Col md="3">
+                                    Description
                             </Col>
-                        </Row>
-                        <hr />
-                        <Row>
-                            <Col md="3">
-                                Nonce
+                                <Col md="9">
+                                    <div className="text-area">
+                                        {metadata.description ? metadata.description : "None"}
+                                    </div>
+                                </Col>
+                            </Row>
+                            <hr />
+                            <Row>
+                                <Col md="3">
+                                    Icon
                             </Col>
-                            <Col md="9">
-                                {transactionDoc.data.nonce}
+                                <Col md="9">
+                                    <div className="text-area">
+                                        {metadata.icon_url ? metadata.icon_url : "None"}
+                                    </div>
+                                </Col>
+                            </Row>
+                            <hr />
+                            <Row>
+                                <Col md="3">
+                                    Raw data
                             </Col>
-                        </Row>
-                        <hr />
-                        <Row>
-                            <Col md="3">
-                                Status
-                            </Col>
-                            <Col md="9">
-                                <StatusBadge status={status} />
-                            </Col>
-                        </Row>
-                        <hr />
-                        <Row>
-                            <Col md="3">
-                                LockScriptHash
-                            </Col>
-                            <Col md="9">
-                                {transactionDoc.data.output.lockScriptHash === "f42a65ea518ba236c08b261c34af0521fa3cd1aa505e1c18980919cb8945f8f3" ? "P2PKH" : <HexString text={transactionDoc.data.output.lockScriptHash} />}
-                            </Col>
-                        </Row>
-                        <hr />
-                        <Row>
-                            <Col md="3">
-                                Parameters
-                            </Col>
-                            <Col md="9">
-                                <div className="text-area">
-                                    {_.map(transactionDoc.data.output.parameters, (parameter, i) => {
-                                        return <div key={`transaction-heder-param-${i}`}>{Buffer.from(parameter).toString("hex")}</div>
-                                    })}
-                                </div>
-                            </Col>
-                        </Row>
-                        <hr />
-                        <Row>
-                            <Col md="3">
-                                AssetType
-                            </Col>
-                            <Col md="9">
-                                {
-                                    Type.getMetadata(transactionDoc.data.metadata).icon_url ?
-                                        <ImageLoader url={Type.getMetadata(transactionDoc.data.metadata).icon_url} size={18} className="mr-2" />
-                                        : <ImageLoader data={transactionDoc.data.output.assetType} size={18} className="mr-2" />
-                                }
-                                <HexString link={`/asset/0x${transactionDoc.data.output.assetType}`} text={transactionDoc.data.output.assetType} />
-                            </Col>
-                        </Row>
-                        <hr />
-                        <Row>
-                            <Col md="3">
-                                Amount
-                            </Col>
-                            <Col md="9">
-                                {transactionDoc.data.output.amount ? transactionDoc.data.output.amount.toLocaleString() : 0}
-                            </Col>
-                        </Row>
-                        <hr />
-                        <Row>
-                            <Col md="3">
-                                Registrar
-                            </Col>
-                            <Col md="9">
-                                {transactionDoc.data.registrar ? <Link to={`/addr-platform/${PlatformAddress.fromAccountId(transactionDoc.data.registrar).value}`}>{PlatformAddress.fromAccountId(transactionDoc.data.registrar).value}</Link> : "None"}
-                            </Col>
-                        </Row>
-                        <hr />
-                        <Row>
-                            <Col md="3">
-                                Owner
-                            </Col>
-                            <Col md="9">
-                                {
-                                    transactionDoc.data.output.owner ? <Link to={`/addr-asset/${AssetTransferAddress.fromPublicKeyHash(new H256(transactionDoc.data.output.owner)).value}`}>{AssetTransferAddress.fromPublicKeyHash(new H256(transactionDoc.data.output.owner)).value}</Link> : "Unknown"
-                                }
-                            </Col>
-                        </Row>
-                        <hr />
-                    </div>
-                </Col>
-            </Row>,
-            <Row key="metadata">
-                <Col lg="12" className="mt-large">
-                    <h2>Metadata</h2>
-                    <hr className="heading-hr" />
-                </Col>
-            </Row>,
-            <Row key="metadata-detail">
-                <Col lg="12">
-                    <div className="data-set">
-                        <Row>
-                            <Col md="3">
-                                Name
-                            </Col>
-                            <Col md="9">
-                                {metadata.name ? metadata.name : "None"}
-                            </Col>
-                        </Row>
-                        <hr />
-                        <Row>
-                            <Col md="3">
-                                Description
-                            </Col>
-                            <Col md="9">
-                                <div className="text-area">
-                                    {metadata.description ? metadata.description : "None"}
-                                </div>
-                            </Col>
-                        </Row>
-                        <hr />
-                        <Row>
-                            <Col md="3">
-                                Icon
-                            </Col>
-                            <Col md="9">
-                                <div className="text-area">
-                                    {metadata.icon_url ? metadata.icon_url : "None"}
-                                </div>
-                            </Col>
-                        </Row>
-                        <hr />
-                        <Row>
-                            <Col md="3">
-                                Raw data
-                            </Col>
-                            <Col md="9">
-                                <div className="text-area">
-                                    {transactionDoc.data.metadata}
-                                </div>
-                            </Col>
-                        </Row>
-                        <hr />
-                    </div>
-                </Col>
-            </Row>
-        ]);
-    }
-    return null;
-}
-
-const TransactionDetails = (props: Props) => {
-    const { transaction, status } = props;
-
-    return <div className="transaction-details">
-        <Row>
-            <Col lg="12">
-                <h2>Details</h2>
-                <hr className="heading-hr" />
-            </Col>
-        </Row>
-        {
-            getTransactionInfoByType(transaction, status)
+                                <Col md="9">
+                                    <div className="text-area">
+                                        {transactionDoc.data.metadata}
+                                    </div>
+                                </Col>
+                            </Row>
+                            <hr />
+                        </div>
+                    </Col>
+                </Row>
+            ]);
         }
-    </div>
+        return null;
+    }
+
+    private loadMoreInput = () => {
+        this.setState({ pageForInput: this.state.pageForInput + 1 });
+    }
+
+    private loadMoreBurn = () => {
+        this.setState({ pageForBurn: this.state.pageForBurn + 1 });
+    }
+
+    private loadMoreOutput = () => {
+        this.setState({ pageForOutput: this.state.pageForOutput + 1 });
+    }
 };
 
 export default TransactionDetails;
