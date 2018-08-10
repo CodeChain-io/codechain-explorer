@@ -198,7 +198,7 @@ class TransactionList extends React.Component<Props, State> {
                         <Row>
                             <Col md="5">
                                 {
-                                    _.map(transactionDoc.data.inputs, (input, i) => {
+                                    _.map(transactionDoc.data.inputs.slice(0, 3), (input, i) => {
                                         return (
                                             <div key={`input-${i}`} className={`data-set input-output-container ${owner && AssetTransferAddress.fromPublicKeyHash(new H256(input.prevOut.owner)).value === owner ? "input-highlight" : ""}`}>
                                                 <Row>
@@ -240,13 +240,24 @@ class TransactionList extends React.Component<Props, State> {
                                         )
                                     })
                                 }
+                                {
+                                    transactionDoc.data.inputs.length > 3 ?
+                                        <div className="view-more-transfer-btn">
+                                            <Link to={`/tx/0x${transactionDoc.data.hash}`}>
+                                                <button type="button" className="btn btn-primary w-100">
+                                                    <span>View more inputs</span>
+                                                </button>
+                                            </Link>
+                                        </div>
+                                        : null
+                                }
                             </Col>
                             <Col md="2" className="text-center">
                                 <img src={arrow} alt="Arrow" className="arrow" />
                             </Col>
                             <Col md="5">
                                 {
-                                    _.map(transactionDoc.data.outputs, (output, i) => {
+                                    _.map(transactionDoc.data.outputs.slice(0, 3), (output, i) => {
                                         return (
                                             <div key={`output-${i}`} className={`data-set input-output-container ${owner && AssetTransferAddress.fromPublicKeyHash(new H256(output.owner)).value === owner ? "output-highlight" : ""}`}>
                                                 <Row>
@@ -288,6 +299,17 @@ class TransactionList extends React.Component<Props, State> {
                                             </div>
                                         )
                                     })
+                                }
+                                {
+                                    transactionDoc.data.outputs.length > 3 ?
+                                        <div className="view-more-transfer-btn">
+                                            <Link to={`/tx/0x${transactionDoc.data.hash}`}>
+                                                <button type="button" className="btn btn-primary w-100">
+                                                    <span>View more outputs</span>
+                                                </button>
+                                            </Link>
+                                        </div>
+                                        : null
                                 }
                             </Col>
                         </Row>
