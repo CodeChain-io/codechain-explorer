@@ -21,6 +21,9 @@
       margin-bottom: 5px;
       a {
         color: $dark-color;
+        &:hover {
+          color: black;
+        }
       }
     }
   }
@@ -37,6 +40,9 @@
       margin-left: 10px;
       a {
         color: $dark-color;
+        &:hover {
+          color: black;
+        }
       }
     }
   }
