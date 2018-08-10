@@ -90,7 +90,7 @@ class AssetList extends React.Component<Props, State> {
                         <Col>
                             <div className="mt-small">
                                 <button className="btn btn-primary w-100" onClick={this.loadMore}>
-                                    Load Parcels
+                                    Load Assets
                             </button>
                             </div>
                         </Col>
