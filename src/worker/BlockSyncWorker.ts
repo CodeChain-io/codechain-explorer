@@ -12,10 +12,13 @@ export class BlockSyncWorker {
     private codeChainAgent: CodeChainAgent;
     private elasticSearchAgent: ElasticSearchAgent;
 
+    private jobIsRunning: boolean;
+
     constructor(config: WorkerConfig, codeChainAgent: CodeChainAgent, elasticSearchAgent: ElasticSearchAgent) {
         this.config = config;
         this.codeChainAgent = codeChainAgent;
         this.elasticSearchAgent = elasticSearchAgent;
+        this.jobIsRunning = false;
     }
 
     public start() {
@@ -37,12 +40,15 @@ export class BlockSyncWorker {
             return;
         }
         this.watchJob = scheduleJob(this.config.cron.blockWatch, () => {
-            this.sync();
+            if (!this.jobIsRunning) {
+                this.sync();
+            }
         });
     }
 
     private async sync() {
         console.log("================ sync start ==================");
+        this.jobIsRunning = true;
         await this.elasticSearchAgent.checkIndexOrCreate();
         let latestSyncBlockNumber: number = await this.elasticSearchAgent.getLastBlockNumber();
         const latestCodechainBlockNumber: number = await this.codeChainAgent.getLastBlockNumber();
@@ -67,6 +73,8 @@ export class BlockSyncWorker {
             latestSyncBlockNumber = nextBlockIndex;
         }
         await this.indexingPendingParcel();
+        this.jobIsRunning = false;
+        console.log("================ sync done ===================\n");
     }
 
     private indexingPendingParcel = async () => {
@@ -103,7 +111,6 @@ export class BlockSyncWorker {
         await Promise.all(_.map(revivalPendingParcels, async (revivalPendingParcel) => {
             return this.elasticSearchAgent.revialPendingParcel(revivalPendingParcel.hash());
         }));
-        console.log("================ sync done ===================\n");
     }
 
     private checkRetractAndReturnSyncNumber = async (currentBlockNumber): Promise<number> => {
