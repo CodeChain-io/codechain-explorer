@@ -42,6 +42,7 @@ export class ElasticSearchAgent implements QueryBlock, QueryParcel, QueryTransac
     public retractTransaction: (transactionHash: H256) => Promise<void>;
     public indexTransaction: (currentTransactions: Transaction[], transaction: Transaction, timestamp: number, parcel: SignedParcel, transactionIndex: number) => Promise<any>;
     public updateTransaction: (hash: H256, partial: any) => Promise<any>;
+    public getAllOfCurrentPendingParcels: () => Promise<PendingParcelDoc[]>;
     public getCurrentPendingParcels: (page?: number, itemsPerPage?: number, actionFilters?: string[], signerFilter?: string, sorting?: string, orderBy?: string) => Promise<PendingParcelDoc[]>;
     public getPendingParcel: (hash: H256) => Promise<PendingParcelDoc | null>;
     public getPendingTransaction: (hash: H256) => Promise<PendingTransactionDoc | null>;

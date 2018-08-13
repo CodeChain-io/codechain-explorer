@@ -72,7 +72,7 @@ export class BlockSyncWorker {
     private indexingPendingParcel = async () => {
         console.log("========== indexing pending parcels ==========");
         const pendingParcels = await this.codeChainAgent.getPendingParcels();
-        const indexedParcels = await this.elasticSearchAgent.getCurrentPendingParcels();
+        const indexedParcels = await this.elasticSearchAgent.getAllOfCurrentPendingParcels();
 
         console.log("current indexed pending parcels : %d", indexedParcels.length);
         console.log("codechain pending parcels : %d", pendingParcels.length);

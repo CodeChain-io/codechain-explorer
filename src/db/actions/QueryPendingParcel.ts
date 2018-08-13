@@ -9,6 +9,23 @@ export class QueryPendingParcel implements BaseAction {
     public agent: ElasticSearchAgent;
     public client: Client;
 
+    public async getAllOfCurrentPendingParcels(): Promise<PendingParcelDoc[]> {
+        const response = await this.searchPendinParcel({
+            "size": 10000,
+            "query": {
+                "bool": {
+                    "must": [
+                        { "term": { "status": "pending" } }
+                    ]
+                }
+            }
+        });
+        if (response.hits.total === 0) {
+            return [];
+        }
+        return _.map(response.hits.hits, hit => hit._source);
+    }
+
     public async getCurrentPendingParcels(page: number = 1, itemsPerPage: number = 5, actionFilters: string[] = [], signerFilter: string, sorting: string = "pendingPeriod", orderBy: string = "desc"): Promise<PendingParcelDoc[]> {
         let sortQuery;
         switch (sorting) {
