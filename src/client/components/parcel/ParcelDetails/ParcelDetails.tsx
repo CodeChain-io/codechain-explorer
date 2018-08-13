@@ -126,7 +126,7 @@ const ParcelDetails = (props: Props) => {
                             Network ID
                         </Col>
                         <Col md="9">
-                            {parcel.networkId.toLocaleString()}
+                            {parcel.networkId}
                         </Col>
                     </Row>
                     <hr />

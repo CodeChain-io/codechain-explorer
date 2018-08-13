@@ -60,7 +60,7 @@ export const getMappingTransaction = () => {
                                                 "type": "long"
                                             },
                                             "networkId": {
-                                                "type": "long"
+                                                "type": "keyword"
                                             }
                                         }
                                     },
@@ -84,7 +84,7 @@ export const getMappingTransaction = () => {
                         "type": "keyword",
                     },
                     "networkId": {
-                        "type": "long"
+                        "type": "keyword"
                     },
                     "nonce": {
                         "type": "long"
@@ -138,7 +138,7 @@ export const getMappingTransaction = () => {
                                         "type": "long"
                                     },
                                     "networkId": {
-                                        "type": "long"
+                                        "type": "keyword"
                                     }
                                 }
                             },

@@ -11,7 +11,7 @@ interface Props {
 interface State {
     // FIXME: U64
     nonce: number;
-    networkId: number;
+    networkId: string;
 }
 
 export default class AssetTransferTransactionEditor extends React.Component<Props, State> {
@@ -19,7 +19,7 @@ export default class AssetTransferTransactionEditor extends React.Component<Prop
         super(props);
         this.state = {
             nonce: 0,
-            networkId: 0,
+            networkId: "c",
         };
     }
     public render() {
@@ -46,7 +46,7 @@ export default class AssetTransferTransactionEditor extends React.Component<Prop
     private onChangeNetworkId = (event: React.ChangeEvent<HTMLInputElement>) => {
         this.setState({
             ...this.state,
-            networkId: Number.parseInt(event.target.value)
+            networkId: event.target.value
         });
     }
 

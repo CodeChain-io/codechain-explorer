@@ -41,8 +41,9 @@ export default class SendSignedParcel extends React.Component<{}, State> {
                     parameters: [],
                     lockScriptHash: new H256("563d207a7b1d91f9b4440536bc4818e90263ada0707b41d119e667ed35524b68"),
                 },
+                worldId: 1,
                 shardId: 0,
-                networkId: 1,
+                networkId: "c",
                 registrar: null,
             }),
         };
@@ -164,7 +165,7 @@ export default class SendSignedParcel extends React.Component<{}, State> {
                 sentHash: hash,
             })
         }
-    
+
         private onErrorSend = ({ message }: { message: string }) => {
             this.setState({
                 ...this.state,

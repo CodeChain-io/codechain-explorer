@@ -92,7 +92,7 @@ class TransactionDetails extends React.Component<Props, State> {
                                         NetworkID
                                 </Col>
                                     <Col md="9">
-                                        {transactionDoc.data.networkId.toLocaleString()}
+                                        {transactionDoc.data.networkId}
                                     </Col>
                                 </Row>
                                 <hr />

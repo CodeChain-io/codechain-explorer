@@ -25,7 +25,7 @@ export interface ParcelDoc {
     parcelIndex: number | null;
     nonce: string;
     fee: string;
-    networkId: number;
+    networkId: string;
     sig: string;
     hash: string;
     action: ActionDoc;
@@ -64,7 +64,7 @@ export interface AssetSchemeDoc {
     metadata: string;
     registrar: string | null;
     amount: number | null;
-    networkId: number;
+    networkId: string;
 }
 
 export interface AssetBundleDoc {
@@ -92,7 +92,7 @@ export interface AssetMintTransactionDoc {
             owner: string;
             assetType: string;
         }
-        networkId: number;
+        networkId: string;
         metadata: string;
         registrar: string | null;
         nonce: number;
@@ -111,7 +111,7 @@ export interface AssetMintTransactionDoc {
 export interface AssetTransferTransactionDoc {
     type: string;
     data: {
-        networkId: number;
+        networkId: string;
         burns: AssetTransferInputDoc[];
         inputs: AssetTransferInputDoc[];
         outputs: AssetTransferOutputDoc[];
@@ -190,8 +190,8 @@ const fromAssetTransferInput = async (currentTransactions: Transaction[], assetT
             amount: assetTransferInputJson.prevOut.amount,
             owner
         },
-        lockScript: assetTransferInputJson.lockScript,
-        unlockScript: assetTransferInputJson.unlockScript
+        lockScript: Buffer.from(assetTransferInputJson.lockScript),
+        unlockScript: Buffer.from(assetTransferInputJson.unlockScript)
     }
 }
 
@@ -214,8 +214,8 @@ const fromAssetTransferOutput = async (currentTransactions: Transaction[], asset
     const assetScheme = await getAssetScheme(currentTransactions, assetTransferOutputJson.assetType, elasticSearchAgent)
     return {
         lockScriptHash: assetTransferOutputJson.lockScriptHash,
-        owner: assetTransferOutputJson.lockScriptHash === "f42a65ea518ba236c08b261c34af0521fa3cd1aa505e1c18980919cb8945f8f3" ? assetTransferOutputJson.parameters[0].toString("hex") : "",
-        parameters: assetTransferOutputJson.parameters,
+        owner: assetTransferOutputJson.lockScriptHash === "f42a65ea518ba236c08b261c34af0521fa3cd1aa505e1c18980919cb8945f8f3" ? Buffer.from(assetTransferOutputJson.parameters[0]).toString("hex") : "",
+        parameters: _.map(assetTransferOutputJson.parameters, p => Buffer.from(p)),
         assetType: assetTransferOutputJson.assetType,
         assetScheme,
         amount: assetTransferOutputJson.amount
@@ -231,16 +231,16 @@ const fromTransaction = async (currentTransactions: Transaction[], transaction: 
             data: {
                 output: {
                     lockScriptHash: transactionJson.data.output.lockScriptHash,
-                    parameters: transactionJson.data.output.parameters,
+                    parameters: _.map(transactionJson.data.output.parameters, p => Buffer.from(p)),
                     amount: transactionJson.data.output.amount,
                     assetType: transaction.getAssetSchemeAddress().value,
-                    owner: transactionJson.data.output.lockScriptHash === "f42a65ea518ba236c08b261c34af0521fa3cd1aa505e1c18980919cb8945f8f3" ? transactionJson.data.output.parameters[0].toString("hex") : ""
+                    owner: transactionJson.data.output.lockScriptHash === "f42a65ea518ba236c08b261c34af0521fa3cd1aa505e1c18980919cb8945f8f3" ? Buffer.from(transactionJson.data.output.parameters[0]).toString("hex") : ""
                 },
                 networkId: transactionJson.data.networkId,
                 metadata: transactionJson.data.metadata,
                 registrar: transactionJson.data.registrar,
                 nonce: transactionJson.data.nonce,
-                hash: transactionJson.data.hash,
+                hash: transaction.hash().value,
                 timestamp,
                 assetName: metadata.name || "",
                 parcelHash: parcel ? parcel.hash().value : "",
@@ -263,7 +263,7 @@ const fromTransaction = async (currentTransactions: Transaction[], transaction: 
                 inputs,
                 outputs,
                 nonce: transactionJson.data.nonce,
-                hash: transactionJson.data.hash,
+                hash: transaction.hash().value,
                 timestamp,
                 parcelHash: parcel ? parcel.hash().value : "",
                 blockNumber: parcel ? parcel.blockNumber || 0 : 0,

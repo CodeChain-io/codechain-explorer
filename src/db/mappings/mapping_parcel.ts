@@ -39,7 +39,7 @@ export const getMappingParcel = () => {
                 "type": "keyword",
             },
             "networkId": {
-                "type": "long"
+                "type": "keyword"
             },
             "nonce": {
                 "type": "keyword",
