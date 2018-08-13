@@ -3,25 +3,44 @@ const Identicon = require("identicon.js");
 const sha256 = require('js-sha256');
 
 interface Props {
-    data?: string;
+    data: string;
     className?: string;
     url?: string;
     size: number;
 }
-export const ImageLoader = (props: Props) => {
-    const { className, data, url, size } = props;
-    const hash = sha256.create();
-    if (data) {
-        hash.update(data);
-        const identiconData = new Identicon(hash.hex(), size).toString();
-        return <img className={className} style={{ verticalAlign: "middle", width: size, height: size }} src={`data:image/png;base64,${identiconData}`} />
-    } else {
-        hash.update(url);
-        const identiconData = new Identicon(hash.hex(), size).toString();
-        return (
-            <object className={className} style={{ verticalAlign: "middle", width: size, height: size }} data={url} type="image/png">
-                <img src={`data:image/png;base64,${identiconData}`} />
-            </object>
-        )
+interface State {
+    requestUrl?: string;
+}
+
+export class ImageLoader extends React.Component<Props, State> {
+    constructor(prop: Props) {
+        super(prop);
+        let requestUrl;
+        if (prop.url) {
+            requestUrl = prop.url;
+        } else {
+            requestUrl = this.getDefaultImage()
+        }
+        this.state = {
+            requestUrl
+        }
+    }
+
+    public render() {
+        const { className, size } = this.props;
+        const { requestUrl } = this.state;
+
+        return <img className={className} style={{ verticalAlign: "middle", width: size, height: size }} src={requestUrl} onError={this.fallback} />
+    }
+
+    private getDefaultImage = () => {
+        const hash = sha256.create();
+        hash.update(this.props.data);
+        const identiconData = new Identicon(hash.hex(), this.props.size).toString();
+        return `data:image/png;base64,${identiconData}`;
+    }
+
+    private fallback = () => {
+        this.setState({ requestUrl: this.getDefaultImage() });
     }
 }

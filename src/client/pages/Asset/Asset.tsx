@@ -64,11 +64,7 @@ class Asset extends React.Component<Props, State> {
                     <Col>
                         <div className="title-container d-flex">
                             <div className="d-inline-block left-container">
-                                {
-                                    Type.getMetadata(assetScheme.metadata).icon_url ?
-                                        <ImageLoader size={65} url={Type.getMetadata(assetScheme.metadata).icon_url} />
-                                        : <ImageLoader size={65} data={new H256(assetType).value} />
-                                }
+                                <ImageLoader size={65} data={new H256(assetType).value} url={Type.getMetadata(assetScheme.metadata).icon_url} />
                             </div>
                             <div className="d-inline-block right-container">
                                 <h1>Asset</h1>

@@ -204,11 +204,7 @@ class Search extends React.Component<Props, State> {
 
     private renderSuggestion = (suggestion: AssetBundleDoc) => (
         <div>
-            {
-                Type.getMetadata(suggestion.assetScheme.metadata).icon_url ?
-                    <ImageLoader className="icon" size={20} url={Type.getMetadata(suggestion.assetScheme.metadata).icon_url} />
-                    : <ImageLoader className="icon" size={20} data={new H256(suggestion.asset.assetType).value} />
-            }
+            <ImageLoader className="icon" size={20} url={Type.getMetadata(suggestion.assetScheme.metadata).icon_url} data={new H256(suggestion.asset.assetType).value} />
             <span className="name">{Type.getMetadata(suggestion.assetScheme.metadata).name}</span>
         </div>
     );

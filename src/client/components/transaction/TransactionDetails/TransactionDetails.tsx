@@ -153,11 +153,8 @@ class TransactionDetails extends React.Component<Props, State> {
                                                         AssetType
                                                 </Col>
                                                     <Col md="9">
-                                                        {
-                                                            Type.getMetadata(input.prevOut.assetScheme.metadata).icon_url ?
-                                                                <span><ImageLoader className="mr-2" size={18} url={Type.getMetadata(input.prevOut.assetScheme.metadata).icon_url} /><HexString link={`/asset/0x${input.prevOut.assetType}`} text={input.prevOut.assetType} /></span>
-                                                                : <span><ImageLoader className="mr-2" size={18} data={input.prevOut.assetType} /><HexString link={`/asset/0x${input.prevOut.assetType}`} text={input.prevOut.assetType} /></span>
-                                                        }
+                                                        <ImageLoader className="mr-2" size={18} data={input.prevOut.assetType} url={Type.getMetadata(input.prevOut.assetScheme.metadata).icon_url} />
+                                                        <HexString link={`/asset/0x${input.prevOut.assetType}`} text={input.prevOut.assetType} />
                                                     </Col>
                                                 </Row>
                                                 <hr />
@@ -257,11 +254,8 @@ class TransactionDetails extends React.Component<Props, State> {
                                                         AssetType
                                                 </Col>
                                                     <Col md="9">
-                                                        {
-                                                            Type.getMetadata(burn.prevOut.assetScheme.metadata).icon_url ?
-                                                                <span><ImageLoader className="mr-2" size={18} url={Type.getMetadata(burn.prevOut.assetScheme.metadata).icon_url} /><HexString link={`/asset/0x${burn.prevOut.assetType}`} text={burn.prevOut.assetType} /></span>
-                                                                : <span><ImageLoader className="mr-2" size={18} data={burn.prevOut.assetType} /><HexString link={`/asset/0x${burn.prevOut.assetType}`} text={burn.prevOut.assetType} /></span>
-                                                        }
+                                                        <ImageLoader className="mr-2" size={18} data={burn.prevOut.assetType} url={Type.getMetadata(burn.prevOut.assetScheme.metadata).icon_url} />
+                                                        <HexString link={`/asset/0x${burn.prevOut.assetType}`} text={burn.prevOut.assetType} />
                                                     </Col>
                                                 </Row>
                                                 <hr />
@@ -361,11 +355,7 @@ class TransactionDetails extends React.Component<Props, State> {
                                                         AssetType
                                                 </Col>
                                                     <Col md="9">
-                                                        {
-                                                            Type.getMetadata(output.assetScheme.metadata).icon_url ?
-                                                                <ImageLoader size={18} url={Type.getMetadata(output.assetScheme.metadata).icon_url} className="mr-2" />
-                                                                : <ImageLoader size={18} data={output.assetType} className="mr-2" />
-                                                        }
+                                                        <ImageLoader size={18} data={output.assetType} url={Type.getMetadata(output.assetScheme.metadata).icon_url} className="mr-2" />
                                                         <HexString link={`/asset/0x${output.assetType}`} text={output.assetType} />
                                                     </Col>
                                                 </Row>
@@ -510,11 +500,7 @@ class TransactionDetails extends React.Component<Props, State> {
                                     AssetType
                             </Col>
                                 <Col md="9">
-                                    {
-                                        Type.getMetadata(transactionDoc.data.metadata).icon_url ?
-                                            <ImageLoader url={Type.getMetadata(transactionDoc.data.metadata).icon_url} size={18} className="mr-2" />
-                                            : <ImageLoader data={transactionDoc.data.output.assetType} size={18} className="mr-2" />
-                                    }
+                                    <ImageLoader data={transactionDoc.data.output.assetType} url={Type.getMetadata(transactionDoc.data.metadata).icon_url} size={18} className="mr-2" />
                                     <HexString link={`/asset/0x${transactionDoc.data.output.assetType}`} text={transactionDoc.data.output.assetType} />
                                 </Col>
                             </Row>

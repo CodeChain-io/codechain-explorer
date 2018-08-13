@@ -60,11 +60,7 @@ class AssetList extends React.Component<Props, State> {
                                     <Col key={`asset-item-${index}`} lg="3" md="4" sm="6" className="mt-small">
                                         <div className="asset-item d-flex">
                                             <div className="d-inline-block">
-                                                {
-                                                    metadata.icon_url ?
-                                                        <ImageLoader size={50} url={metadata.icon_url} className="icon" />
-                                                        : <ImageLoader size={50} data={assetBundle.asset.assetType} className="icon" />
-                                                }
+                                                <ImageLoader size={50} url={metadata.icon_url} data={assetBundle.asset.assetType} className="icon" />
                                             </div>
                                             <div className="d-inline-block d-flex align-items-center asset-text-container">
                                                 <div>

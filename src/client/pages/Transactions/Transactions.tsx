@@ -107,20 +107,12 @@ class Transactions extends React.Component<Props, State> {
                                                     <td>{
                                                         Type.isAssetMintTransactionDoc(transaction) ?
                                                             <span>
-                                                                {
-                                                                    Type.getMetadata((transaction as AssetMintTransactionDoc).data.metadata).icon_url ?
-                                                                        <ImageLoader className="mr-2" url={Type.getMetadata((transaction as AssetMintTransactionDoc).data.metadata).icon_url} size={18} />
-                                                                        : <ImageLoader className="mr-2" data={(transaction as AssetMintTransactionDoc).data.output.assetType} size={18} />
-                                                                }
+                                                                <ImageLoader className="mr-2" data={(transaction as AssetMintTransactionDoc).data.output.assetType} url={Type.getMetadata((transaction as AssetMintTransactionDoc).data.metadata).icon_url} size={18} />
                                                                 <HexString link={`/asset/0x${(transaction as AssetMintTransactionDoc).data.output.assetType}`} text={(transaction as AssetMintTransactionDoc).data.output.assetType} />
                                                             </span>
                                                             : (Type.isAssetTransferTransactionDoc(transaction) ?
                                                                 <span>
-                                                                    {
-                                                                        Type.getMetadata((transaction as AssetTransferTransactionDoc).data.inputs[0].prevOut.assetScheme.metadata).icon_url ?
-                                                                            <ImageLoader className="mr-2" url={Type.getMetadata((transaction as AssetTransferTransactionDoc).data.inputs[0].prevOut.assetScheme.metadata).icon_url} size={18} />
-                                                                            : <ImageLoader className="mr-2" data={(transaction as AssetTransferTransactionDoc).data.inputs[0].prevOut.assetType} size={18} />
-                                                                    }
+                                                                    <ImageLoader className="mr-2" data={(transaction as AssetTransferTransactionDoc).data.inputs[0].prevOut.assetType} url={Type.getMetadata((transaction as AssetTransferTransactionDoc).data.inputs[0].prevOut.assetScheme.metadata).icon_url} size={18} />
                                                                     <HexString link={`/asset/0x${(transaction as AssetTransferTransactionDoc).data.inputs[0].prevOut.assetType}`} text={(transaction as AssetTransferTransactionDoc).data.inputs[0].prevOut.assetType} />
                                                                 </span>
                                                                 : "")

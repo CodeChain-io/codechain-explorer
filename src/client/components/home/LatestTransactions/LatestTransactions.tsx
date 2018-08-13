@@ -43,20 +43,12 @@ const LatestTransactions = (props: Props) => {
                                             <td scope="row"><HexString link={`/tx/0x${transaction.data.hash}`} text={transaction.data.hash} /></td>
                                             <td>{Type.isAssetMintTransactionDoc(transaction) ?
                                                 <span>
-                                                    {
-                                                        Type.getMetadata((transaction as AssetMintTransactionDoc).data.metadata).icon_url
-                                                            ? <ImageLoader size={18} className="icon" url={Type.getMetadata((transaction as AssetMintTransactionDoc).data.metadata).icon_url} />
-                                                            : <ImageLoader size={18} className="icon" data={(transaction as AssetMintTransactionDoc).data.output.assetType} />
-                                                    }
+                                                    <ImageLoader size={18} className="icon" url={Type.getMetadata((transaction as AssetMintTransactionDoc).data.metadata).icon_url} data={(transaction as AssetMintTransactionDoc).data.output.assetType} />
                                                     <HexString link={`/asset/0x${(transaction as AssetMintTransactionDoc).data.output.assetType}`} text={(transaction as AssetMintTransactionDoc).data.output.assetType} />
                                                 </span>
                                                 : (Type.isAssetTransferTransactionDoc(transaction) ?
                                                     <span>
-                                                        {
-                                                            Type.getMetadata((transaction as AssetTransferTransactionDoc).data.inputs[0].prevOut.assetScheme.metadata).icon_url
-                                                                ? <ImageLoader size={18} className="icon" url={Type.getMetadata((transaction as AssetTransferTransactionDoc).data.inputs[0].prevOut.assetScheme.metadata).icon_url} />
-                                                                : <ImageLoader size={18} className="icon" data={(transaction as AssetTransferTransactionDoc).data.inputs[0].prevOut.assetType} />
-                                                        }
+                                                        <ImageLoader size={18} className="icon" data={(transaction as AssetTransferTransactionDoc).data.inputs[0].prevOut.assetType} url={Type.getMetadata((transaction as AssetTransferTransactionDoc).data.inputs[0].prevOut.assetScheme.metadata).icon_url} />
                                                         <HexString link={`/asset/0x${(transaction as AssetTransferTransactionDoc).data.inputs[0].prevOut.assetType}`} text={(transaction as AssetTransferTransactionDoc).data.inputs[0].prevOut.assetType} />
                                                     </span> : "")}</td>
                                             <td>{Type.isAssetMintTransactionDoc(transaction) ? ((transaction as AssetMintTransactionDoc).data.output.amount ? ((transaction as AssetMintTransactionDoc).data.output.amount as number).toLocaleString() : 0) : (Type.isAssetTransferTransactionDoc(transaction) ? _.sumBy((transaction as AssetTransferTransactionDoc).data.inputs, (input) => input.prevOut.amount) : "").toLocaleString()}</td>
