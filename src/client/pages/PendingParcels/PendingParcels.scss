@@ -70,8 +70,14 @@
           width: 20px;
           border: 1px solid white;
         }
-        input[type="checkbox"]:checked {
-          background: $primary-color;
+        .filter-input-change-shard-state[type="checkbox"]:checked {
+          background: $change-shard-state-action-primary-color;
+        }
+        .filter-input-set-regular-key[type="checkbox"]:checked {
+          background: $set-regular-key-action-primary-color;
+        }
+        .filter-input-payment[type="checkbox"]:checked {
+          background: $payment-action-primary-color;
         }
         input[type="checkbox"]:hover {
           filter: brightness(90%);

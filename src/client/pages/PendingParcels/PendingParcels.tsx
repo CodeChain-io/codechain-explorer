@@ -103,19 +103,19 @@ class PendingParcels extends React.Component<Props, State> {
                     <div className="type-filter">
                         <div className="d-md-inline mr-4">
                             <span className="filter-item" onClick={this.toggleChangeShardStateFilter}>
-                                <input readOnly={true} checked={isChangeShardStateFilterOn} type="checkbox" className="filter-input" />
+                                <input readOnly={true} checked={isChangeShardStateFilterOn} type="checkbox" className="filter-input filter-input-change-shard-state" />
                                 <span className="filter-text">ChangeShardState</span>
                             </span>
                         </div>
                         <div className="d-md-inline mr-4">
                             <span className="filter-item" onClick={this.togglePaymentFilter}>
-                                <input readOnly={true} checked={isPaymentFilterOn} type="checkbox" className="filter-input" />
+                                <input readOnly={true} checked={isPaymentFilterOn} type="checkbox" className="filter-input filter-input-payment" />
                                 <span className="filter-text">Payment</span>
                             </span>
                         </div>
                         <div className="d-md-inline">
                             <span className="filter-item" onClick={this.toggleSetRegularKeyFilter}>
-                                <input readOnly={true} checked={isSetRegularKeyFilterOn} type="checkbox" className="filter-input" />
+                                <input readOnly={true} checked={isSetRegularKeyFilterOn} type="checkbox" className="filter-input filter-input-set-regular-key" />
                                 <span className="filter-text">SetRegularKey</span>
                             </span>
                         </div>
