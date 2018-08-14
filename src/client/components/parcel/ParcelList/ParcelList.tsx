@@ -13,6 +13,7 @@ import { PlatformAddress } from "codechain-sdk/lib/key/classes";
 import { Link } from "react-router-dom";
 import { ActionBadge } from "../../util/ActionBadge/ActionBadge";
 import { CommaNumberString } from "../../util/CommaNumberString/CommaNumberString";
+import { BigNumber } from "bignumber.js";
 
 interface Props {
     parcels: ParcelDoc[];
@@ -107,7 +108,7 @@ class ParcelList extends React.Component<Props, State> {
                                             Fee
                                         </Col>
                                         <Col md="9">
-                                            <CommaNumberString text={parcel.fee} />
+                                            <CommaNumberString text={new BigNumber(parcel.fee).div(Math.pow(10, 9)).toString(10)} />CCC
                                         </Col>
                                     </Row>
                                     <hr />

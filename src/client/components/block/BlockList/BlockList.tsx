@@ -10,6 +10,8 @@ import HexString from "../../util/HexString/HexString";
 import { BlockDoc } from "../../../../db/DocType";
 import { Link } from "react-router-dom";
 import { PlatformAddress } from "codechain-sdk/lib/key/classes";
+import { CommaNumberString } from "../../util/CommaNumberString/CommaNumberString";
+import { BigNumber } from "bignumber.js";
 
 interface Props {
     blocks: BlockDoc[];
@@ -88,10 +90,10 @@ class BlockList extends React.Component<Props, State> {
                                         <Row>
                                             <Col md="2">
                                                 Reward
-                                        </Col>
+                                            </Col>
                                             <Col md="10">
-                                                3000 CCC
-                                        </Col>
+                                                <CommaNumberString text={_.reduce(block.parcels, (memo, parcel) => new BigNumber(parcel.fee).plus(memo), new BigNumber(0)).div(Math.pow(10, 9)).plus(50).toString(10)} />CCC
+                                            </Col>
                                         </Row>
                                     </div>
                                 </div>

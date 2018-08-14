@@ -29,7 +29,7 @@ const AccountDetails = (prop: OwnProps) => {
                             Balance
                         </Col>
                         <Col md="9">
-                            <CommaNumberString text={account.balance.value.toString()} />
+                            <CommaNumberString text={account.balance.value.div(Math.pow(10, 9)).toString(10)} />CCC
                         </Col>
                     </Row>
                     <hr />
