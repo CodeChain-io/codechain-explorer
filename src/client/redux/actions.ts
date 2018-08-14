@@ -26,6 +26,7 @@ interface AppReducer {
     transactionsByAssetType: {
         [assetType: string]: TransactionDoc[];
     };
+    moveToSectionRef?: string;
 }
 
 const initialState: AppReducer = {
@@ -35,7 +36,8 @@ const initialState: AppReducer = {
     parcelByHash: {},
     assetSchemeByAssetType: {},
     transactionByHash: {},
-    transactionsByAssetType: {}
+    transactionsByAssetType: {},
+    moveToSectionRef: undefined
 };
 
 interface BestBlockNumberAction {
@@ -74,8 +76,13 @@ interface CacheAssetTransactionsAction {
     };
 }
 
+interface MoveToSectionAction {
+    type: "MOVE_TO_SECTION";
+    data: string;
+}
 
-type Action = BestBlockNumberAction | CacheAssetSchemeAction | CacheBlockAction | CacheParcelAction | CacheTransactionAction | CacheAssetTransactionsAction;
+
+type Action = BestBlockNumberAction | CacheAssetSchemeAction | CacheBlockAction | CacheParcelAction | CacheTransactionAction | CacheAssetTransactionsAction | MoveToSectionAction;
 
 const appReducer = (state = initialState, action: Action) => {
     if (action.type === "BEST_BLOCK_NUMBER_ACTION") {
@@ -101,6 +108,8 @@ const appReducer = (state = initialState, action: Action) => {
         const { assetType, transactions } = (action as CacheAssetTransactionsAction).data;
         const transactionsByAssetType = { ...state.transactionsByAssetType, [assetType]: transactions };
         return { ...state, transactionsByAssetType };
+    } else if (action.type === "MOVE_TO_SECTION") {
+        return { ...state, moveToSectionRef: action.data }
     } else {
         return state;
     }

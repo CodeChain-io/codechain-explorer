@@ -120,10 +120,10 @@ class Parcels extends React.Component<Props, State> {
                             <div className="d-inline ml-auto pager">
                                 <ul className="list-inline">
                                     <li className="list-inline-item">
-                                        <button className={`btn btn-primary page-btn ${currentPage === 1 ? "disabled" : ""}`} type="button" onClick={_.partial(this.moveFirst, currentPage)}><FontAwesomeIcon icon={faAngleDoubleLeft} /></button>
+                                        <button disabled={currentPage === 1} className={`btn btn-primary page-btn ${currentPage === 1 ? "disabled" : ""}`} type="button" onClick={_.partial(this.moveFirst, currentPage)}><FontAwesomeIcon icon={faAngleDoubleLeft} /></button>
                                     </li>
                                     <li className="list-inline-item">
-                                        <button className={`btn btn-primary page-btn ${currentPage === 1 ? "disabled" : ""}`} type="button" onClick={_.partial(this.moveBefore, currentPage)}><FontAwesomeIcon icon={faAngleLeft} /> Prev</button>
+                                        <button disabled={currentPage === 1} className={`btn btn-primary page-btn ${currentPage === 1 ? "disabled" : ""}`} type="button" onClick={_.partial(this.moveBefore, currentPage)}><FontAwesomeIcon icon={faAngleLeft} /> Prev</button>
                                     </li>
                                     <li className="list-inline-item">
                                         <div className="number-view">
@@ -131,10 +131,10 @@ class Parcels extends React.Component<Props, State> {
                                         </div>
                                     </li>
                                     <li className="list-inline-item">
-                                        <button className={`btn btn-primary page-btn ${currentPage === maxPage ? "disabled" : ""}`} type="button" onClick={_.partial(this.moveNext, currentPage, maxPage)}>Next <FontAwesomeIcon icon={faAngleRight} /></button>
+                                        <button disabled={currentPage === maxPage} className={`btn btn-primary page-btn ${currentPage === maxPage ? "disabled" : ""}`} type="button" onClick={_.partial(this.moveNext, currentPage, maxPage)}>Next <FontAwesomeIcon icon={faAngleRight} /></button>
                                     </li>
                                     <li className="list-inline-item">
-                                        <button className={`btn btn-primary page-btn ${currentPage === maxPage ? "disabled" : ""}`} type="button" onClick={_.partial(this.moveLast, currentPage, maxPage)}><FontAwesomeIcon icon={faAngleDoubleRight} /></button>
+                                        <button disabled={currentPage === maxPage} className={`btn btn-primary page-btn ${currentPage === maxPage ? "disabled" : ""}`} type="button" onClick={_.partial(this.moveLast, currentPage, maxPage)}><FontAwesomeIcon icon={faAngleDoubleRight} /></button>
                                     </li>
                                 </ul>
                             </div>

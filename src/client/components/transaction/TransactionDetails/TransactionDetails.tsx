@@ -1,7 +1,9 @@
 import * as React from "react";
 import * as _ from "lodash";
 
+import { connect, Dispatch } from "react-redux";
 import { Col, Row } from "reactstrap";
+import { RootState } from "../../../redux/actions";
 
 import "./TransactionDetails.scss"
 import HexString from "../../util/HexString/HexString";
@@ -17,6 +19,8 @@ import { StatusBadge } from "../../util/StatusBadge/StatusBadge";
 interface Props {
     transaction: TransactionDoc;
     status: string;
+    moveToSectionRef?: string;
+    dispatch: Dispatch;
 }
 
 interface State {
@@ -25,8 +29,9 @@ interface State {
     pageForBurn: number;
 }
 
-class TransactionDetails extends React.Component<Props, State> {
+class TransactionDetailsInternal extends React.Component<Props, State> {
     private itemsPerPage = 3;
+    private refList: any = {};
     constructor(props: Props) {
         super(props);
         this.state = {
@@ -34,6 +39,12 @@ class TransactionDetails extends React.Component<Props, State> {
             pageForOutput: 1,
             pageForBurn: 1,
         };
+    }
+
+    public componentDidUpdate() {
+        if (this.props.moveToSectionRef) {
+            this.scrollToRef();
+        }
     }
 
     public render() {
@@ -139,12 +150,10 @@ class TransactionDetails extends React.Component<Props, State> {
                         {
                             _.map(transactionDoc.data.inputs.slice(0, this.itemsPerPage * pageForInput), (input, index) => {
                                 return ([
-                                    <Row key={`transaction-header-table-input-title-${index}`} className="mt-large">
-                                        <Col lg="12">
-                                            <h3>Input #{index}</h3>
-                                            <hr className="heading-hr" />
-                                        </Col>
-                                    </Row>,
+                                    <div key={`transaction-header-table-input-title-${index}`} className="mt-large" ref={(re: any) => { this.refList[`input-${index}`] = re; }}>
+                                        <h3>Input #{index}</h3>
+                                        <hr className="heading-hr" />
+                                    </div>,
                                     <Row key={`transaction-header-table-input-detail-${index}`}>
                                         <Col lg="12">
                                             <div className="data-set">
@@ -240,12 +249,10 @@ class TransactionDetails extends React.Component<Props, State> {
                         {
                             _.map(transactionDoc.data.burns.slice(0, this.itemsPerPage * pageForBurn), (burn, index) => {
                                 return ([
-                                    <Row key={`transaction-header-table-burn-title-${index}`} className="mt-large">
-                                        <Col lg="12">
-                                            <h3>Burn #{index}</h3>
-                                            <hr className="heading-hr" />
-                                        </Col>
-                                    </Row>,
+                                    <div key={`transaction-header-table-burn-title-${index}`} className="mt-large" ref={(re: any) => { this.refList[`burn-${index}`] = re; }}>
+                                        <h3>Burn #{index}</h3>
+                                        <hr className="heading-hr" />
+                                    </div>,
                                     <Row key={`transaction-header-table-burn-detail-${index}`}>
                                         <Col lg="12">
                                             <div className="data-set">
@@ -341,12 +348,10 @@ class TransactionDetails extends React.Component<Props, State> {
                         {
                             _.map(transactionDoc.data.outputs.slice(0, this.itemsPerPage * pageForOutput), (output, index) => {
                                 return ([
-                                    <Row key={`transaction-header-table-output-title-${index}`} className="mt-large">
-                                        <Col lg="12">
-                                            <h3>Output #{index}</h3>
-                                            <hr className="heading-hr" />
-                                        </Col>
-                                    </Row>,
+                                    <div key={`transaction-header-table-output-title-${index}`} className="mt-large" ref={(re: any) => { this.refList[`output-${index}`] = re; }}>
+                                        <h3>Output #{index}</h3>
+                                        <hr className="heading-hr" />
+                                    </div>,
                                     <Row key={`transaction-header-table-output-details-${index}`}>
                                         <Col lg="12">
                                             <div className="data-set">
@@ -596,6 +601,24 @@ class TransactionDetails extends React.Component<Props, State> {
         return null;
     }
 
+    private scrollToRef = () => {
+        const ref = this.props.moveToSectionRef;
+        if (ref) {
+            const domNode = this.refList[ref];
+            if (domNode) {
+                if (window.innerWidth <= 991) {
+                    window.scrollTo(0, domNode.offsetTop - 120);
+                } else {
+                    window.scrollTo(0, domNode.offsetTop - 70);
+                }
+            }
+        }
+        this.props.dispatch({
+            type: "MOVE_TO_SECTION",
+            data: undefined
+        });
+    }
+
     private loadMoreInput = () => {
         this.setState({ pageForInput: this.state.pageForInput + 1 });
     }
@@ -608,5 +631,12 @@ class TransactionDetails extends React.Component<Props, State> {
         this.setState({ pageForOutput: this.state.pageForOutput + 1 });
     }
 };
+
+const TransactionDetails = connect((state: RootState) => {
+    const { moveToSectionRef } = state.appReducer;
+    return {
+        moveToSectionRef
+    }
+})(TransactionDetailsInternal);
 
 export default TransactionDetails;

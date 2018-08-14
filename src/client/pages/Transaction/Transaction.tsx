@@ -8,7 +8,7 @@ import { RequestTransaction } from "../../request";
 import TransactionDetails from "../../components/transaction/TransactionDetails/TransactionDetails";
 
 import "./Transaction.scss";
-// import TransactionSummary from "../../components/transaction/TransactionSummary/TransactionSummary";
+import TransactionSummary from "../../components/transaction/TransactionSummary/TransactionSummary";
 import { TransactionDoc } from "../../../db/DocType";
 import RequestPendingTransaction from "../../request/RequestPendingTransaction";
 import { PendingTransactionDoc } from "../../../db/DocType";
@@ -84,6 +84,9 @@ class Transaction extends React.Component<Props, State> {
                         <CopyButton className="d-inline-block" copyString={`0x${transactionResult.transaction.data.hash}`} />
                     </Col>
                 </Row>
+                <div className="mt-large">
+                    <TransactionSummary transaction={transactionResult.transaction} />
+                </div>
                 <div className="mt-large">
                     <TransactionDetails transaction={transactionResult.transaction} status={transactionResult.status} />
                 </div>
