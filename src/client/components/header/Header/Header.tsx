@@ -98,14 +98,14 @@ class Header extends React.Component<{}, State> {
                         </Nav>
                         <Nav>
                             <NavItem className="search-for-large-screen">
-                                <Search />
+                                <Search idString="large" />
                             </NavItem>
                         </Nav>
                     </Collapse>
                 </Container>
             </Navbar>
             <Container className="searchbar-container search-for-small-screen">
-                <Search className="ml-auto" />
+                <Search className="ml-auto" idString="small" />
             </Container>
             <LoadingBar className="loading-bar" />
         </div>

@@ -74,7 +74,7 @@ class Block extends React.Component<Props, State> {
                         <CopyButton className="d-inline-block" copyString={`0x${block.hash}`} />
                     </Col>
                     <Col md="3" xl="2" className="d-flex align-items-center justify-content-between offset-md-1 offset-xl-3 mt-2 mt-md-0">
-                        <Link to={block.number !== 0 ? `/block/${block.number - 1}` : "#"}><button type="button" className={`btn btn-primary ${block.number === 0 ? "disabled" : ""}`}>&lt; Prev</button></Link>
+                        <Link to={block.number !== 0 ? `/block/${block.number - 1}` : "#"}><button type="button" disabled={block.number === 0} className={`btn btn-primary ${block.number === 0 ? "disabled" : ""}`}>&lt; Prev</button></Link>
                         <Link to={`/block/${block.number + 1}`}><button type="button" className="btn btn-primary">Next &gt;</button></Link>
                     </Col>
                 </Row>

@@ -61,7 +61,7 @@ class BlockList extends React.Component<Props, State> {
                                     <div className="card-list-item-header">
                                         <Row>
                                             <Col md="3">
-                                                <Link to={`/block/${block.number}`}><span className="title">#{block.number}</span></Link>
+                                                <Link to={`/block/${block.number}`}><span className="title">Block #{block.number}</span></Link>
                                             </Col>
                                             <Col md="9">
                                                 <span className="timestamp float-right">{moment.unix(block.timestamp).format("YYYY-MM-DD HH:mm:ssZ")}</span>

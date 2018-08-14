@@ -64,7 +64,7 @@ class ParcelList extends React.Component<Props, State> {
                                 <div className="card-list-item-header">
                                     <Row>
                                         <Col md="3">
-                                            <span className="title">#{i}</span>
+                                            <span className="title">Parcel #{i}</span>
                                         </Col>
                                         <Col md="9">
                                             <span className="timestamp float-right">{moment.unix(parcel.timestamp).format("YYYY-MM-DD HH:mm:ssZ")}</span>

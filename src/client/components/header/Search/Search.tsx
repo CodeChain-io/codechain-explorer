@@ -1,8 +1,8 @@
 import * as React from "react";
 import * as _ from "lodash";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faExclamationTriangle, faSearch } from '@fortawesome/free-solid-svg-icons'
-import { Form, FormGroup, Button } from "reactstrap";
+import { faSearch } from '@fortawesome/free-solid-svg-icons'
+import { Form, FormGroup, Button, Popover, PopoverBody } from "reactstrap";
 import LoadingBar from "react-redux-loading-bar";
 import { Redirect } from "react-router";
 import * as Autosuggest from "react-autosuggest";
@@ -20,10 +20,12 @@ interface State {
     requestCount: number;
     suggestions: AssetBundleDoc[];
     searchStatusForSuggest: string;
+    popoverOpen: boolean;
 }
 
 interface Props {
     className?: string
+    idString: string
 }
 
 class Search extends React.Component<Props, State> {
@@ -35,7 +37,8 @@ class Search extends React.Component<Props, State> {
             inputValue: "",
             requestCount: 0,
             suggestions: [],
-            searchStatusForSuggest: "wait"
+            searchStatusForSuggest: "wait",
+            popoverOpen: false
         };
         this.debouncedLoadSuggestions = _.debounce(this.fetchAssetBundles, 500);
     }
@@ -46,12 +49,13 @@ class Search extends React.Component<Props, State> {
             inputValue: "",
             redirectTo: undefined,
             requestCount: 0,
-            searchStatusForSuggest: "wait"
+            searchStatusForSuggest: "wait",
+            popoverOpen: false
         });
     }
 
     public render() {
-        const { inputValue, status, redirectTo, requestCount, suggestions, searchStatusForSuggest } = this.state;
+        const { inputValue, status, redirectTo, requestCount, suggestions, searchStatusForSuggest, popoverOpen } = this.state;
         const inputProps = {
             placeholder: "Block / Parcel / Tx / Asset / Address",
             value: inputValue,
@@ -59,11 +63,7 @@ class Search extends React.Component<Props, State> {
         };
         return <Form inline={true} onSubmit={this.handleSumbit} className={`search-form d-flex ${this.props.className}`}>
             <FormGroup className="mb-0 search-form-group d-flex">
-                {
-                    status === "notFound" ?
-                        <FontAwesomeIcon icon={faExclamationTriangle} className="not-found text-danger" /> : null
-                }
-                <div className="search-input d-inline-block">
+                <div className="search-input d-inline-block" id={`suggest-input-container-${this.props.idString}`}>
                     <Autosuggest
                         suggestions={suggestions}
                         onSuggestionsFetchRequested={this.onSuggestionsFetchRequested}
@@ -98,7 +98,16 @@ class Search extends React.Component<Props, State> {
                     <RequestAssetBundlesByName assetName={inputValue} onAssetBundles={this.onAssetBundles} onError={this.onSearchError} />
                     : null
             }
+            <Popover placement="bottom" className="search-error-pop" isOpen={popoverOpen} target={`suggest-input-container-${this.props.idString}`} toggle={this.togglePopover}>
+                <PopoverBody>There are no search results.</PopoverBody>
+            </Popover>
         </Form>
+    }
+
+    private togglePopover = () => {
+        this.setState({
+            popoverOpen: !this.state.popoverOpen
+        });
     }
 
     private onSearchError = (e: any) => {
@@ -171,16 +180,13 @@ class Search extends React.Component<Props, State> {
     private handleNotFoundOrError = () => {
         const requestCount = this.state.requestCount - 1;
         if (requestCount === 0) {
-            this.setState({ requestCount, status: "notFound" });
+            this.setState({ requestCount, popoverOpen: true, status: "wait" });
         } else {
             this.setState({ requestCount });
         }
     }
 
     private updateInputValue = (e: any, value: any) => {
-        if (value.newValue === "") {
-            this.setState({ status: "wait" });
-        }
         this.setState({
             inputValue: value.newValue
         });
@@ -225,6 +231,9 @@ class Search extends React.Component<Props, State> {
             return;
         }
         const inputValue = this.state.inputValue.trim();
+        if (inputValue === "") {
+            return;
+        }
         this.setState({ status: "search", requestCount: 8, inputValue });
     }
 }

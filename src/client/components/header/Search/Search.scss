@@ -102,3 +102,10 @@
     }
   }
 }
+
+.search-error-pop {
+  z-index: 10001;
+  .popover-body {
+    color: red !important;
+  }
+}
