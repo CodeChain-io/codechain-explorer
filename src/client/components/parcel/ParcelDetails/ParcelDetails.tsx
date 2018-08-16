@@ -6,11 +6,10 @@ import "./ParcelDetails.scss"
 import HexString from "../../util/HexString/HexString";
 import { ParcelDoc, Type, PaymentDoc, SetRegularKeyDoc, ChangeShardStateDoc } from "../../../../db/DocType";
 import { Link } from "react-router-dom";
-import { PlatformAddress } from "codechain-sdk/lib/key/classes";
 import { ActionBadge } from "../../util/ActionBadge/ActionBadge";
 import { StatusBadge } from "../../util/StatusBadge/StatusBadge";
 import { CommaNumberString } from "../../util/CommaNumberString/CommaNumberString";
-import { BigNumber } from "bignumber.js";
+import { changeQuarkStringToCCC } from "../../../utils/Formatter";
 
 interface Props {
     parcel: ParcelDoc;
@@ -25,7 +24,7 @@ const getElementByType = (parcel: ParcelDoc) => {
                     Sender
                 </Col>
                 <Col md="9">
-                    <Link to={`/addr-platform/${PlatformAddress.fromAccountId(parcel.sender).value}`}>{PlatformAddress.fromAccountId(parcel.sender).value}</Link>
+                    <Link to={`/addr-platform/${parcel.sender}`}>{parcel.sender}</Link>
                 </Col>
             </Row>,
             <hr key="line1" />,
@@ -34,7 +33,7 @@ const getElementByType = (parcel: ParcelDoc) => {
                     Receiver
                 </Col>
                 <Col md="9">
-                    <Link to={`/addr-platform/${PlatformAddress.fromAccountId((parcel.action as PaymentDoc).receiver).value}`}>{PlatformAddress.fromAccountId((parcel.action as PaymentDoc).receiver).value}</Link>
+                    <Link to={`/addr-platform/${(parcel.action as PaymentDoc).receiver}`}>{(parcel.action as PaymentDoc).receiver}</Link>
                 </Col>
             </Row>,
             <hr key="line2" />,
@@ -43,7 +42,7 @@ const getElementByType = (parcel: ParcelDoc) => {
                     Amount
                 </Col>
                 <Col md="9">
-                    <CommaNumberString text={(parcel.action as PaymentDoc).amount} />
+                    <CommaNumberString text={changeQuarkStringToCCC((parcel.action as PaymentDoc).amount)} />CCC
                 </Col>
             </Row>,
             <hr key="line3" />
@@ -145,7 +144,7 @@ const ParcelDetails = (props: Props) => {
                             Signer
                         </Col>
                         <Col md="9">
-                            <Link to={`/addr-platform/${PlatformAddress.fromAccountId(parcel.sender).value}`}>{PlatformAddress.fromAccountId(parcel.sender).value}</Link>
+                            <Link to={`/addr-platform/${parcel.sender}`}>{parcel.sender}</Link>
                         </Col>
                     </Row>
                     <hr />
@@ -154,7 +153,7 @@ const ParcelDetails = (props: Props) => {
                             Fee
                         </Col>
                         <Col md="9">
-                            <CommaNumberString text={new BigNumber(parcel.fee).div(Math.pow(10, 9)).toString(10)} />CCC
+                            <CommaNumberString text={changeQuarkStringToCCC(parcel.fee)} />CCC
                         </Col>
                     </Row>
                     <hr />

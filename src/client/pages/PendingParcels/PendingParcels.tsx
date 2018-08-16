@@ -13,7 +13,6 @@ import { PendingParcelDoc, Type, ChangeShardStateDoc } from "../../../db/DocType
 import { ActionBadge } from "../../components/util/ActionBadge/ActionBadge";
 import HexString from "../../components/util/HexString/HexString";
 import { Link } from "react-router-dom";
-import { PlatformAddress } from "codechain-sdk/lib/key/classes";
 
 interface State {
     pendingParcels: PendingParcelDoc[];
@@ -154,7 +153,7 @@ class PendingParcels extends React.Component<Props, State> {
                                             return (
                                                 <tr key={`pending-parcel-${pendingParcel.parcel.hash}`}>
                                                     <td><ActionBadge parcel={pendingParcel.parcel} simple={true} /><HexString text={pendingParcel.parcel.hash} link={`/parcel/0x${pendingParcel.parcel.hash}`} /></td>
-                                                    <td><span onClick={_.partial(this.toogleFilter, pendingParcel.parcel.sender)}><FontAwesomeIcon className={`filter ${isSenderFilterOn ? "" : "disable"}`} icon={faFilter} /></span><Link to={`/addr-platform/${PlatformAddress.fromAccountId(pendingParcel.parcel.sender).value}`}>{PlatformAddress.fromAccountId(pendingParcel.parcel.sender).value}</Link></td>
+                                                    <td><span onClick={_.partial(this.toogleFilter, pendingParcel.parcel.sender)}><FontAwesomeIcon className={`filter ${isSenderFilterOn ? "" : "disable"}`} icon={faFilter} /></span><Link to={`/addr-platform/${pendingParcel.parcel.sender}`}>{pendingParcel.parcel.sender}</Link></td>
                                                     <td>{pendingParcel.parcel.fee.toLocaleString()}</td>
                                                     <td>{Type.isChangeShardStateDoc(pendingParcel.parcel.action) ? (pendingParcel.parcel.action as ChangeShardStateDoc).transactions.length.toLocaleString() : 0}</td>
                                                     <td>{moment.unix(pendingParcel.timestamp).fromNow()}</td>

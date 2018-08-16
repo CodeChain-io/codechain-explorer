@@ -1,6 +1,7 @@
 import { Block, Transaction, SignedParcel, Action, ChangeShardState, SetRegularKey, CreateShard, Payment, AssetTransferTransaction, AssetMintTransaction, AssetTransferInput, AssetTransferOutput, H256 } from "codechain-sdk/lib/core/classes";
 import * as _ from "lodash";
 import { ElasticSearchAgent } from "./ElasticSearchAgent";
+import { AssetTransferAddress } from "codechain-sdk/lib/key/classes";
 
 export interface BlockDoc {
     parentHash: string;
@@ -214,7 +215,7 @@ const fromAssetTransferOutput = async (currentTransactions: Transaction[], asset
     const assetScheme = await getAssetScheme(currentTransactions, assetTransferOutputJson.assetType, elasticSearchAgent)
     return {
         lockScriptHash: assetTransferOutputJson.lockScriptHash,
-        owner: assetTransferOutputJson.lockScriptHash === "f42a65ea518ba236c08b261c34af0521fa3cd1aa505e1c18980919cb8945f8f3" ? Buffer.from(assetTransferOutputJson.parameters[0]).toString("hex") : "",
+        owner: assetTransferOutputJson.lockScriptHash === "f42a65ea518ba236c08b261c34af0521fa3cd1aa505e1c18980919cb8945f8f3" ? AssetTransferAddress.fromPublicKeyHash(new H256(Buffer.from(assetTransferOutputJson.parameters[0]).toString("hex"))).value : "",
         parameters: _.map(assetTransferOutputJson.parameters, p => Buffer.from(p)),
         assetType: assetTransferOutputJson.assetType,
         assetScheme,
@@ -234,7 +235,7 @@ const fromTransaction = async (currentTransactions: Transaction[], transaction: 
                     parameters: _.map(transactionJson.data.output.parameters, p => Buffer.from(p)),
                     amount: transactionJson.data.output.amount,
                     assetType: transaction.getAssetSchemeAddress().value,
-                    owner: transactionJson.data.output.lockScriptHash === "f42a65ea518ba236c08b261c34af0521fa3cd1aa505e1c18980919cb8945f8f3" ? Buffer.from(transactionJson.data.output.parameters[0]).toString("hex") : ""
+                    owner: transactionJson.data.output.lockScriptHash === "f42a65ea518ba236c08b261c34af0521fa3cd1aa505e1c18980919cb8945f8f3" ? AssetTransferAddress.fromPublicKeyHash(new H256(Buffer.from(transactionJson.data.output.parameters[0]).toString("hex"))).value : ""
                 },
                 networkId: transactionJson.data.networkId,
                 metadata: transactionJson.data.metadata,
@@ -318,7 +319,7 @@ const fromParcel = async (currentParcels: SignedParcel[], parcel: SignedParcel, 
         nonce: parcelJson.nonce,
         fee: parcelJson.fee,
         networkId: parcelJson.networkId,
-        sender: parcel.getSignerAccountId().value,
+        sender: parcel.getSignerAddress().value,
         sig: parcelJson.sig,
         hash: parcelJson.hash,
         action,

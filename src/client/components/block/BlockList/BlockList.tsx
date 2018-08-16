@@ -9,7 +9,6 @@ import "./BlockList.scss";
 import HexString from "../../util/HexString/HexString";
 import { BlockDoc } from "../../../../db/DocType";
 import { Link } from "react-router-dom";
-import { PlatformAddress } from "codechain-sdk/lib/key/classes";
 import { CommaNumberString } from "../../util/CommaNumberString/CommaNumberString";
 import { BigNumber } from "bignumber.js";
 
@@ -83,7 +82,7 @@ class BlockList extends React.Component<Props, State> {
                                                 Author
                                         </Col>
                                             <Col md="10">
-                                                {PlatformAddress.fromAccountId(block.author).value}
+                                                {block.author}
                                             </Col>
                                         </Row>
                                         <hr />

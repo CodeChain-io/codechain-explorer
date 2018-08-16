@@ -10,7 +10,6 @@ import HexString from "../../util/HexString/HexString";
 import * as arrow from "./img/arrow.png";
 import { TransactionDoc, Type, AssetMintTransactionDoc, AssetTransferTransactionDoc } from "../../../../db/DocType";
 import { Link } from "react-router-dom";
-import { PlatformAddress, AssetTransferAddress } from "codechain-sdk/lib/key/classes";
 import { H256 } from "codechain-sdk/lib/core/classes";
 import { TypeBadge } from "../../util/TypeBadge/TypeBadge";
 import { ImageLoader } from "../../util/ImageLoader/ImageLoader";
@@ -144,7 +143,7 @@ class TransactionList extends React.Component<Props, State> {
                         <Col md="9">
                             {
                                 transactionDoc.data.registrar ?
-                                    <Link to={`/addr-platform/${PlatformAddress.fromAccountId(transactionDoc.data.registrar).value}`}>{PlatformAddress.fromAccountId(transactionDoc.data.registrar).value}</Link>
+                                    <Link to={`/addr-platform/${transactionDoc.data.registrar}`}>{transactionDoc.data.registrar}</Link>
                                     : "None"
                             }
                         </Col>
@@ -158,9 +157,9 @@ class TransactionList extends React.Component<Props, State> {
                             {
                                 transactionDoc.data.output.owner ?
                                     (
-                                        owner && owner === AssetTransferAddress.fromPublicKeyHash(new H256(transactionDoc.data.output.owner)).value ?
-                                            AssetTransferAddress.fromPublicKeyHash(new H256(transactionDoc.data.output.owner)).value
-                                            : <Link to={`/addr-asset/${AssetTransferAddress.fromPublicKeyHash(new H256(transactionDoc.data.output.owner)).value}`}>{AssetTransferAddress.fromPublicKeyHash(new H256(transactionDoc.data.output.owner)).value}</Link>
+                                        owner && owner === transactionDoc.data.output.owner ?
+                                            transactionDoc.data.output.owner
+                                            : <Link to={`/addr-asset/${transactionDoc.data.output.owner}`}>{transactionDoc.data.output.owner}</Link>
                                     )
                                     : "Unknown"
                             }
@@ -196,7 +195,7 @@ class TransactionList extends React.Component<Props, State> {
                                 {
                                     _.map(transactionDoc.data.inputs.slice(0, 3), (input, i) => {
                                         return (
-                                            <div key={`input-${i}`} className={`data-set input-output-container ${owner && AssetTransferAddress.fromPublicKeyHash(new H256(input.prevOut.owner)).value === owner ? "input-highlight" : ""}`}>
+                                            <div key={`input-${i}`} className={`data-set input-output-container ${owner && input.prevOut.owner === owner ? "input-highlight" : ""}`}>
                                                 <Row>
                                                     <Col md="0" />
                                                     <Col md="12">
@@ -211,9 +210,9 @@ class TransactionList extends React.Component<Props, State> {
                                                     <Col md="8">{
                                                         input.prevOut.owner ?
                                                             (
-                                                                owner && owner === AssetTransferAddress.fromPublicKeyHash(new H256(input.prevOut.owner)).value ?
-                                                                    AssetTransferAddress.fromPublicKeyHash(new H256(input.prevOut.owner)).value
-                                                                    : <Link to={`/addr-asset/${AssetTransferAddress.fromPublicKeyHash(new H256(input.prevOut.owner)).value}`}>{AssetTransferAddress.fromPublicKeyHash(new H256(input.prevOut.owner)).value}</Link>
+                                                                owner && owner === input.prevOut.owner ?
+                                                                    input.prevOut.owner
+                                                                    : <Link to={`/addr-asset/${input.prevOut.owner}`}>{input.prevOut.owner}</Link>
                                                             )
                                                             : "Unknown"
                                                     }
@@ -251,7 +250,7 @@ class TransactionList extends React.Component<Props, State> {
                                 {
                                     _.map(transactionDoc.data.outputs.slice(0, 3), (output, i) => {
                                         return (
-                                            <div key={`output-${i}`} className={`data-set input-output-container ${owner && AssetTransferAddress.fromPublicKeyHash(new H256(output.owner)).value === owner ? "output-highlight" : ""}`}>
+                                            <div key={`output-${i}`} className={`data-set input-output-container ${owner && output.owner === owner ? "output-highlight" : ""}`}>
                                                 <Row>
                                                     <Col md="0" />
                                                     <Col md="12">
@@ -267,9 +266,9 @@ class TransactionList extends React.Component<Props, State> {
                                                         {
                                                             output.owner ?
                                                                 (
-                                                                    owner && owner === AssetTransferAddress.fromPublicKeyHash(new H256(output.owner)).value ?
-                                                                        AssetTransferAddress.fromPublicKeyHash(new H256(output.owner)).value
-                                                                        : <Link to={`/addr-asset/${AssetTransferAddress.fromPublicKeyHash(new H256(output.owner)).value}`}>{AssetTransferAddress.fromPublicKeyHash(new H256(output.owner)).value}</Link>
+                                                                    owner && owner === output.owner ?
+                                                                        output.owner
+                                                                        : <Link to={`/addr-asset/${output.owner}`}>{output.owner}</Link>
                                                                 )
                                                                 : "Unknown"
                                                         }

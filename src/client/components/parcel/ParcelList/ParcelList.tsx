@@ -9,11 +9,10 @@ import HexString from "../../util/HexString/HexString";
 import { Row, Col } from "reactstrap";
 import * as arrow from "./img/arrow.png";
 import { ParcelDoc, Type, PaymentDoc, ChangeShardStateDoc, SetRegularKeyDoc } from "../../../../db/DocType";
-import { PlatformAddress } from "codechain-sdk/lib/key/classes";
 import { Link } from "react-router-dom";
 import { ActionBadge } from "../../util/ActionBadge/ActionBadge";
 import { CommaNumberString } from "../../util/CommaNumberString/CommaNumberString";
-import { BigNumber } from "bignumber.js";
+import { changeQuarkStringToCCC } from "../../../utils/Formatter";
 
 interface Props {
     parcels: ParcelDoc[];
@@ -96,9 +95,9 @@ class ParcelList extends React.Component<Props, State> {
                                         </Col>
                                         <Col md="9">
                                             {
-                                                address && address === PlatformAddress.fromAccountId(parcel.sender).value ?
-                                                    PlatformAddress.fromAccountId(parcel.sender).value :
-                                                    <Link to={`/addr-platform/${PlatformAddress.fromAccountId(parcel.sender).value}`}>{PlatformAddress.fromAccountId(parcel.sender).value}</Link>
+                                                address && address === parcel.sender ?
+                                                    parcel.sender :
+                                                    <Link to={`/addr-platform/${parcel.sender}`}>{parcel.sender}</Link>
                                             }
                                         </Col>
                                     </Row>
@@ -108,7 +107,7 @@ class ParcelList extends React.Component<Props, State> {
                                             Fee
                                         </Col>
                                         <Col md="9">
-                                            <CommaNumberString text={new BigNumber(parcel.fee).div(Math.pow(10, 9)).toString(10)} />CCC
+                                            <CommaNumberString text={changeQuarkStringToCCC(parcel.fee)} />CCC
                                         </Col>
                                     </Row>
                                     <hr />
@@ -142,7 +141,7 @@ class ParcelList extends React.Component<Props, State> {
                         Amount
                     </Col>
                     <Col md="9">
-                        <CommaNumberString text={(parcel.action as PaymentDoc).amount} />
+                        <CommaNumberString text={changeQuarkStringToCCC((parcel.action as PaymentDoc).amount)} />CCC
                     </Col>
                 </Row>,
                 <Row key="payment-sender-receiver">
@@ -151,9 +150,9 @@ class ParcelList extends React.Component<Props, State> {
                             <Col md="5">
                                 <div className="sender-receiver-container">
                                     {
-                                        address && address === PlatformAddress.fromAccountId(parcel.sender).value ?
-                                            `${PlatformAddress.fromAccountId(parcel.sender).value}`
-                                            : <Link to={`/addr-platform/${PlatformAddress.fromAccountId(parcel.sender).value}`}>{PlatformAddress.fromAccountId(parcel.sender).value}</Link>
+                                        address && address === parcel.sender ?
+                                            parcel.sender
+                                            : <Link to={`/addr-platform/${parcel.sender}`}>{parcel.sender}</Link>
                                     }
                                 </div>
                             </Col>
@@ -163,9 +162,9 @@ class ParcelList extends React.Component<Props, State> {
                             <Col md="5">
                                 <div className="sender-receiver-container">
                                     {
-                                        address && address === PlatformAddress.fromAccountId((parcel.action as PaymentDoc).receiver).value ?
-                                            `${PlatformAddress.fromAccountId((parcel.action as PaymentDoc).receiver).value}`
-                                            : <Link to={`/addr-platform/${PlatformAddress.fromAccountId((parcel.action as PaymentDoc).receiver).value}`}>{PlatformAddress.fromAccountId((parcel.action as PaymentDoc).receiver).value}</Link>
+                                        address && address === (parcel.action as PaymentDoc).receiver ?
+                                            (parcel.action as PaymentDoc).receiver
+                                            : <Link to={`/addr-platform/${(parcel.action as PaymentDoc).receiver}`}>{(parcel.action as PaymentDoc).receiver}</Link>
                                     }
                                 </div>
                             </Col>

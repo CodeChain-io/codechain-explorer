@@ -1,6 +1,6 @@
 import * as _ from "lodash";
 import { ParcelDoc, Converter } from "../DocType";
-import { H256, H160, SignedParcel } from "codechain-sdk/lib/core/classes";
+import { H256, SignedParcel } from "codechain-sdk/lib/core/classes";
 import { BaseAction } from "./BaseAction";
 import { ElasticSearchAgent } from "../ElasticSearchAgent";
 import { Client, SearchResponse, CountResponse } from "elasticsearch";
@@ -58,7 +58,7 @@ export class QueryParcel implements BaseAction {
         return count.count;
     }
 
-    public async getParcelsByAccountId(accountId: H160, page: number = 1, itemsPerPage: number = 3): Promise<ParcelDoc[]> {
+    public async getParcelsByPlatformAddress(address: string, page: number = 1, itemsPerPage: number = 3): Promise<ParcelDoc[]> {
         const response = await this.searchParcel({
             "sort": [
                 {
@@ -77,8 +77,8 @@ export class QueryParcel implements BaseAction {
                         {
                             "bool": {
                                 "should": [
-                                    { "term": { "sender": accountId.value } },
-                                    { "term": { "action.receiver": accountId.value } }
+                                    { "term": { "sender": address } },
+                                    { "term": { "action.receiver": address } }
                                 ]
                             }
                         }
@@ -89,7 +89,7 @@ export class QueryParcel implements BaseAction {
         return _.map(response.hits.hits, hit => hit._source);
     }
 
-    public async getTotalParcelCountByAccountId(accountId: H160): Promise<number> {
+    public async getTotalParcelCountByPlatformAddress(address: string): Promise<number> {
         const count = await this.countParcel({
             "query": {
                 "bool": {
@@ -98,8 +98,8 @@ export class QueryParcel implements BaseAction {
                         {
                             "bool": {
                                 "should": [
-                                    { "term": { "sender": accountId.value } },
-                                    { "term": { "action.receiver": accountId.value } }
+                                    { "term": { "sender": address } },
+                                    { "term": { "action.receiver": address } }
                                 ]
                             }
                         }

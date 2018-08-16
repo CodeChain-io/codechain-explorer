@@ -3,7 +3,6 @@ import * as React from "react";
 import "./AssetDetails.scss"
 import { AssetSchemeDoc, Type } from "../../../../db/DocType";
 import { Row, Col } from "reactstrap";
-import { PlatformAddress } from "codechain-sdk/lib/key/classes";
 import { Link } from "react-router-dom";
 
 interface OwnProps {
@@ -70,7 +69,7 @@ const AssetDetails = (prop: OwnProps) => {
                             Registrar
                         </Col>
                         <Col md="9">
-                            {prop.assetScheme.registrar ? <Link to={`/addr-platform/${PlatformAddress.fromAccountId(prop.assetScheme.registrar).value}`}>{PlatformAddress.fromAccountId(prop.assetScheme.registrar).value}</Link> : "None"}
+                            {prop.assetScheme.registrar ? <Link to={`/addr-platform/${prop.assetScheme.registrar}`}>{prop.assetScheme.registrar}</Link> : "None"}
                         </Col>
                     </Row>
                     <hr />

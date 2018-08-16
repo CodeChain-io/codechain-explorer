@@ -6,7 +6,6 @@ import { Col, Row } from "reactstrap";
 import "./BlockDetails.scss"
 import HexString from "../../util/HexString/HexString";
 import { BlockDoc, Type, ChangeShardStateDoc } from "../../../../db/DocType";
-import { PlatformAddress } from "codechain-sdk/lib/key/classes";
 import { Link } from "react-router-dom";
 import { CommaNumberString } from "../../util/CommaNumberString/CommaNumberString";
 
@@ -69,7 +68,7 @@ class BlockDetails extends React.Component<OwnProps> {
                                     Author
                                 </Col>
                                 <Col md="9">
-                                    <Link to={`/addr-platform/${PlatformAddress.fromAccountId(block.author).value}`}>{PlatformAddress.fromAccountId(block.author).value}</Link>
+                                    <Link to={`/addr-platform/${block.author}`}>{block.author}</Link>
                                 </Col>
                             </Row>
                             <hr />

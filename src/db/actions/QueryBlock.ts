@@ -1,7 +1,7 @@
 import * as _ from "lodash";
 import { BlockDoc, Converter } from "../DocType";
 import { SearchResponse, Client, CountResponse } from "elasticsearch";
-import { H160, H256, Block } from "codechain-sdk/lib/core/classes";
+import { H256, Block } from "codechain-sdk/lib/core/classes";
 import { BaseAction } from "./BaseAction";
 import { ElasticSearchAgent } from "../ElasticSearchAgent";
 
@@ -115,7 +115,7 @@ export class QueryBlock implements BaseAction {
         return count.count;
     }
 
-    public async getBlocksByAccountId(accountId: H160, page: number = 1, itemsPerPage: number = 3): Promise<BlockDoc[]> {
+    public async getBlocksByPlatformAddress(address: string, page: number = 1, itemsPerPage: number = 3): Promise<BlockDoc[]> {
         return this.searchBlock({
             "sort": [
                 {
@@ -127,7 +127,7 @@ export class QueryBlock implements BaseAction {
             "query": {
                 "bool": {
                     "must": [
-                        { "term": { "author": accountId.value } },
+                        { "term": { "author": address } },
                         { "term": { "isRetracted": false } }
                     ]
                 }
@@ -140,12 +140,12 @@ export class QueryBlock implements BaseAction {
         });
     }
 
-    public async getTotalBlockCountByAccountId(accountId: H160): Promise<number> {
+    public async getTotalBlockCountByPlatformAddress(address: string): Promise<number> {
         const count = await this.countBlock({
             "query": {
                 "bool": {
                     "must": [
-                        { "term": { "author": accountId.value } },
+                        { "term": { "author": address } },
                         { "term": { "isRetracted": false } }
                     ]
                 }

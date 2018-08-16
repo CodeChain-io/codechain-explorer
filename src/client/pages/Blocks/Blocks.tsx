@@ -7,7 +7,6 @@ import { Redirect } from "react-router";
 import { Container, Table } from "reactstrap";
 import { BlockDoc } from "../../../db/DocType";
 import { Link } from "react-router-dom";
-import { PlatformAddress } from "codechain-sdk/lib/key/classes";
 import { RequestTotalBlockCount, RequestBlocks } from "../../request";
 import "./Blocks.scss";
 import { CommaNumberString } from "../../components/util/CommaNumberString/CommaNumberString";
@@ -104,7 +103,7 @@ class Blocks extends React.Component<Props, State> {
                                                 <tr key={`block-${block.hash}`}>
                                                     <td scope="row"><Link to={`/block/${block.number}`}>{block.number.toLocaleString()}</Link></td>
                                                     <td>{block.parcels.length.toLocaleString()}</td>
-                                                    <td><Link to={`/addr-platform/${PlatformAddress.fromAccountId(block.author).value}`}>{PlatformAddress.fromAccountId(block.author).value}</Link></td>
+                                                    <td><Link to={`/addr-platform/${block.author}`}>{block.author}</Link></td>
                                                     <td><CommaNumberString text={_.reduce(block.parcels, (memo, parcel) => new BigNumber(parcel.fee).plus(memo), new BigNumber(0)).div(Math.pow(10, 9)).plus(50).toString(10)} />CCC</td>
                                                     <td>{moment.unix(block.timestamp).fromNow()}</td>
                                                 </tr>

@@ -8,16 +8,15 @@ import { TransactionDoc, AssetDoc } from "../../db/DocType";
 function handle(context: ServerContext, router: Router) {
     router.get("/addr-platform-account/:address", async (req, res, next) => {
         const { address } = req.params;
-        let accountId;
         try {
-            accountId = PlatformAddress.fromString(address).getAccountId();
+            PlatformAddress.fromString(address).getAccountId();
         } catch (e) {
             res.send(JSON.stringify(null));
             return;
         }
         try {
-            const balance = await context.codechainSdk.rpc.chain.getBalance(accountId);
-            const nonce = await context.codechainSdk.rpc.chain.getNonce(accountId);
+            const balance = await context.codechainSdk.rpc.chain.getBalance(address);
+            const nonce = await context.codechainSdk.rpc.chain.getNonce(address);
             const account = {
                 balance: balance.value,
                 nonce: nonce.value
@@ -31,9 +30,14 @@ function handle(context: ServerContext, router: Router) {
     router.get("/addr-platform-blocks/:address", async (req, res, next) => {
         const { address } = req.params;
         const { page, itemsPerPage } = req.query;
-        const accountId = PlatformAddress.fromString(address).getAccountId();
         try {
-            const blocks = await context.db.getBlocksByAccountId(accountId, page, itemsPerPage);
+            PlatformAddress.fromString(address).getAccountId();
+        } catch (e) {
+            res.send(JSON.stringify([]));
+            return;
+        }
+        try {
+            const blocks = await context.db.getBlocksByPlatformAddress(address, page, itemsPerPage);
             res.send(blocks);
         } catch (e) {
             next(e);
@@ -42,9 +46,14 @@ function handle(context: ServerContext, router: Router) {
 
     router.get("/addr-platform-blocks/:address/totalCount", async (req, res, next) => {
         const { address } = req.params;
-        const accountId = PlatformAddress.fromString(address).getAccountId();
         try {
-            const count = await context.db.getTotalBlockCountByAccountId(accountId);
+            PlatformAddress.fromString(address).getAccountId();
+        } catch (e) {
+            res.send(JSON.stringify(0));
+            return;
+        }
+        try {
+            const count = await context.db.getTotalBlockCountByPlatformAddress(address);
             res.send(JSON.stringify(count));
         } catch (e) {
             next(e);
@@ -54,9 +63,14 @@ function handle(context: ServerContext, router: Router) {
     router.get("/addr-platform-parcels/:address", async (req, res, next) => {
         const { address } = req.params;
         const { page, itemsPerPage } = req.query;
-        const accountId = PlatformAddress.fromString(address).getAccountId();
         try {
-            const parcels = await context.db.getParcelsByAccountId(accountId, page, itemsPerPage);
+            PlatformAddress.fromString(address).getAccountId();
+        } catch (e) {
+            res.send(JSON.stringify([]));
+            return;
+        }
+        try {
+            const parcels = await context.db.getParcelsByPlatformAddress(address, page, itemsPerPage);
             res.send(parcels);
         } catch (e) {
             next(e);
@@ -65,9 +79,14 @@ function handle(context: ServerContext, router: Router) {
 
     router.get("/addr-platform-parcels/:address/totalCount", async (req, res, next) => {
         const { address } = req.params;
-        const accountId = PlatformAddress.fromString(address).getAccountId();
         try {
-            const count = await context.db.getTotalParcelCountByAccountId(accountId);
+            PlatformAddress.fromString(address).getAccountId();
+        } catch (e) {
+            res.send(JSON.stringify(0));
+            return;
+        }
+        try {
+            const count = await context.db.getTotalParcelCountByPlatformAddress(address);
             res.send(JSON.stringify(count));
         } catch (e) {
             next(e);
@@ -77,9 +96,14 @@ function handle(context: ServerContext, router: Router) {
     router.get("/addr-platform-assets/:address", async (req, res, next) => {
         const { address } = req.params;
         const { page, itemsPerPage } = req.query;
-        const accountId = PlatformAddress.fromString(address).getAccountId();
         try {
-            const assetBundles = await context.db.getAssetBundlesByAccountId(accountId, page, itemsPerPage);
+            PlatformAddress.fromString(address).getAccountId();
+        } catch (e) {
+            res.send(JSON.stringify([]));
+            return;
+        }
+        try {
+            const assetBundles = await context.db.getAssetBundlesByPlatformAddress(address, page, itemsPerPage);
             res.send(assetBundles);
         } catch (e) {
             next(e);
@@ -88,9 +112,14 @@ function handle(context: ServerContext, router: Router) {
 
     router.get("/addr-platform-assets/:address/totalCount", async (req, res, next) => {
         const { address } = req.params;
-        const accountId = PlatformAddress.fromString(address).getAccountId();
         try {
-            const count = await context.db.getTotalAssetBundleCountByAccountId(accountId);
+            PlatformAddress.fromString(address).getAccountId();
+        } catch (e) {
+            res.send(JSON.stringify(0));
+            return;
+        }
+        try {
+            const count = await context.db.getTotalAssetBundleCountByPlatformAddress(address);
             res.send(JSON.stringify(count));
         } catch (e) {
             next(e);
@@ -113,16 +142,15 @@ function handle(context: ServerContext, router: Router) {
                 res.send([]);
                 return;
             }
-            const pubKey = lockscriptHashAndParams.parameters[0].toString("hex");
             let utxoList = [];
             let lastSelectedTransactionHash = lastTransactionHash;
             while (utxoList.length < itemsPerPage) {
                 let assets: AssetDoc[];
                 if (lastSelectedTransactionHash) {
                     const transaction = await context.db.getTransaction(new H256(lastSelectedTransactionHash));
-                    assets = await context.db.getAssetsByPubKey(new H256(pubKey), transaction.data.blockNumber, transaction.data.parcelIndex, transaction.data.transactionIndex, itemsPerPage);
+                    assets = await context.db.getAssetsByAssetTransferAddress(address, transaction.data.blockNumber, transaction.data.parcelIndex, transaction.data.transactionIndex, itemsPerPage);
                 } else {
-                    assets = await context.db.getAssetsByPubKey(new H256(pubKey), Number.MAX_VALUE, Number.MAX_VALUE, Number.MAX_VALUE, itemsPerPage);
+                    assets = await context.db.getAssetsByAssetTransferAddress(address, Number.MAX_VALUE, Number.MAX_VALUE, Number.MAX_VALUE, itemsPerPage);
                 }
                 if (assets.length === 0) {
                     break;
@@ -168,8 +196,7 @@ function handle(context: ServerContext, router: Router) {
                 res.send([]);
                 return;
             }
-            const pubKey = lockscriptHashAndParams.parameters[0].toString("hex");
-            const transactions: TransactionDoc[] = await context.db.getTransactionsByPubKey(new H256(pubKey), page, itemsPerPage);
+            const transactions: TransactionDoc[] = await context.db.getTransactionsByAssetTransferAddress(address, page, itemsPerPage);
             res.send(transactions);
         } catch (e) {
             next(e);
@@ -191,8 +218,7 @@ function handle(context: ServerContext, router: Router) {
                 res.send([]);
                 return;
             }
-            const pubKey = lockscriptHashAndParams.parameters[0].toString("hex");
-            const count = await context.db.getTotalTransactionCountByPubKey(new H256(pubKey));
+            const count = await context.db.getTotalTxCountByAssetTransferAddress(address);
             res.send(JSON.stringify(count));
         } catch (e) {
             next(e);

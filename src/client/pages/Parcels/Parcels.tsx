@@ -12,9 +12,8 @@ import { ParcelDoc } from "../../../db/DocType";
 import { ActionBadge } from "../../components/util/ActionBadge/ActionBadge";
 import HexString from "../../components/util/HexString/HexString";
 import { Link } from "react-router-dom";
-import { PlatformAddress } from "codechain-sdk/lib/key/classes";
 import { CommaNumberString } from "../../components/util/CommaNumberString/CommaNumberString";
-import { BigNumber } from "bignumber.js";
+import { changeQuarkStringToCCC } from "../../utils/Formatter";
 
 interface State {
     parcels: ParcelDoc[];
@@ -107,8 +106,8 @@ class Parcels extends React.Component<Props, State> {
                                                 <tr key={`parcel-${parcel.hash}`}>
                                                     <td><ActionBadge parcel={parcel} /></td>
                                                     <td scope="row"><HexString link={`/parcel/0x${parcel.hash}`} text={parcel.hash} /></td>
-                                                    <td><Link to={`/addr-platform/${PlatformAddress.fromAccountId(parcel.sender).value}`}>{PlatformAddress.fromAccountId(parcel.sender).value}</Link></td>
-                                                    <td><CommaNumberString text={new BigNumber(parcel.fee).div(Math.pow(10, 9)).toString(10)} />CCC</td>
+                                                    <td><Link to={`/addr-platform/${parcel.sender}`}>{parcel.sender}</Link></td>
+                                                    <td><CommaNumberString text={changeQuarkStringToCCC(parcel.fee)} />CCC</td>
                                                     <td>{moment.unix(parcel.timestamp).fromNow()}</td>
                                                 </tr>
                                             );

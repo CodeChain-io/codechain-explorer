@@ -8,10 +8,9 @@ import { RootState } from "../../../redux/actions";
 import "./TransactionDetails.scss"
 import HexString from "../../util/HexString/HexString";
 import { TransactionDoc, Type, AssetTransferTransactionDoc, AssetMintTransactionDoc } from "../../../../db/DocType";
-import { Script, H256 } from "codechain-sdk/lib/core/classes";
+import { Script } from "codechain-sdk/lib/core/classes";
 import { Buffer } from "buffer";
 import { Link } from "react-router-dom";
-import { PlatformAddress, AssetTransferAddress } from "codechain-sdk/lib/key/classes";
 import { ImageLoader } from "../../util/ImageLoader/ImageLoader";
 import { TypeBadge } from "../../util/TypeBadge/TypeBadge";
 import { StatusBadge } from "../../util/StatusBadge/StatusBadge";
@@ -172,7 +171,7 @@ class TransactionDetailsInternal extends React.Component<Props, State> {
                                                         Owner
                                                 </Col>
                                                     <Col md="9">
-                                                        {input.prevOut.owner ? <Link to={`/addr-asset/${AssetTransferAddress.fromPublicKeyHash(new H256(input.prevOut.owner)).value}`}>{AssetTransferAddress.fromPublicKeyHash(new H256(input.prevOut.owner)).value}</Link>
+                                                        {input.prevOut.owner ? <Link to={`/addr-asset/${input.prevOut.owner}`}>{input.prevOut.owner}</Link>
                                                             : "Unknown"}
                                                     </Col>
                                                 </Row>
@@ -271,7 +270,7 @@ class TransactionDetailsInternal extends React.Component<Props, State> {
                                                         Owner
                                                 </Col>
                                                     <Col md="9">
-                                                        {burn.prevOut.owner ? <Link to={`/addr-asset/${AssetTransferAddress.fromPublicKeyHash(new H256(burn.prevOut.owner)).value}`}>{AssetTransferAddress.fromPublicKeyHash(new H256(burn.prevOut.owner)).value}</Link>
+                                                        {burn.prevOut.owner ? <Link to={`/addr-asset/${burn.prevOut.owner}`}>{burn.prevOut.owner}</Link>
                                                             : "Unknown"}
                                                     </Col>
                                                 </Row>
@@ -370,7 +369,7 @@ class TransactionDetailsInternal extends React.Component<Props, State> {
                                                         Owner
                                                 </Col>
                                                     <Col md="9">{
-                                                        output.owner ? <Link to={`/addr-asset/${AssetTransferAddress.fromPublicKeyHash(new H256(output.owner)).value}`}>{AssetTransferAddress.fromPublicKeyHash(new H256(output.owner)).value}</Link> : "Unknown"
+                                                        output.owner ? <Link to={`/addr-asset/${output.owner}`}>{output.owner}</Link> : "Unknown"
                                                     }</Col>
                                                 </Row>
                                                 <hr />
@@ -524,7 +523,7 @@ class TransactionDetailsInternal extends React.Component<Props, State> {
                                     Registrar
                             </Col>
                                 <Col md="9">
-                                    {transactionDoc.data.registrar ? <Link to={`/addr-platform/${PlatformAddress.fromAccountId(transactionDoc.data.registrar).value}`}>{PlatformAddress.fromAccountId(transactionDoc.data.registrar).value}</Link> : "None"}
+                                    {transactionDoc.data.registrar ? <Link to={`/addr-platform/${transactionDoc.data.registrar}`}>{transactionDoc.data.registrar}</Link> : "None"}
                                 </Col>
                             </Row>
                             <hr />
@@ -534,7 +533,7 @@ class TransactionDetailsInternal extends React.Component<Props, State> {
                             </Col>
                                 <Col md="9">
                                     {
-                                        transactionDoc.data.output.owner ? <Link to={`/addr-asset/${AssetTransferAddress.fromPublicKeyHash(new H256(transactionDoc.data.output.owner)).value}`}>{AssetTransferAddress.fromPublicKeyHash(new H256(transactionDoc.data.output.owner)).value}</Link> : "Unknown"
+                                        transactionDoc.data.output.owner ? <Link to={`/addr-asset/${transactionDoc.data.output.owner}`}>{transactionDoc.data.output.owner}</Link> : "Unknown"
                                     }
                                 </Col>
                             </Row>

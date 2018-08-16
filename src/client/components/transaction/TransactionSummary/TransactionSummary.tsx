@@ -10,7 +10,6 @@ import { Col, Row, Popover, PopoverBody } from "reactstrap";
 import "./TransactionSummary.scss"
 import { TransactionDoc, MetadataFormat, Type, AssetTransferTransactionDoc, AssetMintTransactionDoc } from "../../../../db/DocType";
 import { ImageLoader } from "../../util/ImageLoader/ImageLoader";
-import { PlatformAddress } from "codechain-sdk/lib/key/classes";
 import { Link } from "react-router-dom";
 
 interface OwnProps {
@@ -140,7 +139,7 @@ class TransactionSummaryInternal extends React.Component<Props, State> {
                                 <div className="registrar-text">
                                     {
                                         transactionDoc.data.registrar ?
-                                            <Link to={`/addr-platform/${PlatformAddress.fromAccountId(transactionDoc.data.registrar).value}`}>{PlatformAddress.fromAccountId(transactionDoc.data.registrar).value}</Link>
+                                            <Link to={`/addr-platform/${transactionDoc.data.registrar}`}>{transactionDoc.data.registrar}</Link>
                                             : "None"
                                     }
                                 </div>

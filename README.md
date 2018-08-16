@@ -10,7 +10,7 @@ CodeChain explorer is a simple, easy to use, an open-source visualization tool f
 ## Install
 ### Requirements
 The following are the software dependencies required to install and run CodeChain-explorer:
-* [CodeChain](https://github.com/CodeChain-io/codechain) version of commit [`6867f1`](https://github.com/CodeChain-io/codechain/commit/6867f191e00a578d7d035d446bfd9381e4e57313)
+* [CodeChain](https://github.com/CodeChain-io/codechain) version of commit [`f11b14`](https://github.com/CodeChain-io/codechain/commit/f11b14d060361b3ba2d5f09791ed7)
 * Nodejs v10.4.1
 * ElasticSearch v6.2.4
 ### Download

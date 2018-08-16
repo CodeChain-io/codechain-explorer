@@ -7,7 +7,6 @@ import { BigNumber } from "bignumber.js";
 
 import "./LatestBlocks.scss";
 import { BlockDoc } from "../../../../db/DocType";
-import { PlatformAddress } from "codechain-sdk/lib/key/classes";
 import { CommaNumberString } from "../../util/CommaNumberString/CommaNumberString";
 
 interface Props {
@@ -38,7 +37,7 @@ const LatestBlocks = (props: Props) => {
                                 <tr key={`home-block-num-${block.hash}`}>
                                     <td scope="row"><Link to={`/block/${block.number}`}>{block.number.toLocaleString()}</Link></td>
                                     <td>{block.parcels.length.toLocaleString()}</td>
-                                    <td><Link to={`/addr-platform/${PlatformAddress.fromAccountId(block.author).value}`}>{PlatformAddress.fromAccountId(block.author).value}</Link></td>
+                                    <td><Link to={`/addr-platform/${block.author}`}>{block.author}</Link></td>
                                     <td><CommaNumberString text={_.reduce(block.parcels, (memo, parcel) => new BigNumber(parcel.fee).plus(memo), new BigNumber(0)).div(Math.pow(10, 9)).plus(50).toString(10)} />CCC</td>
                                     <td>{moment.unix(block.timestamp).fromNow()}</td>
                                 </tr>
