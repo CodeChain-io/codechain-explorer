@@ -1,8 +1,37 @@
 .summary {
   .chart-container {
     background-color: #F8F8F8;
-    height: 326px;
     width: 100%;
-    line-height: 326px;
+    padding-top: 66.66%;
+    position: relative;
+    .chart {
+      position: absolute;
+      top: 0;
+      left: 0;
+      bottom: 0;
+      right: 0;
+      .header-part {
+        position: relative;
+        height: 70px;
+        .title {
+          position: absolute;
+          top: 20px;
+          left: 20px;
+        }
+        .week {
+          position: absolute;
+          top: 45px;
+          left: 20px;
+        }
+        .select {
+          position: absolute;
+          right: 20px;
+          top: 20px;
+        }
+      }
+      .chart-item {
+        height: calc(100% - 70px);
+      }
+    }
   }
 }

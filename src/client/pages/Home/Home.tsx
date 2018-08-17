@@ -8,6 +8,7 @@ import LatestTransactions from "../../components/home/LatestTransactions/LatestT
 
 import "./Home.scss"
 import { BlockDoc } from "../../../db/DocType";
+import Summary from "../../components/home/Summary/Summary";
 
 interface State {
     bestBlockNumber?: number;
@@ -36,13 +37,9 @@ class Home extends React.Component<{}, State> {
         return (
             <div className="home">
                 <Container>
-                    {
-                        /*
-                            <div className="home-element-container">
-                                <Summary />
-                            </div>
-                        */
-                    }
+                    <div className="home-element-container">
+                        <Summary />
+                    </div>
                     <div className="home-element-container">
                         <LatestBlocks blocksByNumber={blocksByNumber} />
                     </div>
