@@ -39,9 +39,15 @@ export class BlockSyncWorker {
             console.error(error);
             return;
         }
-        this.watchJob = scheduleJob(this.config.cron.blockWatch, () => {
-            if (!this.jobIsRunning) {
-                this.sync();
+        this.watchJob = scheduleJob(this.config.cron.blockWatch, async () => {
+            if (this.jobIsRunning) {
+                return;
+            }
+            try {
+                await this.sync();
+            } catch (error) {
+                this.jobIsRunning = false;
+                console.error(error);
             }
         });
     }
