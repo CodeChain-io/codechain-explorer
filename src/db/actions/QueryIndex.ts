@@ -5,6 +5,7 @@ import { getMappingPendingParcel } from "../mappings/mapping_pending_parcel";
 import { BaseAction } from "./BaseAction";
 import { ElasticSearchAgent } from "../ElasticSearchAgent";
 import { Client } from "elasticsearch";
+import { getMappingLog } from "../mappings/mapping_log";
 
 export class QueryIndex implements BaseAction {
     public agent: ElasticSearchAgent;
@@ -15,6 +16,7 @@ export class QueryIndex implements BaseAction {
         const isMappingParcelExisted = await this.client.indices.exists({ index: "parcel" });
         const isMappingTransactionExisted = await this.client.indices.exists({ index: "transaction" });
         const isMappingPendingParcelExisted = await this.client.indices.exists({ index: "pending_parcel" });
+        const isMappingLogExisted = await this.client.indices.exists({ index: "log" });
         if (!isMappingBlockExisted) {
             await this.client.indices.create({
                 index: "block"
@@ -53,6 +55,16 @@ export class QueryIndex implements BaseAction {
                 index: "pending_parcel",
                 type: "_doc",
                 body: getMappingPendingParcel()
+            });
+        }
+        if (!isMappingLogExisted) {
+            await this.client.indices.create({
+                index: "log"
+            });
+            await this.client.indices.putMapping({
+                index: "log",
+                type: "_doc",
+                body: getMappingLog()
             });
         }
     }

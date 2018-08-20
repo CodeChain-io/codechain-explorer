@@ -26,6 +26,8 @@ import RequestTotalAssetTransactionCount from "./RequestTotalAssetTransactionCou
 import RequestTotalPlatformAssetCount from "./RequestTotalPlatformAssetCount";
 import RequestTotalPlatformBlockCount from "./RequestTotalPlatformBlockCount";
 import RequestTotalPlatformParcelCount from "./RequestTotalPlatformParcelCount";
+import RequestWeeklyLogs from "./RequestWeeklyLogs";
+import RequestDailyLogs from "./RequestDailyLogs";
 
 export { RequestPing };
 export { RequestParcel };
@@ -55,3 +57,5 @@ export { RequestTotalAssetTransactionCount };
 export { RequestTotalPlatformAssetCount };
 export { RequestTotalPlatformBlockCount };
 export { RequestTotalPlatformParcelCount };
+export { RequestWeeklyLogs };
+export { RequestDailyLogs };

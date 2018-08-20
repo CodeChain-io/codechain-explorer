@@ -1,3 +1,4 @@
+@import "../../../mixins.scss";
 .summary {
   .chart-container {
     background-color: #F8F8F8;
@@ -17,6 +18,18 @@
           position: absolute;
           top: 20px;
           left: 20px;
+        }
+        hr {
+          position: absolute;
+          top: 60px;
+          left: 20px;
+          width: calc(100% - 40px);
+        }
+        .subname {
+          position: absolute;
+          top: 80px;
+          left: 20px;
+          @include heading-font;
         }
         .week {
           position: absolute;

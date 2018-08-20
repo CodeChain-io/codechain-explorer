@@ -2,9 +2,11 @@ import { scheduleJob, Job } from "node-schedule";
 import { WorkerConfig } from "./";
 import { CodeChainAgent } from "./CodeChainAgent";
 import { ElasticSearchAgent } from "../db/ElasticSearchAgent";
-import { Block, H256, ChangeShardState } from "codechain-sdk/lib/core/classes";
+import { Block, H256, ChangeShardState, Payment, SetRegularKey, AssetMintTransaction, AssetTransferTransaction } from "codechain-sdk/lib/core/classes";
 import { BlockDoc, Type, ChangeShardStateDoc } from "../db/DocType";
+import * as moment from "moment";
 import * as _ from "lodash";
+import { LogType } from "../db/actions/QueryLog";
 
 export class BlockSyncWorker {
     private watchJob: Job;
@@ -43,18 +45,18 @@ export class BlockSyncWorker {
             if (this.jobIsRunning) {
                 return;
             }
+            this.jobIsRunning = true;
             try {
                 await this.sync();
             } catch (error) {
-                this.jobIsRunning = false;
                 console.error(error);
             }
+            this.jobIsRunning = false;
         });
     }
 
     private async sync() {
         console.log("================ sync start ==================");
-        this.jobIsRunning = true;
         await this.elasticSearchAgent.checkIndexOrCreate();
         let latestSyncBlockNumber: number = await this.elasticSearchAgent.getLastBlockNumber();
         const latestCodechainBlockNumber: number = await this.codeChainAgent.getLastBlockNumber();
@@ -79,7 +81,6 @@ export class BlockSyncWorker {
             latestSyncBlockNumber = nextBlockIndex;
         }
         await this.indexingPendingParcel();
-        this.jobIsRunning = false;
         console.log("================ sync done ===================\n");
     }
 
@@ -136,9 +137,12 @@ export class BlockSyncWorker {
     }
 
     private indexingNewBlock = async (nextBlock: Block) => {
+        // indexing blocks
         await this.elasticSearchAgent.indexBlock(nextBlock);
+        // indexing parcels
         await Promise.all(_.map(nextBlock.parcels, (parcel) => this.elasticSearchAgent.indexParcel(nextBlock.parcels, parcel, nextBlock.timestamp)));
 
+        // indexing transactions
         const indexTransactionJobs = [];
         _.each(nextBlock.parcels, parcel => {
             const action = parcel.unsigned.action;
@@ -149,6 +153,28 @@ export class BlockSyncWorker {
             }
         });
         await Promise.all(indexTransactionJobs);
+
+        // index log
+        const dateString = moment.unix(nextBlock.timestamp).format("YYYY-MM-DD");
+        await this.elasticSearchAgent.increaseLogCount(dateString, LogType.BLOCK_COUNT, 1);
+        await this.elasticSearchAgent.increaseLogCount(dateString, LogType.BLOCK_MINING_COUNT, 1, nextBlock.author.value);
+        const parcelCount = nextBlock.parcels.length;
+        await this.elasticSearchAgent.increaseLogCount(dateString, LogType.PARCEL_COUNT, parcelCount);
+        const paymentParcelCount = _.filter(nextBlock.parcels, p => p.unsigned.action instanceof Payment).length;
+        await this.elasticSearchAgent.increaseLogCount(dateString, LogType.PARCEL_PAYMENT_COUNT, paymentParcelCount);
+        const serRegularKeyParcelCount = _.filter(nextBlock.parcels, p => p.unsigned.action instanceof SetRegularKey).length;
+        await this.elasticSearchAgent.increaseLogCount(dateString, LogType.PARCEL_SET_REGULAR_KEY_COUNT, serRegularKeyParcelCount);
+        const changeShardStateParcelCount = _.filter(nextBlock.parcels, p => p.unsigned.action instanceof ChangeShardState).length;
+        await this.elasticSearchAgent.increaseLogCount(dateString, LogType.PARCEL_CHANGE_SHARD_STATE_COUNT, changeShardStateParcelCount);
+
+        const txs = _.chain(nextBlock.parcels).filter(parcel => parcel.unsigned.action instanceof ChangeShardState)
+            .flatMap(parcel => (parcel.unsigned.action as ChangeShardState).transactions).value();
+
+        await this.elasticSearchAgent.increaseLogCount(dateString, LogType.TX_COUNT, txs.length);
+        const assetMintTxCount = _.filter(txs, tx => tx instanceof AssetMintTransaction).length;
+        await this.elasticSearchAgent.increaseLogCount(dateString, LogType.TX_ASSET_MINT_COUNT, assetMintTxCount);
+        const assetTransferTxCount = _.filter(txs, tx => tx instanceof AssetTransferTransaction).length;
+        await this.elasticSearchAgent.increaseLogCount(dateString, LogType.TX_ASSET_TRANSFER_COUNT, assetTransferTxCount);
     }
 
     private retractBlock = async (lastSynchronizedBlock: BlockDoc) => {
@@ -158,5 +184,26 @@ export class BlockSyncWorker {
         const transactions = _.chain(lastSynchronizedBlock.parcels).filter(parcel => Type.isChangeShardStateDoc(parcel.action))
             .flatMap(parcel => (parcel.action as ChangeShardStateDoc).transactions).value()
         await Promise.all(_.map(transactions, async (transaction) => await this.elasticSearchAgent.retractTransaction(new H256(transaction.data.hash))));
+
+        // retract log
+        const dateString = moment.unix(lastSynchronizedBlock.timestamp).format("YYYY-MM-DD");
+        await this.elasticSearchAgent.decreaseLogCount(dateString, LogType.BLOCK_COUNT, 1);
+        await this.elasticSearchAgent.decreaseLogCount(dateString, LogType.BLOCK_MINING_COUNT, 1, lastSynchronizedBlock.author);
+        const parcelCount = lastSynchronizedBlock.parcels.length;
+        await this.elasticSearchAgent.decreaseLogCount(dateString, LogType.PARCEL_COUNT, parcelCount);
+
+        const paymentParcelCount = _.filter(lastSynchronizedBlock.parcels, p => Type.isPaymentDoc(p.action)).length;
+        await this.elasticSearchAgent.decreaseLogCount(dateString, LogType.PARCEL_PAYMENT_COUNT, paymentParcelCount);
+        const setRegularKeyParcelCount = _.filter(lastSynchronizedBlock.parcels, p => Type.isSetRegularKeyDoc(p.action)).length;
+        await this.elasticSearchAgent.decreaseLogCount(dateString, LogType.PARCEL_SET_REGULAR_KEY_COUNT, setRegularKeyParcelCount);
+        const changeShardStateParcelCount = _.filter(lastSynchronizedBlock.parcels, p => Type.isChangeShardStateDoc(p.action)).length;
+        await this.elasticSearchAgent.decreaseLogCount(dateString, LogType.PARCEL_CHANGE_SHARD_STATE_COUNT, changeShardStateParcelCount);
+        const txs = _.chain(lastSynchronizedBlock.parcels).filter(parcel => Type.isChangeShardStateDoc(parcel.action))
+            .flatMap(parcel => (parcel.action as ChangeShardStateDoc).transactions).value();
+        await this.elasticSearchAgent.decreaseLogCount(dateString, LogType.TX_COUNT, txs.length);
+        const assetMintTxCount = _.filter(txs, tx => Type.isAssetMintTransactionDoc(tx)).length;
+        await this.elasticSearchAgent.decreaseLogCount(dateString, LogType.TX_ASSET_MINT_COUNT, assetMintTxCount);
+        const assetTransferTxCount = _.filter(txs, tx => Type.isAssetTransferTransactionDoc(tx)).length;
+        await this.elasticSearchAgent.decreaseLogCount(dateString, LogType.TX_ASSET_TRANSFER_COUNT, assetTransferTxCount);
     }
 }

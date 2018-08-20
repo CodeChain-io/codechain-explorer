@@ -6,8 +6,9 @@ import { QueryPendingParcel } from "./actions/QueryPendingParcel";
 import { QueryBlock } from "./actions/QueryBlock";
 import { QueryParcel } from "./actions/QueryParcel";
 import { QueryTransaction } from "./actions/QueryTransaction";
+import { QueryLog, LogData, LogType } from "./actions/QueryLog";
 
-export class ElasticSearchAgent implements QueryBlock, QueryParcel, QueryTransaction, QueryPendingParcel, QueryIndex {
+export class ElasticSearchAgent implements QueryBlock, QueryParcel, QueryTransaction, QueryPendingParcel, QueryIndex, QueryLog {
     public client: Client;
     public agent: ElasticSearchAgent;
     public getBlockByHash: (hash: H256) => Promise<BlockDoc | null>;
@@ -62,6 +63,14 @@ export class ElasticSearchAgent implements QueryBlock, QueryParcel, QueryTransac
     public getTotalTxCountByAssetTransferAddress: (address: string) => Promise<number>;
     public getTotalAssetBundleCountByPlatformAddress: (address: string) => Promise<number>;
     public getTotalBlockCountByPlatformAddress: (address: string) => Promise<number>;
+    public increaseLogCount: (date: string, logType: LogType, count: number, value?: string | undefined) => Promise<void>;
+    public decreaseLogCount: (date: string, logType: LogType, count: number, value?: string | undefined) => Promise<void>;
+    public getLogCount: (date: string, logType: LogType) => Promise<number>;
+    public getBestMiners: (date: string) => Promise<LogData[]>;
+    public searchLog: (body: any) => Promise<SearchResponse<any>>;
+    public indexLog: (date: string, logType: LogType, value?: string | undefined) => Promise<any>;
+    public updateLog: (logData: LogData, doc: any) => Promise<void>;
+    public getLog: (date: string, logType: LogType, value?: string | undefined) => Promise<LogData | null>;
 
     constructor(host: string) {
         this.client = new Client({
@@ -77,7 +86,7 @@ export class ElasticSearchAgent implements QueryBlock, QueryParcel, QueryTransac
     }
 }
 
-applyMixins(ElasticSearchAgent, [QueryBlock, QueryParcel, QueryTransaction, QueryPendingParcel, QueryIndex]);
+applyMixins(ElasticSearchAgent, [QueryBlock, QueryParcel, QueryTransaction, QueryPendingParcel, QueryIndex, QueryLog]);
 function applyMixins(derivedCtor: any, baseCtors: any[]) {
     baseCtors.forEach(baseCtor => {
         Object.getOwnPropertyNames(baseCtor.prototype).forEach(name => {

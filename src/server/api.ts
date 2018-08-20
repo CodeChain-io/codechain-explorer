@@ -2,14 +2,13 @@ import * as cors from "cors";
 import * as express from "express";
 import * as _ from "lodash";
 
-import { H256, SignedParcel } from "codechain-sdk/lib/core/classes";
-
 import { ServerContext } from "./ServerContext";
 import { BlockAction } from "./actions/BlockAction";
 import { ParcelAction } from "./actions/ParcelAction";
 import { AddressAction } from "./actions/AddressAction";
 import { TransactionAction } from "./actions/TransactionAction";
 import { AssetAction } from "./actions/AssetAction";
+import { LogAction } from "./actions/LogAction";
 
 const corsOptions = {
     origin: true,
@@ -31,6 +30,7 @@ export function createApiRouter(context: ServerContext, useCors = false) {
     AddressAction.handle(context, router);
     TransactionAction.handle(context, router);
     AssetAction.handle(context, router);
+    LogAction.handle(context, router);
 
     router.get("/ping", async (req, res, next) => {
         try {
