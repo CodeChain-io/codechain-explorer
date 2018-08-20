@@ -14,7 +14,7 @@ export interface ApiError {
 }
 
 export const apiRequest = ({ path, body, dispatch, progressBarTarget, showProgressBar }: ApiRequestData) => {
-    const host = process.env.REACT_APP_SERVER_HOST ? process.env.REACT_APP_SERVER_HOST : "localhost:8081";
+    const host = process.env.REACT_APP_SERVER_HOST ? process.env.REACT_APP_SERVER_HOST : "http://localhost:8081";
     return new Promise((resolve, reject) => {
         if (showProgressBar) {
             dispatch(showLoading(progressBarTarget ? progressBarTarget : undefined));
@@ -27,7 +27,7 @@ export const apiRequest = ({ path, body, dispatch, progressBarTarget, showProgre
             reject(new Error("Request timed out"));
         }, 10000);
 
-        fetch(`http://${host}/api/${path}`, body && {
+        fetch(`${host}/api/${path}`, body && {
             body: JSON.stringify(body),
             headers: { "Content-Type": "application/json" },
             method: "POST",

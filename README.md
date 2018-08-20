@@ -41,7 +41,7 @@ Run CodeChain-worker for indexing data to ElasticSearch
 # yarn run start-worker
 
 // You can change ElasticSearch and CodeChain host URL using an environment variables.
-# CODECHAIN_HOST=127.0.0.1:8080 ELASTICSERACH_HOST=127.0.0.1:9200 yarn run start-worker
+# CODECHAIN_HOST=http://127.0.0.1:8080 ELASTICSERACH_HOST=http://127.0.0.1:9200 yarn run start-worker
 ```
 ### Server
 Run CodeChain-explorer server
@@ -49,7 +49,7 @@ Run CodeChain-explorer server
 # yarn run start-server
 
 // You can change ElasticSearch and CodeChain host URL using an environment variables.
-# CODECHAIN_HOST=127.0.0.1:8080 ELASTICSERACH_HOST=127.0.0.1:9200 yarn run start-server
+# CODECHAIN_HOST=http://127.0.0.1:8080 ELASTICSERACH_HOST=http://127.0.0.1:9200 yarn run start-server
 ```
 ### Client
 Run CodeChain-explorer client in development mode
@@ -57,14 +57,14 @@ Run CodeChain-explorer client in development mode
 # yarn run start-client
 
 // You can change the server host using an environment variable
-# REACT_APP_SERVER_HOST=127.0.0.1:8080 yarn run start-client
+# REACT_APP_SERVER_HOST=http://127.0.0.1:8080 yarn run start-client
 ```
 ### Running worker, server, client at once
 ```
 # yarn run start
 
 // You can chage each host URL with environment variables.
-# CODECHAIN_HOST=127.0.0.1:8080 ELASTICSERACH_HOST=127.0.0.1:9200 REACT_APP_SERVER_HOST=127.0.0.1:8081 yarn run start
+# CODECHAIN_HOST=http://127.0.0.1:8080 ELASTICSERACH_HOST=http://127.0.0.1:9200 REACT_APP_SERVER_HOST=http://127.0.0.1:8081 yarn run start
 ```
 ## Running for production
 ### Build
@@ -74,7 +74,7 @@ Build CodeChain-explorer with following script. You can get optimized, uglified 
 ```
 * You can change the server host using an environment variable
 ```
-# REACT_APP_SERVER_HOST=127.0.0.1:8080 yarn run build
+# REACT_APP_SERVER_HOST=http://127.0.0.1:8080 yarn run build
 ```
 ## Tools
 ### Delete all indices in the elasticsearch
