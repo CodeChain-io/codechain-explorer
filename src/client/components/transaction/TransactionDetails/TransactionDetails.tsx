@@ -91,7 +91,7 @@ class TransactionDetailsInternal extends React.Component<Props, State> {
                                 <Row>
                                     <Col md="3">
                                         Transaction Index
-                                </Col>
+                                    </Col>
                                     <Col md="9">
                                         {transactionDoc.data.transactionIndex.toLocaleString()}
                                     </Col>
@@ -447,6 +447,15 @@ class TransactionDetailsInternal extends React.Component<Props, State> {
                             </Col>
                                 <Col md="9">
                                     <HexString text={transactionDoc.data.parcelHash} link={`/parcel/0x${transactionDoc.data.parcelHash}`} />
+                                </Col>
+                            </Row>
+                            <hr />
+                            <Row>
+                                <Col md="3">
+                                    Transaction Index
+                                </Col>
+                                <Col md="9">
+                                    {transactionDoc.data.transactionIndex.toLocaleString()}
                                 </Col>
                             </Row>
                             <hr />
