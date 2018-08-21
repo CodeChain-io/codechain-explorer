@@ -72,7 +72,11 @@ class Transaction extends React.Component<Props, State> {
                     <Col md="8" xl="7">
                         <div className="d-flex title-container">
                             <h1 className="d-inline-block align-self-center mr-auto">Transaction</h1>
-                            <span className="timestamp align-self-end">{moment.unix(transactionResult.transaction.data.timestamp).format("YYYY-MM-DD HH:mm:ssZ")}</span>
+                            {
+                                transactionResult.status === "confirmed" ?
+                                    <span className="timestamp align-self-end">{moment.unix(transactionResult.transaction.data.timestamp).format("YYYY-MM-DD HH:mm:ssZ")}</span>
+                                    : null
+                            }
                         </div>
                     </Col>
                 </Row>

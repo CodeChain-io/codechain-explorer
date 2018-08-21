@@ -72,7 +72,11 @@ class Parcel extends React.Component<Props, State> {
                 <Col md="8" xl="7">
                     <div className="d-flex title-container">
                         <h1 className="d-inline-block align-self-center mr-auto">Parcel</h1>
-                        <span className="timestamp align-self-end">{moment.unix(parcelResult.parcel.timestamp).format("YYYY-MM-DD HH:mm:ssZ")}</span>
+                        {
+                            parcelResult.status === "confirmed" ?
+                                <span className="timestamp align-self-end">{moment.unix(parcelResult.parcel.timestamp).format("YYYY-MM-DD HH:mm:ssZ")}</span>
+                                : null
+                        }
                     </div>
                 </Col>
             </Row>
