@@ -11,8 +11,8 @@ export class QueryParcel implements BaseAction {
     public async getParcel(hash: H256): Promise<ParcelDoc | null> {
         const response = await this.searchParcel({
             "sort": [
-                { "parcelIndex": { "order": "desc" } },
-                { "blockNumber": { "order": "desc" } }
+                { "blockNumber": { "order": "desc" } },
+                { "parcelIndex": { "order": "desc" } }
             ],
             "size": 1,
             "query": {
@@ -33,8 +33,8 @@ export class QueryParcel implements BaseAction {
     public async getParcels(page: number = 1, itemsPerPage: number = 5): Promise<ParcelDoc[]> {
         const response = await this.searchParcel({
             "sort": [
-                { "parcelIndex": { "order": "desc" } },
-                { "blockNumber": { "order": "desc" } }
+                { "blockNumber": { "order": "desc" } },
+                { "parcelIndex": { "order": "desc" } }
             ],
             "from": (page - 1) * itemsPerPage,
             "size": itemsPerPage,
@@ -61,12 +61,8 @@ export class QueryParcel implements BaseAction {
     public async getParcelsByPlatformAddress(address: string, page: number = 1, itemsPerPage: number = 3): Promise<ParcelDoc[]> {
         const response = await this.searchParcel({
             "sort": [
-                {
-                    "parcelIndex": { "order": "desc" }
-                },
-                {
-                    "blockNumber": { "order": "desc" }
-                }
+                {"blockNumber": { "order": "desc" }},
+                {"parcelIndex": { "order": "desc" }}
             ],
             "from": (page - 1) * itemsPerPage,
             "size": itemsPerPage,
