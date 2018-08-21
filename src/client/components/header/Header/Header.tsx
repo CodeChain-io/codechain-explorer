@@ -5,7 +5,7 @@ import LoadingBar from "react-redux-loading-bar";
 import HealthChecker from "../../util/HealthChecker/HealthChecker";
 import Search from "../Search/Search";
 
-import * as logo from "./img/logo-with-huskey.svg";
+import * as logo from "./img/logo-with-husky.png";
 
 import "./Header.scss";
 
