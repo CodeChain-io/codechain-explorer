@@ -17,13 +17,7 @@
   .output-highlight {
     background-color: #C1EED4;
   }
-  .arrow {
-    margin-top: 45px;
-    @include respond-below(sm) {
-      & {
-        margin-top: 6px;
-        margin-bottom: 0px;
-      }
-    }
+  .arrow-icon {
+    color: #BDBDBD;
   }
 }

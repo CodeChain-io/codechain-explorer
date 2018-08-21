@@ -71,10 +71,10 @@ class TransactionSummaryInternal extends React.Component<Props, State> {
                         </div>
                     </Col>
                     <Col lg="3" className="d-flex align-items-center justify-content-center">
-                        <div className="text-center d-none d-lg-block">
+                        <div className="text-center d-none d-lg-block arrow-icon">
                             <FontAwesomeIcon icon={faChevronCircleRight} size="2x" />
                         </div>
-                        <div className="d-lg-none text-center pt-2 pb-2">
+                        <div className="d-lg-none text-center pt-2 pb-2 arrow-icon">
                             <FontAwesomeIcon icon={faChevronCircleDown} size="2x" />
                         </div>
                     </Col>

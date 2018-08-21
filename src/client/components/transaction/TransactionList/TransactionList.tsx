@@ -4,10 +4,12 @@ import * as moment from "moment";
 
 import { Row, Col } from "reactstrap";
 
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faChevronCircleRight, faChevronCircleDown } from '@fortawesome/free-solid-svg-icons'
+
 import "./TransactionList.scss"
 import HexString from "../../util/HexString/HexString";
 
-import * as arrow from "./img/arrow.png";
 import { TransactionDoc, Type, AssetMintTransactionDoc, AssetTransferTransactionDoc } from "../../../../db/DocType";
 import { Link } from "react-router-dom";
 import { H256 } from "codechain-sdk/lib/core/classes";
@@ -243,8 +245,13 @@ class TransactionList extends React.Component<Props, State> {
                                         : null
                                 }
                             </Col>
-                            <Col md="2" className="text-center">
-                                <img src={arrow} alt="Arrow" className="arrow" />
+                            <Col md="2" className="d-flex align-items-center justify-content-center">
+                                <div className="text-center d-none d-md-block arrow-icon">
+                                    <FontAwesomeIcon icon={faChevronCircleRight} size="2x" />
+                                </div>
+                                <div className="d-md-none text-center pt-2 pb-2 arrow-icon">
+                                    <FontAwesomeIcon icon={faChevronCircleDown} size="2x" />
+                                </div>
                             </Col>
                             <Col md="5">
                                 {

@@ -1,6 +1,9 @@
 @import "../../../variables.scss";
 @import "../../../mixins.scss";
 .transaction-summary {
+  .arrow-icon {
+    color: #BDBDBD;
+  }
   .summary-item {
     border: 1px solid $line-color;
     .title-panel {
