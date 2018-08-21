@@ -34,7 +34,7 @@ const LatestParcels = (props: Props) => {
                 </thead>
                 <tbody>
                     {
-                        _.flatMap(_.reverse(_.values(blocksByNumber)), block => {
+                        _.reverse(_.flatMap(_.values(blocksByNumber), block => {
                             return _.map(block.parcels, (parcel) => {
                                 return (
                                     <tr key={`home-parcel-${parcel.hash}`}>
@@ -46,7 +46,7 @@ const LatestParcels = (props: Props) => {
                                     </tr>
                                 );
                             })
-                        }).slice(0, 10)
+                        })).slice(0, 10)
                     }
                 </tbody>
             </Table>
