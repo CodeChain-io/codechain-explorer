@@ -28,7 +28,7 @@ import ScrollToTop from "./components/util/ScrollToTop/ScrollToTop";
 
 ReactDOM.render(
     <Provider store={store}>
-        <Router>
+        <Router basename={process.env.PUBLIC_URL}>
             <ScrollToTop>
                 <div id="page">
                     <Header />

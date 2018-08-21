@@ -6,7 +6,6 @@
         "type": "git",
         "url": "git+https://github.com/kodebox-io/codechain-explorer.git"
     },
-    "homepage": "http://husky.codechain.io/explorer",
     "author": "CodeChain Team <codechain@kodebox.io>",
     "license": "Apache-2.0",
     "dependencies": {
