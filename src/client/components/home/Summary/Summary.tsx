@@ -105,6 +105,7 @@ class Summary extends React.Component<{}, State> {
                                         dotSize={10}
                                         dotColor="inherit:darker(0.3)"
                                         dotBorderWidth={2}
+                                        enableGridX={false}
                                         dotBorderColor="#ffffff"
                                         enableDotLabel={false}
                                         animate={true}
@@ -139,6 +140,7 @@ class Summary extends React.Component<{}, State> {
                                         colorBy={(e: any) => (e.color)}
                                         borderWidth={1}
                                         borderColor="inherit:darker(0.2)"
+                                        enableSlicesLabels={false}
                                         radialLabelsSkipAngle={10}
                                         radialLabelsTextXOffset={6}
                                         radialLabelsTextColor="#333333"

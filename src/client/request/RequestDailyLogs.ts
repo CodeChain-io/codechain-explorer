@@ -48,7 +48,7 @@ class RequestDailyLogsInternal extends React.Component<Props> {
     }
 
     private getColor = (index: number) => {
-        const colorSet = ["hsl(163, 100%, 50%)", "hsl(235, 100%, 50%)", "hsl(328, 100%, 50%)", "hsl(53, 100%, 50%)", "hsl(114, 100%, 50%)"];
+        const colorSet = ["hsl(237, 49%, 45%)", "hsl(237, 89%, 64%)", "hsl(238, 99%, 74%)", "hsl(238, 100%, 81%)", "hsl(238, 100%, 88%)"];
         return colorSet[index];
     }
 
