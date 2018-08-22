@@ -87,5 +87,5 @@ Build CodeChain-explorer with following script. You can get optimized, uglified 
 | REACT_APP_SERVER_HOST           | http://127.0.0.1:8081 |                            |
 | CODECHAIN_HOST                  | http://127.0.0.1:8080 |                            |
 | ELASTICSERACH_HOST              | http://127.0.0.1:9200 |                            |
-| REACT_APP_DEFAULT_MINING_REWARD |                       | 50                         |
-| GENESIS_ADDRESS_LIST            |                       | address1,address2,address3 |
+| REACT_APP_DEFAULT_MINING_REWARD | 50                    | address1,address2,address3 |
+| GENESIS_ADDRESS_LIST            | []                    |                            |
