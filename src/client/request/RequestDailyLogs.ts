@@ -48,7 +48,7 @@ class RequestDailyLogsInternal extends React.Component<Props> {
     }
 
     private getColor = (index: number) => {
-        const colorSet = ["hsl(237, 49%, 45%)", "hsl(237, 89%, 64%)", "hsl(238, 99%, 74%)", "hsl(238, 100%, 81%)", "hsl(238, 100%, 88%)"];
+        const colorSet = ["hsl(238, 100%, 73%)", "hsl(237, 100%, 78%)", "hsl(238, 100%, 85%)", "hsl(238, 100%, 89%)", "hsl(238, 100%, 94%)"];
         return colorSet[index];
     }
 
@@ -101,7 +101,7 @@ class RequestDailyLogsInternal extends React.Component<Props> {
                     id: `Transfer (${(transferCount / total * 100).toFixed(1)}%)`,
                     label: "Transfer",
                     value: transferCount,
-                    color: "hsl(263, 100%, 43%)"
+                    color: "hsl(263, 83%, 68%)"
                 },
                 {
                     id: `Mint (${(mintCount / total * 100).toFixed(1)}%)`,
