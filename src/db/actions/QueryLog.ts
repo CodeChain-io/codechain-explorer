@@ -50,7 +50,7 @@ export class QueryLog implements BaseAction {
                 count: log.count - count
             });
         } else {
-            await this.indexLog(date, logType, value);
+            throw new Error("Invalid decreasing log action");
         }
     }
 

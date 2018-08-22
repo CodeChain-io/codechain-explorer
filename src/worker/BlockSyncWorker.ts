@@ -2,11 +2,12 @@ import { scheduleJob, Job } from "node-schedule";
 import { WorkerConfig } from "./";
 import { CodeChainAgent } from "./CodeChainAgent";
 import { ElasticSearchAgent } from "../db/ElasticSearchAgent";
-import { Block, H256, ChangeShardState, Payment, SetRegularKey, AssetMintTransaction, AssetTransferTransaction } from "codechain-sdk/lib/core/classes";
-import { BlockDoc, Type, ChangeShardStateDoc } from "../db/DocType";
+import { Block, H256, ChangeShardState, Payment, SetRegularKey, AssetMintTransaction, AssetTransferTransaction, SignedParcel, Invoice } from "codechain-sdk/lib/core/classes";
+import { BlockDoc, Type, ChangeShardStateDoc, PaymentDoc } from "../db/DocType";
 import * as moment from "moment";
 import * as _ from "lodash";
 import { LogType } from "../db/actions/QueryLog";
+import { BigNumber } from "bignumber.js";
 
 export class BlockSyncWorker {
     private watchJob: Job;
@@ -158,23 +159,72 @@ export class BlockSyncWorker {
         const dateString = moment.unix(nextBlock.timestamp).format("YYYY-MM-DD");
         await this.elasticSearchAgent.increaseLogCount(dateString, LogType.BLOCK_COUNT, 1);
         await this.elasticSearchAgent.increaseLogCount(dateString, LogType.BLOCK_MINING_COUNT, 1, nextBlock.author.value);
+
         const parcelCount = nextBlock.parcels.length;
-        await this.elasticSearchAgent.increaseLogCount(dateString, LogType.PARCEL_COUNT, parcelCount);
-        const paymentParcelCount = _.filter(nextBlock.parcels, p => p.unsigned.action instanceof Payment).length;
-        await this.elasticSearchAgent.increaseLogCount(dateString, LogType.PARCEL_PAYMENT_COUNT, paymentParcelCount);
-        const serRegularKeyParcelCount = _.filter(nextBlock.parcels, p => p.unsigned.action instanceof SetRegularKey).length;
-        await this.elasticSearchAgent.increaseLogCount(dateString, LogType.PARCEL_SET_REGULAR_KEY_COUNT, serRegularKeyParcelCount);
-        const changeShardStateParcelCount = _.filter(nextBlock.parcels, p => p.unsigned.action instanceof ChangeShardState).length;
-        await this.elasticSearchAgent.increaseLogCount(dateString, LogType.PARCEL_CHANGE_SHARD_STATE_COUNT, changeShardStateParcelCount);
+        if (parcelCount > 0) {
+            await this.elasticSearchAgent.increaseLogCount(dateString, LogType.PARCEL_COUNT, parcelCount);
+            const paymentParcelCount = _.filter(nextBlock.parcels, p => p.unsigned.action instanceof Payment).length;
+            await this.elasticSearchAgent.increaseLogCount(dateString, LogType.PARCEL_PAYMENT_COUNT, paymentParcelCount);
+            const serRegularKeyParcelCount = _.filter(nextBlock.parcels, p => p.unsigned.action instanceof SetRegularKey).length;
+            await this.elasticSearchAgent.increaseLogCount(dateString, LogType.PARCEL_SET_REGULAR_KEY_COUNT, serRegularKeyParcelCount);
+            const changeShardStateParcelCount = _.filter(nextBlock.parcels, p => p.unsigned.action instanceof ChangeShardState).length;
+            await this.elasticSearchAgent.increaseLogCount(dateString, LogType.PARCEL_CHANGE_SHARD_STATE_COUNT, changeShardStateParcelCount);
+        }
 
         const txs = _.chain(nextBlock.parcels).filter(parcel => parcel.unsigned.action instanceof ChangeShardState)
             .flatMap(parcel => (parcel.unsigned.action as ChangeShardState).transactions).value();
+        const txCount = txs.length
+        if (txCount > 0) {
+            await this.elasticSearchAgent.increaseLogCount(dateString, LogType.TX_COUNT, txCount);
+            const assetMintTxCount = _.filter(txs, tx => tx instanceof AssetMintTransaction).length;
+            await this.elasticSearchAgent.increaseLogCount(dateString, LogType.TX_ASSET_MINT_COUNT, assetMintTxCount);
+            const assetTransferTxCount = _.filter(txs, tx => tx instanceof AssetTransferTransaction).length;
+            await this.elasticSearchAgent.increaseLogCount(dateString, LogType.TX_ASSET_TRANSFER_COUNT, assetTransferTxCount);
+        }
 
-        await this.elasticSearchAgent.increaseLogCount(dateString, LogType.TX_COUNT, txs.length);
-        const assetMintTxCount = _.filter(txs, tx => tx instanceof AssetMintTransaction).length;
-        await this.elasticSearchAgent.increaseLogCount(dateString, LogType.TX_ASSET_MINT_COUNT, assetMintTxCount);
-        const assetTransferTxCount = _.filter(txs, tx => tx instanceof AssetTransferTransaction).length;
-        await this.elasticSearchAgent.increaseLogCount(dateString, LogType.TX_ASSET_TRANSFER_COUNT, assetTransferTxCount);
+        // index genesis block
+        if (nextBlock.number === 0) {
+            const addressListJob = _.map(this.config.genesisAddressList, async (address) => {
+                const balance = await this.codeChainAgent.getBalance(address);
+                return {
+                    address,
+                    balance: balance.value.toString(10)
+                }
+            })
+            const addressList = await Promise.all(addressListJob);
+            const updateAddressJob = _.map(addressList, address => this.elasticSearchAgent.increaseBalance(address.address, address.balance));
+            await Promise.all(updateAddressJob);
+        }
+
+        // index account
+        const blockMiner = nextBlock.author.value;
+        const sumOfParcelFee = _.reduce(nextBlock.parcels, (memo, parcel) => new BigNumber(parcel.unsigned.fee.value.toString(10)).plus(memo), new BigNumber(0)).toString(10);
+        const miningReward = new BigNumber(sumOfParcelFee).plus(new BigNumber(this.config.defaultMiningReward)).toString(10);
+        await this.elasticSearchAgent.increaseBalance(blockMiner, miningReward);
+
+        const decreaseFeeJob = _.map(nextBlock.parcels, (parcel) => {
+            const signer = parcel.getSignerAddress().value;
+            const fee = parcel.unsigned.fee;
+            return this.elasticSearchAgent.decreaseBalance(signer, fee.value.toString(10));
+        });
+        await Promise.all(decreaseFeeJob);
+
+        const paymentParcels = _.filter(nextBlock.parcels, parcel => parcel.unsigned.action instanceof Payment);
+        const succeedPaymentParcelJob = _.map(paymentParcels, async (parcel: SignedParcel) => {
+            const invoices = await this.codeChainAgent.getParcelInvoice(parcel.hash()) as Invoice;
+            if (invoices.success) {
+                return parcel;
+            } else {
+                return null;
+            }
+        });
+        const succeedPaymentParcels = _.compact(await Promise.all(succeedPaymentParcelJob));
+        const changeBlanaceJob = _.map(succeedPaymentParcels, async (parcel) => {
+            const action = parcel.unsigned.action as Payment;
+            this.elasticSearchAgent.increaseBalance(action.receiver.value, action.amount.value.toString(10));
+            this.elasticSearchAgent.decreaseBalance(parcel.getSignerAddress().value, action.amount.value.toString(10));
+        });
+        await Promise.all(changeBlanaceJob);
     }
 
     private retractBlock = async (lastSynchronizedBlock: BlockDoc) => {
@@ -190,20 +240,55 @@ export class BlockSyncWorker {
         await this.elasticSearchAgent.decreaseLogCount(dateString, LogType.BLOCK_COUNT, 1);
         await this.elasticSearchAgent.decreaseLogCount(dateString, LogType.BLOCK_MINING_COUNT, 1, lastSynchronizedBlock.author);
         const parcelCount = lastSynchronizedBlock.parcels.length;
-        await this.elasticSearchAgent.decreaseLogCount(dateString, LogType.PARCEL_COUNT, parcelCount);
+        if (parcelCount > 0) {
+            await this.elasticSearchAgent.decreaseLogCount(dateString, LogType.PARCEL_COUNT, parcelCount);
+            const paymentParcelCount = _.filter(lastSynchronizedBlock.parcels, p => Type.isPaymentDoc(p.action)).length;
+            await this.elasticSearchAgent.decreaseLogCount(dateString, LogType.PARCEL_PAYMENT_COUNT, paymentParcelCount);
+            const setRegularKeyParcelCount = _.filter(lastSynchronizedBlock.parcels, p => Type.isSetRegularKeyDoc(p.action)).length;
+            await this.elasticSearchAgent.decreaseLogCount(dateString, LogType.PARCEL_SET_REGULAR_KEY_COUNT, setRegularKeyParcelCount);
+            const changeShardStateParcelCount = _.filter(lastSynchronizedBlock.parcels, p => Type.isChangeShardStateDoc(p.action)).length;
+            await this.elasticSearchAgent.decreaseLogCount(dateString, LogType.PARCEL_CHANGE_SHARD_STATE_COUNT, changeShardStateParcelCount);
+        }
 
-        const paymentParcelCount = _.filter(lastSynchronizedBlock.parcels, p => Type.isPaymentDoc(p.action)).length;
-        await this.elasticSearchAgent.decreaseLogCount(dateString, LogType.PARCEL_PAYMENT_COUNT, paymentParcelCount);
-        const setRegularKeyParcelCount = _.filter(lastSynchronizedBlock.parcels, p => Type.isSetRegularKeyDoc(p.action)).length;
-        await this.elasticSearchAgent.decreaseLogCount(dateString, LogType.PARCEL_SET_REGULAR_KEY_COUNT, setRegularKeyParcelCount);
-        const changeShardStateParcelCount = _.filter(lastSynchronizedBlock.parcels, p => Type.isChangeShardStateDoc(p.action)).length;
-        await this.elasticSearchAgent.decreaseLogCount(dateString, LogType.PARCEL_CHANGE_SHARD_STATE_COUNT, changeShardStateParcelCount);
         const txs = _.chain(lastSynchronizedBlock.parcels).filter(parcel => Type.isChangeShardStateDoc(parcel.action))
             .flatMap(parcel => (parcel.action as ChangeShardStateDoc).transactions).value();
-        await this.elasticSearchAgent.decreaseLogCount(dateString, LogType.TX_COUNT, txs.length);
-        const assetMintTxCount = _.filter(txs, tx => Type.isAssetMintTransactionDoc(tx)).length;
-        await this.elasticSearchAgent.decreaseLogCount(dateString, LogType.TX_ASSET_MINT_COUNT, assetMintTxCount);
-        const assetTransferTxCount = _.filter(txs, tx => Type.isAssetTransferTransactionDoc(tx)).length;
-        await this.elasticSearchAgent.decreaseLogCount(dateString, LogType.TX_ASSET_TRANSFER_COUNT, assetTransferTxCount);
+        const txCount = txs.length;
+        if (txCount > 0) {
+            await this.elasticSearchAgent.decreaseLogCount(dateString, LogType.TX_COUNT, txCount);
+            const assetMintTxCount = _.filter(txs, tx => Type.isAssetMintTransactionDoc(tx)).length;
+            await this.elasticSearchAgent.decreaseLogCount(dateString, LogType.TX_ASSET_MINT_COUNT, assetMintTxCount);
+            const assetTransferTxCount = _.filter(txs, tx => Type.isAssetTransferTransactionDoc(tx)).length;
+            await this.elasticSearchAgent.decreaseLogCount(dateString, LogType.TX_ASSET_TRANSFER_COUNT, assetTransferTxCount);
+        }
+
+        // retract account
+        const blockMiner = lastSynchronizedBlock.author;
+        const sumOfParcelFee = _.reduce(lastSynchronizedBlock.parcels, (memo, parcel) => new BigNumber(parcel.fee).plus(memo), new BigNumber(0)).toString(10);
+        const miningReward = new BigNumber(sumOfParcelFee).plus(new BigNumber(this.config.defaultMiningReward)).toString(10);
+        await this.elasticSearchAgent.decreaseBalance(blockMiner, miningReward);
+
+        const feeJob = _.map(lastSynchronizedBlock.parcels, (parcel) => {
+            const signer = parcel.sender;
+            const fee = parcel.fee;
+            return this.elasticSearchAgent.increaseBalance(signer, fee);
+        });
+        await Promise.all(feeJob);
+
+        const paymentParcels = _.filter(lastSynchronizedBlock.parcels, parcel => Type.isPaymentDoc(parcel.action));
+        const succeedPaymentParcelJob = _.map(paymentParcels, async (parcel) => {
+            const invoices = await this.codeChainAgent.getParcelInvoice(new H256(parcel.hash));
+            if (invoices[0].success) {
+                return parcel;
+            } else {
+                return null;
+            }
+        });
+        const succeedPaymentParcels = _.compact(await Promise.all(succeedPaymentParcelJob));
+        const changeBlanaceJob = _.map(succeedPaymentParcels, async (parcel) => {
+            const action = parcel.action as PaymentDoc;
+            this.elasticSearchAgent.decreaseBalance(action.receiver, action.amount);
+            this.elasticSearchAgent.increaseBalance(parcel.sender, action.amount);
+        });
+        await Promise.all(changeBlanaceJob);
     }
 }

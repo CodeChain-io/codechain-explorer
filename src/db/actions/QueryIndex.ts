@@ -6,6 +6,7 @@ import { BaseAction } from "./BaseAction";
 import { ElasticSearchAgent } from "../ElasticSearchAgent";
 import { Client } from "elasticsearch";
 import { getMappingLog } from "../mappings/mapping_log";
+import { getAccountMapping } from "../mappings/mapping_account";
 
 export class QueryIndex implements BaseAction {
     public agent: ElasticSearchAgent;
@@ -17,6 +18,7 @@ export class QueryIndex implements BaseAction {
         const isMappingTransactionExisted = await this.client.indices.exists({ index: "transaction" });
         const isMappingPendingParcelExisted = await this.client.indices.exists({ index: "pending_parcel" });
         const isMappingLogExisted = await this.client.indices.exists({ index: "log" });
+        const isMappingAccountExisted = await this.client.indices.exists({ index: "account" });
         if (!isMappingBlockExisted) {
             await this.client.indices.create({
                 index: "block"
@@ -65,6 +67,16 @@ export class QueryIndex implements BaseAction {
                 index: "log",
                 type: "_doc",
                 body: getMappingLog()
+            });
+        }
+        if (!isMappingAccountExisted) {
+            await this.client.indices.create({
+                index: "account"
+            });
+            await this.client.indices.putMapping({
+                index: "account",
+                type: "_doc",
+                body: getAccountMapping()
             });
         }
     }

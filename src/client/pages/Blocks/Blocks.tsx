@@ -50,6 +50,7 @@ class Blocks extends React.Component<Props, State> {
 
     public render() {
         const { location: { search } } = this.props;
+        const miningReward = process.env.REACT_APP_DEFAULT_MINING_REWARD ? Number(process.env.REACT_APP_DEFAULT_MINING_REWARD) : 50;
         const params = new URLSearchParams(search);
         const currentPage = params.get('page') ? parseInt((params.get('page') as string), 10) : 1;
         const itemsPerPage = params.get('itemsPerPage') ? parseInt((params.get('itemsPerPage') as string), 10) : 5
@@ -104,7 +105,7 @@ class Blocks extends React.Component<Props, State> {
                                                     <td scope="row"><Link to={`/block/${block.number}`}>{block.number.toLocaleString()}</Link></td>
                                                     <td>{block.parcels.length.toLocaleString()}</td>
                                                     <td><Link to={`/addr-platform/${block.author}`}>{block.author}</Link></td>
-                                                    <td><CommaNumberString text={_.reduce(block.parcels, (memo, parcel) => new BigNumber(parcel.fee).plus(memo), new BigNumber(0)).div(Math.pow(10, 9)).plus(50).toString(10)} />CCC</td>
+                                                    <td><CommaNumberString text={_.reduce(block.parcels, (memo, parcel) => new BigNumber(parcel.fee).plus(memo), new BigNumber(0)).div(Math.pow(10, 9)).plus(miningReward).toString(10)} />CCC</td>
                                                     <td>{moment.unix(block.timestamp).fromNow()}</td>
                                                 </tr>
                                             );

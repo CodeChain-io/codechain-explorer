@@ -17,6 +17,7 @@ interface Props {
 
 const LatestBlocks = (props: Props) => {
     const { blocksByNumber } = props;
+    const miningReward = process.env.REACT_APP_DEFAULT_MINING_REWARD ? Number(process.env.REACT_APP_DEFAULT_MINING_REWARD) : 50;
     return <div className="latest-blocks">
         <h1>Latest Blocks</h1>
         <div className="latest-container">
@@ -38,7 +39,7 @@ const LatestBlocks = (props: Props) => {
                                     <td scope="row"><Link to={`/block/${block.number}`}>{block.number.toLocaleString()}</Link></td>
                                     <td>{block.parcels.length.toLocaleString()}</td>
                                     <td><Link to={`/addr-platform/${block.author}`}>{block.author}</Link></td>
-                                    <td><CommaNumberString text={_.reduce(block.parcels, (memo, parcel) => new BigNumber(parcel.fee).plus(memo), new BigNumber(0)).div(Math.pow(10, 9)).plus(50).toString(10)} />CCC</td>
+                                    <td><CommaNumberString text={_.reduce(block.parcels, (memo, parcel) => new BigNumber(parcel.fee).plus(memo), new BigNumber(0)).div(Math.pow(10, 9)).plus(miningReward).toString(10)} />CCC</td>
                                     <td>{moment.unix(block.timestamp).fromNow()}</td>
                                 </tr>
                             );

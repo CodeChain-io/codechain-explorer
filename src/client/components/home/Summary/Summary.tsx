@@ -140,7 +140,7 @@ class Summary extends React.Component<{}, State> {
                                         colorBy={(e: any) => (e.color)}
                                         borderWidth={1}
                                         borderColor="inherit:darker(0.2)"
-                                        enableSlicesLabels={false}
+                                        enableSlicesLabels={true}
                                         radialLabelsSkipAngle={10}
                                         radialLabelsTextXOffset={6}
                                         radialLabelsTextColor="#333333"

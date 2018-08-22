@@ -13,6 +13,8 @@ export interface WorkerConfig {
     cron: {
         blockWatch: string
     }
+    defaultMiningReward: number,
+    genesisAddressList: string[]
 }
 
 const app = () => {

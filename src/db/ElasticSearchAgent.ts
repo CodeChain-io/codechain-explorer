@@ -7,8 +7,9 @@ import { QueryBlock } from "./actions/QueryBlock";
 import { QueryParcel } from "./actions/QueryParcel";
 import { QueryTransaction } from "./actions/QueryTransaction";
 import { QueryLog, LogData, LogType } from "./actions/QueryLog";
+import { QueryAccount, Account } from "./actions/QueryAccount";
 
-export class ElasticSearchAgent implements QueryBlock, QueryParcel, QueryTransaction, QueryPendingParcel, QueryIndex, QueryLog {
+export class ElasticSearchAgent implements QueryBlock, QueryParcel, QueryTransaction, QueryPendingParcel, QueryIndex, QueryLog, QueryAccount {
     public client: Client;
     public agent: ElasticSearchAgent;
     public getBlockByHash: (hash: H256) => Promise<BlockDoc | null>;
@@ -71,6 +72,11 @@ export class ElasticSearchAgent implements QueryBlock, QueryParcel, QueryTransac
     public indexLog: (date: string, logType: LogType, value?: string | undefined) => Promise<any>;
     public updateLog: (logData: LogData, doc: any) => Promise<void>;
     public getLog: (date: string, logType: LogType, value?: string | undefined) => Promise<LogData | null>;
+    public increaseBalance: (address: string, balance: string) => Promise<void>;
+    public decreaseBalance: (address: string, balance: string) => Promise<void>;
+    public indexAccount: (address: string, balance: string) => Promise<any>;
+    public updateAccount: (address: string, balance: string) => Promise<void>;
+    public getAccount: (address: string) => Promise<Account | null>;
 
     constructor(host: string) {
         this.client = new Client({
@@ -86,7 +92,7 @@ export class ElasticSearchAgent implements QueryBlock, QueryParcel, QueryTransac
     }
 }
 
-applyMixins(ElasticSearchAgent, [QueryBlock, QueryParcel, QueryTransaction, QueryPendingParcel, QueryIndex, QueryLog]);
+applyMixins(ElasticSearchAgent, [QueryBlock, QueryParcel, QueryTransaction, QueryPendingParcel, QueryIndex, QueryLog, QueryAccount]);
 function applyMixins(derivedCtor: any, baseCtors: any[]) {
     baseCtors.forEach(baseCtor => {
         Object.getOwnPropertyNames(baseCtor.prototype).forEach(name => {
