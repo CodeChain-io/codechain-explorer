@@ -3,6 +3,7 @@ import { Container, Row, Col } from "reactstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faGithub, faGitter, faTwitter, faMedium } from "@fortawesome/free-brands-svg-icons"
 import "./Footer.scss";
+import * as codechainIcon from "./img/codechain-icon.svg"
 
 const Footer = () => {
     return <div className="footer">
@@ -11,12 +12,14 @@ const Footer = () => {
                 <Col lg="9">
                     <ul className="mb-3 mb-lg-0 home-link-list">
                         <li><a href="https://codechain.io" target="_blank">codechain.io</a></li>
-                        <li>codechain@kodebox.io</li>
+                        <li><a href="https://husky.codechain.io" target="_blank">husky.codechain.io</a></li>
+                        <li><a href="https://husky.codechain.io/faucet" target="_blank">husky.codechain.io/faucet</a></li>
                         <li>Powered by Kodebox, Inc.</li>
                     </ul>
                 </Col>
                 <Col lg="3">
                     <ul className="list-inline link-list">
+                        <li className="list-inline-item"><a href="https://github.com/CodeChain-io/codechain" target="_blank"><img className="link-icon" src={codechainIcon} /></a></li>
                         <li className="list-inline-item"><a href="https://github.com/CodeChain-io/codechain" target="_blank"><FontAwesomeIcon icon={faGithub} /></a></li>
                         <li className="list-inline-item"><a href="https://gitter.im/CodeChain-io/codechain" target="_blank"><FontAwesomeIcon icon={faGitter} /></a></li>
                         <li className="list-inline-item"><a href="https://twitter.com/codechain_io" target="_blank"><FontAwesomeIcon icon={faTwitter} /></a></li>
