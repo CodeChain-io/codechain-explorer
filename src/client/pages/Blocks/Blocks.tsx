@@ -53,7 +53,7 @@ class Blocks extends React.Component<Props, State> {
         const miningReward = process.env.REACT_APP_DEFAULT_MINING_REWARD ? Number(process.env.REACT_APP_DEFAULT_MINING_REWARD) : 50;
         const params = new URLSearchParams(search);
         const currentPage = params.get('page') ? parseInt((params.get('page') as string), 10) : 1;
-        const itemsPerPage = params.get('itemsPerPage') ? parseInt((params.get('itemsPerPage') as string), 10) : 5
+        const itemsPerPage = params.get('itemsPerPage') ? parseInt((params.get('itemsPerPage') as string), 10) : 25
         const { blocks, totalBlockCount, isBlockRequested, redirect, redirectItemsPerPage, redirectPage } = this.state;
 
         if (redirect) {
@@ -77,10 +77,9 @@ class Blocks extends React.Component<Props, State> {
                             <div className="float-right">
                                 <span>Show </span>
                                 <select onChange={this.handleOptionChange} defaultValue={itemsPerPage.toString()}>
-                                    <option value="5">5</option>
-                                    <option value="10">10</option>
                                     <option value="25">25</option>
                                     <option value="50">50</option>
+                                    <option value="75">75</option>
                                     <option value="100">100</option>
                                 </select>
                                 <span> entries</span>

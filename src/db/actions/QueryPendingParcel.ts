@@ -26,7 +26,7 @@ export class QueryPendingParcel implements BaseAction {
         return _.map(response.hits.hits, hit => hit._source);
     }
 
-    public async getCurrentPendingParcels(page: number = 1, itemsPerPage: number = 5, actionFilters: string[] = [], signerFilter: string, sorting: string = "pendingPeriod", orderBy: string = "desc"): Promise<PendingParcelDoc[]> {
+    public async getCurrentPendingParcels(page: number = 1, itemsPerPage: number = 25, actionFilters: string[] = [], signerFilter: string, sorting: string = "pendingPeriod", orderBy: string = "desc"): Promise<PendingParcelDoc[]> {
         let sortQuery;
         switch (sorting) {
             case "pendingPeriod":

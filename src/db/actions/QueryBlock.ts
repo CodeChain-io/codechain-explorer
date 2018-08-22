@@ -82,7 +82,7 @@ export class QueryBlock implements BaseAction {
         });
     }
 
-    public async getBlocks(page: number = 1, itemsPerPage: number = 5): Promise<BlockDoc[]> {
+    public async getBlocks(page: number = 1, itemsPerPage: number = 25): Promise<BlockDoc[]> {
         return this.searchBlock({
             "sort": [
                 {

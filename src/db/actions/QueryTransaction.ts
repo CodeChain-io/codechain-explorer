@@ -26,7 +26,7 @@ export class QueryTransaction implements BaseAction {
         return response.hits.hits[0]._source;
     }
 
-    public async getTransactions(page: number = 1, itemsPerPage: number = 5): Promise<TransactionDoc[]> {
+    public async getTransactions(page: number = 1, itemsPerPage: number = 25): Promise<TransactionDoc[]> {
         const response = await this.searchTransaction({
             "sort": [
                 { "data.blockNumber": { "order": "desc" } },
