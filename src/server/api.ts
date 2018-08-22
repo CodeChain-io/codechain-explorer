@@ -9,6 +9,7 @@ import { AddressAction } from "./actions/AddressAction";
 import { TransactionAction } from "./actions/TransactionAction";
 import { AssetAction } from "./actions/AssetAction";
 import { LogAction } from "./actions/LogAction";
+import { AccountAction } from "./actions/AccountAction";
 
 const corsOptions = {
     origin: true,
@@ -31,6 +32,7 @@ export function createApiRouter(context: ServerContext, useCors = false) {
     TransactionAction.handle(context, router);
     AssetAction.handle(context, router);
     LogAction.handle(context, router);
+    AccountAction.handle(context, router);
 
     router.get("/ping", async (req, res, next) => {
         try {

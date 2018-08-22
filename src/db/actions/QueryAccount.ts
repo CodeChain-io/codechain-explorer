@@ -35,6 +35,25 @@ export class QueryAccount implements BaseAction {
         }
     }
 
+    public async getAccounts(): Promise<Account[]> {
+        const response = await this.client.search<AccountData>({
+            "index": "account",
+            "type": "_doc",
+            "body": {
+                "size": 10000,
+                "query": {
+                    "match_all": {}
+                }
+            }
+        });
+        return _.map(response.hits.hits, (hit) => {
+            return {
+                address: hit._id,
+                balance: hit._source.balance
+            };
+        });
+    }
+
     public async indexAccount(address: string, balance: string): Promise<any> {
         return this.client.index({
             "index": "account",

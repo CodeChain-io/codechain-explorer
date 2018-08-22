@@ -77,6 +77,7 @@ export class ElasticSearchAgent implements QueryBlock, QueryParcel, QueryTransac
     public indexAccount: (address: string, balance: string) => Promise<any>;
     public updateAccount: (address: string, balance: string) => Promise<void>;
     public getAccount: (address: string) => Promise<Account | null>;
+    public getAccounts: () => Promise<Account[]>;
 
     constructor(host: string) {
         this.client = new Client({
