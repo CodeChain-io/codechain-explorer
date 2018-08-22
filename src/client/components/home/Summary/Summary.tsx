@@ -54,7 +54,6 @@ class Summary extends React.Component<{}, State> {
                     !isDailyLogRequested ?
                         <RequestDailyLogs type={dailyLogType} date={selectedDate} onData={this.onDailyLogData} onError={this.onError} /> : null
                 }
-                <h1>Summary</h1>
                 <Row>
                     <Col lg="6">
                         <div className="chart-container">
