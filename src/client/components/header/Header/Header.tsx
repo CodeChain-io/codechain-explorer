@@ -67,34 +67,12 @@ class Header extends React.Component<{}, State> {
                                 </DropdownMenu>
                             </UncontrolledDropdown>
                             <NavItem>
-                                <NavLink className="health-checker">
-                                    <HealthChecker />
-                                </NavLink>
-                            </NavItem>
-                            {
-                                /*
-                                <IndexLinkContainer to="/node_info">
-                                    <NavItem>
-                                        <NavLink>Status</NavLink>
-                                    </NavItem>
+                                <IndexLinkContainer to="/status">
+                                    <NavLink className="health-checker">
+                                        <HealthChecker />
+                                    </NavLink>
                                 </IndexLinkContainer>
-                                <UncontrolledDropdown nav={true} inNavbar={true}>
-                                <DropdownToggle nav={true} caret={true}>
-                                    MISC
-                                </DropdownToggle>
-                                <DropdownMenu right={true}>
-                                    <IndexLinkContainer to="/send_signed_parcel">
-                                        <DropdownItem>
-                                            Broadcast Parcel
-                                        </DropdownItem>
-                                    </IndexLinkContainer>
-                                    <DropdownItem>
-                                        API
-                                    </DropdownItem>
-                                </DropdownMenu>
-                                </UncontrolledDropdown>
-                                */
-                            }
+                            </NavItem>
                         </Nav>
                         <Nav>
                             <NavItem className="search-for-large-screen">

@@ -24,10 +24,10 @@ class HealthChecker extends React.Component<Props, State> {
         const { isSimple } = this.props;
         const { isNodeAlive } = this.state;
         if (isNodeAlive === undefined) {
-            return <div className="status">{isSimple ? "" : "Status"} <FontAwesomeIcon icon={faCircle} /><RequestPing onPong={this.onPong} onError={this.onError} /></div>
+            return <div className="health-checker">{isSimple ? "" : "Status"} <FontAwesomeIcon icon={faCircle} /><RequestPing onPong={this.onPong} onError={this.onError} /></div>
         }
         return (
-            <div className="status">
+            <div className="health-checker">
                 {
                     isNodeAlive ? <div>{isSimple ? "" : "Status"} <span className="text-success"><FontAwesomeIcon icon={faCircle} /></span></div>
                         : <div>{isSimple ? "" : "Status"} <span className="text-danger"><FontAwesomeIcon icon={faCircle} /></span></div>

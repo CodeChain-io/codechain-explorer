@@ -13,7 +13,7 @@ import Header from "./components/header/Header/Header";
 import Home from "./pages/Home/Home";
 import Parcel from "./pages/Parcel/Parcel";
 import Asset from "./pages/Asset/Asset";
-import NodeInfo from "./pages/NodeInfo";
+import Status from "./pages/Status/Status";
 import SendSignedParcel from "./pages/SendSignedParcel";
 import Transaction from "./pages/Transaction/Transaction";
 import Footer from "./components/footer/Footer";
@@ -36,7 +36,7 @@ ReactDOM.render(
                         <Switch>
                             <Route exact={true} path="/" component={Home} />
                             <Route path="/send_signed_parcel" component={SendSignedParcel} />
-                            <Route path="/node_info" component={NodeInfo} />
+                            <Route path="/status" component={Status} />
                             <Route path="/block/:id" component={Block} />
                             <Route path="/parcel/:hash" component={Parcel} />
                             <Route path="/asset/:assetType" component={Asset} />
