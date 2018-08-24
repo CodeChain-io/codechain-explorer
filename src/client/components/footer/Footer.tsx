@@ -19,7 +19,7 @@ const Footer = () => {
                 </Col>
                 <Col lg="3">
                     <ul className="list-inline link-list">
-                        <li className="list-inline-item"><a href="https://github.com/CodeChain-io/codechain" target="_blank"><img className="link-icon" src={codechainIcon} /></a></li>
+                        <li className="list-inline-item"><a href="https://codechain.io" target="_blank"><img className="link-icon" src={codechainIcon} /></a></li>
                         <li className="list-inline-item"><a href="https://github.com/CodeChain-io/codechain" target="_blank"><FontAwesomeIcon icon={faGithub} /></a></li>
                         <li className="list-inline-item"><a href="https://gitter.im/CodeChain-io/codechain" target="_blank"><FontAwesomeIcon icon={faGitter} /></a></li>
                         <li className="list-inline-item"><a href="https://twitter.com/codechain_io" target="_blank"><FontAwesomeIcon icon={faTwitter} /></a></li>

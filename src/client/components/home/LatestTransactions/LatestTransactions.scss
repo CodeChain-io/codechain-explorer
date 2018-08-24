@@ -1,4 +1,5 @@
 @import "../../../mixins.scss";
+@import "../../../variables.scss";
 .latest-transactions {
   .latest-container {
     .transaction-type {
@@ -7,10 +8,10 @@
       border-radius: 11px;
     }
     .asset-transfer-type {
-      background-color: #5300DB;
+      background-color: $asset-transfer-transaction-primary-color;
     }
     .asset-mint-type {
-      background-color: #00DBB4;
+      background-color: $asset-mint-transaction-primary-color;
     }
   }
 }
