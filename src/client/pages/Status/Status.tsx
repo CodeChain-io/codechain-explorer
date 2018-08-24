@@ -9,11 +9,15 @@ import DifficultyChart from "../../components/status/DifficultyChart/DifficultyC
 import RequestNodeStatus, { NodeStatusData } from "../../request/RequestNodeStatus";
 import RequestSyncStatus, { SyncData } from "../../request/RequestSyncStatus";
 import RequestCodeChainStatus, { CodeChainData } from "../../request/RequestCodeChainStatus";
+import RequestBlockDifficulty from "../../request/RequestBlockDifficulty";
 
 interface State {
     nodeStatus?: NodeStatusData;
     syncStatus?: SyncData;
     chainInfo?: CodeChainData;
+    difficulty?: Array<{
+        Score: number;
+    }>
 }
 
 class Status extends React.Component<{}, State> {
@@ -22,12 +26,13 @@ class Status extends React.Component<{}, State> {
         this.state = {
             nodeStatus: undefined,
             syncStatus: undefined,
-            chainInfo: undefined
+            chainInfo: undefined,
+            difficulty: undefined
         }
     }
 
     public render() {
-        const { nodeStatus, syncStatus, chainInfo } = this.state;
+        const { nodeStatus, syncStatus, chainInfo, difficulty } = this.state;
         return (
             <div className="status">
                 <Container>
@@ -54,14 +59,20 @@ class Status extends React.Component<{}, State> {
                             }
                         </Col>
                         <Col lg="6">
-                            <div className="mt-large">
-                                <DifficultyChart />
-                            </div>
+                            {
+                                difficulty ?
+                                    <div className="mt-large">
+                                        <DifficultyChart difficulty={difficulty} />
+                                    </div> : <RequestBlockDifficulty onBlockDifficulty={this.onBlockDifficulty} onError={this.onError} />
+                            }
                         </Col>
                     </Row>
                 </Container>
             </div>
         );
+    }
+    private onBlockDifficulty = (difficulty: Array<{ Score: number }>) => {
+        this.setState({ difficulty });
     }
     private onNodeStatus = (nodeStatus: NodeStatusData) => {
         this.setState({ nodeStatus });

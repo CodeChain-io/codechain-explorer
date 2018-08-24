@@ -5,6 +5,7 @@ import { Progress } from 'reactstrap';
 import "./SyncStatus.scss";
 import { SyncData } from "../../../request/RequestSyncStatus";
 import HexString from "../../util/HexString/HexString";
+import { Link } from "react-router-dom";
 
 interface Props {
     syncStatus: SyncData;
@@ -47,7 +48,7 @@ class SyncStatus extends React.Component<Props, {}> {
                             Last block number (Explorer)
                         </div>
                         <div>
-                            {syncStatus.explorerLastBlockNumber.toLocaleString()}
+                            <Link to={`/block/${syncStatus.explorerLastBlockNumber}`}>{syncStatus.explorerLastBlockNumber.toLocaleString()}</Link>
                         </div>
                     </div>
                     <hr />

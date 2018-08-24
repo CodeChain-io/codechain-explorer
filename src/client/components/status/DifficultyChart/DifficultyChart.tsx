@@ -2,44 +2,46 @@ import * as React from "react";
 const { ResponsiveStream } = require("@nivo/stream");
 
 import "./DifficultyChart.scss";
-import { getTestData } from "./testData";
 
-class DifficultyChart extends React.Component<{}, {}> {
-    constructor(props: {}) {
+interface Props {
+    difficulty: Array<{
+        Score: number;
+    }>
+}
+
+class DifficultyChart extends React.Component<Props, {}> {
+    constructor(props: Props) {
         super(props);
     }
 
     public render() {
+        const { difficulty } = this.props;
         return (
             <div className="difficulty-chart">
                 <div className="chart-container">
                     <div className="chart">
                         <div className="header-part">
                             <h2 className="title">Block Difficulty</h2>
+                            <p className="week">Last 10 blocks</p>
                         </div>
                         <div className="chart-item">
                             <ResponsiveStream
-                                data={getTestData()}
+                                data={difficulty}
                                 keys={[
-                                    "Raoul",
-                                    "Josiane",
-                                    "Marcel",
-                                    "René",
-                                    "Paul",
-                                    "Jacques"
+                                    "Score"
                                 ]}
                                 margin={{
-                                    "top": 0,
+                                    "top": 10,
                                     "right": 30,
                                     "bottom": 50,
-                                    "left": 60
+                                    "left": 90
                                 }}
                                 axisBottom={{
                                     "orient": "bottom",
                                     "tickSize": 5,
                                     "tickPadding": 5,
                                     "tickRotation": 0,
-                                    "legend": "",
+                                    "legend": "Block number",
                                     "legendOffset": 36
                                 }}
                                 axisLeft={{
@@ -47,46 +49,15 @@ class DifficultyChart extends React.Component<{}, {}> {
                                     "tickSize": 5,
                                     "tickPadding": 5,
                                     "tickRotation": 0,
-                                    "legend": "",
-                                    "legendOffset": -40
+                                    "legend": "Score",
+                                    "legendOffset": -60
                                 }}
+                                colors="paired"
+                                enableGridX={false}
+                                enableGridY={true}
                                 offsetType="none"
                                 fillOpacity={0.85}
                                 borderColor="#000"
-                                defs={[
-                                    {
-                                        "id": "dots",
-                                        "type": "patternDots",
-                                        "background": "inherit",
-                                        "color": "#2c998f",
-                                        "size": 4,
-                                        "padding": 2,
-                                        "stagger": true
-                                    },
-                                    {
-                                        "id": "squares",
-                                        "type": "patternSquares",
-                                        "background": "inherit",
-                                        "color": "#e4c912",
-                                        "size": 6,
-                                        "padding": 2,
-                                        "stagger": true
-                                    }
-                                ]}
-                                fill={[
-                                    {
-                                        "match": {
-                                            "id": "Paul"
-                                        },
-                                        "id": "dots"
-                                    },
-                                    {
-                                        "match": {
-                                            "id": "Marcel"
-                                        },
-                                        "id": "squares"
-                                    }
-                                ]}
                                 animate={true}
                                 motionStiffness={90}
                                 motionDamping={15}
