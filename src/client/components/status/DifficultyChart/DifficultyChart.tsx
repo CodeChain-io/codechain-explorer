@@ -59,6 +59,8 @@ class DifficultyChart extends React.Component<Props, {}> {
                                     "legendOffset": -60,
                                     "legend": "Score",
                                 }}
+                                enableDots={false}
+                                enableArea={true}
                                 curve="natural"
                                 // tslint:disable-next-line:jsx-no-lambda
                                 colorBy={(e: any) => (e.color)}
