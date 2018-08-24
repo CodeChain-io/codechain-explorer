@@ -5,20 +5,18 @@ import { Table } from "reactstrap";
 
 import "./LatestParcels.scss";
 import HexString from "../../util/HexString/HexString";
-import { BlockDoc } from "../../../../db/DocType";
+import { ParcelDoc } from "../../../../db/DocType";
 import { Link } from "react-router-dom";
 import { ActionBadge } from "../../util/ActionBadge/ActionBadge";
 import { CommaNumberString } from "../../util/CommaNumberString/CommaNumberString";
 import { changeQuarkStringToCCC } from "../../../utils/Formatter";
 
 interface Props {
-    blocksByNumber: {
-        [n: number]: BlockDoc;
-    }
+    parcels: ParcelDoc[]
 }
 
 const LatestParcels = (props: Props) => {
-    const { blocksByNumber } = props;
+    const { parcels } = props;
     return <div className="latest-parcels">
         <h1>Latest Parcels</h1>
         <div className="latest-container">
@@ -34,19 +32,17 @@ const LatestParcels = (props: Props) => {
                 </thead>
                 <tbody>
                     {
-                        _.reverse(_.flatMap(_.values(blocksByNumber), block => {
-                            return _.map(block.parcels, (parcel) => {
-                                return (
-                                    <tr key={`home-parcel-${parcel.hash}`}>
-                                        <td><ActionBadge parcel={parcel} /></td>
-                                        <td scope="row"><HexString link={`/parcel/0x${parcel.hash}`} text={parcel.hash} /></td>
-                                        <td><Link to={`/addr-platform/${parcel.sender}`}>{parcel.sender}</Link></td>
-                                        <td><CommaNumberString text={changeQuarkStringToCCC(parcel.fee)} />CCC</td>
-                                        <td>{moment.unix(block.timestamp).fromNow()}</td>
-                                    </tr>
-                                );
-                            })
-                        })).slice(0, 10)
+                        _.map(parcels.slice(0, 10), (parcel) => {
+                            return (
+                                <tr key={`home-parcel-${parcel.hash}`}>
+                                    <td><ActionBadge parcel={parcel} /></td>
+                                    <td scope="row"><HexString link={`/parcel/0x${parcel.hash}`} text={parcel.hash} /></td>
+                                    <td><Link to={`/addr-platform/${parcel.sender}`}>{parcel.sender}</Link></td>
+                                    <td><CommaNumberString text={changeQuarkStringToCCC(parcel.fee)} />CCC</td>
+                                    <td>{moment.unix(parcel.timestamp).fromNow()}</td>
+                                </tr>
+                            );
+                        })
                     }
                 </tbody>
             </Table>

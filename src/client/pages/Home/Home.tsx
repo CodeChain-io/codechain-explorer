@@ -1,39 +1,43 @@
 import * as React from "react";
 import * as _ from "lodash";
-import { RequestBlockNumber, RequestBlock } from "../../request";
+import { RequestBlockNumber, RequestBlock, RequestBlocks, RequestParcels, RequestTransactions } from "../../request";
 import { Container } from "reactstrap";
 import LatestBlocks from "../../components/home/LatestBlocks/LatestBlocks";
 import LatestParcels from "../../components/home/LatestParcels/LatestParcels";
 import LatestTransactions from "../../components/home/LatestTransactions/LatestTransactions";
 
 import "./Home.scss"
-import { BlockDoc } from "../../../db/DocType";
+import { BlockDoc, ParcelDoc, TransactionDoc, Type, ChangeShardStateDoc } from "../../../db/DocType";
 import Summary from "../../components/home/Summary/Summary";
 
 interface State {
     bestBlockNumber?: number;
-    blocksByNumber: {
-        [n: number]: BlockDoc;
-    }
+    blocks: BlockDoc[];
+    parcels: ParcelDoc[];
+    transactions: TransactionDoc[];
+    requestNewBlock: boolean;
+    blockInitialized: boolean;
+    parcelInitialized: boolean;
+    transactionInitialized: boolean;
 }
 
 class Home extends React.Component<{}, State> {
     constructor(props: {}) {
         super(props);
         this.state = {
-            blocksByNumber: {}
+            bestBlockNumber: undefined,
+            blocks: [],
+            parcels: [],
+            transactions: [],
+            requestNewBlock: false,
+            blockInitialized: false,
+            parcelInitialized: false,
+            transactionInitialized: false
         };
     }
 
     public render() {
-        const { bestBlockNumber, blocksByNumber } = this.state;
-        if (bestBlockNumber === undefined) {
-            return (
-                <RequestBlockNumber
-                    onBlockNumber={this.onBlockNumber}
-                    onError={this.onError} />
-            );
-        }
+        const { bestBlockNumber, requestNewBlock, blocks, parcels, transactions, blockInitialized, parcelInitialized, transactionInitialized } = this.state;
         return (
             <div className="home">
                 <Container>
@@ -41,36 +45,55 @@ class Home extends React.Component<{}, State> {
                         <Summary />
                     </div>
                     <div className="home-element-container">
-                        <LatestBlocks blocksByNumber={blocksByNumber} />
+                        <LatestBlocks blocks={blocks} />
+                        <RequestBlocks page={1} itemsPerPage={10} onBlocks={this.onBlocks} onError={this.onError} />
                     </div>
                     <div className="home-element-container">
-                        <LatestParcels blocksByNumber={blocksByNumber} />
+                        <LatestParcels parcels={parcels} />
+                        <RequestParcels page={1} itemsPerPage={10} onParcels={this.onParcels} onError={this.onError} />
                     </div>
                     <div className="home-element-container">
-                        <LatestTransactions blocksByNumber={blocksByNumber} />
+                        <LatestTransactions transactions={transactions} />
+                        <RequestTransactions page={1} itemsPerPage={10} onTransactions={this.onTransactions} onError={this.onError} />
                     </div>
-                    {/* Reqest blocks */}
-                    {_.map(_.reverse(_.range(Math.max(0, (bestBlockNumber + 1) - 10), bestBlockNumber + 1)), n => {
-                        return <RequestBlock key={"request-block-num-" + n} id={n} onBlock={this.onBlock} onError={this.onError} onBlockNotExist={this.onBlockNotExist} />
-                    })}
+                    {
+                        requestNewBlock && bestBlockNumber ?
+                            <RequestBlock id={bestBlockNumber} onBlock={this.onBlock} onError={this.onError} onBlockNotExist={this.onBlockNotExist} />
+                            : null
+                    }
                 </Container>
-                <RequestBlockNumber
-                    repeat={1000}
-                    onBlockNumber={this.onBlockNumber}
-                    onError={this.onError} />
+                {
+                    blockInitialized && parcelInitialized && transactionInitialized ?
+                        <RequestBlockNumber
+                            repeat={5000}
+                            onBlockNumber={this.onBlockNumber}
+                            onError={this.onError} /> : null
+                }
             </div>
         );
     }
 
+    private onBlocks = (blocks: BlockDoc[]) => {
+        this.setState({ blocks, blockInitialized: true });
+    }
+
+    private onParcels = (parcels: ParcelDoc[]) => {
+        this.setState({ parcels, parcelInitialized: true });
+    }
+
+    private onTransactions = (transactions: TransactionDoc[]) => {
+        this.setState({ transactions, transactionInitialized: true });
+    }
     private onBlock = (block: BlockDoc) => {
-        const blocksByNumber = {
-            ...this.state.blocksByNumber,
-            [block.number]: block
+        this.setState({ blocks: [block, ...this.state.blocks] });
+        if (block.parcels.length > 0) {
+            this.setState({ parcels: _.concat(_.reverse(block.parcels), this.state.parcels) });
         }
-        this.setState({
-            ...this.state,
-            blocksByNumber
-        });
+        const transactions = _.chain(block.parcels).filter(parcel => Type.isChangeShardStateDoc(parcel.action))
+            .flatMap(parcel => (parcel.action as ChangeShardStateDoc).transactions).value();
+        if (transactions.length > 0) {
+            this.setState({ transactions: _.concat(_.reverse(transactions), this.state.transactions) });
+        }
     }
 
     private onBlockNotExist = () => {
@@ -78,7 +101,9 @@ class Home extends React.Component<{}, State> {
     }
 
     private onBlockNumber = (n: number) => {
-        this.setState({ ...this.state, bestBlockNumber: n });
+        if (this.state.blocks[0].number < n) {
+            this.setState({ bestBlockNumber: n, requestNewBlock: true });
+        }
     }
 
     private onError = (e: any) => (console.log(e))

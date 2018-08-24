@@ -10,13 +10,11 @@ import { BlockDoc } from "../../../../db/DocType";
 import { CommaNumberString } from "../../util/CommaNumberString/CommaNumberString";
 
 interface Props {
-    blocksByNumber: {
-        [n: number]: BlockDoc;
-    }
+    blocks: BlockDoc[]
 }
 
 const LatestBlocks = (props: Props) => {
-    const { blocksByNumber } = props;
+    const { blocks } = props;
     const miningReward = process.env.REACT_APP_DEFAULT_MINING_REWARD ? Number(process.env.REACT_APP_DEFAULT_MINING_REWARD) : 50;
     return <div className="latest-blocks">
         <h1>Latest Blocks</h1>
@@ -33,7 +31,7 @@ const LatestBlocks = (props: Props) => {
                 </thead>
                 <tbody>
                     {
-                        _.map(_.reverse(_.values(blocksByNumber)), block => {
+                        _.map(blocks.slice(0, 10), block => {
                             return (
                                 <tr key={`home-block-num-${block.hash}`}>
                                     <td scope="row"><Link to={`/block/${block.number}`}>{block.number.toLocaleString()}</Link></td>
@@ -43,7 +41,7 @@ const LatestBlocks = (props: Props) => {
                                     <td>{moment.unix(block.timestamp).fromNow()}</td>
                                 </tr>
                             );
-                        }).slice(0, 10)
+                        })
                     }
                 </tbody>
             </Table>
