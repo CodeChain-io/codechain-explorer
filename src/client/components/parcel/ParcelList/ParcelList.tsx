@@ -1,13 +1,12 @@
 import * as React from "react";
 import * as moment from "moment";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faSquare } from '@fortawesome/free-solid-svg-icons'
+import { faSquare, faChevronCircleRight, faChevronCircleDown } from '@fortawesome/free-solid-svg-icons'
 import * as _ from "lodash";
 
 import "./ParcelList.scss"
 import HexString from "../../util/HexString/HexString";
 import { Row, Col } from "reactstrap";
-import * as arrow from "./img/arrow.png";
 import { ParcelDoc, Type, PaymentDoc, ChangeShardStateDoc, SetRegularKeyDoc } from "../../../../db/DocType";
 import { Link } from "react-router-dom";
 import { ActionBadge } from "../../util/ActionBadge/ActionBadge";
@@ -156,8 +155,13 @@ class ParcelList extends React.Component<Props, State> {
                                     }
                                 </div>
                             </Col>
-                            <Col md="2" className="text-center">
-                                <img src={arrow} alt="arrow" />
+                            <Col md="2" className="d-flex align-items-center justify-content-center">
+                                <div className="text-center d-none d-md-block arrow-icon">
+                                    <FontAwesomeIcon icon={faChevronCircleRight} size="2x" />
+                                </div>
+                                <div className="d-md-none text-center pt-2 pb-2 arrow-icon">
+                                    <FontAwesomeIcon icon={faChevronCircleDown} size="2x" />
+                                </div>
                             </Col>
                             <Col md="5">
                                 <div className="sender-receiver-container">
