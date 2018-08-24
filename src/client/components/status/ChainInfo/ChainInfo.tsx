@@ -2,13 +2,19 @@ import * as React from "react";
 import { Row, Col } from "reactstrap";
 
 import "./ChainInfo.scss";
+import { CodeChainData } from "../../../request/RequestCodeChainStatus";
 
-class ChainInfo extends React.Component<{}, {}> {
-    constructor(props: {}) {
+interface Props {
+    chainInfo: CodeChainData
+}
+
+class ChainInfo extends React.Component<Props, {}> {
+    constructor(props: Props) {
         super(props);
     }
 
     public render() {
+        const { chainInfo } = this.props;
         return (
             <div className="chain-info">
                 <div>
@@ -21,7 +27,7 @@ class ChainInfo extends React.Component<{}, {}> {
                             Network ID
                         </div>
                         <div>
-                            TC
+                            {chainInfo.networkId}
                         </div>
                     </div>
                     <hr />
@@ -30,7 +36,7 @@ class ChainInfo extends React.Component<{}, {}> {
                             Version
                         </div>
                         <div>
-                            v0.0.1
+                            v{chainInfo.nodeVersion}
                         </div>
                     </div>
                     <hr />
@@ -39,29 +45,18 @@ class ChainInfo extends React.Component<{}, {}> {
                             Git hash
                         </div>
                         <div>
-                            hashhash...
+                            <a href={`https://github.com/CodeChain-io/codechain/commit/${chainInfo.commitHash}`} target="_black">{chainInfo.commitHash}</a>
                         </div>
                     </div>
                     <hr />
                     <div className="one-line-data-set">
                         <div>
-                            Git hash
-                        </div>
-                        <div>
-                            hashhash...
-                        </div>
-                    </div>
-                    <hr />
-                    <Row>
-                        <Col md="12">
                             Peer count
-                        </Col>
-                        <Col md="12">
-                            <div className="text-area text-left">
-                                area
-                            </div>
-                        </Col>
-                    </Row>
+                        </div>
+                        <div>
+                            {chainInfo.peerCount}
+                        </div>
+                    </div>
                     <hr />
                     <Row>
                         <Col md="12">
@@ -69,10 +64,19 @@ class ChainInfo extends React.Component<{}, {}> {
                         </Col>
                         <Col md="12">
                             <div className="text-area text-left">
-                                area
+                                {chainInfo.peers.join(", ")}
                             </div>
                         </Col>
                     </Row>
+                    <hr />
+                    <div className="one-line-data-set">
+                        <div>
+                            White list status
+                        </div>
+                        <div>
+                            {chainInfo.whiteList.enabled ? "enabled" : "disabled"}
+                        </div>
+                    </div>
                     <hr />
                     <Row>
                         <Col md="12">
@@ -80,7 +84,27 @@ class ChainInfo extends React.Component<{}, {}> {
                         </Col>
                         <Col md="12">
                             <div className="text-area text-left">
-                                area
+                                {chainInfo.whiteList.list.join(", ")}
+                            </div>
+                        </Col>
+                    </Row>
+                    <hr />
+                    <div className="one-line-data-set">
+                        <div>
+                            Black list status
+                        </div>
+                        <div>
+                            {chainInfo.blackList.enabled ? "enabled" : "disabled"}
+                        </div>
+                    </div>
+                    <hr />
+                    <Row>
+                        <Col md="12">
+                            Black list
+                        </Col>
+                        <Col md="12">
+                            <div className="text-area text-left">
+                                {chainInfo.blackList.list.join(", ")}
                             </div>
                         </Col>
                     </Row>

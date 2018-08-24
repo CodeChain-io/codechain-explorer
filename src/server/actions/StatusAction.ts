@@ -11,6 +11,22 @@ function handle(context: ServerContext, router: Router) {
             next(e);
         }
     });
+    router.get("/status/ping/server", async (req, res, next) => {
+        try {
+            await context.db.ping();
+            res.send(JSON.stringify("pong"));
+        } catch (e) {
+            next(e);
+        }
+    });
+    router.get("/status/ping/codechain", async (req, res, next) => {
+        try {
+            const codechainResponse = await context.codechainSdk.rpc.node.ping();
+            res.send(JSON.stringify(codechainResponse));
+        } catch (e) {
+            next(e);
+        }
+    });
     router.get("/status/sync", async (req, res, next) => {
         try {
             const codechainBestBlockNumber = await context.codechainSdk.rpc.chain.getBestBlockNumber();
@@ -20,7 +36,7 @@ function handle(context: ServerContext, router: Router) {
 
             res.send({
                 codechainBestBlockNumber,
-                codechainBestBlockHash,
+                codechainBestBlockHash: codechainBestBlockHash.value,
                 explorerLastBlockNumber,
                 explorerLastBlockHash: explorerLastBlock.hash
             });

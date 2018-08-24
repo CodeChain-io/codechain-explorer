@@ -3,13 +3,19 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCircle } from '@fortawesome/free-solid-svg-icons'
 
 import "./NodeStatus.scss";
+import { NodeStatusData } from "../../../request/RequestNodeStatus";
 
-class NodeStatus extends React.Component<{}, {}> {
-    constructor(props: {}) {
+interface Props {
+    nodeStatus: NodeStatusData;
+}
+
+class NodeStatus extends React.Component<Props, {}> {
+    constructor(props: Props) {
         super(props);
     }
 
     public render() {
+        const { nodeStatus } = this.props;
         return (
             <div className="node-status">
                 <div>
@@ -19,19 +25,27 @@ class NodeStatus extends React.Component<{}, {}> {
                 <div className="data-set-for-status">
                     <div className="one-line-data-set">
                         <div>
-                            CodeChain node status
+                            Node status
                         </div>
                         <div>
-                            <span className="running"><FontAwesomeIcon icon={faCircle} /> Running</span>
+                            {
+                                nodeStatus.isCodeChainRunning ?
+                                    <span className="running"><FontAwesomeIcon icon={faCircle} /> Running</span> :
+                                    <span className="text-danger"><FontAwesomeIcon icon={faCircle} /> Stopped</span>
+                            }
                         </div>
                     </div>
                     <hr />
                     <div className="one-line-data-set">
                         <div>
-                            Explorer server status
+                            Server status
                         </div>
                         <div>
-                            <span className="running"><FontAwesomeIcon icon={faCircle} /> Running</span>
+                            {
+                                nodeStatus.isServerRunning ?
+                                    <span className="running"><FontAwesomeIcon icon={faCircle} /> Running</span> :
+                                    <span className="text-danger"><FontAwesomeIcon icon={faCircle} /> Stopped</span>
+                            }
                         </div>
                     </div>
                     <hr />
