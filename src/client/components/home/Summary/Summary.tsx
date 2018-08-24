@@ -5,6 +5,7 @@ const { ResponsiveLine } = require("@nivo/line");
 const { ResponsivePie } = require("@nivo/pie");
 
 import "./Summary.scss";
+import * as emptyImage from "./img/empty.png"
 import { RequestWeeklyLogs, RequestDailyLogs } from "../../../request";
 import { WeeklyLogType } from "../../../request/RequestWeeklyLogs";
 import { DailyLogType } from "../../../request/RequestDailyLogs";
@@ -24,7 +25,8 @@ interface State {
         value: number,
         color: string
     }>;
-    selectedDate: string
+    selectedDate: string;
+    isEmptyForDailyLog: boolean;
 }
 
 class Summary extends React.Component<{}, State> {
@@ -37,11 +39,12 @@ class Summary extends React.Component<{}, State> {
             isDailyLogRequested: false,
             dailyLogType: DailyLogType.BEST_MINER,
             dailyLogs: [],
-            selectedDate: moment().format("YYYY-MM-DD")
+            selectedDate: moment().format("YYYY-MM-DD"),
+            isEmptyForDailyLog: false
         }
     }
     public render() {
-        const { weeklyLogs, isWeeklyLogRequested, type, isDailyLogRequested, dailyLogType, dailyLogs, selectedDate } = this.state;
+        const { weeklyLogs, isWeeklyLogRequested, type, isDailyLogRequested, dailyLogType, dailyLogs, selectedDate, isEmptyForDailyLog } = this.state;
         const before7days = moment().subtract(6, "days").format("YYYY-MM-DD");
         const today = moment().format("YYYY-MM-DD");
         return (
@@ -52,7 +55,7 @@ class Summary extends React.Component<{}, State> {
                 }
                 {
                     !isDailyLogRequested ?
-                        <RequestDailyLogs type={dailyLogType} date={selectedDate} onData={this.onDailyLogData} onError={this.onError} /> : null
+                        <RequestDailyLogs onEmptyResult={this.onEmptyResult} type={dailyLogType} date={selectedDate} onData={this.onDailyLogData} onError={this.onError} /> : null
                 }
                 <Row>
                     <Col lg="6">
@@ -125,45 +128,55 @@ class Summary extends React.Component<{}, State> {
                                     <span className="subname">{this.getDailyLogSubName(dailyLogType)}</span>
                                 </div>
                                 <div className="chart-item">
-                                    <ResponsivePie
-                                        data={dailyLogs}
-                                        margin={{
-                                            "top": 40,
-                                            "right": 80,
-                                            "bottom": 30,
-                                            "left": 80
-                                        }}
-                                        innerRadius={0.5}
-                                        padAngle={0.7}
-                                        // tslint:disable-next-line:jsx-no-lambda
-                                        colorBy={(e: any) => (e.color)}
-                                        borderWidth={1}
-                                        borderColor="inherit:darker(0.2)"
-                                        enableSlicesLabels={true}
-                                        radialLabelsSkipAngle={10}
-                                        radialLabelsTextXOffset={6}
-                                        radialLabelsTextColor="#333333"
-                                        radialLabelsLinkOffset={0}
-                                        radialLabelsLinkDiagonalLength={16}
-                                        radialLabelsLinkHorizontalLength={24}
-                                        radialLabelsLinkStrokeWidth={1}
-                                        radialLabelsLinkColor="inherit"
-                                        slicesLabelsSkipAngle={10}
-                                        slicesLabelsTextColor="#333333"
-                                        animate={true}
-                                        motionStiffness={90}
-                                        motionDamping={15}
-                                        theme={{
-                                            "tooltip": {
-                                                "container": {
-                                                    "fontSize": "13px"
-                                                }
-                                            },
-                                            "labels": {
-                                                "textColor": "#555"
-                                            }
-                                        }}
-                                    />
+                                    {
+                                        isEmptyForDailyLog ?
+                                            <div className="empty-container align-items-center justify-content-center">
+                                                <img className="empty-icon" src={emptyImage} />
+                                                <div>
+                                                    <h3>Empty!</h3>
+                                                    <span>There is no data to display.</span>
+                                                </div>
+                                            </div> :
+                                            <ResponsivePie
+                                                data={dailyLogs}
+                                                margin={{
+                                                    "top": 40,
+                                                    "right": 80,
+                                                    "bottom": 30,
+                                                    "left": 80
+                                                }}
+                                                innerRadius={0.5}
+                                                padAngle={0.7}
+                                                // tslint:disable-next-line:jsx-no-lambda
+                                                colorBy={(e: any) => (e.color)}
+                                                borderWidth={1}
+                                                borderColor="inherit:darker(0.2)"
+                                                enableSlicesLabels={true}
+                                                radialLabelsSkipAngle={10}
+                                                radialLabelsTextXOffset={6}
+                                                radialLabelsTextColor="#333333"
+                                                radialLabelsLinkOffset={0}
+                                                radialLabelsLinkDiagonalLength={16}
+                                                radialLabelsLinkHorizontalLength={24}
+                                                radialLabelsLinkStrokeWidth={1}
+                                                radialLabelsLinkColor="inherit"
+                                                slicesLabelsSkipAngle={10}
+                                                slicesLabelsTextColor="#333333"
+                                                animate={true}
+                                                motionStiffness={90}
+                                                motionDamping={15}
+                                                theme={{
+                                                    "tooltip": {
+                                                        "container": {
+                                                            "fontSize": "13px"
+                                                        }
+                                                    },
+                                                    "labels": {
+                                                        "textColor": "#555"
+                                                    }
+                                                }}
+                                            />
+                                    }
                                 </div>
                             </div>
                         </div>
@@ -186,7 +199,11 @@ class Summary extends React.Component<{}, State> {
                 dailyLogType = DailyLogType.TX_TYPE;
                 break;
         }
-        this.setState({ isWeeklyLogRequested: false, type: event.target.value, dailyLogType, isDailyLogRequested: false });
+        this.setState({ isWeeklyLogRequested: false, type: event.target.value, dailyLogType, isDailyLogRequested: false, isEmptyForDailyLog: false });
+    }
+
+    private onEmptyResult = () => {
+        this.setState({ isEmptyForDailyLog: true, isDailyLogRequested: true });
     }
 
     private getWeeklyLogTitle = (type: WeeklyLogType) => {

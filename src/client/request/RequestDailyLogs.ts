@@ -19,6 +19,7 @@ interface OwnProps {
         value: number,
         color: string
     }>) => void;
+    onEmptyResult: () => void;
     onError: (e: ApiError) => void;
 }
 
@@ -53,10 +54,14 @@ class RequestDailyLogsInternal extends React.Component<Props> {
     }
 
     private queryDailyLog = async () => {
-        const { onData, dispatch, type, date } = this.props;
+        const { onData, dispatch, type, date, onEmptyResult } = this.props;
 
         if (type === DailyLogType.BEST_MINER) {
             const bestMineres = await apiRequest({ path: `log/bestMiners?date=${date}`, dispatch, showProgressBar: true }) as MinerLog[];
+            if (bestMineres.length === 0) {
+                onEmptyResult();
+                return;
+            }
             const total = _.sumBy(bestMineres, (miner) => miner.count);
             const results = _.map(bestMineres, (bestMiner, index) => {
                 return {
@@ -72,6 +77,10 @@ class RequestDailyLogsInternal extends React.Component<Props> {
             const changeShardStateScount = await apiRequest({ path: `log/changeShardStateCount?date=${date}`, dispatch, showProgressBar: true }) as number;
             const setRegularKeyCount = await apiRequest({ path: `log/setRegularKeyCount?date=${date}`, dispatch, showProgressBar: true }) as number;
             const total = paymentParcelCount + changeShardStateScount + setRegularKeyCount;
+            if (total === 0) {
+                onEmptyResult();
+                return;
+            }
             onData([
                 {
                     id: `Payment (${(paymentParcelCount / total * 100).toFixed(1)}%)`,
@@ -96,6 +105,10 @@ class RequestDailyLogsInternal extends React.Component<Props> {
             const transferCount = await apiRequest({ path: `log/transferTxCount?date=${date}`, dispatch, showProgressBar: true }) as number;
             const mintCount = await apiRequest({ path: `log/mintTxCount?date=${date}`, dispatch, showProgressBar: true }) as number;
             const total = mintCount + transferCount;
+            if (total === 0) {
+                onEmptyResult();
+                return;
+            }
             onData([
                 {
                     id: `Transfer (${(transferCount / total * 100).toFixed(1)}%)`,

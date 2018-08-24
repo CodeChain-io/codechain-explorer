@@ -40,6 +40,14 @@
   .sort-btn.disable {
     background-color: #D5D5D5;
   }
+  .empty-container {
+    height: 100%;
+    display: flex;
+    .empty-icon {
+      width: 150px;
+      height: 150px;
+    }
+  }
   .filter-container {
     position: relative;
     .type-filter {

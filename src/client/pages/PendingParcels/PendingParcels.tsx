@@ -5,6 +5,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faFilter, faCaretUp, faCaretDown, faAngleDoubleLeft, faAngleLeft, faAngleDoubleRight, faAngleRight } from "@fortawesome/free-solid-svg-icons";
 import { Container, Table } from "reactstrap";
 import { Redirect } from "react-router";
+import * as emptyImage from "./img/empty.png"
 
 import { RequestPendingParcels, RequestTotalPendingParcelCount } from "../../request";
 
@@ -146,23 +147,38 @@ class PendingParcels extends React.Component<Props, State> {
                                         <th style={{ width: '20%' }}>Estimated Confirmation Period</th>
                                     </tr>
                                 </thead>
-                                <tbody>
-                                    {
-                                        _.map(pendingParcels, (pendingParcel, index) => {
-                                            return (
-                                                <tr key={`pending-parcel-${pendingParcel.parcel.hash}`}>
-                                                    <td><ActionBadge parcel={pendingParcel.parcel} simple={true} /><HexString text={pendingParcel.parcel.hash} link={`/parcel/0x${pendingParcel.parcel.hash}`} /></td>
-                                                    <td><span onClick={_.partial(this.toogleFilter, pendingParcel.parcel.sender)}><FontAwesomeIcon className={`filter ${isSenderFilterOn ? "" : "disable"}`} icon={faFilter} /></span><Link to={`/addr-platform/${pendingParcel.parcel.sender}`}>{pendingParcel.parcel.sender}</Link></td>
-                                                    <td>{pendingParcel.parcel.fee.toLocaleString()}</td>
-                                                    <td>{Type.isChangeShardStateDoc(pendingParcel.parcel.action) ? (pendingParcel.parcel.action as ChangeShardStateDoc).transactions.length.toLocaleString() : 0}</td>
-                                                    <td>{moment.unix(pendingParcel.timestamp).fromNow()}</td>
-                                                    <td>?</td>
-                                                </tr>
-                                            );
-                                        })
-                                    }
-                                </tbody>
+                                {
+                                    pendingParcels.length > 0 ?
+                                        <tbody>
+                                            {
+                                                _.map(pendingParcels, (pendingParcel, index) => {
+                                                    return (
+                                                        <tr key={`pending-parcel-${pendingParcel.parcel.hash}`}>
+                                                            <td><ActionBadge parcel={pendingParcel.parcel} simple={true} /><HexString text={pendingParcel.parcel.hash} link={`/parcel/0x${pendingParcel.parcel.hash}`} /></td>
+                                                            <td><span onClick={_.partial(this.toogleFilter, pendingParcel.parcel.sender)}><FontAwesomeIcon className={`filter ${isSenderFilterOn ? "" : "disable"}`} icon={faFilter} /></span><Link to={`/addr-platform/${pendingParcel.parcel.sender}`}>{pendingParcel.parcel.sender}</Link></td>
+                                                            <td>{pendingParcel.parcel.fee.toLocaleString()}</td>
+                                                            <td>{Type.isChangeShardStateDoc(pendingParcel.parcel.action) ? (pendingParcel.parcel.action as ChangeShardStateDoc).transactions.length.toLocaleString() : 0}</td>
+                                                            <td>{moment.unix(pendingParcel.timestamp).fromNow()}</td>
+                                                            <td>?</td>
+                                                        </tr>
+                                                    );
+                                                })
+                                            }
+                                        </tbody>
+                                        : null
+                                }
                             </Table>
+                            {
+                                pendingParcels.length === 0 ?
+                                    <div className="empty-container align-items-center justify-content-center">
+                                        <img className="empty-icon" src={emptyImage} />
+                                        <div>
+                                            <h3>Empty!</h3>
+                                            <span>There is no data to display.</span>
+                                        </div>
+                                    </div>
+                                    : null
+                            }
                         </div>
                         <div className="d-flex mt-small">
                             <div className="d-inline ml-auto pager">
