@@ -16,7 +16,8 @@ interface State {
     syncStatus?: SyncData;
     chainInfo?: CodeChainData;
     difficulty?: Array<{
-        Score: number;
+        x: string;
+        y: string;
     }>
 }
 
@@ -71,7 +72,7 @@ class Status extends React.Component<{}, State> {
             </div>
         );
     }
-    private onBlockDifficulty = (difficulty: Array<{ Score: number }>) => {
+    private onBlockDifficulty = (difficulty: Array<{ x: string, y: string }>) => {
         this.setState({ difficulty });
     }
     private onNodeStatus = (nodeStatus: NodeStatusData) => {

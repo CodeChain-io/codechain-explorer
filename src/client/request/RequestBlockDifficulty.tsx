@@ -6,7 +6,7 @@ import { apiRequest, ApiError } from "./ApiRequest";
 import { BlockDoc } from "../../db/DocType";
 
 interface OwnProps {
-    onBlockDifficulty: (difficulty: Array<{ Score: number }>) => void;
+    onBlockDifficulty: (difficulty: Array<{ x: string, y: string }>) => void;
     onError: (e: ApiError) => void;
 }
 
@@ -36,7 +36,8 @@ class RequestBlockDifficultyInternal extends React.Component<Props> {
 
         onBlockDifficulty(_.map(_.reverse(blocks), (block: BlockDoc) => {
             return {
-                Score: parseInt(block.score, 10)
+                x: block.number.toString(),
+                y: block.score
             };
         }))
     }

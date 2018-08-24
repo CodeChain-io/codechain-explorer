@@ -1,11 +1,12 @@
 import * as React from "react";
-const { ResponsiveStream } = require("@nivo/stream");
+const { ResponsiveLine } = require("@nivo/line");
 
 import "./DifficultyChart.scss";
 
 interface Props {
     difficulty: Array<{
-        Score: number;
+        x: string,
+        y: string
     }>
 }
 
@@ -22,42 +23,51 @@ class DifficultyChart extends React.Component<Props, {}> {
                     <div className="chart">
                         <div className="header-part">
                             <h2 className="title">Block Difficulty</h2>
-                            <p className="week">Last 10 blocks</p>
+                            <p className="week">Last 25 blocks</p>
                         </div>
                         <div className="chart-item">
-                            <ResponsiveStream
-                                data={difficulty}
-                                keys={[
-                                    "Score"
-                                ]}
+                            <ResponsiveLine
+                                data={
+                                    [
+                                        {
+                                            "id": "block",
+                                            "color": "hsl(237, 49%, 45%)",
+                                            "data": difficulty
+                                        }
+                                    ]
+                                }
                                 margin={{
-                                    "top": 10,
+                                    "top": 20,
                                     "right": 30,
                                     "bottom": 50,
-                                    "left": 90
+                                    "left": 80
                                 }}
+                                minY="0"
                                 axisBottom={{
                                     "orient": "bottom",
                                     "tickSize": 5,
                                     "tickPadding": 5,
                                     "tickRotation": 0,
+                                    "legendOffset": 36,
                                     "legend": "Block number",
-                                    "legendOffset": 36
                                 }}
                                 axisLeft={{
                                     "orient": "left",
                                     "tickSize": 5,
                                     "tickPadding": 5,
                                     "tickRotation": 0,
+                                    "legendOffset": -60,
                                     "legend": "Score",
-                                    "legendOffset": -60
                                 }}
-                                colors="paired"
+                                curve="natural"
+                                // tslint:disable-next-line:jsx-no-lambda
+                                colorBy={(e: any) => (e.color)}
+                                dotSize={10}
+                                dotColor="inherit:darker(0.3)"
+                                dotBorderWidth={2}
                                 enableGridX={false}
-                                enableGridY={true}
-                                offsetType="none"
-                                fillOpacity={0.85}
-                                borderColor="#000"
+                                dotBorderColor="#ffffff"
+                                enableDotLabel={false}
                                 animate={true}
                                 motionStiffness={90}
                                 motionDamping={15}
