@@ -156,7 +156,7 @@ export class BlockSyncWorker {
         await Promise.all(indexTransactionJobs);
 
         // index log
-        const dateString = moment.unix(nextBlock.timestamp).format("YYYY-MM-DD");
+        const dateString = moment.unix(nextBlock.timestamp).utc().format("YYYY-MM-DD");
         await this.elasticSearchAgent.increaseLogCount(dateString, LogType.BLOCK_COUNT, 1);
         await this.elasticSearchAgent.increaseLogCount(dateString, LogType.BLOCK_MINING_COUNT, 1, nextBlock.author.value);
 
@@ -236,7 +236,7 @@ export class BlockSyncWorker {
         await Promise.all(_.map(transactions, async (transaction) => await this.elasticSearchAgent.retractTransaction(new H256(transaction.data.hash))));
 
         // retract log
-        const dateString = moment.unix(lastSynchronizedBlock.timestamp).format("YYYY-MM-DD");
+        const dateString = moment.unix(lastSynchronizedBlock.timestamp).utc().format("YYYY-MM-DD");
         await this.elasticSearchAgent.decreaseLogCount(dateString, LogType.BLOCK_COUNT, 1);
         await this.elasticSearchAgent.decreaseLogCount(dateString, LogType.BLOCK_MINING_COUNT, 1, lastSynchronizedBlock.author);
         const parcelCount = lastSynchronizedBlock.parcels.length;

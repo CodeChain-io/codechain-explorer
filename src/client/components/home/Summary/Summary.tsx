@@ -39,14 +39,14 @@ class Summary extends React.Component<{}, State> {
             isDailyLogRequested: false,
             dailyLogType: DailyLogType.BEST_MINER,
             dailyLogs: [],
-            selectedDate: moment().format("YYYY-MM-DD"),
+            selectedDate: moment().utc().format("YYYY-MM-DD"),
             isEmptyForDailyLog: false
         }
     }
     public render() {
         const { weeklyLogs, isWeeklyLogRequested, type, isDailyLogRequested, dailyLogType, dailyLogs, selectedDate, isEmptyForDailyLog } = this.state;
-        const before7days = moment().subtract(6, "days").format("YYYY-MM-DD");
-        const today = moment().format("YYYY-MM-DD");
+        const before7days = moment().utc().subtract(6, "days").format("YYYY-MM-DD");
+        const today = moment().utc().format("YYYY-MM-DD");
         return (
             <div className="summary">
                 {
@@ -63,7 +63,7 @@ class Summary extends React.Component<{}, State> {
                             <div className="chart">
                                 <div className="header-part">
                                     <h2 className="title">Weekly {this.getWeeklyLogTitle(type)} log</h2>
-                                    <p className="week">{before7days} ~ {today}</p>
+                                    <p className="week">{before7days} ~ {today} (UTC+0000)</p>
                                     <select className="select" defaultValue={type} onChange={this.onWeeklyLogTypeChanged}>
                                         <option value={WeeklyLogType.BLOCK_COUNT}>Block</option>
                                         <option value={WeeklyLogType.PARCEL_COUNT}>Parcel</option>
@@ -123,7 +123,7 @@ class Summary extends React.Component<{}, State> {
                             <div className="chart">
                                 <div className="header-part">
                                     <h2 className="title">Daily {this.getDailyLogTitle(dailyLogType)} log</h2>
-                                    <p className="week">{selectedDate}</p>
+                                    <p className="week">{selectedDate} (UTC+0000)</p>
                                     <hr />
                                     <span className="subname">{this.getDailyLogSubName(dailyLogType)}</span>
                                 </div>

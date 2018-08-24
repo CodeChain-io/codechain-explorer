@@ -51,7 +51,7 @@ class RequestWeeklyLogsInternal extends React.Component<Props> {
         }
         try {
             const asyncJobs = _.map(_.reverse(_.range(7)), async (index) => {
-                const momentObject = moment().subtract(index, "days");
+                const momentObject = moment().utc().subtract(index, "days");
                 const dateString = momentObject.format("YYYY-MM-DD");
                 const resultDateString = momentObject.format("MM-DD");
                 const count = await apiRequest({ path: `${query}?date=${dateString}`, dispatch, showProgressBar: true }) as string;
