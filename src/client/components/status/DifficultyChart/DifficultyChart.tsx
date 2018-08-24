@@ -30,7 +30,7 @@ class DifficultyChart extends React.Component<Props, {}> {
                                 data={
                                     [
                                         {
-                                            "id": "block",
+                                            "id": "Score",
                                             "color": "hsl(237, 49%, 45%)",
                                             "data": difficulty
                                         }
