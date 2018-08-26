@@ -41,7 +41,7 @@ Run CodeChain-worker for indexing data to ElasticSearch
 # yarn run start-worker
 
 // You can change ElasticSearch and CodeChain host URL using an environment variables.
-# CODECHAIN_HOST=http://127.0.0.1:8080 ELASTICSERACH_HOST=http://127.0.0.1:9200 yarn run start-worker
+# CODECHAIN_CHAIN=huksy CODECHAIN_HOST=http://52.79.108.1:8080 ELASTICSERACH_HOST=http://127.0.0.1:9200 yarn run start-worker
 ```
 ### Server
 Run CodeChain-explorer server
@@ -49,7 +49,7 @@ Run CodeChain-explorer server
 # yarn run start-server
 
 // You can change ElasticSearch and CodeChain host URL using an environment variables.
-# CODECHAIN_HOST=http://127.0.0.1:8080 ELASTICSERACH_HOST=http://127.0.0.1:9200 yarn run start-server
+# CODECHAIN_HOST=http://52.79.108.1:8080 ELASTICSERACH_HOST=http://127.0.0.1:9200 yarn run start-server
 ```
 ### Client
 Run CodeChain-explorer client in development mode
@@ -64,7 +64,7 @@ Run CodeChain-explorer client in development mode
 # yarn run start
 
 // You can chage each host URL with environment variables.
-# CODECHAIN_HOST=http://127.0.0.1:8080 ELASTICSERACH_HOST=http://127.0.0.1:9200 REACT_APP_SERVER_HOST=http://127.0.0.1:8081 yarn run start
+# CODECHAIN_CHAIN=husky CODECHAIN_HOST=http://52.79.108.1:8080 ELASTICSERACH_HOST=http://127.0.0.1:9200 REACT_APP_SERVER_HOST=http://127.0.0.1:8081 yarn run start
 ```
 ## Running for production
 ### Build
@@ -82,10 +82,9 @@ Build CodeChain-explorer with following script. You can get optimized, uglified 
 # yarn run clear-index
 ```
 ## Custom Configuration
-|                                 | Default               | Example                    |
+|                                 | Default               | Options                    |
 |---------------------------------|-----------------------|----------------------------|
 | REACT_APP_SERVER_HOST           | http://127.0.0.1:8081 |                            |
 | CODECHAIN_HOST                  | http://127.0.0.1:8080 |                            |
 | ELASTICSERACH_HOST              | http://127.0.0.1:9200 |                            |
-| REACT_APP_DEFAULT_MINING_REWARD | 50                    | address1,address2,address3 |
-| GENESIS_ADDRESS_LIST            | []                    |                            |
+| CODECHAIN_CHAIN                 | solo                  | solo, husky                |

@@ -1,7 +1,8 @@
-import { Block, Transaction, SignedParcel, Action, ChangeShardState, SetRegularKey, CreateShard, Payment, AssetTransferTransaction, AssetMintTransaction, AssetTransferInput, AssetTransferOutput, H256 } from "codechain-sdk/lib/core/classes";
+import { Block, Transaction, SignedParcel, Action, ChangeShardState, SetRegularKey, CreateShard, Payment, AssetTransferTransaction, AssetMintTransaction, AssetTransferInput, AssetTransferOutput, H256, U256 } from "codechain-sdk/lib/core/classes";
 import * as _ from "lodash";
 import { ElasticSearchAgent } from "./ElasticSearchAgent";
 import { AssetTransferAddress } from "codechain-sdk/lib/key/classes";
+import { BigNumber } from "bignumber.js";
 
 export interface BlockDoc {
     parentHash: string;
@@ -18,6 +19,7 @@ export interface BlockDoc {
     parcels: ParcelDoc[];
     /* custom field for indexing */
     isRetracted: boolean;
+    miningReward: string;
 }
 
 export interface ParcelDoc {
@@ -329,10 +331,10 @@ const fromParcel = async (currentParcels: SignedParcel[], parcel: SignedParcel, 
     }
 }
 
-const fromBlock = async (block: Block, elasticSearchAgent: ElasticSearchAgent): Promise<BlockDoc> => {
+const fromBlock = async (block: Block, elasticSearchAgent: ElasticSearchAgent, defaultMiningReward: number): Promise<BlockDoc> => {
     const blockJson = block.toJSON();
     const parcelDocs = await Promise.all(_.map(block.parcels, parcel => fromParcel(block.parcels, parcel, elasticSearchAgent, block.timestamp)));
-
+    const miningReward = _.reduce(block.parcels, (memo, parcel) => new BigNumber((parcel.unsigned.fee as U256).value.toString(10)).plus(memo), new BigNumber(0)).div(Math.pow(10, 9)).plus(defaultMiningReward).toString(10)
     return {
         parentHash: blockJson.parentHash,
         timestamp: blockJson.timestamp,
@@ -346,7 +348,8 @@ const fromBlock = async (block: Block, elasticSearchAgent: ElasticSearchAgent): 
         seal: blockJson.seal,
         hash: blockJson.hash,
         parcels: parcelDocs,
-        isRetracted: false
+        isRetracted: false,
+        miningReward
     }
 }
 

@@ -85,7 +85,7 @@ class Home extends React.Component<{}, State> {
         this.setState({ transactions, transactionInitialized: true });
     }
     private onBlock = (block: BlockDoc) => {
-        this.setState({ blocks: [block, ...this.state.blocks] });
+        this.setState({ blocks: [block, ...this.state.blocks], requestNewBlock: false });
         if (block.parcels.length > 0) {
             this.setState({ parcels: _.concat(_.reverse(block.parcels), this.state.parcels) });
         }

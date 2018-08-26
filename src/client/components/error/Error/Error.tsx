@@ -15,7 +15,7 @@ export const Error = (props: Props) => {
         <Container className={`error ${className}`}>
             <Row>
                 <Col md="4" className="text-center">
-                    <img src={errorMonster} className="error-monster mx-auto" />
+                    <img src={errorMonster} className="error-monster" />
                 </Col>
                 <Col md="8" className="d-flex align-items-center">
                     <div>

@@ -19,7 +19,7 @@ export class ElasticSearchAgent implements QueryBlock, QueryParcel, QueryTransac
     public getTotalBlockCount: () => Promise<number>;
     public getBlocksByPlatformAddress: (address: string, page?: number, itemsPerPage?: number) => Promise<BlockDoc[]>;
     public retractBlock: (blockHash: H256) => Promise<void>;
-    public indexBlock: (block: Block) => Promise<any>;
+    public indexBlock: (block: Block, defaultBlockReward: number) => Promise<any>;
     public updateBlock: (hash: H256, partial: any) => Promise<any>;
     public searchBlock: (body: any) => Promise<SearchResponse<any>>;
     public countBlock: (body: any) => Promise<CountResponse>;

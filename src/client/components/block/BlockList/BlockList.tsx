@@ -10,7 +10,6 @@ import HexString from "../../util/HexString/HexString";
 import { BlockDoc } from "../../../../db/DocType";
 import { Link } from "react-router-dom";
 import { CommaNumberString } from "../../util/CommaNumberString/CommaNumberString";
-import { BigNumber } from "bignumber.js";
 
 interface Props {
     blocks: BlockDoc[];
@@ -35,7 +34,6 @@ class BlockList extends React.Component<Props, State> {
     public render() {
         const { page } = this.state;
         const { blocks, totalCount, loadMoreAction, hideMoreButton } = this.props;
-        const miningReward = process.env.REACT_APP_DEFAULT_MINING_REWARD ? Number(process.env.REACT_APP_DEFAULT_MINING_REWARD) : 50;
         let loadedBlocks = blocks.slice(0, this.itemPerPage * page);
         if (loadMoreAction) {
             loadedBlocks = blocks;
@@ -92,7 +90,7 @@ class BlockList extends React.Component<Props, State> {
                                                 Reward
                                             </Col>
                                             <Col md="10">
-                                                <CommaNumberString text={_.reduce(block.parcels, (memo, parcel) => new BigNumber(parcel.fee).plus(memo), new BigNumber(0)).div(Math.pow(10, 9)).plus(miningReward).toString(10)} />CCC
+                                                <CommaNumberString text={block.miningReward} />CCC
                                             </Col>
                                         </Row>
                                     </div>

@@ -21,6 +21,9 @@ export const getMappingBlock = () => {
             "number": {
                 "type": "long"
             },
+            "miningReward": {
+                "type": "keyword"
+            },
             "parcelsRoot": {
                 "type": "keyword",
             },

@@ -139,7 +139,7 @@ export class BlockSyncWorker {
 
     private indexingNewBlock = async (nextBlock: Block) => {
         // indexing blocks
-        await this.elasticSearchAgent.indexBlock(nextBlock);
+        await this.elasticSearchAgent.indexBlock(nextBlock, this.config.miningReward[process.env.CODECHAIN || "solo"]);
         // indexing parcels
         await Promise.all(_.map(nextBlock.parcels, (parcel) => this.elasticSearchAgent.indexParcel(nextBlock.parcels, parcel, nextBlock.timestamp)));
 
@@ -184,7 +184,7 @@ export class BlockSyncWorker {
 
         // index genesis block
         if (nextBlock.number === 0) {
-            const addressListJob = _.map(this.config.genesisAddressList, async (address) => {
+            const addressListJob = _.map(this.config.genesisAddressList[process.env.CODECHAIN || "solo"], async (address) => {
                 const balance = await this.codeChainAgent.getBalance(address);
                 return {
                     address,
@@ -199,7 +199,7 @@ export class BlockSyncWorker {
         // index account
         const blockMiner = nextBlock.author.value;
         const sumOfParcelFee = _.reduce(nextBlock.parcels, (memo, parcel) => new BigNumber(parcel.unsigned.fee.value.toString(10)).plus(memo), new BigNumber(0)).toString(10);
-        const miningReward = new BigNumber(sumOfParcelFee).plus(new BigNumber(this.config.defaultMiningReward)).toString(10);
+        const miningReward = new BigNumber(sumOfParcelFee).plus(new BigNumber(this.config.miningReward[process.env.CODECHAIN || "solo"])).toString(10);
         await this.elasticSearchAgent.increaseBalance(blockMiner, miningReward);
 
         const decreaseFeeJob = _.map(nextBlock.parcels, (parcel) => {
@@ -263,9 +263,7 @@ export class BlockSyncWorker {
 
         // retract account
         const blockMiner = lastSynchronizedBlock.author;
-        const sumOfParcelFee = _.reduce(lastSynchronizedBlock.parcels, (memo, parcel) => new BigNumber(parcel.fee).plus(memo), new BigNumber(0)).toString(10);
-        const miningReward = new BigNumber(sumOfParcelFee).plus(new BigNumber(this.config.defaultMiningReward)).toString(10);
-        await this.elasticSearchAgent.decreaseBalance(blockMiner, miningReward);
+        await this.elasticSearchAgent.decreaseBalance(blockMiner, lastSynchronizedBlock.miningReward);
 
         const feeJob = _.map(lastSynchronizedBlock.parcels, (parcel) => {
             const signer = parcel.sender;

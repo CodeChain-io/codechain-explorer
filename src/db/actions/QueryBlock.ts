@@ -158,8 +158,8 @@ export class QueryBlock implements BaseAction {
         return this.updateBlock(blockHash, { "isRetracted": true });
     }
 
-    public async indexBlock(block: Block): Promise<any> {
-        const blockDoc: BlockDoc = await Converter.fromBlock(block, this.agent);
+    public async indexBlock(block: Block, defaultBlockReward: number): Promise<any> {
+        const blockDoc: BlockDoc = await Converter.fromBlock(block, this.agent, defaultBlockReward);
         return this.client.index({
             index: "block",
             type: "_doc",
