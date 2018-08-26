@@ -202,12 +202,12 @@ export class BlockSyncWorker {
         const miningReward = new BigNumber(sumOfParcelFee).plus(new BigNumber(this.config.miningReward[process.env.CODECHAIN_CHAIN || "solo"])).toString(10);
         await this.elasticSearchAgent.increaseBalance(blockMiner, miningReward);
 
-        const decreaseFeeJob = _.map(nextBlock.parcels, (parcel) => {
+        // Resolve sequentially
+        for (const parcel of nextBlock.parcels) {
             const signer = parcel.getSignerAddress().value;
             const fee = parcel.unsigned.fee;
-            return this.elasticSearchAgent.decreaseBalance(signer, fee.value.toString(10));
-        });
-        await Promise.all(decreaseFeeJob);
+            await this.elasticSearchAgent.decreaseBalance(signer, fee.value.toString(10));
+        }
 
         const paymentParcels = _.filter(nextBlock.parcels, parcel => parcel.unsigned.action instanceof Payment);
         const succeedPaymentParcelJob = _.map(paymentParcels, async (parcel: SignedParcel) => {
@@ -219,12 +219,12 @@ export class BlockSyncWorker {
             }
         });
         const succeedPaymentParcels = _.compact(await Promise.all(succeedPaymentParcelJob));
-        const changeBlanaceJob = _.map(succeedPaymentParcels, async (parcel) => {
+        // Resolve sequentially
+        for (const parcel of succeedPaymentParcels) {
             const action = parcel.unsigned.action as Payment;
-            this.elasticSearchAgent.increaseBalance(action.receiver.value, action.amount.value.toString(10));
-            this.elasticSearchAgent.decreaseBalance(parcel.getSignerAddress().value, action.amount.value.toString(10));
-        });
-        await Promise.all(changeBlanaceJob);
+            await this.elasticSearchAgent.increaseBalance(action.receiver.value, action.amount.value.toString(10));
+            await this.elasticSearchAgent.decreaseBalance(parcel.getSignerAddress().value, action.amount.value.toString(10));
+        }
     }
 
     private retractBlock = async (lastSynchronizedBlock: BlockDoc) => {
@@ -265,12 +265,12 @@ export class BlockSyncWorker {
         const blockMiner = lastSynchronizedBlock.author;
         await this.elasticSearchAgent.decreaseBalance(blockMiner, lastSynchronizedBlock.miningReward);
 
-        const feeJob = _.map(lastSynchronizedBlock.parcels, (parcel) => {
+        // Resolve sequentially
+        for (const parcel of lastSynchronizedBlock.parcels) {
             const signer = parcel.sender;
             const fee = parcel.fee;
-            return this.elasticSearchAgent.increaseBalance(signer, fee);
-        });
-        await Promise.all(feeJob);
+            await this.elasticSearchAgent.increaseBalance(signer, fee);
+        }
 
         const paymentParcels = _.filter(lastSynchronizedBlock.parcels, parcel => Type.isPaymentDoc(parcel.action));
         const succeedPaymentParcelJob = _.map(paymentParcels, async (parcel) => {
@@ -282,11 +282,11 @@ export class BlockSyncWorker {
             }
         });
         const succeedPaymentParcels = _.compact(await Promise.all(succeedPaymentParcelJob));
-        const changeBlanaceJob = _.map(succeedPaymentParcels, async (parcel) => {
+        // Resolve sequentially
+        for (const parcel of succeedPaymentParcels) {
             const action = parcel.action as PaymentDoc;
-            this.elasticSearchAgent.decreaseBalance(action.receiver, action.amount);
-            this.elasticSearchAgent.increaseBalance(parcel.sender, action.amount);
-        });
-        await Promise.all(changeBlanaceJob);
+            await this.elasticSearchAgent.decreaseBalance(action.receiver, action.amount);
+            await this.elasticSearchAgent.increaseBalance(parcel.sender, action.amount);
+        }
     }
 }
