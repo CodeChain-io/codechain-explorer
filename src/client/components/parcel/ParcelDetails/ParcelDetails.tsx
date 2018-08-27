@@ -4,7 +4,7 @@ import { Col, Row } from "reactstrap";
 
 import "./ParcelDetails.scss"
 import HexString from "../../util/HexString/HexString";
-import { ParcelDoc, Type, PaymentDoc, SetRegularKeyDoc, ChangeShardStateDoc } from "../../../../db/DocType";
+import { ParcelDoc, Type, PaymentDoc, SetRegularKeyDoc, ChangeShardStateDoc, CreateShardDoc } from "../../../../db/DocType";
 import { Link } from "react-router-dom";
 import { ActionBadge } from "../../util/ActionBadge/ActionBadge";
 import { StatusBadge } from "../../util/StatusBadge/StatusBadge";
@@ -75,6 +75,26 @@ const getElementByType = (parcel: ParcelDoc) => {
                 </Row >,
                 <hr key="line" />
             ]);
+    }
+    return null;
+}
+
+const getParcelInvoice = (parcel: ParcelDoc) => {
+    if (Type.isPaymentDoc(parcel.action) || Type.isSetRegularKeyDoc(parcel.action) || Type.isCreateShardDoc(parcel.action)) {
+        const parcelAction = parcel.action as PaymentDoc | SetRegularKeyDoc | CreateShardDoc;
+        return (
+            [
+                <Row key="invoice-row">
+                    <Col md="3">
+                        Invoice
+                    </Col>
+                    <Col md="9">
+                        {parcelAction.invoice ? "Success" : `Fail - ${parcelAction.errorType}`}
+                    </Col>
+                </Row>,
+                <hr key="invoice-hr" />
+            ]
+        )
     }
     return null;
 }
@@ -166,6 +186,9 @@ const ParcelDetails = (props: Props) => {
                         </Col>
                     </Row>
                     <hr />
+                    {
+                        getParcelInvoice(parcel)
+                    }
                     {
                         getElementByType(parcel)
                     }

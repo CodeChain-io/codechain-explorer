@@ -118,9 +118,18 @@ class TransactionDetailsInternal extends React.Component<Props, State> {
                                 <Row>
                                     <Col md="3">
                                         Status
-                                </Col>
+                                    </Col>
                                     <Col md="9">
                                         <StatusBadge status={status} />
+                                    </Col>
+                                </Row>
+                                <hr />
+                                <Row>
+                                    <Col md="3">
+                                        Invoice
+                                </Col>
+                                    <Col md="9">
+                                        {transactionDoc.data.invoice ? "Success" : `Fail - ${transactionDoc.data.errorType}`}
                                     </Col>
                                 </Row>
                                 <hr />
@@ -483,6 +492,15 @@ class TransactionDetailsInternal extends React.Component<Props, State> {
                             </Col>
                                 <Col md="9">
                                     <StatusBadge status={status} />
+                                </Col>
+                            </Row>
+                            <hr />
+                            <Row>
+                                <Col md="3">
+                                    Invoice
+                                </Col>
+                                <Col md="9">
+                                    {transactionDoc.data.invoice ? "success" : `fail - ${transactionDoc.data.errorType}`}
                                 </Col>
                             </Row>
                             <hr />
