@@ -69,7 +69,7 @@ class TransactionList extends React.Component<Props, State> {
                                             <span className="title">Transaction #{i}</span>
                                         </Col>
                                         <Col md="9">
-                                            <span className="timestamp float-right">{moment.unix(transaction.data.timestamp).format("YYYY-MM-DD HH:mm:ssZ")}</span>
+                                            <span className="timestamp float-right">{transaction.data.timestamp !== 0 ? moment.unix(transaction.data.timestamp).format("YYYY-MM-DD HH:mm:ssZ") : ""}</span>
                                         </Col>
                                     </Row>
                                 </div>
