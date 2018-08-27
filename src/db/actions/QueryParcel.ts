@@ -1,6 +1,6 @@
 import * as _ from "lodash";
-import { ParcelDoc, Converter } from "../DocType";
-import { H256, SignedParcel } from "codechain-sdk/lib/core/classes";
+import { ParcelDoc } from "../DocType";
+import { H256 } from "codechain-sdk/lib/core/classes";
 import { BaseAction } from "./BaseAction";
 import { ElasticSearchAgent } from "../ElasticSearchAgent";
 import { Client, SearchResponse, CountResponse } from "elasticsearch";
@@ -118,12 +118,11 @@ export class QueryParcel implements BaseAction {
         return this.updateParcel(parcelHash, { "isRetracted": true });
     }
 
-    public async indexParcel(currentParcels: SignedParcel[], parcel: SignedParcel, timestamp: number): Promise<any> {
-        const parcelDoc: ParcelDoc = await Converter.fromParcel(currentParcels, parcel, this.agent, timestamp);
+    public async indexParcel(parcelDoc: ParcelDoc): Promise<any> {
         return this.client.index({
             index: "parcel",
             type: "_doc",
-            id: parcel.hash().value,
+            id: parcelDoc.hash,
             body: parcelDoc,
             refresh: "wait_for"
         });

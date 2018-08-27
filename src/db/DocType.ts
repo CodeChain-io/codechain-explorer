@@ -1,9 +1,3 @@
-import { Block, Transaction, SignedParcel, Action, ChangeShardState, SetRegularKey, CreateShard, Payment, AssetTransferTransaction, AssetMintTransaction, AssetTransferInput, AssetTransferOutput, H256, U256 } from "codechain-sdk/lib/core/classes";
-import * as _ from "lodash";
-import { ElasticSearchAgent } from "./ElasticSearchAgent";
-import { AssetTransferAddress } from "codechain-sdk/lib/key/classes";
-import { BigNumber } from "bignumber.js";
-
 export interface BlockDoc {
     parentHash: string;
     timestamp: number;
@@ -43,22 +37,31 @@ export type ActionDoc = ChangeShardStateDoc | PaymentDoc | SetRegularKeyDoc | Cr
 
 export interface ChangeShardStateDoc {
     action: string;
-    transactions: TransactionDoc[]
+    transactions: TransactionDoc[];
 }
 
 export interface PaymentDoc {
     action: string;
     receiver: string;
     amount: string;
+    /* custom field for indexing */
+    invoice: boolean;
+    errorType: string;
 }
 
 export interface SetRegularKeyDoc {
     action: string;
     key: string;
+    /* custom field for indexing */
+    invoice: boolean;
+    errorType: string;
 }
 
 export interface CreateShardDoc {
     action: string;
+    /* custom field for indexing */
+    invoice: boolean;
+    errorType: string;
 }
 
 export type TransactionDoc = AssetMintTransactionDoc | AssetTransferTransactionDoc;
@@ -107,6 +110,8 @@ export interface AssetMintTransactionDoc {
         blockNumber: number;
         parcelIndex: number;
         transactionIndex: number;
+        invoice: boolean;
+        errorType: string;
     };
     isRetracted: boolean;
 }
@@ -126,6 +131,8 @@ export interface AssetTransferTransactionDoc {
         blockNumber: number;
         parcelIndex: number;
         transactionIndex: number;
+        invoice: boolean;
+        errorType: string;
     };
     isRetracted: boolean;
 }
@@ -164,202 +171,6 @@ export interface PendingTransactionDoc {
     transaction: TransactionDoc;
     status: string;
     timestamp: number;
-}
-
-const fromAssetTransferInput = async (currentTransactions: Transaction[], assetTransferInput: AssetTransferInput, elasticSearchAgent: ElasticSearchAgent, timestamp: number, parcel?: SignedParcel): Promise<AssetTransferInputDoc> => {
-    const assetTransferInputJson = assetTransferInput.toJSON();
-    const indexedTransaction = await elasticSearchAgent.getTransaction(new H256(assetTransferInputJson.prevOut.transactionHash));
-    const transactionInCurrentBlock = _.find(currentTransactions, transaction => transaction.hash().value === assetTransferInputJson.prevOut.transactionHash);
-    let owner = "";
-    let foundTransaction;
-    if (indexedTransaction) {
-        foundTransaction = indexedTransaction;
-    }
-    if (transactionInCurrentBlock) {
-        foundTransaction = await fromTransaction(currentTransactions, transactionInCurrentBlock, elasticSearchAgent, timestamp, parcel);
-    }
-    if (foundTransaction && isAssetMintTransactionDoc(foundTransaction)) {
-        owner = (foundTransaction as AssetMintTransactionDoc).data.output.owner;
-    } else if (foundTransaction && isAssetTransferTransactionDoc(foundTransaction)) {
-        owner = (foundTransaction as AssetTransferTransactionDoc).data.outputs[assetTransferInputJson.prevOut.index].owner;
-    }
-    const assetScheme = await getAssetScheme(currentTransactions, assetTransferInputJson.prevOut.assetType, elasticSearchAgent);
-    return {
-        prevOut: {
-            transactionHash: assetTransferInputJson.prevOut.transactionHash,
-            index: assetTransferInputJson.prevOut.index,
-            assetType: assetTransferInputJson.prevOut.assetType,
-            assetScheme,
-            amount: assetTransferInputJson.prevOut.amount,
-            owner
-        },
-        lockScript: Buffer.from(assetTransferInputJson.lockScript),
-        unlockScript: Buffer.from(assetTransferInputJson.unlockScript)
-    }
-}
-
-const getAssetScheme = async (currentTransactions: Transaction[], assetType: string, elasticSearchAgent: ElasticSearchAgent): Promise<AssetSchemeDoc> => {
-    const indexedAssetScheme = await elasticSearchAgent.getAssetScheme(new H256(assetType));
-    if (indexedAssetScheme) {
-        return indexedAssetScheme
-    }
-    const transactionInCurrentBlock = _.chain(currentTransactions).filter((transaction: Transaction) => transaction instanceof AssetMintTransaction)
-        .find((transaction: AssetMintTransaction) => transaction.getAssetSchemeAddress().value === assetType)
-        .value()
-    if (transactionInCurrentBlock) {
-        return (transactionInCurrentBlock as AssetMintTransaction).getAssetScheme().toJSON()
-    }
-    throw new Error("Invalid asset type");
-}
-
-const fromAssetTransferOutput = async (currentTransactions: Transaction[], assetTransferOutput: AssetTransferOutput, elasticSearchAgent: ElasticSearchAgent): Promise<AssetTransferOutputDoc> => {
-    const assetTransferOutputJson = assetTransferOutput.toJSON();
-    const assetScheme = await getAssetScheme(currentTransactions, assetTransferOutputJson.assetType, elasticSearchAgent)
-    return {
-        lockScriptHash: assetTransferOutputJson.lockScriptHash,
-        owner: assetTransferOutputJson.lockScriptHash === "f42a65ea518ba236c08b261c34af0521fa3cd1aa505e1c18980919cb8945f8f3" ? AssetTransferAddress.fromPublicKeyHash(new H256(Buffer.from(assetTransferOutputJson.parameters[0]).toString("hex"))).value : "",
-        parameters: _.map(assetTransferOutputJson.parameters, p => Buffer.from(p)),
-        assetType: assetTransferOutputJson.assetType,
-        assetScheme,
-        amount: assetTransferOutputJson.amount
-    }
-}
-
-const fromTransaction = async (currentTransactions: Transaction[], transaction: Transaction, elasticSearchAgent: ElasticSearchAgent, timestamp: number, parcel?: SignedParcel, transactionIndex: number = 0): Promise<TransactionDoc> => {
-    if (transaction instanceof AssetMintTransaction) {
-        const transactionJson = transaction.toJSON();
-        const metadata = getMetadata(transactionJson.data.metadata);
-        return {
-            type: transactionJson.type,
-            data: {
-                output: {
-                    lockScriptHash: transactionJson.data.output.lockScriptHash,
-                    parameters: _.map(transactionJson.data.output.parameters, p => Buffer.from(p)),
-                    amount: transactionJson.data.output.amount,
-                    assetType: transaction.getAssetSchemeAddress().value,
-                    owner: transactionJson.data.output.lockScriptHash === "f42a65ea518ba236c08b261c34af0521fa3cd1aa505e1c18980919cb8945f8f3" ? AssetTransferAddress.fromPublicKeyHash(new H256(Buffer.from(transactionJson.data.output.parameters[0]).toString("hex"))).value : ""
-                },
-                networkId: transactionJson.data.networkId,
-                metadata: transactionJson.data.metadata,
-                registrar: transactionJson.data.registrar,
-                nonce: transactionJson.data.nonce,
-                hash: transaction.hash().value,
-                timestamp,
-                assetName: metadata.name || "",
-                parcelHash: parcel ? parcel.hash().value : "",
-                blockNumber: parcel ? parcel.blockNumber || 0 : 0,
-                parcelIndex: parcel ? parcel.parcelIndex || 0 : 0,
-                transactionIndex
-            },
-            isRetracted: false
-        }
-    } else if (transaction instanceof AssetTransferTransaction) {
-        const transactionJson = transaction.toJSON();
-        const burns = await Promise.all(_.map(transaction.burns, burn => fromAssetTransferInput(currentTransactions, burn, elasticSearchAgent, timestamp)));
-        const inputs = await Promise.all(_.map(transaction.inputs, input => fromAssetTransferInput(currentTransactions, input, elasticSearchAgent, timestamp)));
-        const outputs = await Promise.all(_.map(transaction.outputs, output => fromAssetTransferOutput(currentTransactions, output, elasticSearchAgent)));
-        return {
-            type: transactionJson.type,
-            data: {
-                networkId: transactionJson.data.networkId,
-                burns,
-                inputs,
-                outputs,
-                nonce: transactionJson.data.nonce,
-                hash: transaction.hash().value,
-                timestamp,
-                parcelHash: parcel ? parcel.hash().value : "",
-                blockNumber: parcel ? parcel.blockNumber || 0 : 0,
-                parcelIndex: parcel ? parcel.parcelIndex || 0 : 0,
-                transactionIndex
-            },
-            isRetracted: false
-        };
-    }
-    throw new Error("Unexpected transaction");
-}
-
-const fromAction = async (currentActions: Action[], action: Action, elasticSearchAgent: ElasticSearchAgent, timestamp: number, parcel?: SignedParcel): Promise<ActionDoc> => {
-    if (action instanceof ChangeShardState) {
-        const actionJson = action.toJSON();
-        const currentTransactions = _.chain(currentActions).filter(currentAction => currentAction instanceof ChangeShardState)
-            .flatMap(currentAction => (currentAction as ChangeShardState).transactions).value()
-        const transactionDocs = await Promise.all(_.map(action.transactions, (transaction, i) => fromTransaction(currentTransactions, transaction, elasticSearchAgent, timestamp, parcel, i)));
-        return {
-            action: actionJson.action,
-            transactions: transactionDocs
-        }
-    } else if (action instanceof SetRegularKey) {
-        const actionJson = action.toJSON();
-        return {
-            action: actionJson.action,
-            key: actionJson.key
-        }
-    } else if (action instanceof Payment) {
-        const actionJson = action.toJSON();
-        return {
-            action: actionJson.action,
-            receiver: actionJson.receiver,
-            amount: actionJson.amount
-        }
-    } else if (action instanceof CreateShard) {
-        const actionJson = action.toJSON();
-        return {
-            action: actionJson.action
-        }
-    }
-    throw new Error("Unexpected action");
-}
-
-const fromParcel = async (currentParcels: SignedParcel[], parcel: SignedParcel, elasticSearchAgent: ElasticSearchAgent, timestamp: number): Promise<ParcelDoc> => {
-    const parcelJson = parcel.toJSON();
-    const action = await fromAction(_.map(currentParcels, p => p.unsigned.action), parcel.unsigned.action, elasticSearchAgent, timestamp, parcel);
-    return {
-        blockNumber: parcelJson.blockNumber,
-        blockHash: parcelJson.hash,
-        parcelIndex: parcelJson.parcelIndex,
-        nonce: parcelJson.nonce,
-        fee: parcelJson.fee,
-        networkId: parcelJson.networkId,
-        sender: parcel.getSignerAddress().value,
-        sig: parcelJson.sig,
-        hash: parcelJson.hash,
-        action,
-        timestamp,
-        countOfTransaction: parcel.unsigned.action instanceof ChangeShardState ? parcel.unsigned.action.transactions.length : 0,
-        isRetracted: false
-    }
-}
-
-const fromBlock = async (block: Block, elasticSearchAgent: ElasticSearchAgent, defaultMiningReward: number): Promise<BlockDoc> => {
-    const blockJson = block.toJSON();
-    const parcelDocs = await Promise.all(_.map(block.parcels, parcel => fromParcel(block.parcels, parcel, elasticSearchAgent, block.timestamp)));
-    const miningReward = _.reduce(block.parcels, (memo, parcel) => new BigNumber((parcel.unsigned.fee as U256).value.toString(10)).plus(memo), new BigNumber(0)).div(Math.pow(10, 9)).plus(defaultMiningReward).toString(10)
-    return {
-        parentHash: blockJson.parentHash,
-        timestamp: blockJson.timestamp,
-        number: blockJson.number,
-        author: blockJson.author,
-        extraData: blockJson.extraData,
-        parcelsRoot: blockJson.parcelsRoot,
-        stateRoot: blockJson.stateRoot,
-        invoicesRoot: blockJson.invoicesRoot,
-        score: blockJson.score,
-        seal: blockJson.seal,
-        hash: blockJson.hash,
-        parcels: parcelDocs,
-        isRetracted: false,
-        miningReward
-    }
-}
-
-const fromPendingParcel = async (otherPendingParcels: SignedParcel[], parcel: SignedParcel, elasticSearchAgent: ElasticSearchAgent): Promise<PendingParcelDoc> => {
-    const parcelDoc = await fromParcel(otherPendingParcels, parcel, elasticSearchAgent, 0);
-    return {
-        parcel: parcelDoc,
-        status: "pending",
-        timestamp: Math.floor(Date.now() / 1000)
-    }
 }
 
 function isChangeShardStateDoc(action: ActionDoc) {
@@ -425,11 +236,4 @@ export let Type = {
     getAssetSchemeDoc,
     getMetadata,
     isH256String
-}
-
-export let Converter = {
-    fromBlock,
-    fromPendingParcel,
-    fromParcel,
-    fromTransaction
 }

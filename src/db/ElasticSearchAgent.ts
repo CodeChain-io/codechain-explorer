@@ -1,5 +1,5 @@
 import { Client, SearchResponse, DeleteDocumentResponse, CountResponse } from "elasticsearch";
-import { Block, H256, SignedParcel, Transaction } from "codechain-sdk/lib/core/classes";
+import { H256 } from "codechain-sdk/lib/core/classes";
 import { BlockDoc, ParcelDoc, AssetTransferTransactionDoc, AssetMintTransactionDoc, TransactionDoc, AssetDoc, AssetSchemeDoc, AssetBundleDoc, PendingParcelDoc, PendingTransactionDoc } from "./DocType";
 import { QueryIndex } from "./actions/QueryIndex";
 import { QueryPendingParcel } from "./actions/QueryPendingParcel";
@@ -19,7 +19,7 @@ export class ElasticSearchAgent implements QueryBlock, QueryParcel, QueryTransac
     public getTotalBlockCount: () => Promise<number>;
     public getBlocksByPlatformAddress: (address: string, page?: number, itemsPerPage?: number) => Promise<BlockDoc[]>;
     public retractBlock: (blockHash: H256) => Promise<void>;
-    public indexBlock: (block: Block, defaultBlockReward: number) => Promise<any>;
+    public indexBlock: (blockDoc: BlockDoc) => Promise<any>;
     public updateBlock: (hash: H256, partial: any) => Promise<any>;
     public searchBlock: (body: any) => Promise<SearchResponse<any>>;
     public countBlock: (body: any) => Promise<CountResponse>;
@@ -30,7 +30,7 @@ export class ElasticSearchAgent implements QueryBlock, QueryParcel, QueryTransac
     public getParcelsByPlatformAddress: (address: string, page?: number, itemsPerPage?: number) => Promise<ParcelDoc[]>;
     public searchParcel: (body: any) => Promise<SearchResponse<any>>;
     public retractParcel: (parcelHash: H256) => Promise<void>;
-    public indexParcel: (currentParcels: SignedParcel[], parcel: SignedParcel, timestamp: number) => Promise<any>;
+    public indexParcel: (parcelDoc: ParcelDoc) => Promise<any>;
     public updateParcel: (hash: H256, partial: any) => Promise<any>;
     public getTransaction: (hash: H256) => Promise<AssetMintTransactionDoc | AssetTransferTransactionDoc | null>;
     public getTransactions: (page?: number, itemsPerPage?: number) => Promise<TransactionDoc[]>;
@@ -42,7 +42,7 @@ export class ElasticSearchAgent implements QueryBlock, QueryParcel, QueryTransac
     public getAssetBundlesByAssetName: (name: string) => Promise<AssetBundleDoc[]>;
     public searchTransaction: (body: any) => Promise<SearchResponse<any>>;
     public retractTransaction: (transactionHash: H256) => Promise<void>;
-    public indexTransaction: (currentTransactions: Transaction[], transaction: Transaction, timestamp: number, parcel: SignedParcel, transactionIndex: number) => Promise<any>;
+    public indexTransaction: (transactionDoc: TransactionDoc) => Promise<any>;
     public updateTransaction: (hash: H256, partial: any) => Promise<any>;
     public getAllOfCurrentPendingParcels: () => Promise<PendingParcelDoc[]>;
     public getCurrentPendingParcels: (page?: number, itemsPerPage?: number, actionFilters?: string[], signerFilter?: string, sorting?: string, orderBy?: string) => Promise<PendingParcelDoc[]>;
@@ -52,7 +52,7 @@ export class ElasticSearchAgent implements QueryBlock, QueryParcel, QueryTransac
     public searchPendinParcel: (body: any) => Promise<SearchResponse<any>>;
     public deadPendingParcel: (hash: H256) => Promise<void>;
     public removePendingParcel: (hash: H256) => Promise<DeleteDocumentResponse>;
-    public indexPendingParcel: (otherPendingParcels: SignedParcel[], pendingParcel: SignedParcel) => Promise<any>;
+    public indexPendingParcel: (pendingParcelDoc: PendingParcelDoc) => Promise<any>;
     public revialPendingParcel: (hash: H256) => Promise<void>;
     public checkIndexOrCreate: () => Promise<void>;
     public getTotalParcelCount: () => Promise<number>;

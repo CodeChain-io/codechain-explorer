@@ -1,7 +1,7 @@
 import * as _ from "lodash";
-import { BlockDoc, Converter } from "../DocType";
+import { BlockDoc } from "../DocType";
 import { SearchResponse, Client, CountResponse } from "elasticsearch";
-import { H256, Block } from "codechain-sdk/lib/core/classes";
+import { H256 } from "codechain-sdk/lib/core/classes";
 import { BaseAction } from "./BaseAction";
 import { ElasticSearchAgent } from "../ElasticSearchAgent";
 
@@ -158,12 +158,11 @@ export class QueryBlock implements BaseAction {
         return this.updateBlock(blockHash, { "isRetracted": true });
     }
 
-    public async indexBlock(block: Block, defaultBlockReward: number): Promise<any> {
-        const blockDoc: BlockDoc = await Converter.fromBlock(block, this.agent, defaultBlockReward);
+    public async indexBlock(blockDoc: BlockDoc): Promise<any> {
         return this.client.index({
             index: "block",
             type: "_doc",
-            id: block.hash.value,
+            id: blockDoc.hash,
             body: blockDoc,
             refresh: "wait_for"
         });

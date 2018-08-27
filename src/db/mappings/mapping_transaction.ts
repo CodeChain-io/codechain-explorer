@@ -9,6 +9,12 @@ export const getMappingTransaction = () => {
                     "blockNumber": {
                         "type": "long"
                     },
+                    "invoice": {
+                        "type": "boolean"
+                    },
+                    "errorType": {
+                        "type": "keyword"
+                    },
                     "parcelIndex": {
                         "type": "long"
                     },

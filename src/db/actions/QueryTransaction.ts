@@ -1,6 +1,6 @@
 import * as _ from "lodash";
-import { H256, Transaction, SignedParcel } from "codechain-sdk/lib/core/classes";
-import { TransactionDoc, AssetTransferTransactionDoc, AssetMintTransactionDoc, AssetBundleDoc, Type, AssetDoc, AssetSchemeDoc, Converter } from "../DocType";
+import { H256 } from "codechain-sdk/lib/core/classes";
+import { TransactionDoc, AssetTransferTransactionDoc, AssetMintTransactionDoc, AssetBundleDoc, Type, AssetDoc, AssetSchemeDoc } from "../DocType";
 import { BaseAction } from "./BaseAction";
 import { Client, SearchResponse, CountResponse } from "elasticsearch";
 import { ElasticSearchAgent } from "../ElasticSearchAgent";
@@ -341,12 +341,11 @@ export class QueryTransaction implements BaseAction {
         return this.updateTransaction(transactionHash, { "isRetracted": true });
     }
 
-    public async indexTransaction(currentTransactions: Transaction[], transaction: Transaction, timestamp: number, parcel: SignedParcel, transactionIndex: number): Promise<any> {
-        const transactionDoc: TransactionDoc = await Converter.fromTransaction(currentTransactions, transaction, this.agent, timestamp, parcel, transactionIndex);
+    public async indexTransaction(transactionDoc: TransactionDoc): Promise<any> {
         return this.client.index({
             index: "transaction",
             type: "_doc",
-            id: transaction.hash().value,
+            id: transactionDoc.data.hash,
             body: transactionDoc,
             refresh: "wait_for"
         });

@@ -14,6 +14,12 @@ export const getMappingParcel = () => {
                     "transactions": getMappingTransaction(),
                     "value": {
                         "type": "keyword",
+                    },
+                    "invoice": {
+                        "type": "boolean"
+                    },
+                    "errorType": {
+                        "type": "keyword"
                     }
                 }
             },

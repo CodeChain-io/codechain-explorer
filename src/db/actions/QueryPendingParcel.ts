@@ -1,6 +1,6 @@
 import * as _ from "lodash";
-import { PendingParcelDoc, PendingTransactionDoc, TransactionDoc, Converter, Type, ChangeShardStateDoc } from "../DocType";
-import { H256, SignedParcel } from "codechain-sdk/lib/core/classes";
+import { PendingParcelDoc, PendingTransactionDoc, TransactionDoc, Type, ChangeShardStateDoc } from "../DocType";
+import { H256 } from "codechain-sdk/lib/core/classes";
 import { SearchResponse, Client, DeleteDocumentResponse, CountResponse } from "elasticsearch";
 import { BaseAction } from "./BaseAction";
 import { ElasticSearchAgent } from "../ElasticSearchAgent";
@@ -193,12 +193,11 @@ export class QueryPendingParcel implements BaseAction {
         });
     }
 
-    public async indexPendingParcel(otherPendingParcels: SignedParcel[], pendingParcel: SignedParcel): Promise<any> {
-        const pendingParcelDoc: PendingParcelDoc = await Converter.fromPendingParcel(otherPendingParcels, pendingParcel, this.agent);
+    public async indexPendingParcel(pendingParcelDoc: PendingParcelDoc): Promise<any> {
         return this.client.index({
             index: "pending_parcel",
             type: "_doc",
-            id: pendingParcel.hash().value,
+            id: pendingParcelDoc.parcel.hash,
             body: pendingParcelDoc,
             refresh: "wait_for"
         });

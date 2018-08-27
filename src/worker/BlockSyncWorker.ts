@@ -8,19 +8,22 @@ import * as moment from "moment";
 import * as _ from "lodash";
 import { LogType } from "../db/actions/QueryLog";
 import { BigNumber } from "bignumber.js";
+import TypeConverter from "./TypeConverter";
 
 export class BlockSyncWorker {
     private watchJob: Job;
     private config: WorkerConfig;
     private codeChainAgent: CodeChainAgent;
     private elasticSearchAgent: ElasticSearchAgent;
+    private typeConverter: TypeConverter;
 
     private jobIsRunning: boolean;
 
-    constructor(config: WorkerConfig, codeChainAgent: CodeChainAgent, elasticSearchAgent: ElasticSearchAgent) {
+    constructor(config: WorkerConfig, codeChainAgent: CodeChainAgent, elasticSearchAgent: ElasticSearchAgent, typeConverter: TypeConverter) {
         this.config = config;
         this.codeChainAgent = codeChainAgent;
         this.elasticSearchAgent = elasticSearchAgent;
+        this.typeConverter = typeConverter;
         this.jobIsRunning = false;
     }
 
@@ -109,7 +112,8 @@ export class BlockSyncWorker {
         const indexedPendingParcelHashList = _.map(indexedParcels, (p) => p.parcel.hash);
         const newPendingParcels = _.filter(pendingParcels, pendingParcel => !_.includes(indexedPendingParcelHashList, pendingParcel.hash().value));
         await Promise.all(_.map(newPendingParcels, async (pendingParcel) => {
-            return this.elasticSearchAgent.indexPendingParcel(newPendingParcels, pendingParcel);
+            const pendingParcelDoc = await this.typeConverter.fromPendingParcel(pendingParcel);
+            return this.elasticSearchAgent.indexPendingParcel(pendingParcelDoc);
         }));
 
         // Revival pending parcel
@@ -138,19 +142,25 @@ export class BlockSyncWorker {
     }
 
     private indexingNewBlock = async (nextBlock: Block) => {
+        const blockDoc = await this.typeConverter.fromBlock(nextBlock, this.config.miningReward[process.env.CODECHAIN_CHAIN || "solo"]);
         // indexing blocks
-        await this.elasticSearchAgent.indexBlock(nextBlock, this.config.miningReward[process.env.CODECHAIN_CHAIN || "solo"]);
+        await this.elasticSearchAgent.indexBlock(blockDoc);
         // indexing parcels
-        await Promise.all(_.map(nextBlock.parcels, (parcel) => this.elasticSearchAgent.indexParcel(nextBlock.parcels, parcel, nextBlock.timestamp)));
+        await Promise.all(_.map(nextBlock.parcels, async (parcel) => {
+            const parcelDoc = await this.typeConverter.fromParcel(parcel, nextBlock.timestamp)
+            return this.elasticSearchAgent.indexParcel(parcelDoc)
+        }));
 
         // indexing transactions
-        const indexTransactionJobs = [];
+        let indexTransactionJobs = [];
         _.each(nextBlock.parcels, parcel => {
             const action = parcel.unsigned.action;
             if (action instanceof ChangeShardState) {
-                _.each(action.transactions, (transaction, i) => {
-                    indexTransactionJobs.push(this.elasticSearchAgent.indexTransaction(action.transactions, transaction, nextBlock.timestamp, parcel, i));
+                const jobs = _.map(action.transactions, async (transaction, i) => {
+                    const transactionDoc = await this.typeConverter.fromTransaction(transaction, nextBlock.timestamp, parcel, i);
+                    return this.elasticSearchAgent.indexTransaction(transactionDoc)
                 });
+                indexTransactionJobs = indexTransactionJobs.concat(jobs);
             }
         });
         await Promise.all(indexTransactionJobs);
