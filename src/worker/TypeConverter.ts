@@ -17,8 +17,16 @@ class TypeConverter {
     }
 
     public fromAssetTransferInput = async (assetTransferInput: AssetTransferInput): Promise<AssetTransferInputDoc> => {
-        const assetScheme = await this.codechainAgent.getAssetSchemeByType(assetTransferInput.prevOut.assetType);
-        const transaction = await this.codechainAgent.getTransaction(assetTransferInput.prevOut.transactionHash);
+        const assetScheme = await this.getAssetScheme(assetTransferInput.prevOut.assetType);
+        let transaction = await this.codechainAgent.getTransaction(assetTransferInput.prevOut.transactionHash);
+        if (!transaction) {
+            const pendingParcels = await this.codechainAgent.getPendingParcels();
+            const pendingTransactions = _.chain(pendingParcels).filter(parcel => parcel.unsigned.action instanceof ChangeShardState)
+                .flatMap(parcel => (parcel.unsigned.action as ChangeShardState).transactions)
+                .value();
+            transaction = _.find(pendingTransactions, tx => (tx as Transaction).hash().value === assetTransferInput.prevOut.transactionHash.value);
+        }
+
         let owner = "";
         if (transaction instanceof AssetMintTransaction) {
             if (transaction.output.lockScriptHash.value === this.P2PKH_HASH) {
@@ -36,7 +44,7 @@ class TypeConverter {
                 transactionHash: assetTransferInput.prevOut.transactionHash.value,
                 index: assetTransferInput.prevOut.index,
                 assetType: assetTransferInput.prevOut.assetType.value,
-                assetScheme: this.fromAssetScheme(assetScheme),
+                assetScheme,
                 amount: assetTransferInput.prevOut.amount,
                 owner
             },
@@ -46,13 +54,13 @@ class TypeConverter {
     }
 
     public fromAssetTransferOutput = async (assetTransferOutput: AssetTransferOutput): Promise<AssetTransferOutputDoc> => {
-        const assetScheme = await this.codechainAgent.getAssetSchemeByType(assetTransferOutput.assetType);
+        const assetScheme = await this.getAssetScheme(assetTransferOutput.assetType);
         return {
             lockScriptHash: assetTransferOutput.lockScriptHash.value,
             owner: assetTransferOutput.lockScriptHash.value === this.P2PKH_HASH ? AssetTransferAddress.fromPublicKeyHash(new H256(Buffer.from(assetTransferOutput.parameters[0]).toString("hex"))).value : "",
             parameters: _.map(assetTransferOutput.parameters, p => Buffer.from(p)),
             assetType: assetTransferOutput.assetType.value,
-            assetScheme: this.fromAssetScheme(assetScheme),
+            assetScheme,
             amount: assetTransferOutput.amount
         }
     }
@@ -212,6 +220,24 @@ class TypeConverter {
             amount: assetScheme.amount,
             networkId: assetScheme.networkId
         }
+    }
+
+    private getAssetScheme = async (assetType: H256): Promise<AssetSchemeDoc> => {
+        const assetScheme = await this.codechainAgent.getAssetSchemeByType(assetType);
+        if (assetScheme) {
+            return this.fromAssetScheme(assetScheme);
+        }
+        const pendingParcels = await this.codechainAgent.getPendingParcels();
+        const pendingMintTransactions = _.chain(pendingParcels).filter(parcel => parcel.unsigned.action instanceof ChangeShardState)
+            .flatMap(parcel => (parcel.unsigned.action as ChangeShardState).transactions)
+            .filter(transaction => transaction instanceof AssetMintTransaction)
+            .map(tx => tx as AssetMintTransaction)
+            .value();
+        const mintTransaction = _.find(pendingMintTransactions, (tx: AssetMintTransaction) => tx.getAssetSchemeAddress().value === assetType.value)
+        if (mintTransaction) {
+            return this.fromAssetScheme(mintTransaction.getAssetScheme());
+        }
+        throw new Error("Invalid asset type");
     }
 }
 
