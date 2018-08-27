@@ -45,23 +45,23 @@ export interface PaymentDoc {
     receiver: string;
     amount: string;
     /* custom field for indexing */
-    invoice: boolean;
-    errorType: string;
+    invoice?: boolean;
+    errorType?: string;
 }
 
 export interface SetRegularKeyDoc {
     action: string;
     key: string;
     /* custom field for indexing */
-    invoice: boolean;
-    errorType: string;
+    invoice?: boolean;
+    errorType?: string;
 }
 
 export interface CreateShardDoc {
     action: string;
     /* custom field for indexing */
-    invoice: boolean;
-    errorType: string;
+    invoice?: boolean;
+    errorType?: string;
 }
 
 export type TransactionDoc = AssetMintTransactionDoc | AssetTransferTransactionDoc;
@@ -110,8 +110,8 @@ export interface AssetMintTransactionDoc {
         blockNumber: number;
         parcelIndex: number;
         transactionIndex: number;
-        invoice: boolean;
-        errorType: string;
+        invoice?: boolean;
+        errorType?: string;
     };
     isRetracted: boolean;
 }
@@ -131,8 +131,8 @@ export interface AssetTransferTransactionDoc {
         blockNumber: number;
         parcelIndex: number;
         transactionIndex: number;
-        invoice: boolean;
-        errorType: string;
+        invoice?: boolean;
+        errorType?: string;
     };
     isRetracted: boolean;
 }

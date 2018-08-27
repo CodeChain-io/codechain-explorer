@@ -187,7 +187,8 @@ const ParcelDetails = (props: Props) => {
                     </Row>
                     <hr />
                     {
-                        getParcelInvoice(parcel)
+                        status === "confirmed" ?
+                            getParcelInvoice(parcel) : null
                     }
                     {
                         getElementByType(parcel)

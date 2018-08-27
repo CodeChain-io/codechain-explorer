@@ -83,8 +83,8 @@ class TypeConverter {
                     blockNumber: parcel ? parcel.blockNumber || 0 : 0,
                     parcelIndex: parcel ? parcel.parcelIndex || 0 : 0,
                     transactionIndex,
-                    invoice: transactionInvoice.success,
-                    errorType: transactionInvoice.error ? transactionInvoice.error.type : ""
+                    invoice: transactionInvoice ? transactionInvoice.success : undefined,
+                    errorType: transactionInvoice ? (transactionInvoice.error ? transactionInvoice.error.type : "") : undefined
                 },
                 isRetracted: false
             }
@@ -107,8 +107,8 @@ class TypeConverter {
                     blockNumber: parcel ? parcel.blockNumber || 0 : 0,
                     parcelIndex: parcel ? parcel.parcelIndex || 0 : 0,
                     transactionIndex,
-                    invoice: transactionInvoice.success,
-                    errorType: transactionInvoice.error ? transactionInvoice.error.type : ""
+                    invoice: transactionInvoice ? transactionInvoice.success : undefined,
+                    errorType: transactionInvoice ? (transactionInvoice.error ? transactionInvoice.error.type : "") : undefined
                 },
                 isRetracted: false
             };
@@ -130,8 +130,8 @@ class TypeConverter {
             return {
                 action: actionJson.action,
                 key: actionJson.key,
-                invoice: parcelInvoice.success,
-                errorType: parcelInvoice.error ? parcelInvoice.error.type : ""
+                invoice: parcelInvoice ? parcelInvoice.success : undefined,
+                errorType: parcelInvoice ? (parcelInvoice.error ? parcelInvoice.error.type : "") : undefined
             }
         } else if (action instanceof Payment) {
             const actionJson = action.toJSON();
@@ -140,16 +140,16 @@ class TypeConverter {
                 action: actionJson.action,
                 receiver: actionJson.receiver,
                 amount: actionJson.amount,
-                invoice: parcelInvoice.success,
-                errorType: parcelInvoice.error ? parcelInvoice.error.type : ""
+                invoice: parcelInvoice ? parcelInvoice.success : undefined,
+                errorType: parcelInvoice ? (parcelInvoice.error ? parcelInvoice.error.type : "") : undefined
             }
         } else if (action instanceof CreateShard) {
             const actionJson = action.toJSON();
             const parcelInvoice = await this.codechainAgent.getParcelInvoice(parcel.hash()) as Invoice;
             return {
                 action: actionJson.action,
-                invoice: parcelInvoice.success,
-                errorType: parcelInvoice.error ? parcelInvoice.error.type : ""
+                invoice: parcelInvoice ? parcelInvoice.success : undefined,
+                errorType: parcelInvoice ? (parcelInvoice.error ? parcelInvoice.error.type : "") : undefined
             }
         }
         throw new Error("Unexpected action");

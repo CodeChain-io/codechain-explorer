@@ -124,15 +124,21 @@ class TransactionDetailsInternal extends React.Component<Props, State> {
                                     </Col>
                                 </Row>
                                 <hr />
-                                <Row>
-                                    <Col md="3">
-                                        Invoice
-                                </Col>
-                                    <Col md="9">
-                                        {transactionDoc.data.invoice ? "Success" : `Fail - ${transactionDoc.data.errorType}`}
-                                    </Col>
-                                </Row>
-                                <hr />
+                                {
+                                    status === "confirmed" ?
+                                        [
+                                            <Row key="invoice-row">
+                                                <Col md="3">
+                                                    Invoice
+                                                </Col>
+                                                <Col md="9">
+                                                    {transactionDoc.data.invoice ? "Success" : `Fail - ${transactionDoc.data.errorType}`}
+                                                </Col>
+                                            </Row>,
+                                            <hr key="invoice-hr" />
+                                        ]
+                                        : null
+                                }
                                 <Row>
                                     <Col md="3">
                                         # of Input
@@ -495,15 +501,21 @@ class TransactionDetailsInternal extends React.Component<Props, State> {
                                 </Col>
                             </Row>
                             <hr />
-                            <Row>
-                                <Col md="3">
-                                    Invoice
-                                </Col>
-                                <Col md="9">
-                                    {transactionDoc.data.invoice ? "success" : `fail - ${transactionDoc.data.errorType}`}
-                                </Col>
-                            </Row>
-                            <hr />
+                            {
+                                status === "confirmed" ?
+                                    [
+                                        <Row key="invoice-row">
+                                            <Col md="3">
+                                                Invoice
+                                                </Col>
+                                            <Col md="9">
+                                                {transactionDoc.data.invoice ? "Success" : `Fail - ${transactionDoc.data.errorType}`}
+                                            </Col>
+                                        </Row>,
+                                        <hr key="invoice-hr" />
+                                    ]
+                                    : null
+                            }
                             <Row>
                                 <Col md="3">
                                     LockScriptHash
