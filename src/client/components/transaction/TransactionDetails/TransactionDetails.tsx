@@ -177,7 +177,7 @@ class TransactionDetailsInternal extends React.Component<Props, State> {
                                                 </Col>
                                                     <Col md="9">
                                                         <ImageLoader className="mr-2" size={18} data={input.prevOut.assetType} url={Type.getMetadata(input.prevOut.assetScheme.metadata).icon_url} />
-                                                        <HexString link={`/asset/0x${input.prevOut.assetType}`} text={input.prevOut.assetType} />
+                                                        {status === "confirmed" ? <HexString link={`/asset/0x${input.prevOut.assetType}`} text={input.prevOut.assetType} /> : <HexString text={input.prevOut.assetType} />}
                                                     </Col>
                                                 </Row>
                                                 <hr />
@@ -276,7 +276,7 @@ class TransactionDetailsInternal extends React.Component<Props, State> {
                                                 </Col>
                                                     <Col md="9">
                                                         <ImageLoader className="mr-2" size={18} data={burn.prevOut.assetType} url={Type.getMetadata(burn.prevOut.assetScheme.metadata).icon_url} />
-                                                        <HexString link={`/asset/0x${burn.prevOut.assetType}`} text={burn.prevOut.assetType} />
+                                                        {status === "confirmed" ? <HexString link={`/asset/0x${burn.prevOut.assetType}`} text={burn.prevOut.assetType} /> : <HexString text={burn.prevOut.assetType} />}
                                                     </Col>
                                                 </Row>
                                                 <hr />
@@ -375,7 +375,7 @@ class TransactionDetailsInternal extends React.Component<Props, State> {
                                                 </Col>
                                                     <Col md="9">
                                                         <ImageLoader size={18} data={output.assetType} url={Type.getMetadata(output.assetScheme.metadata).icon_url} className="mr-2" />
-                                                        <HexString link={`/asset/0x${output.assetType}`} text={output.assetType} />
+                                                        {status === "confirmed" ? <HexString link={`/asset/0x${output.assetType}`} text={output.assetType} /> : <HexString text={output.assetType} />}
                                                     </Col>
                                                 </Row>
                                                 <hr />
@@ -544,7 +544,7 @@ class TransactionDetailsInternal extends React.Component<Props, State> {
                             </Col>
                                 <Col md="9">
                                     <ImageLoader data={transactionDoc.data.output.assetType} url={Type.getMetadata(transactionDoc.data.metadata).icon_url} size={18} className="mr-2" />
-                                    <HexString link={`/asset/0x${transactionDoc.data.output.assetType}`} text={transactionDoc.data.output.assetType} />
+                                    {status === "confirmed" ? <HexString link={`/asset/0x${transactionDoc.data.output.assetType}`} text={transactionDoc.data.output.assetType} /> : <HexString text={transactionDoc.data.output.assetType} />}
                                 </Col>
                             </Row>
                             <hr />
