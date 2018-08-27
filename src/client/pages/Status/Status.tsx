@@ -19,21 +19,51 @@ interface State {
         x: string;
         y: string;
     }>
+    requestNodeStatus: boolean;
+    requestSyncStatus: boolean;
+    requestChainInfo: boolean;
+    requestDifficulty: boolean;
 }
 
 class Status extends React.Component<{}, State> {
+    private interval: NodeJS.Timer;
     constructor(props: {}) {
         super(props);
         this.state = {
             nodeStatus: undefined,
             syncStatus: undefined,
             chainInfo: undefined,
-            difficulty: undefined
+            difficulty: undefined,
+            requestNodeStatus: true,
+            requestSyncStatus: true,
+            requestDifficulty: true,
+            requestChainInfo: true
         }
     }
 
+    public componentDidMount() {
+        this.interval = setInterval(() => {
+            if (this.state.nodeStatus) {
+                this.setState({ requestNodeStatus: true });
+            }
+            if (this.state.syncStatus) {
+                this.setState({ requestSyncStatus: true });
+            }
+            if (this.state.chainInfo) {
+                this.setState({ requestChainInfo: true });
+            }
+            if (this.state.difficulty) {
+                this.setState({ requestDifficulty: true });
+            }
+        }, 10000);
+    }
+
+    public componentWillUnmount() {
+        clearInterval(this.interval);
+    }
+
     public render() {
-        const { nodeStatus, syncStatus, chainInfo, difficulty } = this.state;
+        const { nodeStatus, syncStatus, chainInfo, difficulty, requestNodeStatus, requestSyncStatus, requestChainInfo, requestDifficulty } = this.state;
         return (
             <div className="status">
                 <Container>
@@ -44,19 +74,30 @@ class Status extends React.Component<{}, State> {
                                 nodeStatus ?
                                     <div className="mt-large">
                                         <NodeStatus nodeStatus={nodeStatus} />
-                                    </div> : <RequestNodeStatus onNodeStatus={this.onNodeStatus} onError={this.onError} />
+                                    </div> : null
+                            }
+                            {
+                                requestNodeStatus ?
+                                    <RequestNodeStatus onNodeStatus={this.onNodeStatus} onError={this.onError} /> : null
                             }
                             {
                                 syncStatus ?
                                     <div className="mt-large">
                                         <SyncStatus syncStatus={syncStatus} />
-                                    </div> : <RequestSyncStatus onSync={this.onSyncStatus} onError={this.onError} />
+                                    </div> : null
+                            }
+                            {
+                                requestSyncStatus ?
+                                    <RequestSyncStatus onSync={this.onSyncStatus} onError={this.onError} /> : null
                             }
                             {
                                 chainInfo ?
                                     <div className="mt-large">
                                         <ChainInfo chainInfo={chainInfo} />
-                                    </div> : <RequestCodeChainStatus onCodeChain={this.onChainInfo} onError={this.onError} />
+                                    </div> : null
+                            }
+                            {
+                                requestChainInfo ? <RequestCodeChainStatus onCodeChain={this.onChainInfo} onError={this.onError} /> : null
                             }
                         </Col>
                         <Col lg="6">
@@ -64,7 +105,10 @@ class Status extends React.Component<{}, State> {
                                 difficulty ?
                                     <div className="mt-large">
                                         <DifficultyChart difficulty={difficulty} />
-                                    </div> : <RequestBlockDifficulty onBlockDifficulty={this.onBlockDifficulty} onError={this.onError} />
+                                    </div> : null
+                            }
+                            {
+                                requestDifficulty ? <RequestBlockDifficulty onBlockDifficulty={this.onBlockDifficulty} onError={this.onError} /> : null
                             }
                         </Col>
                     </Row>
@@ -73,16 +117,16 @@ class Status extends React.Component<{}, State> {
         );
     }
     private onBlockDifficulty = (difficulty: Array<{ x: string, y: string }>) => {
-        this.setState({ difficulty });
+        this.setState({ difficulty, requestDifficulty: false });
     }
     private onNodeStatus = (nodeStatus: NodeStatusData) => {
-        this.setState({ nodeStatus });
+        this.setState({ nodeStatus, requestNodeStatus: false });
     }
     private onChainInfo = (chainInfo: CodeChainData) => {
-        this.setState({ chainInfo });
+        this.setState({ chainInfo, requestChainInfo: false });
     }
     private onSyncStatus = (syncStatus: SyncData) => {
-        this.setState({ syncStatus });
+        this.setState({ syncStatus, requestSyncStatus: false });
     }
     private onError = (error: any) => {
         console.log(error);
