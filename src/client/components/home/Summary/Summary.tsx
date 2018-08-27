@@ -1,12 +1,13 @@
 import * as React from "react";
 import { Row, Col } from "reactstrap";
 import * as moment from "moment";
+import * as _ from "lodash";
 const { ResponsiveLine } = require("@nivo/line");
 const { ResponsivePie } = require("@nivo/pie");
 
 import "./Summary.scss";
 import * as emptyImage from "./img/empty.png"
-import { RequestWeeklyLogs, RequestDailyLogs } from "../../../request";
+import { RequestWeeklyLogs, RequestDailyLogs, RequestBlockNumber } from "../../../request";
 import { WeeklyLogType } from "../../../request/RequestWeeklyLogs";
 import { DailyLogType } from "../../../request/RequestDailyLogs";
 
@@ -27,6 +28,7 @@ interface State {
     }>;
     selectedDate: string;
     isEmptyForDailyLog: boolean;
+    bestBlockNumber: number;
 }
 
 class Summary extends React.Component<{}, State> {
@@ -40,15 +42,20 @@ class Summary extends React.Component<{}, State> {
             dailyLogType: DailyLogType.BEST_MINER,
             dailyLogs: [],
             selectedDate: moment().utc().format("YYYY-MM-DD"),
-            isEmptyForDailyLog: false
+            isEmptyForDailyLog: false,
+            bestBlockNumber: 0
         }
     }
     public render() {
-        const { weeklyLogs, isWeeklyLogRequested, type, isDailyLogRequested, dailyLogType, dailyLogs, selectedDate, isEmptyForDailyLog } = this.state;
+        const { weeklyLogs, isWeeklyLogRequested, type, isDailyLogRequested, dailyLogType, dailyLogs, selectedDate, isEmptyForDailyLog, bestBlockNumber } = this.state;
         const before7days = moment().utc().subtract(6, "days").format("YYYY-MM-DD");
         const today = moment().utc().format("YYYY-MM-DD");
+        const lastWeeklyLog = _.last(weeklyLogs);
         return (
             <div className="summary">
+                <RequestBlockNumber
+                    onBlockNumber={this.onBlockNumber}
+                    onError={this.onError} />
                 {
                     !isWeeklyLogRequested ?
                         <RequestWeeklyLogs type={type} onData={this.onWeeklyLogData} onError={this.onError} /> : null
@@ -75,7 +82,7 @@ class Summary extends React.Component<{}, State> {
                                         data={
                                             [
                                                 {
-                                                    "id": "block",
+                                                    "id": this.getWeeklyLogTitle(type),
                                                     "color": "hsl(237, 49%, 45%)",
                                                     "data": weeklyLogs
                                                 }
@@ -84,7 +91,7 @@ class Summary extends React.Component<{}, State> {
                                         margin={{
                                             "top": 20,
                                             "right": 30,
-                                            "bottom": 50,
+                                            "bottom": 60,
                                             "left": 60
                                         }}
                                         minY="auto"
@@ -115,6 +122,9 @@ class Summary extends React.Component<{}, State> {
                                         motionDamping={15}
                                     />
                                 </div>
+                                <div className="weekly-total">
+                                    Weekly total {_.reduce(weeklyLogs, (memo, log) => (parseInt(log.y, 10) + memo), 0).toLocaleString()} blocks (Total {bestBlockNumber ? bestBlockNumber.toLocaleString() : 0} blocks)
+                                </div>
                             </div>
                         </div>
                     </Col>
@@ -124,6 +134,8 @@ class Summary extends React.Component<{}, State> {
                                 <div className="header-part">
                                     <h2 className="title">Daily {this.getDailyLogTitle(dailyLogType)} log</h2>
                                     <p className="week">{selectedDate} (UTC+0000)</p>
+                                    <span className="subtitle">{this.getDailyLogSubTitle(dailyLogType)}</span>
+                                    <span className="subtitle-amount">{lastWeeklyLog ? parseInt(lastWeeklyLog.y, 10).toLocaleString() : 0}</span>
                                     <hr />
                                     <span className="subname">{this.getDailyLogSubName(dailyLogType)}</span>
                                 </div>
@@ -140,9 +152,9 @@ class Summary extends React.Component<{}, State> {
                                             <ResponsivePie
                                                 data={dailyLogs}
                                                 margin={{
-                                                    "top": 40,
+                                                    "top": 80,
                                                     "right": 80,
-                                                    "bottom": 30,
+                                                    "bottom": 40,
                                                     "left": 80
                                                 }}
                                                 innerRadius={0.5}
@@ -240,6 +252,22 @@ class Summary extends React.Component<{}, State> {
                 return "Transaction types";
         }
         return "";
+    }
+
+    private getDailyLogSubTitle = (type: DailyLogType) => {
+        switch (type) {
+            case DailyLogType.BEST_MINER:
+                return "# of blocks";
+            case DailyLogType.PARCEL_ACTION:
+                return "# of parcels";
+            case DailyLogType.TX_TYPE:
+                return "# of transactions";
+        }
+        return "";
+    }
+
+    private onBlockNumber = (n: number) => {
+        this.setState({ bestBlockNumber: n });
     }
 
     private onWeeklyLogData = (weeklyLogs: Array<{

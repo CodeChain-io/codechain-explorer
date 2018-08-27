@@ -69,7 +69,7 @@ export class ElasticSearchAgent implements QueryBlock, QueryParcel, QueryTransac
     public getLogCount: (date: string, logType: LogType) => Promise<number>;
     public getBestMiners: (date: string) => Promise<LogData[]>;
     public searchLog: (body: any) => Promise<SearchResponse<any>>;
-    public indexLog: (date: string, logType: LogType, value?: string | undefined) => Promise<any>;
+    public indexLog: (date: string, logType: LogType, count: number, value?: string | undefined) => Promise<any>;
     public updateLog: (logData: LogData, doc: any) => Promise<void>;
     public getLog: (date: string, logType: LogType, value?: string | undefined) => Promise<LogData | null>;
     public increaseBalance: (address: string, balance: string) => Promise<void>;

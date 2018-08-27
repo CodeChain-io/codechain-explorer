@@ -36,7 +36,7 @@ export class QueryLog implements BaseAction {
                 count: log.count + count
             });
         } else {
-            await this.indexLog(date, logType, value);
+            await this.indexLog(date, logType, count, value);
         }
     }
 
@@ -93,14 +93,14 @@ export class QueryLog implements BaseAction {
         })
     }
 
-    public async indexLog(date: string, logType: LogType, value?: string): Promise<any> {
+    public async indexLog(date: string, logType: LogType, count: number, value?: string): Promise<any> {
         return this.client.index({
             "index": "log",
             "type": "_doc",
             "id": `${date}_${logType}_${value || "N"}`,
             "body": {
                 "date": date,
-                "count": 1,
+                "count": count,
                 "type": logType,
                 "value": value
             },
