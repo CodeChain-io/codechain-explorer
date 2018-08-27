@@ -17,7 +17,7 @@ export class ImageLoader extends React.Component<Props, State> {
         super(prop);
         let requestUrl;
         if (prop.url) {
-            requestUrl = prop.url;
+            requestUrl = prop.url.replace("http://", "//");
         } else {
             requestUrl = this.getDefaultImage()
         }
