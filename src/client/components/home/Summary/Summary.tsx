@@ -28,7 +28,7 @@ interface State {
     }>;
     selectedDate: string;
     isEmptyForDailyLog: boolean;
-    bestBlockNumber: number;
+    bestBlockNumber?: number;
 }
 
 class Summary extends React.Component<{}, State> {
@@ -43,7 +43,7 @@ class Summary extends React.Component<{}, State> {
             dailyLogs: [],
             selectedDate: moment().utc().format("YYYY-MM-DD"),
             isEmptyForDailyLog: false,
-            bestBlockNumber: 0
+            bestBlockNumber: undefined
         }
     }
     public render() {
@@ -54,6 +54,7 @@ class Summary extends React.Component<{}, State> {
         return (
             <div className="summary">
                 <RequestBlockNumber
+                    repeat={10000}
                     onBlockNumber={this.onBlockNumber}
                     onError={this.onError} />
                 {
@@ -267,6 +268,9 @@ class Summary extends React.Component<{}, State> {
     }
 
     private onBlockNumber = (n: number) => {
+        if (this.state.bestBlockNumber && this.state.bestBlockNumber < n && this.state.isDailyLogRequested && this.state.isWeeklyLogRequested) {
+            this.setState({ isDailyLogRequested: false, isWeeklyLogRequested: false });
+        }
         this.setState({ bestBlockNumber: n });
     }
 

@@ -65,7 +65,7 @@ class Home extends React.Component<{}, State> {
                 {
                     blockInitialized && parcelInitialized && transactionInitialized ?
                         <RequestBlockNumber
-                            repeat={5000}
+                            repeat={10000}
                             onBlockNumber={this.onBlockNumber}
                             onError={this.onError} /> : null
                 }
