@@ -67,7 +67,7 @@ class TypeConverter {
 
     public fromTransaction = async (transaction: Transaction, timestamp: number, parcel: SignedParcel, transactionIndex: number): Promise<TransactionDoc> => {
         const parcelInvoice = await this.codechainAgent.getParcelInvoice(parcel.hash());
-        const transactionInvoice = (parcelInvoice as Invoice[])[transactionIndex];
+        const transactionInvoice = parcelInvoice ? (parcelInvoice as Invoice[])[transactionIndex] : undefined;
         if (transaction instanceof AssetMintTransaction) {
             const metadata = Type.getMetadata(transaction.metadata);
             return {
