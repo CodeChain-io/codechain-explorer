@@ -14,6 +14,41 @@ interface Props {
     transactions: TransactionDoc[];
 }
 
+
+function getTotalAssetCount(transaction: TransactionDoc) {
+    let totalInputCount = 0;
+    if (Type.isAssetMintTransactionDoc(transaction)) {
+        totalInputCount = (transaction as AssetMintTransactionDoc).data.output.amount || 0;
+    } else if (Type.isAssetTransferTransactionDoc(transaction)) {
+        totalInputCount = _.sumBy((transaction as AssetTransferTransactionDoc).data.inputs, (input) => input.prevOut.amount);
+    }
+    const totalBurnCount = Type.isAssetTransferTransactionDoc(transaction) ? _.sumBy((transaction as AssetTransferTransactionDoc).data.burns, (burn) => burn.prevOut.amount) : 0
+    return totalInputCount + totalBurnCount
+}
+
+function getAssetInfo(transaction: TransactionDoc) {
+    let assetType = "";
+    let assetIamge;
+    if (Type.isAssetMintTransactionDoc(transaction)) {
+        assetType = (transaction as AssetMintTransactionDoc).data.output.assetType;
+        assetIamge = Type.getMetadata((transaction as AssetMintTransactionDoc).data.metadata).icon_url;
+    } else {
+        if ((transaction as AssetTransferTransactionDoc).data.inputs.length > 0) {
+            assetType = (transaction as AssetTransferTransactionDoc).data.inputs[0].prevOut.assetType;
+            assetIamge = Type.getMetadata((transaction as AssetTransferTransactionDoc).data.inputs[0].prevOut.assetScheme.metadata).icon_url;
+        } else if ((transaction as AssetTransferTransactionDoc).data.burns.length > 0) {
+            assetType = (transaction as AssetTransferTransactionDoc).data.burns[0].prevOut.assetType;
+            assetIamge = Type.getMetadata((transaction as AssetTransferTransactionDoc).data.burns[0].prevOut.assetScheme.metadata).icon_url;
+        }
+    }
+    return (
+        <span>
+            <ImageLoader className="mr-2" data={assetType} url={assetIamge} size={18} />
+            <HexString link={`/asset/0x${assetType}`} text={assetType} />
+        </span>
+    )
+}
+
 const LatestTransactions = (props: Props) => {
     const { transactions } = props;
     return <div className="latest-transactions">
@@ -36,17 +71,8 @@ const LatestTransactions = (props: Props) => {
                                 <tr key={`home-transaction-hash-${transaction.data.hash}`}>
                                     <td><TypeBadge transaction={transaction} /> </td>
                                     <td scope="row"><HexString link={`/tx/0x${transaction.data.hash}`} text={transaction.data.hash} /></td>
-                                    <td>{Type.isAssetMintTransactionDoc(transaction) ?
-                                        <span>
-                                            <ImageLoader size={18} className="icon" url={Type.getMetadata((transaction as AssetMintTransactionDoc).data.metadata).icon_url} data={(transaction as AssetMintTransactionDoc).data.output.assetType} />
-                                            <HexString link={`/asset/0x${(transaction as AssetMintTransactionDoc).data.output.assetType}`} text={(transaction as AssetMintTransactionDoc).data.output.assetType} />
-                                        </span>
-                                        : (Type.isAssetTransferTransactionDoc(transaction) ?
-                                            <span>
-                                                <ImageLoader size={18} className="icon" data={(transaction as AssetTransferTransactionDoc).data.inputs[0].prevOut.assetType} url={Type.getMetadata((transaction as AssetTransferTransactionDoc).data.inputs[0].prevOut.assetScheme.metadata).icon_url} />
-                                                <HexString link={`/asset/0x${(transaction as AssetTransferTransactionDoc).data.inputs[0].prevOut.assetType}`} text={(transaction as AssetTransferTransactionDoc).data.inputs[0].prevOut.assetType} />
-                                            </span> : "")}</td>
-                                    <td>{Type.isAssetMintTransactionDoc(transaction) ? ((transaction as AssetMintTransactionDoc).data.output.amount ? ((transaction as AssetMintTransactionDoc).data.output.amount as number).toLocaleString() : 0) : (Type.isAssetTransferTransactionDoc(transaction) ? _.sumBy((transaction as AssetTransferTransactionDoc).data.inputs, (input) => input.prevOut.amount) : "").toLocaleString()}</td>
+                                    <td>{getAssetInfo(transaction)}</td>
+                                    <td>{getTotalAssetCount(transaction).toLocaleString()}</td>
                                     <td>{moment.unix(transaction.data.timestamp).fromNow()}</td>
                                 </tr>
                             );
