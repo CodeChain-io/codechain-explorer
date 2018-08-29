@@ -21,15 +21,6 @@ const AddressDetails = (prop: OwnProps) => {
                 <div className="data-set">
                     <Row>
                         <Col md="3">
-                            Name
-                        </Col>
-                        <Col md="9">
-                            Not implemented
-                        </Col>
-                    </Row>
-                    <hr />
-                    <Row>
-                        <Col md="3">
                             # of Transactions
                         </Col>
                         <Col md="9">
