@@ -87,7 +87,7 @@ class BlockDetails extends React.Component<OwnProps> {
                                 </Col>
                                 <Col md="9">
                                     <div className="text-area">
-                                        {_.map(block.seal, (s) => s.toString("hex")).join(" ")}
+                                        {_.map(block.seal, (s) => Buffer.from(s).toString("hex")).join(" ")}
                                     </div>
                                 </Col>
                             </Row>
@@ -98,7 +98,7 @@ class BlockDetails extends React.Component<OwnProps> {
                                 </Col>
                                 <Col md="9">
                                     <div className="text-area">
-                                        {block.extraData}
+                                        {Buffer.from(block.extraData)}
                                     </div>
                                 </Col>
                             </Row>

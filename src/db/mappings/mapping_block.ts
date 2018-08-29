@@ -7,7 +7,14 @@ export const getMappingBlock = () => {
                 "type": "keyword",
             },
             "extraData": {
-                "type": "keyword",
+                "properties": {
+                    "data": {
+                        "type": "long"
+                    },
+                    "type": {
+                        "type": "keyword",
+                    }
+                }
             },
             "hash": {
                 "type": "keyword",
@@ -34,7 +41,14 @@ export const getMappingBlock = () => {
                 "type": "keyword",
             },
             "seal": {
-                "type": "keyword",
+                "properties": {
+                    "data": {
+                        "type": "long"
+                    },
+                    "type": {
+                        "type": "keyword",
+                    }
+                }
             },
             "stateRoot": {
                 "type": "keyword",
