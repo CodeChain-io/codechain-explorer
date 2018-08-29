@@ -105,7 +105,7 @@ class AssetTransferAddress extends React.Component<Props, State> {
                                 : null
                         }
                         {
-                            transactions.length > 0 ?
+                            totalTransactionCount > 0 ?
                                 <div className="mt-large">
                                     <TransactionList owner={address} hideTitle={true} transactions={transactions} totalCount={totalTransactionCount} loadMoreAction={this.loadMoreTransaction} hideMoreButton={noMoreTransaction} />
                                 </div>
@@ -126,10 +126,10 @@ class AssetTransferAddress extends React.Component<Props, State> {
     }
 
     private onTransactions = (transactions: TransactionDoc[]) => {
-        if (transactions.length < this.transactionItemsPerPage) {
+        this.setState({ transactions: this.state.transactions.concat(transactions), loadTransaction: false });
+        if (this.state.transactions.length >= this.state.totalTransactionCount) {
             this.setState({ noMoreTransaction: true });
         }
-        this.setState({ transactions: this.state.transactions.concat(transactions), loadTransaction: false });
     }
 
     private onTransactionTotalCount = (totalCount: number) => {

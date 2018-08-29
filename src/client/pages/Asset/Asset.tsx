@@ -113,10 +113,10 @@ class Asset extends React.Component<Props, State> {
     }
 
     private onTransactionList = (transactions: TransactionDoc[]) => {
-        if (transactions.length < this.itemsPerPage) {
+        this.setState({ transactions: this.state.transactions.concat(transactions), loadTransaction: false });
+        if (this.state.transactions.length >= this.state.totalTransactionCount) {
             this.setState({ noMoreTransaction: true });
         }
-        this.setState({ transactions: this.state.transactions.concat(transactions), loadTransaction: false });
     }
 
     private onAssetSchemeNotFound = () => {
