@@ -87,7 +87,7 @@ class BlockDetails extends React.Component<OwnProps> {
                                 </Col>
                                 <Col md="9">
                                     <div className="text-area">
-                                        {block.seal}
+                                        {_.map(block.seal, (s) => s.toString("hex")).join(" ")}
                                     </div>
                                 </Col>
                             </Row>
