@@ -19,6 +19,7 @@ interface Props {
     loadMoreAction?: () => void;
     totalCount: number;
     hideMoreButton?: boolean;
+    hideTitle?: boolean;
 }
 
 interface State {
@@ -36,7 +37,7 @@ class ParcelList extends React.Component<Props, State> {
 
     public render() {
         const { page } = this.state;
-        const { parcels, address, loadMoreAction, totalCount, hideMoreButton } = this.props;
+        const { parcels, address, loadMoreAction, totalCount, hideMoreButton, hideTitle } = this.props;
         let loadedParcels;
         if (loadMoreAction) {
             loadedParcels = parcels;
@@ -62,7 +63,11 @@ class ParcelList extends React.Component<Props, State> {
                                 <div className="card-list-item-header">
                                     <Row>
                                         <Col md="3">
-                                            <span className="title">Parcel #{i}</span>
+                                            {
+                                                !hideTitle ?
+                                                    <span className="title">Parcel #{i}</span>
+                                                    : null
+                                            }
                                         </Col>
                                         <Col md="9">
                                             <span className="timestamp float-right">{parcel.timestamp !== 0 ? moment.unix(parcel.timestamp).format("YYYY-MM-DD HH:mm:ssZ") : ""}</span>

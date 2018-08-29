@@ -92,7 +92,7 @@ class Asset extends React.Component<Props, State> {
                 {
                     totalTransactionCount !== 0 ?
                         <div className="mt-large">
-                            <TransactionList assetType={new H256(assetType)} transactions={transactions} totalCount={totalTransactionCount} loadMoreAction={this.loadMoreAction} hideMoreButton={noMoreTransaction} />
+                            <TransactionList assetType={new H256(assetType)} hideTitle={true} transactions={transactions} totalCount={totalTransactionCount} loadMoreAction={this.loadMoreAction} hideMoreButton={noMoreTransaction} />
                         </div>
                         : null
                 }

@@ -107,7 +107,7 @@ class AssetTransferAddress extends React.Component<Props, State> {
                         {
                             transactions.length > 0 ?
                                 <div className="mt-large">
-                                    <TransactionList owner={address} transactions={transactions} totalCount={totalTransactionCount} loadMoreAction={this.loadMoreTransaction} hideMoreButton={noMoreTransaction} />
+                                    <TransactionList owner={address} hideTitle={true} transactions={transactions} totalCount={totalTransactionCount} loadMoreAction={this.loadMoreTransaction} hideMoreButton={noMoreTransaction} />
                                 </div>
                                 : null
                         }

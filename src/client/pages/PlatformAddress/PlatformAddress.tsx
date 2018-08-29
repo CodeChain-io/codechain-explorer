@@ -129,7 +129,7 @@ class Address extends React.Component<Props, State> {
                 {
                     parcels.length > 0 ?
                         <div className="mt-large">
-                            <ParcelList address={address} parcels={parcels} totalCount={totalParcelCount} loadMoreAction={this.loadMoreParcel} hideMoreButton={noMoreParcel} />
+                            <ParcelList address={address} hideTitle={true} parcels={parcels} totalCount={totalParcelCount} loadMoreAction={this.loadMoreParcel} hideMoreButton={noMoreParcel} />
                         </div>
                         : null
                 }

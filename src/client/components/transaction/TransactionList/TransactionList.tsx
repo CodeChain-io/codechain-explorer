@@ -23,6 +23,7 @@ interface Props {
     loadMoreAction?: () => void;
     totalCount: number;
     hideMoreButton?: boolean;
+    hideTitle?: boolean;
 }
 
 interface State {
@@ -40,7 +41,7 @@ class TransactionList extends React.Component<Props, State> {
 
     public render() {
         const { page } = this.state;
-        const { transactions, assetType, owner, loadMoreAction, totalCount, hideMoreButton } = this.props;
+        const { transactions, assetType, owner, loadMoreAction, totalCount, hideMoreButton, hideTitle } = this.props;
         let loadedTransactions;
         if (loadMoreAction) {
             loadedTransactions = transactions;
@@ -66,7 +67,11 @@ class TransactionList extends React.Component<Props, State> {
                                 <div className="card-list-item-header">
                                     <Row>
                                         <Col md="3">
-                                            <span className="title">Transaction #{i}</span>
+                                            {
+                                                !hideTitle ?
+                                                    <span className="title">Transaction #{i}</span>
+                                                    : null
+                                            }
                                         </Col>
                                         <Col md="9">
                                             <span className="timestamp float-right">{transaction.data.timestamp !== 0 ? moment.unix(transaction.data.timestamp).format("YYYY-MM-DD HH:mm:ssZ") : ""}</span>
