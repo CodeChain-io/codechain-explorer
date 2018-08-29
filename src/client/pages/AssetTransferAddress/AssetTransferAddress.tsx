@@ -32,7 +32,7 @@ interface State {
 
 class AssetTransferAddress extends React.Component<Props, State> {
     private utxoItemsPerPage = 12;
-    private transactionItemsPerPage = 3;
+    private transactionItemsPerPage = 6;
     constructor(props: Props) {
         super(props);
         this.state = { utxo: [], transactions: [], pageForTransactions: 1, totalTransactionCount: 0, loadUTXO: true, loadTransaction: true, noMoreUTXO: false, noMoreTransaction: false };

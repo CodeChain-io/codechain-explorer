@@ -55,7 +55,7 @@ export class QueryTransaction implements BaseAction {
         return count.count;
     }
 
-    public async getTransactionsByAssetType(assetType: H256, page: number = 1, itemsPerPage: number = 3): Promise<TransactionDoc[]> {
+    public async getTransactionsByAssetType(assetType: H256, page: number = 1, itemsPerPage: number = 6): Promise<TransactionDoc[]> {
         const response = await this.searchTransaction({
             "sort": [
                 { "data.blockNumber": { "order": "desc" } },
@@ -104,7 +104,7 @@ export class QueryTransaction implements BaseAction {
         return count.count;
     }
 
-    public async getTransactionsByAssetTransferAddress(address: string, page: number = 1, itemsPerPage: number = 3): Promise<TransactionDoc[]> {
+    public async getTransactionsByAssetTransferAddress(address: string, page: number = 1, itemsPerPage: number = 6): Promise<TransactionDoc[]> {
         const response = await this.searchTransaction({
             "sort": [
                 { "data.blockNumber": { "order": "desc" } },
@@ -155,7 +155,7 @@ export class QueryTransaction implements BaseAction {
         return count.count;
     }
 
-    public async getAssetBundlesByPlatformAddress(address: string, page: number = 1, itemsPerPage: number = 3): Promise<AssetBundleDoc[]> {
+    public async getAssetBundlesByPlatformAddress(address: string, page: number = 1, itemsPerPage: number = 6): Promise<AssetBundleDoc[]> {
         const response = await this.searchTransaction({
             "sort": [
                 { "data.blockNumber": { "order": "desc" } },
@@ -207,7 +207,7 @@ export class QueryTransaction implements BaseAction {
         return count.count;
     }
 
-    public async getAssetsByAssetTransferAddress(address: string, lastBlockNumber: number = Number.MAX_VALUE, lastParcelIndex: number = Number.MAX_VALUE, lastTransactionIndex: number = Number.MAX_VALUE, itemsPerPage: number = 3): Promise<AssetDoc[]> {
+    public async getAssetsByAssetTransferAddress(address: string, lastBlockNumber: number = Number.MAX_VALUE, lastParcelIndex: number = Number.MAX_VALUE, lastTransactionIndex: number = Number.MAX_VALUE, itemsPerPage: number = 6): Promise<AssetDoc[]> {
         const response = await this.searchTransaction({
             "sort": [
                 { "data.blockNumber": { "order": "desc" } },

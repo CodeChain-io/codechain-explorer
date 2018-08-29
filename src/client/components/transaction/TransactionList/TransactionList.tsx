@@ -31,7 +31,7 @@ interface State {
 }
 
 class TransactionList extends React.Component<Props, State> {
-    private itemPerPage = 3;
+    private itemPerPage = 6;
     constructor(props: Props) {
         super(props);
         this.state = {

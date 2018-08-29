@@ -115,7 +115,7 @@ export class QueryBlock implements BaseAction {
         return count.count;
     }
 
-    public async getBlocksByPlatformAddress(address: string, page: number = 1, itemsPerPage: number = 3): Promise<BlockDoc[]> {
+    public async getBlocksByPlatformAddress(address: string, page: number = 1, itemsPerPage: number = 6): Promise<BlockDoc[]> {
         return this.searchBlock({
             "sort": [
                 {

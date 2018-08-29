@@ -46,8 +46,8 @@ interface State {
 
 class Address extends React.Component<Props, State> {
     private asssetBundleItemsPerPage = 12;
-    private blockItemsPerPage = 3;
-    private parcelItemsPerPage = 3;
+    private blockItemsPerPage = 6;
+    private parcelItemsPerPage = 6;
     constructor(props: Props) {
         super(props);
         this.state = { blocks: [], parcels: [], assetBundles: [], notFound: false, loadBlock: true, loadParcel: true, loadAssetBundle: true, pageForBlock: 1, pageForParcel: 1, pageForAssetBundle: 1, noMoreBlock: false, noMoreParcel: false, noMoreAssetBundle: false, totalAssetBundleCount: 0, totalBlockCount: 0, totalParcelCount: 0 };

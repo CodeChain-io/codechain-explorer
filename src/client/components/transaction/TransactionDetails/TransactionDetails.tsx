@@ -29,7 +29,7 @@ interface State {
 }
 
 class TransactionDetailsInternal extends React.Component<Props, State> {
-    private itemsPerPage = 3;
+    private itemsPerPage = 6;
     private refList: any = {};
     constructor(props: Props) {
         super(props);

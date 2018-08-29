@@ -58,7 +58,7 @@ export class QueryParcel implements BaseAction {
         return count.count;
     }
 
-    public async getParcelsByPlatformAddress(address: string, page: number = 1, itemsPerPage: number = 3): Promise<ParcelDoc[]> {
+    public async getParcelsByPlatformAddress(address: string, page: number = 1, itemsPerPage: number = 6): Promise<ParcelDoc[]> {
         const response = await this.searchParcel({
             "sort": [
                 { "blockNumber": { "order": "desc" } },

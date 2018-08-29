@@ -32,7 +32,7 @@ interface State {
 }
 
 class Asset extends React.Component<Props, State> {
-    private itemsPerPage = 3;
+    private itemsPerPage = 6;
     constructor(props: Props) {
         super(props);
         this.state = { transactions: [], page: 1, totalTransactionCount: 0, loadTransaction: true, noMoreTransaction: false, notExistedInBlock: false, notExistedInPendingParcel: false };
