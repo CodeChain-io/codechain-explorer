@@ -28,6 +28,7 @@ import RequestTotalPlatformBlockCount from "./RequestTotalPlatformBlockCount";
 import RequestTotalPlatformParcelCount from "./RequestTotalPlatformParcelCount";
 import RequestWeeklyLogs from "./RequestWeeklyLogs";
 import RequestDailyLogs from "./RequestDailyLogs";
+import RequestPendingAssetScheme from "./RequestPendingAssetScheme";
 
 export { RequestPing };
 export { RequestParcel };
@@ -59,3 +60,4 @@ export { RequestTotalPlatformBlockCount };
 export { RequestTotalPlatformParcelCount };
 export { RequestWeeklyLogs };
 export { RequestDailyLogs };
+export { RequestPendingAssetScheme };

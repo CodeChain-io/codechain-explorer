@@ -48,6 +48,20 @@ function handle(context: ServerContext, router: Router) {
             next(e);
         }
     });
+
+    router.get("/asset/pending/:assetType", async (req, res, next) => {
+        const { assetType } = req.params;
+        try {
+            if (!Type.isH256String(assetType)) {
+                res.send(JSON.stringify(null));
+                return;
+            }
+            const assetScheme = await context.db.getPendingAssetScheme(new H256(assetType));
+            assetScheme ? res.send(assetScheme) : res.send(JSON.stringify(null));
+        } catch (e) {
+            next(e);
+        }
+    });
 }
 
 export const AssetAction = {

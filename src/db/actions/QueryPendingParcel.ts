@@ -1,5 +1,5 @@
 import * as _ from "lodash";
-import { PendingParcelDoc, PendingTransactionDoc, TransactionDoc, Type, ChangeShardStateDoc } from "../DocType";
+import { PendingParcelDoc, PendingTransactionDoc, TransactionDoc, Type, ChangeShardStateDoc, AssetSchemeDoc, AssetMintTransactionDoc } from "../DocType";
 import { H256 } from "codechain-sdk/lib/core/classes";
 import { SearchResponse, Client, DeleteDocumentResponse, CountResponse } from "elasticsearch";
 import { BaseAction } from "./BaseAction";
@@ -144,6 +144,31 @@ export class QueryPendingParcel implements BaseAction {
             status: response.hits.hits[0]._source.status,
             transaction: transactionDoc[0]
         }
+    }
+
+    public async getPendingAssetScheme(assetType: H256): Promise<AssetSchemeDoc | null> {
+        const response = await this.searchPendinParcel({
+            "size": 1,
+            "query": {
+                "bool": {
+                    "must": [
+                        { "term": { "status": "pending" } },
+                        { "term": { "parcel.action.transactions.data.output.assetType": assetType.value } }
+                    ]
+                }
+            }
+        });
+        if (response.hits.total === 0) {
+            return null;
+        }
+        const transactionDoc = _.chain(response.hits.hits).flatMap(hit => (hit._source as PendingParcelDoc))
+            .map(PendingParcel => PendingParcel.parcel)
+            .filter(parcel => Type.isChangeShardStateDoc(parcel.action))
+            .flatMap(parcel => (parcel.action as ChangeShardStateDoc).transactions)
+            .filter((transaction) => Type.isAssetMintTransactionDoc(transaction))
+            .filter((transaction: AssetMintTransactionDoc) => transaction.data.output.assetType === assetType.value)
+            .value()
+        return Type.getAssetSchemeDoc(transactionDoc[0] as AssetMintTransactionDoc);
     }
 
     public async getDeadPendingParcels(): Promise<PendingParcelDoc[]> {

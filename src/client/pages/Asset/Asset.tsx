@@ -14,6 +14,7 @@ import { H256 } from "codechain-sdk/lib/core/H256";
 import HexString from "../../components/util/HexString/HexString";
 import { ImageLoader } from "../../components/util/ImageLoader/ImageLoader";
 import CopyButton from "../../components/util/CopyButton/CopyButton";
+import RequestPendingAssetScheme from "../../request/RequestPendingAssetScheme";
 
 interface Props {
     match: match<{ assetType: string }>;
@@ -22,41 +23,45 @@ interface Props {
 interface State {
     transactions: TransactionDoc[];
     assetScheme?: AssetSchemeDoc;
-    notFound: boolean;
     page: number;
     totalTransactionCount: number;
     loadTransaction: boolean;
     noMoreTransaction: boolean;
+    notExistedInBlock: boolean;
+    notExistedInPendingParcel: boolean;
 }
 
 class Asset extends React.Component<Props, State> {
     private itemsPerPage = 3;
     constructor(props: Props) {
         super(props);
-        this.state = { notFound: false, transactions: [], page: 1, totalTransactionCount: 0, loadTransaction: true, noMoreTransaction: false };
+        this.state = { transactions: [], page: 1, totalTransactionCount: 0, loadTransaction: true, noMoreTransaction: false, notExistedInBlock: false, notExistedInPendingParcel: false };
     }
 
     public componentWillReceiveProps(props: Props) {
         const { match: { params: { assetType } } } = this.props;
         const { match: { params: { assetType: nextType } } } = props;
         if (nextType !== assetType) {
-            this.setState({ ...this.state, assetScheme: undefined, transactions: [], page: 1, totalTransactionCount: 0, loadTransaction: true, noMoreTransaction: false });
+            this.setState({ ...this.state, assetScheme: undefined, transactions: [], page: 1, totalTransactionCount: 0, loadTransaction: true, noMoreTransaction: false, notExistedInBlock: false, notExistedInPendingParcel: false });
         }
     }
 
     public render() {
         const { match: { params: { assetType } } } = this.props;
-        const { notFound, assetScheme, transactions, totalTransactionCount, page, loadTransaction, noMoreTransaction } = this.state;
+        const { notExistedInBlock, notExistedInPendingParcel, assetScheme, transactions, totalTransactionCount, page, loadTransaction, noMoreTransaction } = this.state;
 
-        if (notFound) {
-            return (
-                <div>
-                    <Error content={assetType} title="The asset does not exist." />
-                </div>
-            )
-        }
         if (!assetScheme) {
-            return <RequestAssetScheme assetType={assetType} onAssetScheme={this.onAssetScheme} onAssetSchemeNotExist={this.onAssetSchemeNotFound} onError={this.onError} />;
+            if (!notExistedInBlock) {
+                return <RequestAssetScheme assetType={assetType} onAssetScheme={this.onAssetScheme} onAssetSchemeNotExist={this.onAssetSchemeNotFound} onError={this.onError} />
+            } else if (!notExistedInPendingParcel) {
+                return <RequestPendingAssetScheme assetType={assetType} onAssetScheme={this.onAssetScheme} onAssetSchemeNotExist={this.onPendingAssetSchemeNotFound} onError={this.onError} />
+            } else {
+                return (
+                    <div>
+                        <Error content={assetType} title="The asset does not exist." />
+                    </div>
+                )
+            }
         }
         return (
             <Container className="asset">
@@ -119,13 +124,16 @@ class Asset extends React.Component<Props, State> {
         }
     }
 
+    private onPendingAssetSchemeNotFound = () => {
+        this.setState({ notExistedInPendingParcel: true });
+    }
+
     private onAssetSchemeNotFound = () => {
-        this.setState({ notFound: true, loadTransaction: false });
+        this.setState({ notExistedInBlock: true });
     }
 
     private onError = (e: any) => {
         console.log(e);
-        this.setState({ loadTransaction: false });
     }
 }
 
