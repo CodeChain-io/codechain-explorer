@@ -1,45 +1,60 @@
 @import "../../../variables.scss";
 @import "../../../mixins.scss";
+
 .transaction-summary {
   .arrow-icon {
     color: #BDBDBD;
   }
+
   .summary-item {
     border: 1px solid $line-color;
+
     .title-panel {
       border-bottom: 1px solid $line-color;
       padding: 6px;
       background-color: $background-gray;
+
       .burn-title {
         color: #9F3636;
       }
     }
+
     .item-panel {
-      padding: 20px;
+      padding-top: 20px;
+      padding-left: 20px;
+      padding-right: 20px;
+      padding-bottom: 10px;
+
       .icon {
         margin-right: 20px;
+        margin-bottom: 10px;
         width: 42px;
         height: 42px;
         cursor: pointer;
       }
     }
+
     .content-panel {
       padding: 20px;
+
       .content-item {
         .content-title {
           max-width: 200px;
           overflow: hidden;
           text-overflow: ellipsis;
         }
+
         .content-description {
           margin-top: 5px;
           @include small-text;
         }
       }
     }
+
     .registrar-panel {
       border-top: 1px solid $line-color;
       padding: 6px;
+
       .registrar-text {
         flex-grow: 1;
         text-overflow: ellipsis;
