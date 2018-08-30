@@ -196,6 +196,15 @@ class TransactionList extends React.Component<Props, State> {
                         </Col>
                     </Row>,
                     <hr key="line2" />,
+                    <Row key="count-of-burn">
+                        <Col md="3">
+                            # of Burn
+                        </Col>
+                        <Col md="9">
+                            {transactionDoc.data.burns.length.toLocaleString()}
+                        </Col>
+                    </Row>,
+                    <hr key="line3" />,
                     <div key="input-output">
                         <Row>
                             <Col md="5">

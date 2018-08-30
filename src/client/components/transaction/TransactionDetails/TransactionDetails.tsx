@@ -157,6 +157,15 @@ class TransactionDetailsInternal extends React.Component<Props, State> {
                                     </Col>
                                 </Row>
                                 <hr />
+                                <Row>
+                                    <Col md="3">
+                                        # of Burn
+                                    </Col>
+                                    <Col md="9">
+                                        {transactionDoc.data.burns.length.toLocaleString()}
+                                    </Col>
+                                </Row>
+                                <hr />
                             </div>
                         </Col>
                     </Row>,
