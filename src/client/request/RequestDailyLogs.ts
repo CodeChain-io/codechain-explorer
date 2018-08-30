@@ -19,6 +19,7 @@ interface OwnProps {
             label: string;
             value: number;
             color: string;
+            minerAddress?: string;
         }>
     ) => void;
     onEmptyResult: () => void;
@@ -80,7 +81,8 @@ class RequestDailyLogsInternal extends React.Component<Props> {
                     id: `${bestMiner.value.slice(0, 7)}... (${((bestMiner.count / total) * 100).toFixed(1)}%)`,
                     label: `${bestMiner.value.slice(0, 7)}...`,
                     value: bestMiner.count,
-                    color: this.getColor(index)
+                    color: this.getColor(index),
+                    minerAddress: bestMiner.value
                 };
             });
             onData(results);

@@ -11,4 +11,9 @@
   g > rect {
     cursor: pointer;
   }
+  .daily-log-item.block {
+    g > path {
+      cursor: pointer;
+    }
+  }
 }

@@ -4,6 +4,7 @@ import * as React from "react";
 import { Col, Row } from "reactstrap";
 const { ResponsiveBar } = require("@nivo/bar");
 const { ResponsivePie } = require("@nivo/pie");
+import { Redirect } from "react-router";
 
 import { RequestBlockNumber, RequestDailyLogs, RequestWeeklyLogs } from "../../../request";
 import { DailyLogType } from "../../../request/RequestDailyLogs";
@@ -29,8 +30,10 @@ interface State {
         color: string;
     }>;
     selectedDate: string;
+    selectedIndex: number;
     isEmptyForDailyLog: boolean;
     bestBlockNumber?: number;
+    selectedMinerAddress?: string;
 }
 
 class Summary extends React.Component<{}, State> {
@@ -41,13 +44,15 @@ class Summary extends React.Component<{}, State> {
             isWeeklyLogRequested: false,
             type: WeeklyLogType.BLOCK_COUNT,
             isDailyLogRequested: false,
+            selectedIndex: 6,
             dailyLogType: DailyLogType.BEST_MINER,
             dailyLogs: [],
             selectedDate: moment()
                 .utc()
                 .format("YYYY-MM-DD"),
             isEmptyForDailyLog: false,
-            bestBlockNumber: undefined
+            bestBlockNumber: undefined,
+            selectedMinerAddress: undefined
         };
     }
     public render() {
@@ -60,7 +65,9 @@ class Summary extends React.Component<{}, State> {
             dailyLogs,
             selectedDate,
             isEmptyForDailyLog,
-            bestBlockNumber
+            bestBlockNumber,
+            selectedIndex,
+            selectedMinerAddress
         } = this.state;
         const before7days = moment()
             .utc()
@@ -69,9 +76,9 @@ class Summary extends React.Component<{}, State> {
         const today = moment()
             .utc()
             .format("YYYY-MM-DD");
-        const lastWeeklyLog = _.last(weeklyLogs);
         return (
             <div className="summary">
+                {selectedMinerAddress ? <Redirect push={true} to={`/addr-platform/${selectedMinerAddress}`} /> : null}
                 <RequestBlockNumber repeat={10000} onBlockNumber={this.onBlockNumber} onError={this.onError} />
                 {!isWeeklyLogRequested ? (
                     <RequestWeeklyLogs type={type} onData={this.onWeeklyLogData} onError={this.onError} />
@@ -153,14 +160,16 @@ class Summary extends React.Component<{}, State> {
                         </div>
                     </Col>
                     <Col lg="6" className="mt-3 mt-lg-0">
-                        <div className="chart-container">
+                        <div className={`chart-container daily-log-item ${this.getDailyLogTitle(dailyLogType)}`}>
                             <div className="chart">
                                 <div className="header-part">
                                     <h2 className="title">Daily {this.getDailyLogTitle(dailyLogType)} log</h2>
                                     <p className="week">{selectedDate} (UTC+0000)</p>
                                     <span className="subtitle">{this.getDailyLogSubTitle(dailyLogType)}</span>
                                     <span className="subtitle-amount">
-                                        {lastWeeklyLog ? parseInt(lastWeeklyLog["#"], 10).toLocaleString() : 0}
+                                        {weeklyLogs.length > 0
+                                            ? parseInt(weeklyLogs[selectedIndex]["#"], 10).toLocaleString()
+                                            : 0}
                                     </span>
                                     <hr />
                                     <span className="subname">{this.getDailyLogSubName(dailyLogType)}</span>
@@ -203,6 +212,7 @@ class Summary extends React.Component<{}, State> {
                                             animate={true}
                                             motionStiffness={90}
                                             motionDamping={15}
+                                            onClick={this.onClickDailyLog}
                                             theme={{
                                                 tooltip: {
                                                     container: {
@@ -225,7 +235,11 @@ class Summary extends React.Component<{}, State> {
     }
 
     private onClickWeeklyLog = (event: any) => {
-        this.setState({ selectedDate: event.data.fullDate, isDailyLogRequested: false });
+        this.setState({ selectedDate: event.data.fullDate, isDailyLogRequested: false, selectedIndex: event.index });
+    };
+
+    private onClickDailyLog = (event: any) => {
+        this.setState({ selectedMinerAddress: event.minerAddress });
     };
 
     private onWeeklyLogTypeChanged = (event: any) => {
