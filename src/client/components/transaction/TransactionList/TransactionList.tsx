@@ -204,123 +204,195 @@ class TransactionList extends React.Component<Props, State> {
                             {transactionDoc.data.burns.length.toLocaleString()}
                         </Col>
                     </Row>,
-                    <hr key="line3" />,
-                    <div key="input-output">
-                        <Row>
-                            <Col md="5">
-                                {
-                                    _.map(transactionDoc.data.inputs.slice(0, 3), (input, i) => {
-                                        return (
-                                            <div key={`input-${i}`} className={`data-set input-output-container ${owner && input.prevOut.owner === owner ? "input-highlight" : ""}`}>
-                                                <Row>
-                                                    <Col md="0" />
-                                                    <Col md="12">
-                                                        <ImageLoader data={input.prevOut.assetType} url={Type.getMetadata(input.prevOut.assetScheme.metadata).icon_url} className="icon mr-2" size={18} />
-                                                        {assetType && assetType.value === input.prevOut.assetType ? <HexString text={input.prevOut.assetType} /> : <HexString link={`/asset/0x${input.prevOut.assetType}`} text={input.prevOut.assetType} />}
-                                                    </Col>
-                                                </Row>
-                                                <Row>
-                                                    <Col md="4">
-                                                        Owner
-                                                    </Col>
-                                                    <Col md="8">{
-                                                        input.prevOut.owner ?
-                                                            (
-                                                                owner && owner === input.prevOut.owner ?
-                                                                    input.prevOut.owner
-                                                                    : <Link to={`/addr-asset/${input.prevOut.owner}`}>{input.prevOut.owner}</Link>
-                                                            )
-                                                            : "Unknown"
-                                                    }
-                                                    </Col>
-                                                </Row>
-                                                <hr />
-                                                <Row>
-                                                    <Col md="4">
-                                                        Amount
+                    <div key="input-output-burn">
+                        {
+                            transactionDoc.data.inputs.length > 0 ?
+                                [
+                                    <hr key="line3" />,
+                                    <div key="input-output">
+                                        <Row>
+                                            <Col md="5">
+                                                <p className="mt-1 mb-0">Input</p>
+                                                {
+                                                    _.map(transactionDoc.data.inputs.slice(0, 3), (input, i) => {
+                                                        return (
+                                                            <div key={`input-${i}`} className={`data-set input-output-container ${owner && input.prevOut.owner === owner ? "input-highlight" : ""}`}>
+                                                                <Row>
+                                                                    <Col md="0" />
+                                                                    <Col md="12">
+                                                                        <ImageLoader data={input.prevOut.assetType} url={Type.getMetadata(input.prevOut.assetScheme.metadata).icon_url} className="icon mr-2" size={18} />
+                                                                        {assetType && assetType.value === input.prevOut.assetType ? <HexString text={input.prevOut.assetType} /> : <HexString link={`/asset/0x${input.prevOut.assetType}`} text={input.prevOut.assetType} />}
+                                                                    </Col>
+                                                                </Row>
+                                                                <Row>
+                                                                    <Col md="4">
+                                                                        Owner
+                                                                    </Col>
+                                                                    <Col md="8">{
+                                                                        input.prevOut.owner ?
+                                                                            (
+                                                                                owner && owner === input.prevOut.owner ?
+                                                                                    input.prevOut.owner
+                                                                                    : <Link to={`/addr-asset/${input.prevOut.owner}`}>{input.prevOut.owner}</Link>
+                                                                            )
+                                                                            : "Unknown"
+                                                                    }
+                                                                    </Col>
+                                                                </Row>
+                                                                <hr />
+                                                                <Row>
+                                                                    <Col md="4">
+                                                                        Amount
                                                         </Col>
-                                                    <Col md="8">
-                                                        {input.prevOut.amount.toLocaleString()}
-                                                    </Col>
-                                                </Row>
-                                            </div>
-                                        )
-                                    })
-                                }
-                                {
-                                    transactionDoc.data.inputs.length > 3 ?
-                                        <div className="view-more-transfer-btn">
-                                            <Link to={`/tx/0x${transactionDoc.data.hash}`}>
-                                                <button type="button" className="btn btn-primary w-100">
-                                                    <span>View more inputs</span>
-                                                </button>
-                                            </Link>
-                                        </div>
-                                        : null
-                                }
-                            </Col>
-                            <Col md="2" className="d-flex align-items-center justify-content-center">
-                                <div className="text-center d-none d-md-block arrow-icon">
-                                    <FontAwesomeIcon icon={faChevronCircleRight} size="2x" />
-                                </div>
-                                <div className="d-md-none text-center pt-2 pb-2 arrow-icon">
-                                    <FontAwesomeIcon icon={faChevronCircleDown} size="2x" />
-                                </div>
-                            </Col>
-                            <Col md="5">
-                                {
-                                    _.map(transactionDoc.data.outputs.slice(0, 3), (output, i) => {
-                                        return (
-                                            <div key={`output-${i}`} className={`data-set input-output-container ${owner && output.owner === owner ? "output-highlight" : ""}`}>
-                                                <Row>
-                                                    <Col md="0" />
-                                                    <Col md="12">
-                                                        <ImageLoader data={output.assetType} url={Type.getMetadata(output.assetScheme.metadata).icon_url} className="icon mr-2" size={18} />
-                                                        {assetType && assetType.value === output.assetType ? <HexString text={output.assetType} /> : <HexString link={`/asset/0x${output.assetType}`} text={output.assetType} />}
-                                                    </Col>
-                                                </Row>
-                                                <Row>
-                                                    <Col md="4">
-                                                        Owner
+                                                                    <Col md="8">
+                                                                        {input.prevOut.amount.toLocaleString()}
+                                                                    </Col>
+                                                                </Row>
+                                                            </div>
+                                                        )
+                                                    })
+                                                }
+                                                {
+                                                    transactionDoc.data.inputs.length > 3 ?
+                                                        <div className="view-more-transfer-btn">
+                                                            <Link to={`/tx/0x${transactionDoc.data.hash}`}>
+                                                                <button type="button" className="btn btn-primary w-100">
+                                                                    <span>View more inputs</span>
+                                                                </button>
+                                                            </Link>
+                                                        </div>
+                                                        : null
+                                                }
+                                            </Col>
+                                            <Col md="2" className="d-flex align-items-center justify-content-center">
+                                                <div className="text-center d-none d-md-block arrow-icon">
+                                                    <FontAwesomeIcon icon={faChevronCircleRight} size="2x" />
+                                                </div>
+                                                <div className="d-md-none text-center pt-2 pb-2 arrow-icon">
+                                                    <FontAwesomeIcon icon={faChevronCircleDown} size="2x" />
+                                                </div>
+                                            </Col>
+                                            <Col md="5">
+                                                <p className="mt-1 mb-0">Output</p>
+                                                {
+                                                    _.map(transactionDoc.data.outputs.slice(0, 3), (output, i) => {
+                                                        return (
+                                                            <div key={`output-${i}`} className={`data-set input-output-container ${owner && output.owner === owner ? "output-highlight" : ""}`}>
+                                                                <Row>
+                                                                    <Col md="0" />
+                                                                    <Col md="12">
+                                                                        <ImageLoader data={output.assetType} url={Type.getMetadata(output.assetScheme.metadata).icon_url} className="icon mr-2" size={18} />
+                                                                        {assetType && assetType.value === output.assetType ? <HexString text={output.assetType} /> : <HexString link={`/asset/0x${output.assetType}`} text={output.assetType} />}
+                                                                    </Col>
+                                                                </Row>
+                                                                <Row>
+                                                                    <Col md="4">
+                                                                        Owner
                                                         </Col>
-                                                    <Col md="8">
-                                                        {
-                                                            output.owner ?
-                                                                (
-                                                                    owner && owner === output.owner ?
-                                                                        output.owner
-                                                                        : <Link to={`/addr-asset/${output.owner}`}>{output.owner}</Link>
-                                                                )
-                                                                : "Unknown"
-                                                        }
-                                                    </Col>
-                                                </Row>
-                                                <hr />
-                                                <Row>
-                                                    <Col md="4">
-                                                        Amount
+                                                                    <Col md="8">
+                                                                        {
+                                                                            output.owner ?
+                                                                                (
+                                                                                    owner && owner === output.owner ?
+                                                                                        output.owner
+                                                                                        : <Link to={`/addr-asset/${output.owner}`}>{output.owner}</Link>
+                                                                                )
+                                                                                : "Unknown"
+                                                                        }
+                                                                    </Col>
+                                                                </Row>
+                                                                <hr />
+                                                                <Row>
+                                                                    <Col md="4">
+                                                                        Amount
                                                         </Col>
-                                                    <Col md="8">
-                                                        {output.amount.toLocaleString()}
-                                                    </Col>
-                                                </Row>
-                                            </div>
-                                        )
-                                    })
-                                }
-                                {
-                                    transactionDoc.data.outputs.length > 3 ?
-                                        <div className="view-more-transfer-btn">
-                                            <Link to={`/tx/0x${transactionDoc.data.hash}`}>
-                                                <button type="button" className="btn btn-primary w-100">
-                                                    <span>View more outputs</span>
-                                                </button>
-                                            </Link>
-                                        </div>
-                                        : null
-                                }
-                            </Col>
-                        </Row>
+                                                                    <Col md="8">
+                                                                        {output.amount.toLocaleString()}
+                                                                    </Col>
+                                                                </Row>
+                                                            </div>
+                                                        )
+                                                    })
+                                                }
+                                                {
+                                                    transactionDoc.data.outputs.length > 3 ?
+                                                        <div className="view-more-transfer-btn">
+                                                            <Link to={`/tx/0x${transactionDoc.data.hash}`}>
+                                                                <button type="button" className="btn btn-primary w-100">
+                                                                    <span>View more outputs</span>
+                                                                </button>
+                                                            </Link>
+                                                        </div>
+                                                        : null
+                                                }
+                                            </Col>
+                                        </Row>
+                                    </div>
+                                ] : null
+                        }
+                        {
+                            transactionDoc.data.burns.length > 0 ?
+                                [
+                                    <hr key="line3" />,
+                                    <div key="burn-container">
+                                        <Row>
+                                            <Col md="5">
+                                                <p className="mt-1 mb-0">Burn</p>
+                                                {
+                                                    _.map(transactionDoc.data.burns.slice(0, 3), (burn, i) => {
+                                                        return (
+                                                            <div key={`burn-${i}`} className={`data-set input-output-container ${owner && burn.prevOut.owner === owner ? "input-highlight" : ""}`}>
+                                                                <Row>
+                                                                    <Col md="0" />
+                                                                    <Col md="12">
+                                                                        <ImageLoader data={burn.prevOut.assetType} url={Type.getMetadata(burn.prevOut.assetScheme.metadata).icon_url} className="icon mr-2" size={18} />
+                                                                        {assetType && assetType.value === burn.prevOut.assetType ? <HexString text={burn.prevOut.assetType} /> : <HexString link={`/asset/0x${burn.prevOut.assetType}`} text={burn.prevOut.assetType} />}
+                                                                    </Col>
+                                                                </Row>
+                                                                <Row>
+                                                                    <Col md="4">
+                                                                        Owner
+                                                                </Col>
+                                                                    <Col md="8">{
+                                                                        burn.prevOut.owner ?
+                                                                            (
+                                                                                owner && owner === burn.prevOut.owner ?
+                                                                                    burn.prevOut.owner
+                                                                                    : <Link to={`/addr-asset/${burn.prevOut.owner}`}>{burn.prevOut.owner}</Link>
+                                                                            )
+                                                                            : "Unknown"
+                                                                    }
+                                                                    </Col>
+                                                                </Row>
+                                                                <hr />
+                                                                <Row>
+                                                                    <Col md="4">
+                                                                        Amount
+                                                                    </Col>
+                                                                    <Col md="8">
+                                                                        {burn.prevOut.amount.toLocaleString()}
+                                                                    </Col>
+                                                                </Row>
+                                                            </div>
+                                                        )
+                                                    })
+                                                }
+                                                {
+                                                    transactionDoc.data.burns.length > 3 ?
+                                                        <div className="view-more-transfer-btn">
+                                                            <Link to={`/tx/0x${transactionDoc.data.hash}`}>
+                                                                <button type="button" className="btn btn-primary w-100">
+                                                                    <span>View more burns</span>
+                                                                </button>
+                                                            </Link>
+                                                        </div>
+                                                        : null
+                                                }
+                                            </Col>
+                                        </Row>
+                                    </div>
+                                ] : null
+                        }
                     </div>
                 ]
             )
