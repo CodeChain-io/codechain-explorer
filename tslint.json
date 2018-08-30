@@ -8,8 +8,8 @@
         "interface-name": false,
         "no-console": false,
         "object-literal-sort-keys": false,
-        "ordered-imports": false,
-        "no-var-requires": false
+        "no-var-requires": false,
+        "no-unused-variable": [true, {"ignore-pattern": "^_"}]
     },
     "linterOptions": {
         "exclude": [
