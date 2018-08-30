@@ -8,8 +8,7 @@
         "interface-name": false,
         "no-console": false,
         "object-literal-sort-keys": false,
-        "no-var-requires": false,
-        "no-unused-variable": [true, {"ignore-pattern": "^_"}]
+        "no-var-requires": false
     },
     "jsRules": {
         "no-console": false,
