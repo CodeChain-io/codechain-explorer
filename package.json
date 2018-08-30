@@ -15,11 +15,6 @@
         "@fortawesome/react-fontawesome": "^0.1.0-11",
         "@nivo/line": "^0.42.1",
         "@nivo/pie": "^0.42.1",
-        "@types/bignumber.js": "^5.0.0",
-        "@types/qrcode.react": "^0.8.1",
-        "@types/react-autosuggest": "^9.3.4",
-        "@types/react-copy-to-clipboard": "^4.2.6",
-        "@types/react-fontawesome": "^1.6.3",
         "autoprefixer": "7.1.6",
         "babel-jest": "^22.1.0",
         "babel-loader": "^7.1.2",
@@ -113,6 +108,11 @@
         "@types/reactstrap": "^6.0.0",
         "@types/redux": "^3.6.0",
         "@types/yargs": "^11.0.0",
+        "@types/bignumber.js": "^5.0.0",
+        "@types/qrcode.react": "^0.8.1",
+        "@types/react-autosuggest": "^9.3.4",
+        "@types/react-copy-to-clipboard": "^4.2.6",
+        "@types/react-fontawesome": "^1.6.3",
         "typescript": "2.9.2"
     },
     "jest": {
