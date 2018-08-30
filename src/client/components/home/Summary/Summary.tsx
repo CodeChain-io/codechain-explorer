@@ -2,7 +2,7 @@ import * as _ from "lodash";
 import * as moment from "moment";
 import * as React from "react";
 import { Col, Row } from "reactstrap";
-const { ResponsiveLine } = require("@nivo/line");
+const { ResponsiveBar } = require("@nivo/bar");
 const { ResponsivePie } = require("@nivo/pie");
 
 import { RequestBlockNumber, RequestDailyLogs, RequestWeeklyLogs } from "../../../request";
@@ -13,8 +13,10 @@ import "./Summary.scss";
 
 interface State {
     weeklyLogs: Array<{
-        x: string;
-        y: string;
+        date: string;
+        "#": string;
+        color: string;
+        fullDate: string;
     }>;
     isWeeklyLogRequested: boolean;
     type: WeeklyLogType;
@@ -103,53 +105,46 @@ class Summary extends React.Component<{}, State> {
                                     </select>
                                 </div>
                                 <div className="chart-item">
-                                    <ResponsiveLine
-                                        data={[
-                                            {
-                                                id: this.getWeeklyLogTitle(type),
-                                                color: "hsl(237, 49%, 45%)",
-                                                data: weeklyLogs
-                                            }
-                                        ]}
+                                    <ResponsiveBar
+                                        data={weeklyLogs}
+                                        keys={["#"]}
+                                        indexBy="date"
                                         margin={{
                                             top: 20,
                                             right: 30,
-                                            bottom: 60,
+                                            bottom: 50,
                                             left: 60
                                         }}
-                                        minY="auto"
-                                        axisBottom={{
-                                            orient: "bottom",
-                                            tickSize: 5,
-                                            tickPadding: 5,
-                                            tickRotation: 0,
-                                            legendOffset: 36
-                                        }}
-                                        axisLeft={{
-                                            orient: "left",
-                                            tickSize: 5,
-                                            tickPadding: 5,
-                                            tickRotation: 0,
-                                            legendOffset: -40
-                                        }}
+                                        padding={0.3}
+                                        colors="nivo"
                                         // tslint:disable-next-line:jsx-no-lambda
-                                        colorBy={(e: any) => e.color}
-                                        dotSize={10}
-                                        dotColor="inherit:darker(0.3)"
-                                        dotBorderWidth={2}
-                                        enableGridX={false}
-                                        dotBorderColor="#ffffff"
-                                        enableDotLabel={false}
+                                        colorBy={(e: any) => e.data.color}
+                                        borderColor="inherit:darker(1.6)"
+                                        enableLabel={false}
+                                        labelSkipWidth={12}
+                                        labelSkipHeight={12}
+                                        labelTextColor="inherit:darker(1.6)"
                                         animate={true}
                                         motionStiffness={90}
                                         motionDamping={15}
+                                        theme={{
+                                            tooltip: {
+                                                container: {
+                                                    fontSize: "13px"
+                                                }
+                                            },
+                                            labels: {
+                                                textColor: "#555"
+                                            }
+                                        }}
+                                        onClick={this.onClickWeeklyLog}
                                     />
                                 </div>
                                 <div className="weekly-total">
                                     Weekly total{" "}
                                     {_.reduce(
                                         weeklyLogs,
-                                        (memo, log) => parseInt(log.y, 10) + memo,
+                                        (memo, log) => parseInt(log["#"], 10) + memo,
                                         0
                                     ).toLocaleString()}{" "}
                                     blocks (Total {bestBlockNumber ? bestBlockNumber.toLocaleString() : 0} blocks)
@@ -165,7 +160,7 @@ class Summary extends React.Component<{}, State> {
                                     <p className="week">{selectedDate} (UTC+0000)</p>
                                     <span className="subtitle">{this.getDailyLogSubTitle(dailyLogType)}</span>
                                     <span className="subtitle-amount">
-                                        {lastWeeklyLog ? parseInt(lastWeeklyLog.y, 10).toLocaleString() : 0}
+                                        {lastWeeklyLog ? parseInt(lastWeeklyLog["#"], 10).toLocaleString() : 0}
                                     </span>
                                     <hr />
                                     <span className="subname">{this.getDailyLogSubName(dailyLogType)}</span>
@@ -228,6 +223,10 @@ class Summary extends React.Component<{}, State> {
             </div>
         );
     }
+
+    private onClickWeeklyLog = (event: any) => {
+        this.setState({ selectedDate: event.data.fullDate, isDailyLogRequested: false });
+    };
 
     private onWeeklyLogTypeChanged = (event: any) => {
         let dailyLogType = DailyLogType.BEST_MINER;
@@ -320,8 +319,10 @@ class Summary extends React.Component<{}, State> {
 
     private onWeeklyLogData = (
         weeklyLogs: Array<{
-            x: string;
-            y: string;
+            date: string;
+            "#": string;
+            color: string;
+            fullDate: string;
         }>
     ) => {
         this.setState({ weeklyLogs, isWeeklyLogRequested: true });

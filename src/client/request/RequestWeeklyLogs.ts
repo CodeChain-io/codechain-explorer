@@ -15,8 +15,10 @@ interface OwnProps {
     type: WeeklyLogType;
     onData: (
         weeklyLog: Array<{
-            x: string;
-            y: string;
+            date: string;
+            "#": string;
+            color: string;
+            fullDate: string;
         }>
     ) => void;
     onError: (e: ApiError) => void;
@@ -64,8 +66,10 @@ class RequestWeeklyLogsInternal extends React.Component<Props> {
                     showProgressBar: true
                 })) as string;
                 return {
-                    x: resultDateString,
-                    y: count
+                    date: resultDateString,
+                    "#": count,
+                    color: "hsl(237, 49%, 45%)",
+                    fullDate: dateString
                 };
             });
             const results = await Promise.all(asyncJobs);

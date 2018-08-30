@@ -13,6 +13,7 @@
     "@fortawesome/free-brands-svg-icons": "^5.1.0-11",
     "@fortawesome/free-solid-svg-icons": "^5.1.0-11",
     "@fortawesome/react-fontawesome": "^0.1.0-11",
+    "@nivo/bar": "^0.47.1",
     "@nivo/line": "^0.42.1",
     "@nivo/pie": "^0.42.1",
     "autoprefixer": "7.1.6",
