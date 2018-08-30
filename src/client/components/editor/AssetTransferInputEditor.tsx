@@ -15,18 +15,13 @@ interface State {
     unlockScript: string;
 }
 
-export default class AssetTransferInputEditor extends React.Component<
-    Props,
-    State
-> {
+export default class AssetTransferInputEditor extends React.Component<Props, State> {
     constructor(props: Props) {
         super(props);
         this.state = {
-            txhash:
-                "0000000000000000000000000000000000000000000000000000000000000000",
+            txhash: "0000000000000000000000000000000000000000000000000000000000000000",
             txIndex: 0,
-            assetType:
-                "0000000000000000000000000000000000000000000000000000000000000000",
+            assetType: "0000000000000000000000000000000000000000000000000000000000000000",
             amount: 0,
             lockScript: "0x0201",
             unlockScript: "0x"
@@ -34,14 +29,7 @@ export default class AssetTransferInputEditor extends React.Component<
     }
 
     public render() {
-        const {
-            txhash,
-            txIndex,
-            assetType,
-            amount,
-            lockScript,
-            unlockScript
-        } = this.state;
+        const { txhash, txIndex, assetType, amount, lockScript, unlockScript } = this.state;
         return (
             <div>
                 <div>
@@ -52,10 +40,7 @@ export default class AssetTransferInputEditor extends React.Component<
                     <input onChange={this.onChangeTxIndex} value={txIndex} />
                     <br />
                     <span>Asset Type</span>
-                    <input
-                        onChange={this.onChangeAssetType}
-                        value={assetType}
-                    />
+                    <input onChange={this.onChangeAssetType} value={assetType} />
                     <br />
                     <span>Amount</span>
                     <input onChange={this.onChangeAmount} value={amount} />
@@ -64,10 +49,7 @@ export default class AssetTransferInputEditor extends React.Component<
                 <input onChange={this.onChangeLockScript} value={lockScript} />
                 <br />
                 <span>Unlock Script</span>
-                <input
-                    onChange={this.onChangeUnlockScript}
-                    value={unlockScript}
-                />
+                <input onChange={this.onChangeUnlockScript} value={unlockScript} />
                 <br />
             </div>
         );
@@ -88,9 +70,7 @@ export default class AssetTransferInputEditor extends React.Component<
         });
     };
 
-    private onChangeAssetType = (
-        event: React.ChangeEvent<HTMLInputElement>
-    ) => {
+    private onChangeAssetType = (event: React.ChangeEvent<HTMLInputElement>) => {
         // FIXME: check event.target.string has 64 length or 66 length with "0x" prefix
         this.setState({
             ...this.state,
@@ -105,18 +85,14 @@ export default class AssetTransferInputEditor extends React.Component<
         });
     };
 
-    private onChangeLockScript = (
-        event: React.ChangeEvent<HTMLInputElement>
-    ) => {
+    private onChangeLockScript = (event: React.ChangeEvent<HTMLInputElement>) => {
         this.setState({
             ...this.state,
             lockScript: event.target.value
         });
     };
 
-    private onChangeUnlockScript = (
-        event: React.ChangeEvent<HTMLInputElement>
-    ) => {
+    private onChangeUnlockScript = (event: React.ChangeEvent<HTMLInputElement>) => {
         this.setState({
             ...this.state,
             unlockScript: event.target.value

@@ -1,9 +1,4 @@
-import {
-    faAngleDoubleLeft,
-    faAngleDoubleRight,
-    faAngleLeft,
-    faAngleRight
-} from "@fortawesome/free-solid-svg-icons";
+import { faAngleDoubleLeft, faAngleDoubleRight, faAngleLeft, faAngleRight } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import * as _ from "lodash";
 import * as moment from "moment";
@@ -70,12 +65,8 @@ class Parcels extends React.Component<Props, State> {
             location: { search }
         } = this.props;
         const params = new URLSearchParams(search);
-        const currentPage = params.get("page")
-            ? parseInt(params.get("page") as string, 10)
-            : 1;
-        const itemsPerPage = params.get("itemsPerPage")
-            ? parseInt(params.get("itemsPerPage") as string, 10)
-            : 25;
+        const currentPage = params.get("page") ? parseInt(params.get("page") as string, 10) : 1;
+        const itemsPerPage = params.get("itemsPerPage") ? parseInt(params.get("itemsPerPage") as string, 10) : 25;
         const {
             parcels,
             totalParcelCount,
@@ -89,22 +80,15 @@ class Parcels extends React.Component<Props, State> {
             return (
                 <Redirect
                     push={true}
-                    to={`/parcels?page=${redirectPage ||
-                        currentPage}&itemsPerPage=${redirectItemsPerPage ||
+                    to={`/parcels?page=${redirectPage || currentPage}&itemsPerPage=${redirectItemsPerPage ||
                         itemsPerPage}`}
                 />
             );
         }
         if (totalParcelCount === undefined) {
-            return (
-                <RequestTotalParcelCount
-                    onParcelTotalCount={this.onTotalParcelCount}
-                    onError={this.onError}
-                />
-            );
+            return <RequestTotalParcelCount onParcelTotalCount={this.onTotalParcelCount} onError={this.onError} />;
         }
-        const maxPage =
-            Math.floor(Math.max(0, totalParcelCount - 1) / itemsPerPage) + 1;
+        const maxPage = Math.floor(Math.max(0, totalParcelCount - 1) / itemsPerPage) + 1;
         return (
             <Container className="parcels">
                 {!isParcelRequested ? (
@@ -121,10 +105,7 @@ class Parcels extends React.Component<Props, State> {
                         <div>
                             <div className="float-right">
                                 <span>Show </span>
-                                <select
-                                    onChange={this.handleOptionChange}
-                                    defaultValue={itemsPerPage.toString()}
-                                >
+                                <select onChange={this.handleOptionChange} defaultValue={itemsPerPage.toString()}>
                                     <option value="25">25</option>
                                     <option value="50">50</option>
                                     <option value="75">75</option>
@@ -149,40 +130,19 @@ class Parcels extends React.Component<Props, State> {
                                         return (
                                             <tr key={`parcel-${parcel.hash}`}>
                                                 <td>
-                                                    <ActionBadge
-                                                        parcel={parcel}
-                                                    />
+                                                    <ActionBadge parcel={parcel} />
                                                 </td>
                                                 <td scope="row">
-                                                    <HexString
-                                                        link={`/parcel/0x${
-                                                            parcel.hash
-                                                        }`}
-                                                        text={parcel.hash}
-                                                    />
+                                                    <HexString link={`/parcel/0x${parcel.hash}`} text={parcel.hash} />
                                                 </td>
                                                 <td>
-                                                    <Link
-                                                        to={`/addr-platform/${
-                                                            parcel.sender
-                                                        }`}
-                                                    >
-                                                        {parcel.sender}
-                                                    </Link>
+                                                    <Link to={`/addr-platform/${parcel.sender}`}>{parcel.sender}</Link>
                                                 </td>
                                                 <td>
-                                                    <CommaNumberString
-                                                        text={changeQuarkStringToCCC(
-                                                            parcel.fee
-                                                        )}
-                                                    />
+                                                    <CommaNumberString text={changeQuarkStringToCCC(parcel.fee)} />
                                                     CCC
                                                 </td>
-                                                <td>
-                                                    {moment
-                                                        .unix(parcel.timestamp)
-                                                        .fromNow()}
-                                                </td>
+                                                <td>{moment.unix(parcel.timestamp).fromNow()}</td>
                                             </tr>
                                         );
                                     })}
@@ -196,39 +156,24 @@ class Parcels extends React.Component<Props, State> {
                                         <button
                                             disabled={currentPage === 1}
                                             className={`btn btn-primary page-btn ${
-                                                currentPage === 1
-                                                    ? "disabled"
-                                                    : ""
+                                                currentPage === 1 ? "disabled" : ""
                                             }`}
                                             type="button"
-                                            onClick={_.partial(
-                                                this.moveFirst,
-                                                currentPage
-                                            )}
+                                            onClick={_.partial(this.moveFirst, currentPage)}
                                         >
-                                            <FontAwesomeIcon
-                                                icon={faAngleDoubleLeft}
-                                            />
+                                            <FontAwesomeIcon icon={faAngleDoubleLeft} />
                                         </button>
                                     </li>
                                     <li className="list-inline-item">
                                         <button
                                             disabled={currentPage === 1}
                                             className={`btn btn-primary page-btn ${
-                                                currentPage === 1
-                                                    ? "disabled"
-                                                    : ""
+                                                currentPage === 1 ? "disabled" : ""
                                             }`}
                                             type="button"
-                                            onClick={_.partial(
-                                                this.moveBefore,
-                                                currentPage
-                                            )}
+                                            onClick={_.partial(this.moveBefore, currentPage)}
                                         >
-                                            <FontAwesomeIcon
-                                                icon={faAngleLeft}
-                                            />{" "}
-                                            Prev
+                                            <FontAwesomeIcon icon={faAngleLeft} /> Prev
                                         </button>
                                     </li>
                                     <li className="list-inline-item">
@@ -240,41 +185,24 @@ class Parcels extends React.Component<Props, State> {
                                         <button
                                             disabled={currentPage === maxPage}
                                             className={`btn btn-primary page-btn ${
-                                                currentPage === maxPage
-                                                    ? "disabled"
-                                                    : ""
+                                                currentPage === maxPage ? "disabled" : ""
                                             }`}
                                             type="button"
-                                            onClick={_.partial(
-                                                this.moveNext,
-                                                currentPage,
-                                                maxPage
-                                            )}
+                                            onClick={_.partial(this.moveNext, currentPage, maxPage)}
                                         >
-                                            Next{" "}
-                                            <FontAwesomeIcon
-                                                icon={faAngleRight}
-                                            />
+                                            Next <FontAwesomeIcon icon={faAngleRight} />
                                         </button>
                                     </li>
                                     <li className="list-inline-item">
                                         <button
                                             disabled={currentPage === maxPage}
                                             className={`btn btn-primary page-btn ${
-                                                currentPage === maxPage
-                                                    ? "disabled"
-                                                    : ""
+                                                currentPage === maxPage ? "disabled" : ""
                                             }`}
                                             type="button"
-                                            onClick={_.partial(
-                                                this.moveLast,
-                                                currentPage,
-                                                maxPage
-                                            )}
+                                            onClick={_.partial(this.moveLast, currentPage, maxPage)}
                                         >
-                                            <FontAwesomeIcon
-                                                icon={faAngleDoubleRight}
-                                            />
+                                            <FontAwesomeIcon icon={faAngleDoubleRight} />
                                         </button>
                                     </li>
                                 </ul>

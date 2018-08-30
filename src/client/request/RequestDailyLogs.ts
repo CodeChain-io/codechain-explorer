@@ -77,10 +77,7 @@ class RequestDailyLogsInternal extends React.Component<Props> {
             const total = _.sumBy(bestMineres, miner => miner.count);
             const results = _.map(bestMineres, (bestMiner, index) => {
                 return {
-                    id: `${bestMiner.value.slice(0, 7)}... (${(
-                        (bestMiner.count / total) *
-                        100
-                    ).toFixed(1)}%)`,
+                    id: `${bestMiner.value.slice(0, 7)}... (${((bestMiner.count / total) * 100).toFixed(1)}%)`,
                     label: `${bestMiner.value.slice(0, 7)}...`,
                     value: bestMiner.count,
                     color: this.getColor(index)
@@ -103,38 +100,26 @@ class RequestDailyLogsInternal extends React.Component<Props> {
                 dispatch,
                 showProgressBar: true
             })) as number;
-            const total =
-                paymentParcelCount +
-                changeShardStateScount +
-                setRegularKeyCount;
+            const total = paymentParcelCount + changeShardStateScount + setRegularKeyCount;
             if (total === 0) {
                 onEmptyResult();
                 return;
             }
             onData([
                 {
-                    id: `Payment (${(
-                        (paymentParcelCount / total) *
-                        100
-                    ).toFixed(1)}%)`,
+                    id: `Payment (${((paymentParcelCount / total) * 100).toFixed(1)}%)`,
                     label: "Payment",
                     value: paymentParcelCount,
                     color: "hsl(36, 86%, 62%)"
                 },
                 {
-                    id: `ChangeShardState (${(
-                        (changeShardStateScount / total) *
-                        100
-                    ).toFixed(1)}%)`,
+                    id: `ChangeShardState (${((changeShardStateScount / total) * 100).toFixed(1)}%)`,
                     label: "ChangeShardState",
                     value: changeShardStateScount,
                     color: "hsl(90, 100%, 42%)"
                 },
                 {
-                    id: `SetRegularKey (${(
-                        (setRegularKeyCount / total) *
-                        100
-                    ).toFixed(1)}%)`,
+                    id: `SetRegularKey (${((setRegularKeyCount / total) * 100).toFixed(1)}%)`,
                     label: "SetRegularKey",
                     value: setRegularKeyCount,
                     color: "hsl(11, 100%, 71%)"
@@ -158,9 +143,7 @@ class RequestDailyLogsInternal extends React.Component<Props> {
             }
             onData([
                 {
-                    id: `Transfer (${((transferCount / total) * 100).toFixed(
-                        1
-                    )}%)`,
+                    id: `Transfer (${((transferCount / total) * 100).toFixed(1)}%)`,
                     label: "Transfer",
                     value: transferCount,
                     color: "hsl(263, 83%, 68%)"

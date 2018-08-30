@@ -7,10 +7,7 @@ import { ApiError, apiRequest } from "./ApiRequest";
 
 interface OwnProps {
     address: string;
-    onAccount: (
-        account: { nonce: U256; balance: U256 },
-        address: string
-    ) => void;
+    onAccount: (account: { nonce: U256; balance: U256 }, address: string) => void;
     onError: (e: ApiError) => void;
     onAccountNotExist: () => void;
     progressBarTarget?: string;
@@ -24,14 +21,7 @@ type Props = OwnProps & DispatchProps;
 
 class RequestPlatformAddressAccountInternal extends React.Component<Props> {
     public componentWillMount() {
-        const {
-            address,
-            onAccount,
-            onError,
-            dispatch,
-            progressBarTarget,
-            onAccountNotExist
-        } = this.props;
+        const { address, onAccount, onError, dispatch, progressBarTarget, onAccountNotExist } = this.props;
         apiRequest({
             path: `addr-platform-account/${address}`,
             dispatch,

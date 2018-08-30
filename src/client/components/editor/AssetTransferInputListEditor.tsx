@@ -12,10 +12,7 @@ interface State {
     n: number;
 }
 
-export default class AssetTransferInputListEditor extends React.Component<
-    Props,
-    State
-> {
+export default class AssetTransferInputListEditor extends React.Component<Props, State> {
     constructor(props: Props) {
         super(props);
         this.state = { n: 0 };
@@ -27,12 +24,9 @@ export default class AssetTransferInputListEditor extends React.Component<
                 <button onClick={this.onAdd}>Add</button>
                 {_.range(0, n).map(i => (
                     <div key={`asset-transfer-input-list-${i}`}>
-                        Input {i}{" "}
-                        <button onClick={this.onClickRemove(i)}>Remove</button>
+                        Input {i} <button onClick={this.onClickRemove(i)}>Remove</button>
                         <br />
-                        <AssetTransferInputEditor
-                            onChange={this.onChangeInput(i)}
-                        />
+                        <AssetTransferInputEditor onChange={this.onChangeInput(i)} />
                         <br />
                     </div>
                 ))}

@@ -27,9 +27,7 @@ class SyncStatus extends React.Component<Props, {}> {
                 <div className="data-set-for-status">
                     <div className="one-line-data-set">
                         <div>Best block number (CodeChain)</div>
-                        <div>
-                            {syncStatus.codechainBestBlockNumber.toLocaleString()}
-                        </div>
+                        <div>{syncStatus.codechainBestBlockNumber.toLocaleString()}</div>
                     </div>
                     <hr />
                     <Row>
@@ -43,11 +41,7 @@ class SyncStatus extends React.Component<Props, {}> {
                     <div className="one-line-data-set">
                         <div>Last block number (Explorer)</div>
                         <div>
-                            <Link
-                                to={`/block/${
-                                    syncStatus.explorerLastBlockNumber
-                                }`}
-                            >
+                            <Link to={`/block/${syncStatus.explorerLastBlockNumber}`}>
                                 {syncStatus.explorerLastBlockNumber.toLocaleString()}
                             </Link>
                         </div>
@@ -58,9 +52,7 @@ class SyncStatus extends React.Component<Props, {}> {
                         <Col md="6">
                             <HexString
                                 text={syncStatus.explorerLastBlockHash}
-                                link={`/block/0x${
-                                    syncStatus.explorerLastBlockHash
-                                }`}
+                                link={`/block/0x${syncStatus.explorerLastBlockHash}`}
                             />
                         </Col>
                     </Row>
@@ -71,16 +63,11 @@ class SyncStatus extends React.Component<Props, {}> {
                             <Progress
                                 className="custom-progress"
                                 color="success"
-                                value={
-                                    (syncStatus.explorerLastBlockNumber /
-                                        syncStatus.codechainBestBlockNumber) *
-                                    100
-                                }
+                                value={(syncStatus.explorerLastBlockNumber / syncStatus.codechainBestBlockNumber) * 100}
                             />
                             <span className="progress-value">
                                 {(
-                                    (syncStatus.explorerLastBlockNumber /
-                                        syncStatus.codechainBestBlockNumber) *
+                                    (syncStatus.explorerLastBlockNumber / syncStatus.codechainBestBlockNumber) *
                                     100
                                 ).toFixed(1)}
                                 %

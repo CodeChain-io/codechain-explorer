@@ -36,9 +36,7 @@ class ChainInfo extends React.Component<Props, {}> {
                         <div>Git hash</div>
                         <div>
                             <a
-                                href={`https://github.com/CodeChain-io/codechain/commit/${
-                                    chainInfo.commitHash
-                                }`}
+                                href={`https://github.com/CodeChain-io/codechain/commit/${chainInfo.commitHash}`}
                                 target="_black"
                             >
                                 {chainInfo.commitHash}
@@ -54,45 +52,31 @@ class ChainInfo extends React.Component<Props, {}> {
                     <Row>
                         <Col md="12">Peer list</Col>
                         <Col md="12">
-                            <div className="text-area text-left">
-                                {chainInfo.peers.join(", ")}
-                            </div>
+                            <div className="text-area text-left">{chainInfo.peers.join(", ")}</div>
                         </Col>
                     </Row>
                     <hr />
                     <div className="one-line-data-set">
                         <div>White list status</div>
-                        <div>
-                            {chainInfo.whiteList.enabled
-                                ? "enabled"
-                                : "disabled"}
-                        </div>
+                        <div>{chainInfo.whiteList.enabled ? "enabled" : "disabled"}</div>
                     </div>
                     <hr />
                     <Row>
                         <Col md="12">White list</Col>
                         <Col md="12">
-                            <div className="text-area text-left">
-                                {chainInfo.whiteList.list.join(", ")}
-                            </div>
+                            <div className="text-area text-left">{chainInfo.whiteList.list.join(", ")}</div>
                         </Col>
                     </Row>
                     <hr />
                     <div className="one-line-data-set">
                         <div>Black list status</div>
-                        <div>
-                            {chainInfo.blackList.enabled
-                                ? "enabled"
-                                : "disabled"}
-                        </div>
+                        <div>{chainInfo.blackList.enabled ? "enabled" : "disabled"}</div>
                     </div>
                     <hr />
                     <Row>
                         <Col md="12">Black list</Col>
                         <Col md="12">
-                            <div className="text-area text-left">
-                                {chainInfo.blackList.list.join(", ")}
-                            </div>
+                            <div className="text-area text-left">{chainInfo.blackList.list.join(", ")}</div>
                         </Col>
                     </Row>
                     <hr />

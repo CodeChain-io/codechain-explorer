@@ -18,17 +18,13 @@ interface State {
     registrar: string;
 }
 
-export default class AssetMintTransactionEditor extends React.Component<
-    Props,
-    State
-> {
+export default class AssetMintTransactionEditor extends React.Component<Props, State> {
     constructor(props: Props) {
         super(props);
         this.state = {
             nonce: 0,
             metadata: "",
-            lockScriptHash:
-                "0000000000000000000000000000000000000000000000000000000000000000",
+            lockScriptHash: "0000000000000000000000000000000000000000000000000000000000000000",
             parameters: [],
             networkId: "c",
             amount: 100,
@@ -44,13 +40,7 @@ export default class AssetMintTransactionEditor extends React.Component<
     }
 
     public render() {
-        const {
-            nonce,
-            metadata,
-            lockScriptHash,
-            amount,
-            registrar
-        } = this.state;
+        const { nonce, metadata, lockScriptHash, amount, registrar } = this.state;
         return (
             <div>
                 <span>Nonce</span>
@@ -58,10 +48,7 @@ export default class AssetMintTransactionEditor extends React.Component<
                 <span>Metadata</span>
                 <input onChange={this.onChangeMetadata} value={metadata} />
                 <span>Lock Script Hash</span>
-                <input
-                    onChange={this.onChangeLockScriptHash}
-                    value={lockScriptHash}
-                />
+                <input onChange={this.onChangeLockScriptHash} value={lockScriptHash} />
                 <span>Amount</span>
                 <input onChange={this.onChangeAmount} value={amount} />
                 <span>Registrar</span>
@@ -84,9 +71,7 @@ export default class AssetMintTransactionEditor extends React.Component<
         });
     };
 
-    private onChangeLockScriptHash = (
-        event: React.ChangeEvent<HTMLInputElement>
-    ) => {
+    private onChangeLockScriptHash = (event: React.ChangeEvent<HTMLInputElement>) => {
         this.setState({
             ...this.state,
             lockScriptHash: event.target.value
@@ -100,9 +85,7 @@ export default class AssetMintTransactionEditor extends React.Component<
         });
     };
 
-    private onChangeRegistrar = (
-        event: React.ChangeEvent<HTMLInputElement>
-    ) => {
+    private onChangeRegistrar = (event: React.ChangeEvent<HTMLInputElement>) => {
         this.setState({
             ...this.state,
             registrar: event.target.value

@@ -1,11 +1,6 @@
 import { loadingBarReducer } from "react-redux-loading-bar";
 import { combineReducers } from "redux";
-import {
-    AssetSchemeDoc,
-    BlockDoc,
-    ParcelDoc,
-    TransactionDoc
-} from "../../db/DocType";
+import { AssetSchemeDoc, BlockDoc, ParcelDoc, TransactionDoc } from "../../db/DocType";
 
 export interface RootState {
     appReducer: AppReducer;
@@ -115,20 +110,14 @@ const appReducer = (state = initialState, action: Action) => {
         };
         return { ...state, transactionByHash };
     } else if (action.type === "CACHE_ASSET_SCHEME") {
-        const {
-            assetType,
-            assetScheme
-        } = (action as CacheAssetSchemeAction).data;
+        const { assetType, assetScheme } = (action as CacheAssetSchemeAction).data;
         const assetSchemeByAssetType = {
             ...state.assetSchemeByAssetType,
             [assetType]: assetScheme
         };
         return { ...state, assetSchemeByAssetType };
     } else if (action.type === "CACHE_ASSET_TRANSACTIONS") {
-        const {
-            assetType,
-            transactions
-        } = (action as CacheAssetTransactionsAction).data;
+        const { assetType, transactions } = (action as CacheAssetTransactionsAction).data;
         const transactionsByAssetType = {
             ...state.transactionsByAssetType,
             [assetType]: transactions

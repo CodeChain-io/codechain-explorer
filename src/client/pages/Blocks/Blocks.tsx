@@ -1,9 +1,4 @@
-import {
-    faAngleDoubleLeft,
-    faAngleDoubleRight,
-    faAngleLeft,
-    faAngleRight
-} from "@fortawesome/free-solid-svg-icons";
+import { faAngleDoubleLeft, faAngleDoubleRight, faAngleLeft, faAngleRight } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import * as _ from "lodash";
 import * as moment from "moment";
@@ -67,41 +62,23 @@ class Blocks extends React.Component<Props, State> {
             location: { search }
         } = this.props;
         const params = new URLSearchParams(search);
-        const currentPage = params.get("page")
-            ? parseInt(params.get("page") as string, 10)
-            : 1;
-        const itemsPerPage = params.get("itemsPerPage")
-            ? parseInt(params.get("itemsPerPage") as string, 10)
-            : 25;
-        const {
-            blocks,
-            totalBlockCount,
-            isBlockRequested,
-            redirect,
-            redirectItemsPerPage,
-            redirectPage
-        } = this.state;
+        const currentPage = params.get("page") ? parseInt(params.get("page") as string, 10) : 1;
+        const itemsPerPage = params.get("itemsPerPage") ? parseInt(params.get("itemsPerPage") as string, 10) : 25;
+        const { blocks, totalBlockCount, isBlockRequested, redirect, redirectItemsPerPage, redirectPage } = this.state;
 
         if (redirect) {
             return (
                 <Redirect
                     push={true}
-                    to={`/blocks?page=${redirectPage ||
-                        currentPage}&itemsPerPage=${redirectItemsPerPage ||
+                    to={`/blocks?page=${redirectPage || currentPage}&itemsPerPage=${redirectItemsPerPage ||
                         itemsPerPage}`}
                 />
             );
         }
         if (totalBlockCount === undefined) {
-            return (
-                <RequestTotalBlockCount
-                    onBlockTotalCount={this.onTotalBlockCount}
-                    onError={this.onError}
-                />
-            );
+            return <RequestTotalBlockCount onBlockTotalCount={this.onTotalBlockCount} onError={this.onError} />;
         }
-        const maxPage =
-            Math.floor(Math.max(0, totalBlockCount - 1) / itemsPerPage) + 1;
+        const maxPage = Math.floor(Math.max(0, totalBlockCount - 1) / itemsPerPage) + 1;
         return (
             <Container className="blocks">
                 {!isBlockRequested ? (
@@ -118,10 +95,7 @@ class Blocks extends React.Component<Props, State> {
                         <div>
                             <div className="float-right">
                                 <span>Show </span>
-                                <select
-                                    onChange={this.handleOptionChange}
-                                    defaultValue={itemsPerPage.toString()}
-                                >
+                                <select onChange={this.handleOptionChange} defaultValue={itemsPerPage.toString()}>
                                     <option value="25">25</option>
                                     <option value="50">50</option>
                                     <option value="75">75</option>
@@ -135,9 +109,7 @@ class Blocks extends React.Component<Props, State> {
                                 <thead>
                                     <tr>
                                         <th style={{ width: "15%" }}>No.</th>
-                                        <th style={{ width: "15%" }}>
-                                            Parcels
-                                        </th>
+                                        <th style={{ width: "15%" }}>Parcels</th>
                                         <th style={{ width: "35%" }}>Author</th>
                                         <th style={{ width: "15%" }}>Reward</th>
                                         <th style={{ width: "20%" }}>Age</th>
@@ -148,39 +120,21 @@ class Blocks extends React.Component<Props, State> {
                                         return (
                                             <tr key={`block-${block.hash}`}>
                                                 <td scope="row">
-                                                    <Link
-                                                        to={`/block/${
-                                                            block.number
-                                                        }`}
-                                                    >
+                                                    <Link to={`/block/${block.number}`}>
                                                         {block.number.toLocaleString()}
                                                     </Link>
                                                 </td>
+                                                <td>{block.parcels.length.toLocaleString()}</td>
                                                 <td>
-                                                    {block.parcels.length.toLocaleString()}
-                                                </td>
-                                                <td>
-                                                    <Link
-                                                        to={`/addr-platform/${
-                                                            block.author
-                                                        }`}
-                                                    >
-                                                        {block.author}
-                                                    </Link>
+                                                    <Link to={`/addr-platform/${block.author}`}>{block.author}</Link>
                                                 </td>
                                                 <td>
                                                     <CommaNumberString
-                                                        text={changeQuarkStringToCCC(
-                                                            block.miningReward
-                                                        )}
+                                                        text={changeQuarkStringToCCC(block.miningReward)}
                                                     />
                                                     CCC
                                                 </td>
-                                                <td>
-                                                    {moment
-                                                        .unix(block.timestamp)
-                                                        .fromNow()}
-                                                </td>
+                                                <td>{moment.unix(block.timestamp).fromNow()}</td>
                                             </tr>
                                         );
                                     })}
@@ -194,39 +148,24 @@ class Blocks extends React.Component<Props, State> {
                                         <button
                                             disabled={currentPage === 1}
                                             className={`btn btn-primary page-btn ${
-                                                currentPage === 1
-                                                    ? "disabled"
-                                                    : ""
+                                                currentPage === 1 ? "disabled" : ""
                                             }`}
                                             type="button"
-                                            onClick={_.partial(
-                                                this.moveFirst,
-                                                currentPage
-                                            )}
+                                            onClick={_.partial(this.moveFirst, currentPage)}
                                         >
-                                            <FontAwesomeIcon
-                                                icon={faAngleDoubleLeft}
-                                            />
+                                            <FontAwesomeIcon icon={faAngleDoubleLeft} />
                                         </button>
                                     </li>
                                     <li className="list-inline-item">
                                         <button
                                             disabled={currentPage === 1}
                                             className={`btn btn-primary page-btn ${
-                                                currentPage === 1
-                                                    ? "disabled"
-                                                    : ""
+                                                currentPage === 1 ? "disabled" : ""
                                             }`}
                                             type="button"
-                                            onClick={_.partial(
-                                                this.moveBefore,
-                                                currentPage
-                                            )}
+                                            onClick={_.partial(this.moveBefore, currentPage)}
                                         >
-                                            <FontAwesomeIcon
-                                                icon={faAngleLeft}
-                                            />{" "}
-                                            Prev
+                                            <FontAwesomeIcon icon={faAngleLeft} /> Prev
                                         </button>
                                     </li>
                                     <li className="list-inline-item">
@@ -238,41 +177,24 @@ class Blocks extends React.Component<Props, State> {
                                         <button
                                             disabled={currentPage === maxPage}
                                             className={`btn btn-primary page-btn ${
-                                                currentPage === maxPage
-                                                    ? "disabled"
-                                                    : ""
+                                                currentPage === maxPage ? "disabled" : ""
                                             }`}
                                             type="button"
-                                            onClick={_.partial(
-                                                this.moveNext,
-                                                currentPage,
-                                                maxPage
-                                            )}
+                                            onClick={_.partial(this.moveNext, currentPage, maxPage)}
                                         >
-                                            Next{" "}
-                                            <FontAwesomeIcon
-                                                icon={faAngleRight}
-                                            />
+                                            Next <FontAwesomeIcon icon={faAngleRight} />
                                         </button>
                                     </li>
                                     <li className="list-inline-item">
                                         <button
                                             disabled={currentPage === maxPage}
                                             className={`btn btn-primary page-btn ${
-                                                currentPage === maxPage
-                                                    ? "disabled"
-                                                    : ""
+                                                currentPage === maxPage ? "disabled" : ""
                                             }`}
                                             type="button"
-                                            onClick={_.partial(
-                                                this.moveLast,
-                                                currentPage,
-                                                maxPage
-                                            )}
+                                            onClick={_.partial(this.moveLast, currentPage, maxPage)}
                                         >
-                                            <FontAwesomeIcon
-                                                icon={faAngleDoubleRight}
-                                            />
+                                            <FontAwesomeIcon icon={faAngleDoubleRight} />
                                         </button>
                                     </li>
                                 </ul>

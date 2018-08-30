@@ -28,11 +28,7 @@ const AccountDetails = (prop: OwnProps) => {
                         <Row>
                             <Col md="3">Balance</Col>
                             <Col md="9">
-                                <CommaNumberString
-                                    text={account.balance.value
-                                        .div(Math.pow(10, 9))
-                                        .toString(10)}
-                                />
+                                <CommaNumberString text={account.balance.value.div(Math.pow(10, 9)).toString(10)} />
                                 CCC
                             </Col>
                         </Row>
@@ -40,9 +36,7 @@ const AccountDetails = (prop: OwnProps) => {
                         <Row>
                             <Col md="3">Nonce</Col>
                             <Col md="9">
-                                <CommaNumberString
-                                    text={account.nonce.value.toString()}
-                                />
+                                <CommaNumberString text={account.nonce.value.toString()} />
                             </Col>
                         </Row>
                         <hr />

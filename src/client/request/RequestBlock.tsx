@@ -4,12 +4,7 @@ import { connect, Dispatch } from "react-redux";
 
 import { H256 } from "codechain-sdk/lib/core/classes";
 
-import {
-    AssetMintTransactionDoc,
-    BlockDoc,
-    ChangeShardStateDoc,
-    Type
-} from "../../db/DocType";
+import { AssetMintTransactionDoc, BlockDoc, ChangeShardStateDoc, Type } from "../../db/DocType";
 import { RootState } from "../redux/actions";
 import { apiRequest } from "./ApiRequest";
 
@@ -29,19 +24,9 @@ interface DispatchProps {
     dispatch: Dispatch;
 }
 
-class RequestBlockInternal extends React.Component<
-    OwnProps & StateProps & DispatchProps
-> {
+class RequestBlockInternal extends React.Component<OwnProps & StateProps & DispatchProps> {
     public componentWillMount() {
-        const {
-            cached,
-            dispatch,
-            onError,
-            onBlock,
-            id,
-            progressBarTarget,
-            onBlockNotExist
-        } = this.props;
+        const { cached, dispatch, onError, onBlock, id, progressBarTarget, onBlockNotExist } = this.props;
         if (cached) {
             setTimeout(() => onBlock(cached));
             return;
@@ -67,30 +52,22 @@ class RequestBlockInternal extends React.Component<
                         data: parcel
                     });
                     if (Type.isChangeShardStateDoc(parcel.action)) {
-                        _.each(
-                            (parcel.action as ChangeShardStateDoc).transactions,
-                            transaction => {
-                                dispatch({
-                                    type: "CACHE_TRANSACTION",
-                                    data: transaction
-                                });
+                        _.each((parcel.action as ChangeShardStateDoc).transactions, transaction => {
+                            dispatch({
+                                type: "CACHE_TRANSACTION",
+                                data: transaction
+                            });
 
-                                if (
-                                    Type.isAssetMintTransactionDoc(transaction)
-                                ) {
-                                    dispatch({
-                                        type: "CACHE_ASSET_SCHEME",
-                                        data: {
-                                            assetType: (transaction as AssetMintTransactionDoc)
-                                                .data.output.assetType,
-                                            assetScheme: Type.getAssetSchemeDoc(
-                                                transaction as AssetMintTransactionDoc
-                                            )
-                                        }
-                                    });
-                                }
+                            if (Type.isAssetMintTransactionDoc(transaction)) {
+                                dispatch({
+                                    type: "CACHE_ASSET_SCHEME",
+                                    data: {
+                                        assetType: (transaction as AssetMintTransactionDoc).data.output.assetType,
+                                        assetScheme: Type.getAssetSchemeDoc(transaction as AssetMintTransactionDoc)
+                                    }
+                                });
                             }
-                        );
+                        });
                     }
                 });
 

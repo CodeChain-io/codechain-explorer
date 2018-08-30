@@ -10,17 +10,11 @@ export class QueryParcel implements BaseAction {
     public client: Client;
     public async getParcel(hash: H256): Promise<ParcelDoc | null> {
         const response = await this.searchParcel({
-            sort: [
-                { blockNumber: { order: "desc" } },
-                { parcelIndex: { order: "desc" } }
-            ],
+            sort: [{ blockNumber: { order: "desc" } }, { parcelIndex: { order: "desc" } }],
             size: 1,
             query: {
                 bool: {
-                    must: [
-                        { term: { isRetracted: false } },
-                        { term: { hash: hash.value } }
-                    ]
+                    must: [{ term: { isRetracted: false } }, { term: { hash: hash.value } }]
                 }
             }
         });
@@ -30,15 +24,9 @@ export class QueryParcel implements BaseAction {
         return response.hits.hits[0]._source;
     }
 
-    public async getParcels(
-        page: number = 1,
-        itemsPerPage: number = 25
-    ): Promise<ParcelDoc[]> {
+    public async getParcels(page: number = 1, itemsPerPage: number = 25): Promise<ParcelDoc[]> {
         const response = await this.searchParcel({
-            sort: [
-                { blockNumber: { order: "desc" } },
-                { parcelIndex: { order: "desc" } }
-            ],
+            sort: [{ blockNumber: { order: "desc" } }, { parcelIndex: { order: "desc" } }],
             from: (page - 1) * itemsPerPage,
             size: itemsPerPage,
             query: {
@@ -65,10 +53,7 @@ export class QueryParcel implements BaseAction {
         itemsPerPage: number = 6
     ): Promise<ParcelDoc[]> {
         const response = await this.searchParcel({
-            sort: [
-                { blockNumber: { order: "desc" } },
-                { parcelIndex: { order: "desc" } }
-            ],
+            sort: [{ blockNumber: { order: "desc" } }, { parcelIndex: { order: "desc" } }],
             from: (page - 1) * itemsPerPage,
             size: itemsPerPage,
             query: {
@@ -77,10 +62,7 @@ export class QueryParcel implements BaseAction {
                         { term: { isRetracted: false } },
                         {
                             bool: {
-                                should: [
-                                    { term: { sender: address } },
-                                    { term: { "action.receiver": address } }
-                                ]
+                                should: [{ term: { sender: address } }, { term: { "action.receiver": address } }]
                             }
                         }
                     ]
@@ -90,9 +72,7 @@ export class QueryParcel implements BaseAction {
         return _.map(response.hits.hits, hit => hit._source);
     }
 
-    public async getTotalParcelCountByPlatformAddress(
-        address: string
-    ): Promise<number> {
+    public async getTotalParcelCountByPlatformAddress(address: string): Promise<number> {
         const count = await this.countParcel({
             query: {
                 bool: {
@@ -100,10 +80,7 @@ export class QueryParcel implements BaseAction {
                         { term: { isRetracted: false } },
                         {
                             bool: {
-                                should: [
-                                    { term: { sender: address } },
-                                    { term: { "action.receiver": address } }
-                                ]
+                                should: [{ term: { sender: address } }, { term: { "action.receiver": address } }]
                             }
                         }
                     ]

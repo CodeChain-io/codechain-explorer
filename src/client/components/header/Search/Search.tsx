@@ -89,32 +89,18 @@ class Search extends React.Component<Props, State> {
             onChange: this.updateInputValue
         };
         return (
-            <Form
-                inline={true}
-                onSubmit={this.handleSumbit}
-                className={`search-form d-flex ${this.props.className}`}
-            >
+            <Form inline={true} onSubmit={this.handleSumbit} className={`search-form d-flex ${this.props.className}`}>
                 <FormGroup className="mb-0 search-form-group d-flex">
-                    <div
-                        className="search-input d-inline-block"
-                        id={`suggest-input-container-${this.props.idString}`}
-                    >
+                    <div className="search-input d-inline-block" id={`suggest-input-container-${this.props.idString}`}>
                         <Autosuggest
                             suggestions={suggestions}
-                            onSuggestionsFetchRequested={
-                                this.onSuggestionsFetchRequested
-                            }
-                            onSuggestionsClearRequested={
-                                this.onSuggestionsClearRequested
-                            }
+                            onSuggestionsFetchRequested={this.onSuggestionsFetchRequested}
+                            onSuggestionsClearRequested={this.onSuggestionsClearRequested}
                             getSuggestionValue={this.getSuggestionValue}
                             renderSuggestion={this.renderSuggestion}
                             inputProps={inputProps}
                         />
-                        <LoadingBar
-                            scope="searchBar"
-                            className="search-loading-bar"
-                        />
+                        <LoadingBar scope="searchBar" className="search-loading-bar" />
                     </div>
                 </FormGroup>
                 <Button className="btn btn-primary search-summit" type="submit">
@@ -171,9 +157,7 @@ class Search extends React.Component<Props, State> {
                             progressBarTarget="searchBar"
                             hash={inputValue}
                             onPendingTransaction={this.onPendingTransaction}
-                            onPendingTransactionNotExist={
-                                this.onReqeustNotExist
-                            }
+                            onPendingTransactionNotExist={this.onReqeustNotExist}
                             onError={this.onError}
                         />
                         <RequestAssetTransferAddressTransactions
@@ -181,16 +165,12 @@ class Search extends React.Component<Props, State> {
                             page={1}
                             itemsPerPage={1}
                             address={inputValue}
-                            onTransactions={
-                                this.onTransactionsForAssetTransferAddress
-                            }
+                            onTransactions={this.onTransactionsForAssetTransferAddress}
                             onError={this.onError}
                         />
                     </div>
                 ) : null}
-                {requestCount === 0 && redirectTo ? (
-                    <Redirect push={true} to={redirectTo} />
-                ) : null}
+                {requestCount === 0 && redirectTo ? <Redirect push={true} to={redirectTo} /> : null}
                 {searchStatusForSuggest === "search" ? (
                     <RequestAssetBundlesByName
                         assetName={inputValue}
@@ -268,10 +248,7 @@ class Search extends React.Component<Props, State> {
         });
     };
 
-    private onTransactionsForAssetTransferAddress = (
-        transactions: TransactionDoc[],
-        address: string
-    ) => {
+    private onTransactionsForAssetTransferAddress = (transactions: TransactionDoc[], address: string) => {
         if (transactions.length > 0) {
             this.cancelOtherRequest();
             this.setState({
@@ -283,10 +260,7 @@ class Search extends React.Component<Props, State> {
         }
     };
 
-    private onAccount = (
-        account: { nonce: U256; balance: U256 },
-        address: string
-    ) => {
+    private onAccount = (account: { nonce: U256; balance: U256 }, address: string) => {
         this.cancelOtherRequest();
         this.setState({
             redirectTo: `/addr-platform/${address}`,
@@ -294,9 +268,7 @@ class Search extends React.Component<Props, State> {
         });
     };
 
-    private onPendingTransaction = (
-        pendingTransaction: PendingTransactionDoc
-    ) => {
+    private onPendingTransaction = (pendingTransaction: PendingTransactionDoc) => {
         this.cancelOtherRequest();
         this.setState({
             redirectTo: `/tx/0x${pendingTransaction.transaction.data.hash}`,
@@ -331,14 +303,8 @@ class Search extends React.Component<Props, State> {
         });
     };
 
-    private onSuggestionsFetchRequested = (request: {
-        value: string;
-        reason: any;
-    }) => {
-        if (
-            this.state.searchStatusForSuggest === "search" &&
-            request.reason !== "input-changed"
-        ) {
+    private onSuggestionsFetchRequested = (request: { value: string; reason: any }) => {
+        if (this.state.searchStatusForSuggest === "search" && request.reason !== "input-changed") {
             return;
         }
         this.debouncedLoadSuggestions();
@@ -361,9 +327,7 @@ class Search extends React.Component<Props, State> {
                 url={Type.getMetadata(suggestion.assetScheme.metadata).icon_url}
                 data={new H256(suggestion.asset.assetType).value}
             />
-            <span className="name">
-                {Type.getMetadata(suggestion.assetScheme.metadata).name}
-            </span>
+            <span className="name">{Type.getMetadata(suggestion.assetScheme.metadata).name}</span>
         </div>
     );
 

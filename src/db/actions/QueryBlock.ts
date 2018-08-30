@@ -44,10 +44,7 @@ export class QueryBlock implements BaseAction {
             size: 1,
             query: {
                 bool: {
-                    must: [
-                        { term: { number: blockNumber } },
-                        { term: { isRetracted: false } }
-                    ]
+                    must: [{ term: { number: blockNumber } }, { term: { isRetracted: false } }]
                 }
             }
         }).then((response: SearchResponse<BlockDoc>) => {
@@ -68,10 +65,7 @@ export class QueryBlock implements BaseAction {
             size: 1,
             query: {
                 bool: {
-                    must: [
-                        { term: { hash: hash.value } },
-                        { term: { isRetracted: false } }
-                    ]
+                    must: [{ term: { hash: hash.value } }, { term: { isRetracted: false } }]
                 }
             }
         }).then((response: SearchResponse<BlockDoc>) => {
@@ -82,10 +76,7 @@ export class QueryBlock implements BaseAction {
         });
     }
 
-    public async getBlocks(
-        page: number = 1,
-        itemsPerPage: number = 25
-    ): Promise<BlockDoc[]> {
+    public async getBlocks(page: number = 1, itemsPerPage: number = 25): Promise<BlockDoc[]> {
         return this.searchBlock({
             sort: [
                 {
@@ -131,10 +122,7 @@ export class QueryBlock implements BaseAction {
             size: itemsPerPage,
             query: {
                 bool: {
-                    must: [
-                        { term: { author: address } },
-                        { term: { isRetracted: false } }
-                    ]
+                    must: [{ term: { author: address } }, { term: { isRetracted: false } }]
                 }
             }
         }).then((response: SearchResponse<BlockDoc>) => {
@@ -145,16 +133,11 @@ export class QueryBlock implements BaseAction {
         });
     }
 
-    public async getTotalBlockCountByPlatformAddress(
-        address: string
-    ): Promise<number> {
+    public async getTotalBlockCountByPlatformAddress(address: string): Promise<number> {
         const count = await this.countBlock({
             query: {
                 bool: {
-                    must: [
-                        { term: { author: address } },
-                        { term: { isRetracted: false } }
-                    ]
+                    must: [{ term: { author: address } }, { term: { isRetracted: false } }]
                 }
             }
         });

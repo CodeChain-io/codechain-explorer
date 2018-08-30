@@ -39,33 +39,16 @@ const LatestParcels = (props: Props) => {
                                         <ActionBadge parcel={parcel} />
                                     </td>
                                     <td scope="row">
-                                        <HexString
-                                            link={`/parcel/0x${parcel.hash}`}
-                                            text={parcel.hash}
-                                        />
+                                        <HexString link={`/parcel/0x${parcel.hash}`} text={parcel.hash} />
                                     </td>
                                     <td>
-                                        <Link
-                                            to={`/addr-platform/${
-                                                parcel.sender
-                                            }`}
-                                        >
-                                            {parcel.sender}
-                                        </Link>
+                                        <Link to={`/addr-platform/${parcel.sender}`}>{parcel.sender}</Link>
                                     </td>
                                     <td>
-                                        <CommaNumberString
-                                            text={changeQuarkStringToCCC(
-                                                parcel.fee
-                                            )}
-                                        />
+                                        <CommaNumberString text={changeQuarkStringToCCC(parcel.fee)} />
                                         CCC
                                     </td>
-                                    <td>
-                                        {moment
-                                            .unix(parcel.timestamp)
-                                            .fromNow()}
-                                    </td>
+                                    <td>{moment.unix(parcel.timestamp).fromNow()}</td>
                                 </tr>
                             );
                         })}
@@ -74,10 +57,7 @@ const LatestParcels = (props: Props) => {
                 {
                     <div className="mt-small">
                         <Link to={"/parcels"}>
-                            <button
-                                type="button"
-                                className="btn btn-primary w-100"
-                            >
+                            <button type="button" className="btn btn-primary w-100">
                                 <span>View all parcels</span>
                             </button>
                         </Link>

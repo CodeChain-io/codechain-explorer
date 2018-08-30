@@ -43,10 +43,7 @@ export class ImageLoader extends React.Component<Props, State> {
     private getDefaultImage = () => {
         const hash = sha256.create();
         hash.update(this.props.data);
-        const identiconData = new Identicon(
-            hash.hex(),
-            this.props.size
-        ).toString();
+        const identiconData = new Identicon(hash.hex(), this.props.size).toString();
         return `data:image/png;base64,${identiconData}`;
     };
 

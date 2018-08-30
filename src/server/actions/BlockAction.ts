@@ -18,9 +18,7 @@ function handle(context: ServerContext, router: Router) {
         context.db
             .getBlock(Number.parseInt(blockNumber))
             .then(hash => {
-                res.send(
-                    hash === null ? JSON.stringify(null) : JSON.stringify(hash)
-                );
+                res.send(hash === null ? JSON.stringify(null) : JSON.stringify(hash));
             })
             .catch(next);
     });

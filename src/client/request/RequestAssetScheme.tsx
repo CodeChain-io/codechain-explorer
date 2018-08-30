@@ -72,10 +72,7 @@ class RequestAssetSchemeInternal extends React.Component<Props> {
 const RequestAssetScheme = connect((state: RootState, props: OwnProps) => {
     if (Type.isH256String(props.assetType)) {
         return {
-            cached:
-                state.appReducer.assetSchemeByAssetType[
-                    new H256(props.assetType).value
-                ]
+            cached: state.appReducer.assetSchemeByAssetType[new H256(props.assetType).value]
         };
     }
     return {

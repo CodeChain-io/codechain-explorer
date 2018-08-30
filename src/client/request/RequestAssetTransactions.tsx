@@ -20,14 +20,7 @@ type Props = OwnProps & DispatchProps;
 
 class RequestAssetTransactionsInternal extends React.Component<Props> {
     public componentWillMount() {
-        const {
-            dispatch,
-            assetType,
-            onTransactions,
-            onError,
-            page,
-            itemsPerPage
-        } = this.props;
+        const { dispatch, assetType, onTransactions, onError, page, itemsPerPage } = this.props;
         apiRequest({
             path: `asset-txs/${assetType}?page=${page}&itemsPerPage=${itemsPerPage}`,
             dispatch,

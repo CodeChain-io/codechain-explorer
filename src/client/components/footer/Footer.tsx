@@ -1,9 +1,4 @@
-import {
-    faGithub,
-    faGitter,
-    faMedium,
-    faTwitter
-} from "@fortawesome/free-brands-svg-icons";
+import { faGithub, faGitter, faMedium, faTwitter } from "@fortawesome/free-brands-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import * as React from "react";
 import { Col, Container, Row } from "reactstrap";
@@ -23,18 +18,12 @@ const Footer = () => {
                                 </a>
                             </li>
                             <li>
-                                <a
-                                    href="https://husky.codechain.io"
-                                    target="_blank"
-                                >
+                                <a href="https://husky.codechain.io" target="_blank">
                                     husky.codechain.io
                                 </a>
                             </li>
                             <li>
-                                <a
-                                    href="https://husky.codechain.io/faucet"
-                                    target="_blank"
-                                >
+                                <a href="https://husky.codechain.io/faucet" target="_blank">
                                     husky.codechain.io/faucet
                                 </a>
                             </li>
@@ -45,41 +34,26 @@ const Footer = () => {
                         <ul className="list-inline link-list">
                             <li className="list-inline-item">
                                 <a href="https://codechain.io" target="_blank">
-                                    <img
-                                        className="link-icon"
-                                        src={codechainIcon}
-                                    />
+                                    <img className="link-icon" src={codechainIcon} />
                                 </a>
                             </li>
                             <li className="list-inline-item">
-                                <a
-                                    href="https://github.com/CodeChain-io/codechain"
-                                    target="_blank"
-                                >
+                                <a href="https://github.com/CodeChain-io/codechain" target="_blank">
                                     <FontAwesomeIcon icon={faGithub} />
                                 </a>
                             </li>
                             <li className="list-inline-item">
-                                <a
-                                    href="https://gitter.im/CodeChain-io/codechain"
-                                    target="_blank"
-                                >
+                                <a href="https://gitter.im/CodeChain-io/codechain" target="_blank">
                                     <FontAwesomeIcon icon={faGitter} />
                                 </a>
                             </li>
                             <li className="list-inline-item">
-                                <a
-                                    href="https://twitter.com/codechain_io"
-                                    target="_blank"
-                                >
+                                <a href="https://twitter.com/codechain_io" target="_blank">
                                     <FontAwesomeIcon icon={faTwitter} />
                                 </a>
                             </li>
                             <li className="list-inline-item">
-                                <a
-                                    href="https://medium.com/codechain"
-                                    target="_blank"
-                                >
+                                <a href="https://medium.com/codechain" target="_blank">
                                     <FontAwesomeIcon icon={faMedium} />
                                 </a>
                             </li>

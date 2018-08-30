@@ -14,10 +14,7 @@ interface State {
     networkId: string;
 }
 
-export default class AssetTransferTransactionEditor extends React.Component<
-    Props,
-    State
-> {
+export default class AssetTransferTransactionEditor extends React.Component<Props, State> {
     constructor(props: Props) {
         super(props);
         this.state = {
@@ -48,9 +45,7 @@ export default class AssetTransferTransactionEditor extends React.Component<
         });
     };
 
-    private onChangeNetworkId = (
-        event: React.ChangeEvent<HTMLInputElement>
-    ) => {
+    private onChangeNetworkId = (event: React.ChangeEvent<HTMLInputElement>) => {
         this.setState({
             ...this.state,
             networkId: event.target.value

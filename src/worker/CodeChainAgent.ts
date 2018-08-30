@@ -1,13 +1,5 @@
 import { SDK } from "codechain-sdk";
-import {
-    AssetScheme,
-    Block,
-    H256,
-    Invoice,
-    SignedParcel,
-    Transaction,
-    U256
-} from "codechain-sdk/lib/core/classes";
+import { AssetScheme, Block, H256, Invoice, SignedParcel, Transaction, U256 } from "codechain-sdk/lib/core/classes";
 
 export class CodeChainAgent {
     private sdk: SDK;
@@ -36,16 +28,11 @@ export class CodeChainAgent {
         return this.sdk.rpc.chain.getPendingParcels();
     };
 
-    public getParcelInvoice = async (
-        hash: H256
-    ): Promise<Invoice | Invoice[] | null> => {
+    public getParcelInvoice = async (hash: H256): Promise<Invoice | Invoice[] | null> => {
         return this.sdk.rpc.chain.getParcelInvoice(hash);
     };
 
-    public getBalance = async (
-        address: string,
-        blockNumber?: number
-    ): Promise<U256> => {
+    public getBalance = async (address: string, blockNumber?: number): Promise<U256> => {
         return this.sdk.rpc.chain.getBalance(address, blockNumber);
     };
 }

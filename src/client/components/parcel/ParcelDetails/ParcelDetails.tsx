@@ -29,20 +29,14 @@ const getElementByType = (parcel: ParcelDoc) => {
             <Row key="parcel-header-table-payment-sender">
                 <Col md="3">Sender</Col>
                 <Col md="9">
-                    <Link to={`/addr-platform/${parcel.sender}`}>
-                        {parcel.sender}
-                    </Link>
+                    <Link to={`/addr-platform/${parcel.sender}`}>{parcel.sender}</Link>
                 </Col>
             </Row>,
             <hr key="line1" />,
             <Row key="parcel-header-table-payment-receiver">
                 <Col md="3">Receiver</Col>
                 <Col md="9">
-                    <Link
-                        to={`/addr-platform/${
-                            (parcel.action as PaymentDoc).receiver
-                        }`}
-                    >
+                    <Link to={`/addr-platform/${(parcel.action as PaymentDoc).receiver}`}>
                         {(parcel.action as PaymentDoc).receiver}
                     </Link>
                 </Col>
@@ -51,11 +45,7 @@ const getElementByType = (parcel: ParcelDoc) => {
             <Row key="parcel-header-table-payment-amount">
                 <Col md="3">Amount</Col>
                 <Col md="9">
-                    <CommaNumberString
-                        text={changeQuarkStringToCCC(
-                            (parcel.action as PaymentDoc).amount
-                        )}
-                    />
+                    <CommaNumberString text={changeQuarkStringToCCC((parcel.action as PaymentDoc).amount)} />
                     CCC
                 </Col>
             </Row>,
@@ -67,9 +57,7 @@ const getElementByType = (parcel: ParcelDoc) => {
                 <Col md="3">Key</Col>
                 <Col md="9">
                     <div className="text-area">
-                        <HexString
-                            text={(parcel.action as SetRegularKeyDoc).key}
-                        />
+                        <HexString text={(parcel.action as SetRegularKeyDoc).key} />
                     </div>
                 </Col>
             </Row>,
@@ -79,9 +67,7 @@ const getElementByType = (parcel: ParcelDoc) => {
         return [
             <Row key="parcel-header-table-change-shard-state-key">
                 <Col md="3"># of Transactions</Col>
-                <Col md="9">
-                    {(parcel.action as ChangeShardStateDoc).transactions.length.toLocaleString()}
-                </Col>
+                <Col md="9">{(parcel.action as ChangeShardStateDoc).transactions.length.toLocaleString()}</Col>
             </Row>,
             <hr key="line" />
         ];
@@ -95,18 +81,11 @@ const getParcelInvoice = (parcel: ParcelDoc) => {
         Type.isSetRegularKeyDoc(parcel.action) ||
         Type.isCreateShardDoc(parcel.action)
     ) {
-        const parcelAction = parcel.action as
-            | PaymentDoc
-            | SetRegularKeyDoc
-            | CreateShardDoc;
+        const parcelAction = parcel.action as PaymentDoc | SetRegularKeyDoc | CreateShardDoc;
         return [
             <Row key="invoice-row">
                 <Col md="3">Invoice</Col>
-                <Col md="9">
-                    {parcelAction.invoice
-                        ? "Success"
-                        : `Fail - ${parcelAction.errorType}`}
-                </Col>
+                <Col md="9">{parcelAction.invoice ? "Success" : `Fail - ${parcelAction.errorType}`}</Col>
             </Row>,
             <hr key="invoice-hr" />
         ];
@@ -138,19 +117,13 @@ const ParcelDetails = (props: Props) => {
                         <Row>
                             <Col md="3">Block No.</Col>
                             <Col md="9">
-                                <Link to={`/block/${parcel.blockNumber}`}>
-                                    {parcel.blockNumber}
-                                </Link>
+                                <Link to={`/block/${parcel.blockNumber}`}>{parcel.blockNumber}</Link>
                             </Col>
                         </Row>
                         <hr />
                         <Row>
                             <Col md="3">Parcel Index</Col>
-                            <Col md="9">
-                                {parcel.parcelIndex
-                                    ? parcel.parcelIndex.toLocaleString()
-                                    : 0}
-                            </Col>
+                            <Col md="9">{parcel.parcelIndex ? parcel.parcelIndex.toLocaleString() : 0}</Col>
                         </Row>
                         <hr />
                         <Row>
@@ -168,18 +141,14 @@ const ParcelDetails = (props: Props) => {
                         <Row>
                             <Col md="3">Signer</Col>
                             <Col md="9">
-                                <Link to={`/addr-platform/${parcel.sender}`}>
-                                    {parcel.sender}
-                                </Link>
+                                <Link to={`/addr-platform/${parcel.sender}`}>{parcel.sender}</Link>
                             </Col>
                         </Row>
                         <hr />
                         <Row>
                             <Col md="3">Fee</Col>
                             <Col md="9">
-                                <CommaNumberString
-                                    text={changeQuarkStringToCCC(parcel.fee)}
-                                />
+                                <CommaNumberString text={changeQuarkStringToCCC(parcel.fee)} />
                                 CCC
                             </Col>
                         </Row>
@@ -191,9 +160,7 @@ const ParcelDetails = (props: Props) => {
                             </Col>
                         </Row>
                         <hr />
-                        {status === "confirmed"
-                            ? getParcelInvoice(parcel)
-                            : null}
+                        {status === "confirmed" ? getParcelInvoice(parcel) : null}
                         {getElementByType(parcel)}
                     </div>
                 </Col>

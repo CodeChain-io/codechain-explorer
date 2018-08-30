@@ -36,10 +36,7 @@ export const ActionBadge = (props: Props) => {
     const { className, parcel, simple } = props;
     return (
         <span className={className}>
-            <FontAwesomeIcon
-                className={getBadgeClassNameByAction(parcel.action.action)}
-                icon={faSquare}
-            />{" "}
+            <FontAwesomeIcon className={getBadgeClassNameByAction(parcel.action.action)} icon={faSquare} />{" "}
             {simple ? "" : getActionString(parcel.action.action)}
         </span>
     );

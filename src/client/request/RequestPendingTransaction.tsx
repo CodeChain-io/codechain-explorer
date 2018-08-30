@@ -5,9 +5,7 @@ import { PendingTransactionDoc } from "../../db/DocType";
 import { ApiError, apiRequest } from "./ApiRequest";
 
 interface OwnProps {
-    onPendingTransaction: (
-        pendingTransactionDoc: PendingTransactionDoc
-    ) => void;
+    onPendingTransaction: (pendingTransactionDoc: PendingTransactionDoc) => void;
     onError: (e: ApiError) => void;
     onPendingTransactionNotExist: () => void;
     progressBarTarget?: string;

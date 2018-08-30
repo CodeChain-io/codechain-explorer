@@ -27,20 +27,12 @@ class CopyButton extends React.Component<Props, State> {
         const { copyPopoverOpen } = this.state;
         return (
             <div className={`copy-button ${className}`}>
-                <CopyToClipboard
-                    text={copyString}
-                    onCopy={this.toggleCopyPopover}
-                >
+                <CopyToClipboard text={copyString} onCopy={this.toggleCopyPopover}>
                     <button className="btn btn-primary copy" id="copy-btn">
                         <FontAwesomeIcon icon={faCopy} />
                     </button>
                 </CopyToClipboard>
-                <Popover
-                    placement="top"
-                    isOpen={copyPopoverOpen}
-                    target="copy-btn"
-                    toggle={this.toggleCopyPopover}
-                >
+                <Popover placement="top" isOpen={copyPopoverOpen} target="copy-btn" toggle={this.toggleCopyPopover}>
                     <PopoverBody>Copied to clipboard</PopoverBody>
                 </Popover>
             </div>

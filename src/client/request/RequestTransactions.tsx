@@ -19,13 +19,7 @@ type Props = OwnProps & DispatchProps;
 
 class RequestTransactionsInternal extends React.Component<Props> {
     public componentWillMount() {
-        const {
-            onError,
-            onTransactions,
-            dispatch,
-            page,
-            itemsPerPage
-        } = this.props;
+        const { onError, onTransactions, dispatch, page, itemsPerPage } = this.props;
         apiRequest({
             path: `txs?page=${page}&itemsPerPage=${itemsPerPage}`,
             dispatch,

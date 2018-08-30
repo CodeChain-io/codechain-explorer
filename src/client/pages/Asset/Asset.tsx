@@ -6,10 +6,7 @@ import { Error } from "../../components/error/Error/Error";
 import { AssetSchemeDoc, TransactionDoc, Type } from "../../../db/DocType";
 import AssetDetails from "../../components/asset/AssetDetails/AssetDetails";
 import TransactionList from "../../components/transaction/TransactionList/TransactionList";
-import {
-    RequestAssetScheme,
-    RequestTotalAssetTransactionCount
-} from "../../request";
+import { RequestAssetScheme, RequestTotalAssetTransactionCount } from "../../request";
 import RequestAssetTransactions from "../../request/RequestAssetTransactions";
 
 import { H256 } from "codechain-sdk/lib/core/H256";
@@ -107,19 +104,14 @@ class Asset extends React.Component<Props, State> {
                     <RequestPendingAssetScheme
                         assetType={assetType}
                         onAssetScheme={this.onAssetScheme}
-                        onAssetSchemeNotExist={
-                            this.onPendingAssetSchemeNotFound
-                        }
+                        onAssetSchemeNotExist={this.onPendingAssetSchemeNotFound}
                         onError={this.onError}
                     />
                 );
             } else {
                 return (
                     <div>
-                        <Error
-                            content={assetType}
-                            title="The asset does not exist."
-                        />
+                        <Error content={assetType} title="The asset does not exist." />
                     </div>
                 );
             }
@@ -133,25 +125,18 @@ class Asset extends React.Component<Props, State> {
                                 <ImageLoader
                                     size={65}
                                     data={new H256(assetType).value}
-                                    url={
-                                        Type.getMetadata(assetScheme.metadata)
-                                            .icon_url
-                                    }
+                                    url={Type.getMetadata(assetScheme.metadata).icon_url}
                                 />
                             </div>
                             <div className="d-inline-block right-container">
                                 <h1>Asset</h1>
                                 <div className="hash-container d-flex">
                                     <div className="d-inline-block hash">
-                                        <HexString
-                                            text={new H256(assetType).value}
-                                        />
+                                        <HexString text={new H256(assetType).value} />
                                     </div>
                                     <CopyButton
                                         className="d-inline-block"
-                                        copyString={`0x${
-                                            new H256(assetType).value
-                                        }`}
+                                        copyString={`0x${new H256(assetType).value}`}
                                     />
                                 </div>
                             </div>
@@ -159,10 +144,7 @@ class Asset extends React.Component<Props, State> {
                     </Col>
                 </Row>
                 <div className="mt-large">
-                    <AssetDetails
-                        assetType={assetType}
-                        assetScheme={assetScheme}
-                    />
+                    <AssetDetails assetType={assetType} assetScheme={assetScheme} />
                 </div>
                 {
                     <RequestTotalAssetTransactionCount
@@ -213,9 +195,7 @@ class Asset extends React.Component<Props, State> {
             transactions: this.state.transactions.concat(transactions),
             loadTransaction: false
         });
-        if (
-            this.state.transactions.length >= this.state.totalTransactionCount
-        ) {
+        if (this.state.transactions.length >= this.state.totalTransactionCount) {
             this.setState({ noMoreTransaction: true });
         }
     };

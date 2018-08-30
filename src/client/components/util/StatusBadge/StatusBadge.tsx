@@ -33,10 +33,7 @@ export const StatusBadge = (props: Props) => {
     const { className, status } = props;
     return (
         <span className={className}>
-            <FontAwesomeIcon
-                className={getBadgeBackgroundColorClassByStatus(status)}
-                icon={faCircle}
-            />{" "}
+            <FontAwesomeIcon className={getBadgeBackgroundColorClassByStatus(status)} icon={faCircle} />{" "}
             {getStatusString(status)}
         </span>
     );

@@ -34,33 +34,17 @@ const LatestBlocks = (props: Props) => {
                             return (
                                 <tr key={`home-block-num-${block.hash}`}>
                                     <td scope="row">
-                                        <Link to={`/block/${block.number}`}>
-                                            {block.number.toLocaleString()}
-                                        </Link>
+                                        <Link to={`/block/${block.number}`}>{block.number.toLocaleString()}</Link>
+                                    </td>
+                                    <td>{block.parcels.length.toLocaleString()}</td>
+                                    <td>
+                                        <Link to={`/addr-platform/${block.author}`}>{block.author}</Link>
                                     </td>
                                     <td>
-                                        {block.parcels.length.toLocaleString()}
-                                    </td>
-                                    <td>
-                                        <Link
-                                            to={`/addr-platform/${
-                                                block.author
-                                            }`}
-                                        >
-                                            {block.author}
-                                        </Link>
-                                    </td>
-                                    <td>
-                                        <CommaNumberString
-                                            text={changeQuarkStringToCCC(
-                                                block.miningReward
-                                            )}
-                                        />
+                                        <CommaNumberString text={changeQuarkStringToCCC(block.miningReward)} />
                                         CCC
                                     </td>
-                                    <td>
-                                        {moment.unix(block.timestamp).fromNow()}
-                                    </td>
+                                    <td>{moment.unix(block.timestamp).fromNow()}</td>
                                 </tr>
                             );
                         })}
@@ -69,10 +53,7 @@ const LatestBlocks = (props: Props) => {
                 {
                     <div className="mt-small">
                         <Link to={"/blocks"}>
-                            <button
-                                type="button"
-                                className="btn btn-primary w-100"
-                            >
+                            <button type="button" className="btn btn-primary w-100">
                                 <span>View all blocks</span>
                             </button>
                         </Link>

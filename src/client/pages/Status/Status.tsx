@@ -6,12 +6,8 @@ import DifficultyChart from "../../components/status/DifficultyChart/DifficultyC
 import NodeStatus from "../../components/status/NodeStatus/NodeStatus";
 import SyncStatus from "../../components/status/SyncStatus/SyncStatus";
 import RequestBlockDifficulty from "../../request/RequestBlockDifficulty";
-import RequestCodeChainStatus, {
-    CodeChainData
-} from "../../request/RequestCodeChainStatus";
-import RequestNodeStatus, {
-    NodeStatusData
-} from "../../request/RequestNodeStatus";
+import RequestCodeChainStatus, { CodeChainData } from "../../request/RequestCodeChainStatus";
+import RequestNodeStatus, { NodeStatusData } from "../../request/RequestNodeStatus";
 import RequestSyncStatus, { SyncData } from "../../request/RequestSyncStatus";
 import "./Status.scss";
 
@@ -89,10 +85,7 @@ class Status extends React.Component<{}, State> {
                                 </div>
                             ) : null}
                             {requestNodeStatus ? (
-                                <RequestNodeStatus
-                                    onNodeStatus={this.onNodeStatus}
-                                    onError={this.onError}
-                                />
+                                <RequestNodeStatus onNodeStatus={this.onNodeStatus} onError={this.onError} />
                             ) : null}
                             {syncStatus ? (
                                 <div className="mt-large">
@@ -100,10 +93,7 @@ class Status extends React.Component<{}, State> {
                                 </div>
                             ) : null}
                             {requestSyncStatus ? (
-                                <RequestSyncStatus
-                                    onSync={this.onSyncStatus}
-                                    onError={this.onError}
-                                />
+                                <RequestSyncStatus onSync={this.onSyncStatus} onError={this.onError} />
                             ) : null}
                             {chainInfo ? (
                                 <div className="mt-large">
@@ -111,10 +101,7 @@ class Status extends React.Component<{}, State> {
                                 </div>
                             ) : null}
                             {requestChainInfo ? (
-                                <RequestCodeChainStatus
-                                    onCodeChain={this.onChainInfo}
-                                    onError={this.onError}
-                                />
+                                <RequestCodeChainStatus onCodeChain={this.onChainInfo} onError={this.onError} />
                             ) : null}
                         </Col>
                         <Col lg="6">
@@ -135,9 +122,7 @@ class Status extends React.Component<{}, State> {
             </div>
         );
     }
-    private onBlockDifficulty = (
-        difficulty: Array<{ x: string; y: string }>
-    ) => {
+    private onBlockDifficulty = (difficulty: Array<{ x: string; y: string }>) => {
         this.setState({ difficulty, requestDifficulty: false });
     };
     private onNodeStatus = (nodeStatus: NodeStatusData) => {

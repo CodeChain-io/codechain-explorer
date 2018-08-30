@@ -15,17 +15,10 @@ import { Redirect } from "react-router";
 import { Container, Table } from "reactstrap";
 import * as emptyImage from "./img/empty.png";
 
-import {
-    RequestPendingParcels,
-    RequestTotalPendingParcelCount
-} from "../../request";
+import { RequestPendingParcels, RequestTotalPendingParcelCount } from "../../request";
 
 import { Link } from "react-router-dom";
-import {
-    ChangeShardStateDoc,
-    PendingParcelDoc,
-    Type
-} from "../../../db/DocType";
+import { ChangeShardStateDoc, PendingParcelDoc, Type } from "../../../db/DocType";
 import { ActionBadge } from "../../components/util/ActionBadge/ActionBadge";
 import HexString from "../../components/util/HexString/HexString";
 import "./PendingParcels.scss";
@@ -96,12 +89,8 @@ class PendingParcels extends React.Component<Props, State> {
             location: { search }
         } = this.props;
         const params = new URLSearchParams(search);
-        const currentPage = params.get("page")
-            ? parseInt(params.get("page") as string, 10)
-            : 1;
-        const itemsPerPage = params.get("itemsPerPage")
-            ? parseInt(params.get("itemsPerPage") as string, 10)
-            : 25;
+        const currentPage = params.get("page") ? parseInt(params.get("page") as string, 10) : 1;
+        const itemsPerPage = params.get("itemsPerPage") ? parseInt(params.get("itemsPerPage") as string, 10) : 25;
         const {
             filteredPendingParcelCount,
             isASC,
@@ -124,8 +113,7 @@ class PendingParcels extends React.Component<Props, State> {
             return (
                 <Redirect
                     push={true}
-                    to={`/parcels-pending?page=${redirectPage ||
-                        currentPage}&itemsPerPage=${redirectItemsPerPage ||
+                    to={`/parcels-pending?page=${redirectPage || currentPage}&itemsPerPage=${redirectItemsPerPage ||
                         itemsPerPage}`}
                 />
             );
@@ -139,20 +127,14 @@ class PendingParcels extends React.Component<Props, State> {
                 />
             );
         }
-        const maxPage =
-            Math.floor(
-                Math.max(0, (filteredPendingParcelCount || 0) - 1) /
-                    itemsPerPage
-            ) + 1;
+        const maxPage = Math.floor(Math.max(0, (filteredPendingParcelCount || 0) - 1) / itemsPerPage) + 1;
         return (
             <Container className="pending-parcels">
                 {filteredPendingParcelCount === undefined ? (
                     <RequestTotalPendingParcelCount
                         actionFilters={actionFilters}
                         signerFiter={currentSenderFilter}
-                        onPendingParcelTotalCount={
-                            this.onFilteredPendingParcelTotalCount
-                        }
+                        onPendingParcelTotalCount={this.onFilteredPendingParcelTotalCount}
                         onError={this.onError}
                     />
                 ) : null}
@@ -172,39 +154,28 @@ class PendingParcels extends React.Component<Props, State> {
                     <h1 className="d-inline mr-auto">Pending Parcels</h1>
                     <div className="d-inline">
                         <span className="total-parcel-big">
-                            {filteredPendingParcelCount || 0} Pending Parcels
-                            (Total {totalPendingParcelCount})
+                            {filteredPendingParcelCount || 0} Pending Parcels (Total {totalPendingParcelCount})
                         </span>
                     </div>
                     <div className="d-inline">
-                        <span className="total-parcel-small">
-                            {filteredPendingParcelCount || 0} Pending Parcels
-                        </span>
+                        <span className="total-parcel-small">{filteredPendingParcelCount || 0} Pending Parcels</span>
                     </div>
                 </div>
                 <div className="filter-container mt-large">
                     <div className="type-filter">
                         <div className="d-md-inline mr-4">
-                            <span
-                                className="filter-item"
-                                onClick={this.toggleChangeShardStateFilter}
-                            >
+                            <span className="filter-item" onClick={this.toggleChangeShardStateFilter}>
                                 <input
                                     readOnly={true}
                                     checked={isChangeShardStateFilterOn}
                                     type="checkbox"
                                     className="filter-input filter-input-change-shard-state"
                                 />
-                                <span className="filter-text">
-                                    ChangeShardState
-                                </span>
+                                <span className="filter-text">ChangeShardState</span>
                             </span>
                         </div>
                         <div className="d-md-inline mr-4">
-                            <span
-                                className="filter-item"
-                                onClick={this.togglePaymentFilter}
-                            >
+                            <span className="filter-item" onClick={this.togglePaymentFilter}>
                                 <input
                                     readOnly={true}
                                     checked={isPaymentFilterOn}
@@ -215,19 +186,14 @@ class PendingParcels extends React.Component<Props, State> {
                             </span>
                         </div>
                         <div className="d-md-inline">
-                            <span
-                                className="filter-item"
-                                onClick={this.toggleSetRegularKeyFilter}
-                            >
+                            <span className="filter-item" onClick={this.toggleSetRegularKeyFilter}>
                                 <input
                                     readOnly={true}
                                     checked={isSetRegularKeyFilterOn}
                                     type="checkbox"
                                     className="filter-input filter-input-set-regular-key"
                                 />
-                                <span className="filter-text">
-                                    SetRegularKey
-                                </span>
+                                <span className="filter-text">SetRegularKey</span>
                             </span>
                         </div>
                     </div>
@@ -237,10 +203,7 @@ class PendingParcels extends React.Component<Props, State> {
                         <div>
                             <div className="float-right">
                                 <span>Show </span>
-                                <select
-                                    onChange={this.handleOptionChange}
-                                    defaultValue={itemsPerPage.toString()}
-                                >
+                                <select onChange={this.handleOptionChange} defaultValue={itemsPerPage.toString()}>
                                     <option value="25">25</option>
                                     <option value="50">50</option>
                                     <option value="75">75</option>
@@ -258,10 +221,7 @@ class PendingParcels extends React.Component<Props, State> {
                                         <th
                                             style={{ width: "10%" }}
                                             className="sort-header"
-                                            onClick={_.partial(
-                                                this.handleSortButton,
-                                                "fee"
-                                            )}
+                                            onClick={_.partial(this.handleSortButton, "fee")}
                                         >
                                             Fee
                                             {this.getSortButton("fee")}
@@ -269,10 +229,7 @@ class PendingParcels extends React.Component<Props, State> {
                                         <th
                                             style={{ width: "10%" }}
                                             className="sort-header"
-                                            onClick={_.partial(
-                                                this.handleSortButton,
-                                                "txs"
-                                            )}
+                                            onClick={_.partial(this.handleSortButton, "txs")}
                                         >
                                             Txs
                                             {this.getSortButton("txs")}
@@ -280,128 +237,65 @@ class PendingParcels extends React.Component<Props, State> {
                                         <th
                                             style={{ width: "20%" }}
                                             className="sort-header"
-                                            onClick={_.partial(
-                                                this.handleSortButton,
-                                                "pendingPeriod"
-                                            )}
+                                            onClick={_.partial(this.handleSortButton, "pendingPeriod")}
                                         >
                                             Pending Period
-                                            {this.getSortButton(
-                                                "pendingPeriod"
-                                            )}
+                                            {this.getSortButton("pendingPeriod")}
                                         </th>
-                                        <th style={{ width: "20%" }}>
-                                            Estimated Confirmation Period
-                                        </th>
+                                        <th style={{ width: "20%" }}>Estimated Confirmation Period</th>
                                     </tr>
                                 </thead>
                                 {pendingParcels.length > 0 ? (
                                     <tbody>
-                                        {_.map(
-                                            pendingParcels,
-                                            (pendingParcel, index) => {
-                                                return (
-                                                    <tr
-                                                        key={`pending-parcel-${
-                                                            pendingParcel.parcel
-                                                                .hash
-                                                        }`}
-                                                    >
-                                                        <td>
-                                                            <ActionBadge
-                                                                parcel={
-                                                                    pendingParcel.parcel
-                                                                }
-                                                                simple={true}
-                                                            />
-                                                            <HexString
-                                                                text={
-                                                                    pendingParcel
-                                                                        .parcel
-                                                                        .hash
-                                                                }
-                                                                link={`/parcel/0x${
-                                                                    pendingParcel
-                                                                        .parcel
-                                                                        .hash
+                                        {_.map(pendingParcels, (pendingParcel, index) => {
+                                            return (
+                                                <tr key={`pending-parcel-${pendingParcel.parcel.hash}`}>
+                                                    <td>
+                                                        <ActionBadge parcel={pendingParcel.parcel} simple={true} />
+                                                        <HexString
+                                                            text={pendingParcel.parcel.hash}
+                                                            link={`/parcel/0x${pendingParcel.parcel.hash}`}
+                                                        />
+                                                    </td>
+                                                    <td>
+                                                        <span
+                                                            onClick={_.partial(
+                                                                this.toogleFilter,
+                                                                pendingParcel.parcel.sender
+                                                            )}
+                                                        >
+                                                            <FontAwesomeIcon
+                                                                className={`filter ${
+                                                                    isSenderFilterOn ? "" : "disable"
                                                                 }`}
+                                                                icon={faFilter}
                                                             />
-                                                        </td>
-                                                        <td>
-                                                            <span
-                                                                onClick={_.partial(
-                                                                    this
-                                                                        .toogleFilter,
-                                                                    pendingParcel
-                                                                        .parcel
-                                                                        .sender
-                                                                )}
-                                                            >
-                                                                <FontAwesomeIcon
-                                                                    className={`filter ${
-                                                                        isSenderFilterOn
-                                                                            ? ""
-                                                                            : "disable"
-                                                                    }`}
-                                                                    icon={
-                                                                        faFilter
-                                                                    }
-                                                                />
-                                                            </span>
-                                                            <Link
-                                                                to={`/addr-platform/${
-                                                                    pendingParcel
-                                                                        .parcel
-                                                                        .sender
-                                                                }`}
-                                                            >
-                                                                {
-                                                                    pendingParcel
-                                                                        .parcel
-                                                                        .sender
-                                                                }
-                                                            </Link>
-                                                        </td>
-                                                        <td>
-                                                            {pendingParcel.parcel.fee.toLocaleString()}
-                                                        </td>
-                                                        <td>
-                                                            {Type.isChangeShardStateDoc(
-                                                                pendingParcel
-                                                                    .parcel
-                                                                    .action
-                                                            )
-                                                                ? (pendingParcel
-                                                                      .parcel
-                                                                      .action as ChangeShardStateDoc).transactions.length.toLocaleString()
-                                                                : 0}
-                                                        </td>
-                                                        <td>
-                                                            {moment
-                                                                .unix(
-                                                                    pendingParcel.timestamp
-                                                                )
-                                                                .fromNow()}
-                                                        </td>
-                                                        <td>?</td>
-                                                    </tr>
-                                                );
-                                            }
-                                        )}
+                                                        </span>
+                                                        <Link to={`/addr-platform/${pendingParcel.parcel.sender}`}>
+                                                            {pendingParcel.parcel.sender}
+                                                        </Link>
+                                                    </td>
+                                                    <td>{pendingParcel.parcel.fee.toLocaleString()}</td>
+                                                    <td>
+                                                        {Type.isChangeShardStateDoc(pendingParcel.parcel.action)
+                                                            ? (pendingParcel.parcel
+                                                                  .action as ChangeShardStateDoc).transactions.length.toLocaleString()
+                                                            : 0}
+                                                    </td>
+                                                    <td>{moment.unix(pendingParcel.timestamp).fromNow()}</td>
+                                                    <td>?</td>
+                                                </tr>
+                                            );
+                                        })}
                                     </tbody>
                                 ) : null}
                             </Table>
                             {pendingParcels.length === 0 ? (
                                 <div className="empty-container align-items-center justify-content-center">
-                                    <img
-                                        className="empty-icon"
-                                        src={emptyImage}
-                                    />
+                                    <img className="empty-icon" src={emptyImage} />
                                     <div>
                                         <h3>Empty!</h3>
-                                        <span>
-                                            There is no data to display.
-                                        </span>
+                                        <span>There is no data to display.</span>
                                     </div>
                                 </div>
                             ) : null}
@@ -413,39 +307,24 @@ class PendingParcels extends React.Component<Props, State> {
                                         <button
                                             disabled={currentPage === 1}
                                             className={`btn btn-primary page-btn ${
-                                                currentPage === 1
-                                                    ? "disabled"
-                                                    : ""
+                                                currentPage === 1 ? "disabled" : ""
                                             }`}
                                             type="button"
-                                            onClick={_.partial(
-                                                this.moveFirst,
-                                                currentPage
-                                            )}
+                                            onClick={_.partial(this.moveFirst, currentPage)}
                                         >
-                                            <FontAwesomeIcon
-                                                icon={faAngleDoubleLeft}
-                                            />
+                                            <FontAwesomeIcon icon={faAngleDoubleLeft} />
                                         </button>
                                     </li>
                                     <li className="list-inline-item">
                                         <button
                                             disabled={currentPage === 1}
                                             className={`btn btn-primary page-btn ${
-                                                currentPage === 1
-                                                    ? "disabled"
-                                                    : ""
+                                                currentPage === 1 ? "disabled" : ""
                                             }`}
                                             type="button"
-                                            onClick={_.partial(
-                                                this.moveBefore,
-                                                currentPage
-                                            )}
+                                            onClick={_.partial(this.moveBefore, currentPage)}
                                         >
-                                            <FontAwesomeIcon
-                                                icon={faAngleLeft}
-                                            />{" "}
-                                            Prev
+                                            <FontAwesomeIcon icon={faAngleLeft} /> Prev
                                         </button>
                                     </li>
                                     <li className="list-inline-item">
@@ -457,41 +336,24 @@ class PendingParcels extends React.Component<Props, State> {
                                         <button
                                             disabled={currentPage === maxPage}
                                             className={`btn btn-primary page-btn ${
-                                                currentPage === maxPage
-                                                    ? "disabled"
-                                                    : ""
+                                                currentPage === maxPage ? "disabled" : ""
                                             }`}
                                             type="button"
-                                            onClick={_.partial(
-                                                this.moveNext,
-                                                currentPage,
-                                                maxPage
-                                            )}
+                                            onClick={_.partial(this.moveNext, currentPage, maxPage)}
                                         >
-                                            Next{" "}
-                                            <FontAwesomeIcon
-                                                icon={faAngleRight}
-                                            />
+                                            Next <FontAwesomeIcon icon={faAngleRight} />
                                         </button>
                                     </li>
                                     <li className="list-inline-item">
                                         <button
                                             disabled={currentPage === maxPage}
                                             className={`btn btn-primary page-btn ${
-                                                currentPage === maxPage
-                                                    ? "disabled"
-                                                    : ""
+                                                currentPage === maxPage ? "disabled" : ""
                                             }`}
                                             type="button"
-                                            onClick={_.partial(
-                                                this.moveLast,
-                                                currentPage,
-                                                maxPage
-                                            )}
+                                            onClick={_.partial(this.moveLast, currentPage, maxPage)}
                                         >
-                                            <FontAwesomeIcon
-                                                icon={faAngleDoubleRight}
-                                            />
+                                            <FontAwesomeIcon icon={faAngleDoubleRight} />
                                         </button>
                                     </li>
                                 </ul>
@@ -580,9 +442,7 @@ class PendingParcels extends React.Component<Props, State> {
         this.setState({ totalPendingParcelCount: pendingParcelTotalCount });
     };
 
-    private onFilteredPendingParcelTotalCount = (
-        pendingParcelTotalCount: number
-    ) => {
+    private onFilteredPendingParcelTotalCount = (pendingParcelTotalCount: number) => {
         this.setState({ filteredPendingParcelCount: pendingParcelTotalCount });
     };
 
@@ -623,11 +483,7 @@ class PendingParcels extends React.Component<Props, State> {
 
     private getSortButton = (sortType: string) => {
         return (
-            <div
-                className={`d-inline sort-btn ${
-                    this.state.currentSortType !== sortType ? "disable" : ""
-                }`}
-            >
+            <div className={`d-inline sort-btn ${this.state.currentSortType !== sortType ? "disable" : ""}`}>
                 {this.state.currentSortType === sortType ? (
                     this.state.isASC ? (
                         <FontAwesomeIcon icon={faCaretUp} />

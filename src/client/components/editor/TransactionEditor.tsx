@@ -14,18 +14,10 @@ export default class TransactionEditor extends React.Component<Props> {
     public render() {
         const { type } = this.props;
         if (type === "assetMint") {
-            return (
-                <AssetMintTransactionEditor
-                    onChange={this.props.onChangeTransaction}
-                />
-            );
+            return <AssetMintTransactionEditor onChange={this.props.onChangeTransaction} />;
         }
         if (type === "assetTransfer") {
-            return (
-                <AssetTransferTransactionEditor
-                    onChange={this.props.onChangeTransaction}
-                />
-            );
+            return <AssetTransferTransactionEditor onChange={this.props.onChangeTransaction} />;
         }
         return <div>Not implemented for type: {type}</div>;
     }

@@ -25,17 +25,10 @@ export interface WorkerConfig {
 }
 
 const app = () => {
-    const elasticSearchAgent = new ElasticSearchAgent(
-        config.elasticSearch.host
-    );
+    const elasticSearchAgent = new ElasticSearchAgent(config.elasticSearch.host);
     const codeChainAgent = new CodeChainAgent(config.codeChain.host);
     const typeConverter = new TypeConverter(codeChainAgent);
-    const worker = new BlockSyncWorker(
-        config,
-        codeChainAgent,
-        elasticSearchAgent,
-        typeConverter
-    );
+    const worker = new BlockSyncWorker(config, codeChainAgent, elasticSearchAgent, typeConverter);
     worker.start();
 };
 

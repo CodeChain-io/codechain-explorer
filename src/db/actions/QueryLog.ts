@@ -26,12 +26,7 @@ export class QueryLog implements BaseAction {
     public agent: ElasticSearchAgent;
     public client: Client;
 
-    public async increaseLogCount(
-        date: string,
-        logType: LogType,
-        count: number,
-        value?: string
-    ): Promise<void> {
+    public async increaseLogCount(date: string, logType: LogType, count: number, value?: string): Promise<void> {
         if (count === 0) {
             return;
         }
@@ -45,12 +40,7 @@ export class QueryLog implements BaseAction {
         }
     }
 
-    public async decreaseLogCount(
-        date: string,
-        logType: LogType,
-        count: number,
-        value?: string
-    ): Promise<void> {
+    public async decreaseLogCount(date: string, logType: LogType, count: number, value?: string): Promise<void> {
         if (count === 0) {
             return;
         }
@@ -82,10 +72,7 @@ export class QueryLog implements BaseAction {
             size: 5,
             query: {
                 bool: {
-                    must: [
-                        { term: { date } },
-                        { term: { type: "BLOCK_MINING_COUNT" } }
-                    ]
+                    must: [{ term: { date } }, { term: { type: "BLOCK_MINING_COUNT" } }]
                 }
             }
         });
@@ -103,12 +90,7 @@ export class QueryLog implements BaseAction {
         });
     }
 
-    public async indexLog(
-        date: string,
-        logType: LogType,
-        count: number,
-        value?: string
-    ): Promise<any> {
+    public async indexLog(date: string, logType: LogType, count: number, value?: string): Promise<any> {
         return this.client.index({
             index: "log",
             type: "_doc",
@@ -135,11 +117,7 @@ export class QueryLog implements BaseAction {
         });
     }
 
-    public async getLog(
-        date: string,
-        logType: LogType,
-        value?: string
-    ): Promise<LogData | null> {
+    public async getLog(date: string, logType: LogType, value?: string): Promise<LogData | null> {
         const response = await this.client.search<LogData>({
             index: "log",
             type: "_doc",

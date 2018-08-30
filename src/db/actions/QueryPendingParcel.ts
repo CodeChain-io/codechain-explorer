@@ -1,10 +1,5 @@
 import { H256 } from "codechain-sdk/lib/core/classes";
-import {
-    Client,
-    CountResponse,
-    DeleteDocumentResponse,
-    SearchResponse
-} from "elasticsearch";
+import { Client, CountResponse, DeleteDocumentResponse, SearchResponse } from "elasticsearch";
 import * as _ from "lodash";
 import {
     AssetMintTransactionDoc,
@@ -51,16 +46,10 @@ export class QueryPendingParcel implements BaseAction {
                 sortQuery = [{ timestamp: { order: orderBy } }];
                 break;
             case "txs":
-                sortQuery = [
-                    { "parcel.countOfTransaction": { order: orderBy } },
-                    { timestamp: { order: "desc" } }
-                ];
+                sortQuery = [{ "parcel.countOfTransaction": { order: orderBy } }, { timestamp: { order: "desc" } }];
                 break;
             case "fee":
-                sortQuery = [
-                    { "parcel.fee": { order: orderBy } },
-                    { timestamp: { order: "desc" } }
-                ];
+                sortQuery = [{ "parcel.fee": { order: orderBy } }, { timestamp: { order: "desc" } }];
                 break;
         }
         let query;
@@ -71,10 +60,7 @@ export class QueryPendingParcel implements BaseAction {
                 { term: { "parcel.sender": signerFilter } }
             ];
         } else {
-            query = [
-                { term: { status: "pending" } },
-                { terms: { "parcel.action.action": actionFilters } }
-            ];
+            query = [{ term: { status: "pending" } }, { terms: { "parcel.action.action": actionFilters } }];
         }
         const response = await this.searchPendinParcel({
             sort: sortQuery,
@@ -92,10 +78,7 @@ export class QueryPendingParcel implements BaseAction {
         return _.map(response.hits.hits, hit => hit._source);
     }
 
-    public async getTotalPendingParcelCount(
-        actionFilters: string[],
-        signerFilter?: string
-    ): Promise<number> {
+    public async getTotalPendingParcelCount(actionFilters: string[], signerFilter?: string): Promise<number> {
         let query;
         if (signerFilter) {
             query = [
@@ -104,10 +87,7 @@ export class QueryPendingParcel implements BaseAction {
                 { term: { "parcel.sender": signerFilter } }
             ];
         } else {
-            query = [
-                { term: { status: "pending" } },
-                { terms: { "parcel.action.action": actionFilters } }
-            ];
+            query = [{ term: { status: "pending" } }, { terms: { "parcel.action.action": actionFilters } }];
         }
         const count = await this.countPendingParcel({
             query: {
@@ -119,9 +99,7 @@ export class QueryPendingParcel implements BaseAction {
         return count.count;
     }
 
-    public async getPendingParcel(
-        hash: H256
-    ): Promise<PendingParcelDoc | null> {
+    public async getPendingParcel(hash: H256): Promise<PendingParcelDoc | null> {
         const response = await this.searchPendinParcel({
             size: 1,
             query: {
@@ -140,9 +118,7 @@ export class QueryPendingParcel implements BaseAction {
         return response.hits.hits[0]._source;
     }
 
-    public async getPendingTransaction(
-        hash: H256
-    ): Promise<PendingTransactionDoc | null> {
+    public async getPendingTransaction(hash: H256): Promise<PendingTransactionDoc | null> {
         const response = await this.searchPendinParcel({
             size: 1,
             query: {
@@ -150,8 +126,7 @@ export class QueryPendingParcel implements BaseAction {
                     must: [
                         {
                             term: {
-                                "parcel.action.transactions.data.hash":
-                                    hash.value
+                                "parcel.action.transactions.data.hash": hash.value
                             }
                         }
                     ]
@@ -165,13 +140,8 @@ export class QueryPendingParcel implements BaseAction {
             .flatMap(hit => hit._source as PendingParcelDoc)
             .map(PendingParcel => PendingParcel.parcel)
             .filter(parcel => Type.isChangeShardStateDoc(parcel.action))
-            .flatMap(
-                parcel => (parcel.action as ChangeShardStateDoc).transactions
-            )
-            .filter(
-                (transaction: TransactionDoc) =>
-                    transaction.data.hash === hash.value
-            )
+            .flatMap(parcel => (parcel.action as ChangeShardStateDoc).transactions)
+            .filter((transaction: TransactionDoc) => transaction.data.hash === hash.value)
             .value();
         return {
             timestamp: response.hits.hits[0]._source.timestamp,
@@ -180,9 +150,7 @@ export class QueryPendingParcel implements BaseAction {
         };
     }
 
-    public async getPendingAssetScheme(
-        assetType: H256
-    ): Promise<AssetSchemeDoc | null> {
+    public async getPendingAssetScheme(assetType: H256): Promise<AssetSchemeDoc | null> {
         const response = await this.searchPendinParcel({
             size: 1,
             query: {
@@ -191,8 +159,7 @@ export class QueryPendingParcel implements BaseAction {
                         { term: { status: "pending" } },
                         {
                             term: {
-                                "parcel.action.transactions.data.output.assetType":
-                                    assetType.value
+                                "parcel.action.transactions.data.output.assetType": assetType.value
                             }
                         }
                     ]
@@ -206,18 +173,11 @@ export class QueryPendingParcel implements BaseAction {
             .flatMap(hit => hit._source as PendingParcelDoc)
             .map(PendingParcel => PendingParcel.parcel)
             .filter(parcel => Type.isChangeShardStateDoc(parcel.action))
-            .flatMap(
-                parcel => (parcel.action as ChangeShardStateDoc).transactions
-            )
+            .flatMap(parcel => (parcel.action as ChangeShardStateDoc).transactions)
             .filter(transaction => Type.isAssetMintTransactionDoc(transaction))
-            .filter(
-                (transaction: AssetMintTransactionDoc) =>
-                    transaction.data.output.assetType === assetType.value
-            )
+            .filter((transaction: AssetMintTransactionDoc) => transaction.data.output.assetType === assetType.value)
             .value();
-        return Type.getAssetSchemeDoc(
-            transactionDoc[0] as AssetMintTransactionDoc
-        );
+        return Type.getAssetSchemeDoc(transactionDoc[0] as AssetMintTransactionDoc);
     }
 
     public async getDeadPendingParcels(): Promise<PendingParcelDoc[]> {
@@ -256,9 +216,7 @@ export class QueryPendingParcel implements BaseAction {
         });
     }
 
-    public async removePendingParcel(
-        hash: H256
-    ): Promise<DeleteDocumentResponse> {
+    public async removePendingParcel(hash: H256): Promise<DeleteDocumentResponse> {
         return this.client.delete({
             index: "pending_parcel",
             type: "_doc",
@@ -267,9 +225,7 @@ export class QueryPendingParcel implements BaseAction {
         });
     }
 
-    public async indexPendingParcel(
-        pendingParcelDoc: PendingParcelDoc
-    ): Promise<any> {
+    public async indexPendingParcel(pendingParcelDoc: PendingParcelDoc): Promise<any> {
         return this.client.index({
             index: "pending_parcel",
             type: "_doc",
