@@ -30,6 +30,7 @@ interface State {
 type Props = OwnProps & DispatchProps;
 
 class TransactionSummaryInternal extends React.Component<Props, State> {
+    private itemLimit = 6;
     constructor(props: Props) {
         super(props);
         this.state = {
@@ -58,38 +59,54 @@ class TransactionSummaryInternal extends React.Component<Props, State> {
                         : null
                 }
                 <Row>
-                    <Col lg="3">
-                        <div className="summary-item">
-                            <div className="title-panel">
-                                <h3>Inputs</h3>
-                            </div>
-                            <div className="item-panel">
-                                {
-                                    _.map(transactionDoc.data.inputs, (input, i) => this.getAssetIcon(Type.getMetadata(input.prevOut.assetScheme.metadata), input.prevOut.assetType, i, input.prevOut.amount, "input", _.partial(this.onClickItem, "input", i)))
-                                }
-                            </div>
-                        </div>
-                    </Col>
-                    <Col lg="3" className="d-flex align-items-center justify-content-center">
-                        <div className="text-center d-none d-lg-block arrow-icon">
-                            <FontAwesomeIcon icon={faChevronCircleRight} size="2x" />
-                        </div>
-                        <div className="d-lg-none text-center pt-2 pb-2 arrow-icon">
-                            <FontAwesomeIcon icon={faChevronCircleDown} size="2x" />
-                        </div>
-                    </Col>
-                    <Col lg="3">
-                        <div className="summary-item">
-                            <div className="title-panel">
-                                <h3>Outputs</h3>
-                            </div>
-                            <div className="item-panel">
-                                {
-                                    _.map(transactionDoc.data.outputs, (output, i) => this.getAssetIcon(Type.getMetadata(output.assetScheme.metadata), output.assetType, i, output.amount, "output", _.partial(this.onClickItem, "output", i)))
-                                }
-                            </div>
-                        </div>
-                    </Col>
+                    {
+                        transactionDoc.data.inputs.length > 0 ?
+                            [
+                                <Col key="col-1" lg="3">
+                                    <div className="summary-item">
+                                        <div className="title-panel">
+                                            <h3>Inputs</h3>
+                                        </div>
+                                        <div className="item-panel">
+                                            {
+                                                _.map(transactionDoc.data.inputs.slice(0, this.itemLimit), (input, i) => this.getAssetIcon(Type.getMetadata(input.prevOut.assetScheme.metadata), input.prevOut.assetType, i, input.prevOut.amount, "input", _.partial(this.onClickItem, "input", i)))
+                                            }
+                                            {
+                                                transactionDoc.data.inputs.length > this.itemLimit ?
+                                                    <p className="mb-0">{transactionDoc.data.inputs.length - this.itemLimit} more inputs</p>
+                                                    : null
+                                            }
+                                        </div>
+                                    </div>
+                                </Col>,
+                                <Col key="col-2" lg="3" className="d-flex align-items-center justify-content-center">
+                                    <div className="text-center d-none d-lg-block arrow-icon">
+                                        <FontAwesomeIcon icon={faChevronCircleRight} size="2x" />
+                                    </div>
+                                    <div className="d-lg-none text-center pt-2 pb-2 arrow-icon">
+                                        <FontAwesomeIcon icon={faChevronCircleDown} size="2x" />
+                                    </div>
+                                </Col>,
+                                <Col key="col-3" lg="3">
+                                    <div className="summary-item">
+                                        <div className="title-panel">
+                                            <h3>Outputs</h3>
+                                        </div>
+                                        <div className="item-panel">
+                                            {
+                                                _.map(transactionDoc.data.outputs.slice(0, this.itemLimit), (output, i) => this.getAssetIcon(Type.getMetadata(output.assetScheme.metadata), output.assetType, i, output.amount, "output", _.partial(this.onClickItem, "output", i)))
+                                            }
+                                            {
+                                                transactionDoc.data.outputs.length > this.itemLimit ?
+                                                    <p className="mb-0">{transactionDoc.data.outputs.length - this.itemLimit} more outputs</p>
+                                                    : null
+                                            }
+                                        </div>
+                                    </div>
+                                </Col>
+                            ]
+                            : null
+                    }
                     {
                         transactionDoc.data.burns.length > 0 ?
                             <Col lg="3" className="mt-3 mt-lg-0">
