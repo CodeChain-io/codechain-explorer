@@ -7,6 +7,7 @@ import { Link } from "react-router-dom";
 import "./LatestBlocks.scss";
 import { BlockDoc } from "../../../../db/DocType";
 import { CommaNumberString } from "../../util/CommaNumberString/CommaNumberString";
+import { changeQuarkStringToCCC } from "../../../utils/Formatter";
 
 interface Props {
     blocks: BlockDoc[]
@@ -35,7 +36,7 @@ const LatestBlocks = (props: Props) => {
                                     <td scope="row"><Link to={`/block/${block.number}`}>{block.number.toLocaleString()}</Link></td>
                                     <td>{block.parcels.length.toLocaleString()}</td>
                                     <td><Link to={`/addr-platform/${block.author}`}>{block.author}</Link></td>
-                                    <td><CommaNumberString text={block.miningReward} />CCC</td>
+                                    <td><CommaNumberString text={changeQuarkStringToCCC(block.miningReward)} />CCC</td>
                                     <td>{moment.unix(block.timestamp).fromNow()}</td>
                                 </tr>
                             );

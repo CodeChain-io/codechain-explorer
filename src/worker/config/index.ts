@@ -12,7 +12,7 @@ export default {
     },
     miningReward: {
         solo: 0,
-        husky: 50
+        husky: 50000000000
     },
     genesisAddressList: {
         solo: ["tccqzn9jjm3j6qg69smd7cn0eup4w7z2yu9my9a2k78", "tccqzwvud8h4vv9c746rd7gzsxkyz6tm22p6c9gekrh", "tccqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqpqafj6hj", "tccqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqquktnjcq", "tccqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqcep35h6", "tccqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq5glh7xa", "tccqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqs844cf8", "tccqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqvr2m2dn", "tccqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqgvqevzf", "tccqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqya7lxnw"],

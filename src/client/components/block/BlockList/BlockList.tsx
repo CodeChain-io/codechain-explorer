@@ -10,6 +10,7 @@ import HexString from "../../util/HexString/HexString";
 import { BlockDoc } from "../../../../db/DocType";
 import { Link } from "react-router-dom";
 import { CommaNumberString } from "../../util/CommaNumberString/CommaNumberString";
+import { changeQuarkStringToCCC } from "../../../utils/Formatter";
 
 interface Props {
     blocks: BlockDoc[];
@@ -90,7 +91,7 @@ class BlockList extends React.Component<Props, State> {
                                                 Reward
                                             </Col>
                                             <Col md="10">
-                                                <CommaNumberString text={block.miningReward} />CCC
+                                                <CommaNumberString text={changeQuarkStringToCCC(block.miningReward)} />CCC
                                             </Col>
                                         </Row>
                                     </div>

@@ -10,6 +10,7 @@ import { Link } from "react-router-dom";
 import { RequestTotalBlockCount, RequestBlocks } from "../../request";
 import "./Blocks.scss";
 import { CommaNumberString } from "../../components/util/CommaNumberString/CommaNumberString";
+import { changeQuarkStringToCCC } from "../../utils/Formatter";
 
 interface State {
     blocks: BlockDoc[];
@@ -102,7 +103,7 @@ class Blocks extends React.Component<Props, State> {
                                                     <td scope="row"><Link to={`/block/${block.number}`}>{block.number.toLocaleString()}</Link></td>
                                                     <td>{block.parcels.length.toLocaleString()}</td>
                                                     <td><Link to={`/addr-platform/${block.author}`}>{block.author}</Link></td>
-                                                    <td><CommaNumberString text={block.miningReward} />CCC</td>
+                                                    <td><CommaNumberString text={changeQuarkStringToCCC(block.miningReward)} />CCC</td>
                                                     <td>{moment.unix(block.timestamp).fromNow()}</td>
                                                 </tr>
                                             );

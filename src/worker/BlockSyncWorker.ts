@@ -2,7 +2,7 @@ import { scheduleJob, Job } from "node-schedule";
 import { WorkerConfig } from "./";
 import { CodeChainAgent } from "./CodeChainAgent";
 import { ElasticSearchAgent } from "../db/ElasticSearchAgent";
-import { Block, H256, ChangeShardState, Payment, SetRegularKey, AssetMintTransaction, AssetTransferTransaction, SignedParcel, Invoice } from "codechain-sdk/lib/core/classes";
+import { Block, H256, Invoice } from "codechain-sdk/lib/core/classes";
 import { BlockDoc, Type, ChangeShardStateDoc, PaymentDoc } from "../db/DocType";
 import * as moment from "moment";
 import * as _ from "lodash";
@@ -145,57 +145,10 @@ export class BlockSyncWorker {
         const blockDoc = await this.typeConverter.fromBlock(nextBlock, this.config.miningReward[process.env.CODECHAIN_CHAIN || "solo"]);
         // indexing blocks
         await this.elasticSearchAgent.indexBlock(blockDoc);
-        // indexing parcels
-        await Promise.all(_.map(nextBlock.parcels, async (parcel) => {
-            const parcelDoc = await this.typeConverter.fromParcel(parcel, nextBlock.timestamp)
-            return this.elasticSearchAgent.indexParcel(parcelDoc)
-        }));
-
-        // indexing transactions
-        let indexTransactionJobs = [];
-        _.each(nextBlock.parcels, parcel => {
-            const action = parcel.unsigned.action;
-            if (action instanceof ChangeShardState) {
-                const jobs = _.map(action.transactions, async (transaction, i) => {
-                    const transactionDoc = await this.typeConverter.fromTransaction(transaction, nextBlock.timestamp, parcel, i);
-                    return this.elasticSearchAgent.indexTransaction(transactionDoc)
-                });
-                indexTransactionJobs = indexTransactionJobs.concat(jobs);
-            }
-        });
-        await Promise.all(indexTransactionJobs);
-
-        // index log
-        const dateString = moment.unix(nextBlock.timestamp).utc().format("YYYY-MM-DD");
-        await this.elasticSearchAgent.increaseLogCount(dateString, LogType.BLOCK_COUNT, 1);
-        await this.elasticSearchAgent.increaseLogCount(dateString, LogType.BLOCK_MINING_COUNT, 1, nextBlock.author.value);
-
-        const parcelCount = nextBlock.parcels.length;
-        if (parcelCount > 0) {
-            await this.elasticSearchAgent.increaseLogCount(dateString, LogType.PARCEL_COUNT, parcelCount);
-            const paymentParcelCount = _.filter(nextBlock.parcels, p => p.unsigned.action instanceof Payment).length;
-            await this.elasticSearchAgent.increaseLogCount(dateString, LogType.PARCEL_PAYMENT_COUNT, paymentParcelCount);
-            const serRegularKeyParcelCount = _.filter(nextBlock.parcels, p => p.unsigned.action instanceof SetRegularKey).length;
-            await this.elasticSearchAgent.increaseLogCount(dateString, LogType.PARCEL_SET_REGULAR_KEY_COUNT, serRegularKeyParcelCount);
-            const changeShardStateParcelCount = _.filter(nextBlock.parcels, p => p.unsigned.action instanceof ChangeShardState).length;
-            await this.elasticSearchAgent.increaseLogCount(dateString, LogType.PARCEL_CHANGE_SHARD_STATE_COUNT, changeShardStateParcelCount);
-        }
-
-        const txs = _.chain(nextBlock.parcels).filter(parcel => parcel.unsigned.action instanceof ChangeShardState)
-            .flatMap(parcel => (parcel.unsigned.action as ChangeShardState).transactions).value();
-        const txCount = txs.length
-        if (txCount > 0) {
-            await this.elasticSearchAgent.increaseLogCount(dateString, LogType.TX_COUNT, txCount);
-            const assetMintTxCount = _.filter(txs, tx => tx instanceof AssetMintTransaction).length;
-            await this.elasticSearchAgent.increaseLogCount(dateString, LogType.TX_ASSET_MINT_COUNT, assetMintTxCount);
-            const assetTransferTxCount = _.filter(txs, tx => tx instanceof AssetTransferTransaction).length;
-            await this.elasticSearchAgent.increaseLogCount(dateString, LogType.TX_ASSET_TRANSFER_COUNT, assetTransferTxCount);
-        }
-
         // index genesis block
-        if (nextBlock.number === 0) {
+        if (blockDoc.number === 0) {
             const addressListJob = _.map(this.config.genesisAddressList[process.env.CODECHAIN_CHAIN || "solo"], async (address) => {
-                const balance = await this.codeChainAgent.getBalance(address);
+                const balance = await this.codeChainAgent.getBalance(address, 0);
                 return {
                     address,
                     balance: balance.value.toString(10)
@@ -205,23 +158,50 @@ export class BlockSyncWorker {
             const updateAddressJob = _.map(addressList, address => this.elasticSearchAgent.increaseBalance(address.address, address.balance));
             await Promise.all(updateAddressJob);
         }
+        // indexing parcels
+        await Promise.all(_.map(blockDoc.parcels, async (parcel) => {
+            return this.elasticSearchAgent.indexParcel(parcel)
+        }));
+        // indexing transactions
+        const transactions = _.chain(blockDoc.parcels).filter(parcel => Type.isChangeShardStateDoc(parcel.action))
+            .flatMap(parcel => (parcel.action as ChangeShardStateDoc).transactions).value()
+        await Promise.all(_.map(transactions, async (transaction) => await this.elasticSearchAgent.indexTransaction(transaction)));
+        // index log
+        const dateString = moment.unix(blockDoc.timestamp).utc().format("YYYY-MM-DD");
+        await this.elasticSearchAgent.increaseLogCount(dateString, LogType.BLOCK_COUNT, 1);
+        await this.elasticSearchAgent.increaseLogCount(dateString, LogType.BLOCK_MINING_COUNT, 1, blockDoc.author);
 
-        // index account
-        const blockMiner = nextBlock.author.value;
-        const sumOfParcelFee = _.reduce(nextBlock.parcels, (memo, parcel) => new BigNumber(parcel.unsigned.fee.value.toString(10)).plus(memo), new BigNumber(0)).toString(10);
-        const miningReward = new BigNumber(sumOfParcelFee).plus(new BigNumber(this.config.miningReward[process.env.CODECHAIN_CHAIN || "solo"])).toString(10);
-        await this.elasticSearchAgent.increaseBalance(blockMiner, miningReward);
-
-        // Resolve sequentially
-        for (const parcel of nextBlock.parcels) {
-            const signer = parcel.getSignerAddress().value;
-            const fee = parcel.unsigned.fee;
-            await this.elasticSearchAgent.decreaseBalance(signer, fee.value.toString(10));
+        const parcelCount = blockDoc.parcels.length;
+        if (parcelCount > 0) {
+            await this.elasticSearchAgent.increaseLogCount(dateString, LogType.PARCEL_COUNT, parcelCount);
+            const paymentParcelCount = _.filter(blockDoc.parcels, p => Type.isPaymentDoc(p.action)).length;
+            await this.elasticSearchAgent.increaseLogCount(dateString, LogType.PARCEL_PAYMENT_COUNT, paymentParcelCount);
+            const serRegularKeyParcelCount = _.filter(blockDoc.parcels, p => Type.isSetRegularKeyDoc(p.action)).length;
+            await this.elasticSearchAgent.increaseLogCount(dateString, LogType.PARCEL_SET_REGULAR_KEY_COUNT, serRegularKeyParcelCount);
+            const changeShardStateParcelCount = _.filter(blockDoc.parcels, p => Type.isChangeShardStateDoc(p.action)).length;
+            await this.elasticSearchAgent.increaseLogCount(dateString, LogType.PARCEL_CHANGE_SHARD_STATE_COUNT, changeShardStateParcelCount);
         }
 
-        const paymentParcels = _.filter(nextBlock.parcels, parcel => parcel.unsigned.action instanceof Payment);
-        const succeedPaymentParcelJob = _.map(paymentParcels, async (parcel: SignedParcel) => {
-            const invoices = await this.codeChainAgent.getParcelInvoice(parcel.hash()) as Invoice;
+        const txCount = transactions.length
+        if (txCount > 0) {
+            await this.elasticSearchAgent.increaseLogCount(dateString, LogType.TX_COUNT, txCount);
+            const assetMintTxCount = _.filter(transactions, tx => Type.isAssetMintTransactionDoc(tx)).length;
+            await this.elasticSearchAgent.increaseLogCount(dateString, LogType.TX_ASSET_MINT_COUNT, assetMintTxCount);
+            const assetTransferTxCount = _.filter(transactions, tx => Type.isAssetTransferTransactionDoc(tx)).length;
+            await this.elasticSearchAgent.increaseLogCount(dateString, LogType.TX_ASSET_TRANSFER_COUNT, assetTransferTxCount);
+        }
+
+        // index account
+        await this.elasticSearchAgent.increaseBalance(blockDoc.author, blockDoc.miningReward);
+
+        // Resolve sequentially
+        for (const parcel of blockDoc.parcels) {
+            await this.elasticSearchAgent.decreaseBalance(parcel.sender, parcel.fee);
+        }
+
+        const paymentParcels = _.filter(blockDoc.parcels, parcel => Type.isPaymentDoc(parcel.action));
+        const succeedPaymentParcelJob = _.map(paymentParcels, async (parcel) => {
+            const invoices = await this.codeChainAgent.getParcelInvoice(new H256(parcel.hash)) as Invoice;
             if (invoices.success) {
                 return parcel;
             } else {
@@ -231,9 +211,9 @@ export class BlockSyncWorker {
         const succeedPaymentParcels = _.compact(await Promise.all(succeedPaymentParcelJob));
         // Resolve sequentially
         for (const parcel of succeedPaymentParcels) {
-            const action = parcel.unsigned.action as Payment;
-            await this.elasticSearchAgent.increaseBalance(action.receiver.value, action.amount.value.toString(10));
-            await this.elasticSearchAgent.decreaseBalance(parcel.getSignerAddress().value, action.amount.value.toString(10));
+            const paymentAction = parcel.action as PaymentDoc;
+            await this.elasticSearchAgent.increaseBalance(paymentAction.receiver, paymentAction.amount);
+            await this.elasticSearchAgent.decreaseBalance(parcel.sender, paymentAction.amount);
         }
     }
 

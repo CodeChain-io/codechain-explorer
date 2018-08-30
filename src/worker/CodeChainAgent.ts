@@ -32,7 +32,7 @@ export class CodeChainAgent {
         return this.sdk.rpc.chain.getParcelInvoice(hash);
     }
 
-    public getBalance = async (address): Promise<U256> => {
-        return this.sdk.rpc.chain.getBalance(address);
+    public getBalance = async (address: string, blockNumber?: number): Promise<U256> => {
+        return this.sdk.rpc.chain.getBalance(address, blockNumber);
     }
 }
