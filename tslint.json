@@ -11,6 +11,10 @@
         "no-var-requires": false,
         "no-unused-variable": [true, {"ignore-pattern": "^_"}]
     },
+    "jsRules": {
+        "no-console": false,
+        "object-literal-sort-keys": false
+    },
     "linterOptions": {
         "exclude": [
             "config/**/*.js",
