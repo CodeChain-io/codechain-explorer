@@ -83,6 +83,65 @@ export const getMappingTransaction = () => {
                             }
                         }
                     },
+                    "burns": {
+                        "properties": {
+                            "unlockScript": {
+                                "properties": {
+                                    "data": {
+                                        "type": "long"
+                                    },
+                                    "type": {
+                                        "type": "keyword",
+                                    }
+                                }
+                            },
+                            "lockScript": {
+                                "properties": {
+                                    "data": {
+                                        "type": "long"
+                                    },
+                                    "type": {
+                                        "type": "keyword",
+                                    }
+                                }
+                            },
+                            "prevOut": {
+                                "properties": {
+                                    "amount": {
+                                        "type": "long"
+                                    },
+                                    "assetType": {
+                                        "type": "keyword",
+                                    },
+                                    "assetScheme": {
+                                        "properties": {
+                                            "metadata": {
+                                                "type": "text"
+                                            },
+                                            "registrar": {
+                                                "type": "keyword",
+                                            },
+                                            "amount": {
+                                                "type": "long"
+                                            },
+                                            "networkId": {
+                                                "type": "keyword"
+                                            }
+                                        }
+                                    },
+                                    "index": {
+                                        "type": "long"
+                                    },
+                                    "owner": {
+                                        "type": "keyword",
+                                    },
+                                    "transactionHash": {
+                                        "type": "keyword",
+                                    }
+                                }
+                            }
+                        }
+                    },
                     "metadata": {
                         "type": "text"
                     },

@@ -71,7 +71,8 @@ export class QueryTransaction implements BaseAction {
                         {
                             "bool": {
                                 "should": [
-                                    { "term": { "data.outputs.assetType": assetType.value } },
+                                    { "term": { "data.inputs.assetType": assetType.value } },
+                                    { "term": { "data.burns.assetType": assetType.value } },
                                     { "term": { "data.output.assetType": assetType.value } }
                                 ]
                             }
@@ -92,7 +93,8 @@ export class QueryTransaction implements BaseAction {
                         {
                             "bool": {
                                 "should": [
-                                    { "term": { "data.outputs.assetType": assetType.value } },
+                                    { "term": { "data.inputs.assetType": assetType.value } },
+                                    { "term": { "data.burns.assetType": assetType.value } },
                                     { "term": { "data.output.assetType": assetType.value } }
                                 ]
                             }
@@ -122,6 +124,7 @@ export class QueryTransaction implements BaseAction {
                                 "should": [
                                     { "term": { "data.outputs.owner": address } },
                                     { "term": { "data.inputs.owner": address } },
+                                    { "term": { "data.burns.owner": address } },
                                     { "term": { "data.output.owner": address } }
                                 ]
                             }
@@ -144,6 +147,7 @@ export class QueryTransaction implements BaseAction {
                                 "should": [
                                     { "term": { "data.outputs.owner": address } },
                                     { "term": { "data.inputs.owner": address } },
+                                    { "term": { "data.burns.owner": address } },
                                     { "term": { "data.output.owner": address } }
                                 ]
                             }
