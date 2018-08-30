@@ -2,63 +2,63 @@ import { getMappingTransaction } from "./mapping_transaction";
 
 export const getMappingParcel = () => {
     return {
-        "properties": {
-            "action": {
-                "properties": {
-                    "action": {
-                        "type": "keyword",
+        properties: {
+            action: {
+                properties: {
+                    action: {
+                        type: "keyword"
                     },
-                    "receiver": {
-                        "type": "keyword",
+                    receiver: {
+                        type: "keyword"
                     },
-                    "transactions": getMappingTransaction(),
-                    "value": {
-                        "type": "keyword",
+                    transactions: getMappingTransaction(),
+                    value: {
+                        type: "keyword"
                     },
-                    "invoice": {
-                        "type": "boolean"
+                    invoice: {
+                        type: "boolean"
                     },
-                    "errorType": {
-                        "type": "keyword"
+                    errorType: {
+                        type: "keyword"
                     }
                 }
             },
-            "blockHash": {
-                "type": "keyword",
+            blockHash: {
+                type: "keyword"
             },
-            "sender": {
-                "type": "keyword",
+            sender: {
+                type: "keyword"
             },
-            "timestamp": {
-                "type": "long"
+            timestamp: {
+                type: "long"
             },
-            "countOfTransaction": {
-                "type": "long"
+            countOfTransaction: {
+                type: "long"
             },
-            "blockNumber": {
-                "type": "long"
+            blockNumber: {
+                type: "long"
             },
-            "fee": {
-                "type": "keyword",
+            fee: {
+                type: "keyword"
             },
-            "hash": {
-                "type": "keyword",
+            hash: {
+                type: "keyword"
             },
-            "networkId": {
-                "type": "keyword"
+            networkId: {
+                type: "keyword"
             },
-            "nonce": {
-                "type": "keyword",
+            nonce: {
+                type: "keyword"
             },
-            "parcelIndex": {
-                "type": "long"
+            parcelIndex: {
+                type: "long"
             },
-            "sig": {
-                "type": "keyword",
+            sig: {
+                type: "keyword"
             },
-            "isRetracted": {
-                "type": "boolean"
+            isRetracted: {
+                type: "boolean"
             }
         }
     };
-}
+};

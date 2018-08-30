@@ -1,14 +1,26 @@
-import * as React from "react";
 import * as _ from "lodash";
-import { RequestBlockNumber, RequestBlock, RequestBlocks, RequestParcels, RequestTransactions } from "../../request";
+import * as React from "react";
 import { Container } from "reactstrap";
 import LatestBlocks from "../../components/home/LatestBlocks/LatestBlocks";
 import LatestParcels from "../../components/home/LatestParcels/LatestParcels";
 import LatestTransactions from "../../components/home/LatestTransactions/LatestTransactions";
+import {
+    RequestBlock,
+    RequestBlockNumber,
+    RequestBlocks,
+    RequestParcels,
+    RequestTransactions
+} from "../../request";
 
-import "./Home.scss"
-import { BlockDoc, ParcelDoc, TransactionDoc, Type, ChangeShardStateDoc } from "../../../db/DocType";
+import {
+    BlockDoc,
+    ChangeShardStateDoc,
+    ParcelDoc,
+    TransactionDoc,
+    Type
+} from "../../../db/DocType";
 import Summary from "../../components/home/Summary/Summary";
+import "./Home.scss";
 
 interface State {
     bestBlockNumber?: number;
@@ -37,7 +49,16 @@ class Home extends React.Component<{}, State> {
     }
 
     public render() {
-        const { bestBlockNumber, requestNewBlock, blocks, parcels, transactions, blockInitialized, parcelInitialized, transactionInitialized } = this.state;
+        const {
+            bestBlockNumber,
+            requestNewBlock,
+            blocks,
+            parcels,
+            transactions,
+            blockInitialized,
+            parcelInitialized,
+            transactionInitialized
+        } = this.state;
         return (
             <div className="home">
                 <Container>
@@ -46,67 +67,101 @@ class Home extends React.Component<{}, State> {
                     </div>
                     <div className="home-element-container">
                         <LatestBlocks blocks={blocks} />
-                        <RequestBlocks page={1} itemsPerPage={10} onBlocks={this.onBlocks} onError={this.onError} />
+                        <RequestBlocks
+                            page={1}
+                            itemsPerPage={10}
+                            onBlocks={this.onBlocks}
+                            onError={this.onError}
+                        />
                     </div>
                     <div className="home-element-container">
                         <LatestParcels parcels={parcels} />
-                        <RequestParcels page={1} itemsPerPage={10} onParcels={this.onParcels} onError={this.onError} />
+                        <RequestParcels
+                            page={1}
+                            itemsPerPage={10}
+                            onParcels={this.onParcels}
+                            onError={this.onError}
+                        />
                     </div>
                     <div className="home-element-container">
                         <LatestTransactions transactions={transactions} />
-                        <RequestTransactions page={1} itemsPerPage={10} onTransactions={this.onTransactions} onError={this.onError} />
+                        <RequestTransactions
+                            page={1}
+                            itemsPerPage={10}
+                            onTransactions={this.onTransactions}
+                            onError={this.onError}
+                        />
                     </div>
-                    {
-                        requestNewBlock && bestBlockNumber ?
-                            <RequestBlock id={bestBlockNumber} onBlock={this.onBlock} onError={this.onError} onBlockNotExist={this.onBlockNotExist} />
-                            : null
-                    }
+                    {requestNewBlock && bestBlockNumber ? (
+                        <RequestBlock
+                            id={bestBlockNumber}
+                            onBlock={this.onBlock}
+                            onError={this.onError}
+                            onBlockNotExist={this.onBlockNotExist}
+                        />
+                    ) : null}
                 </Container>
-                {
-                    blockInitialized && parcelInitialized && transactionInitialized ?
-                        <RequestBlockNumber
-                            repeat={10000}
-                            onBlockNumber={this.onBlockNumber}
-                            onError={this.onError} /> : null
-                }
+                {blockInitialized &&
+                parcelInitialized &&
+                transactionInitialized ? (
+                    <RequestBlockNumber
+                        repeat={10000}
+                        onBlockNumber={this.onBlockNumber}
+                        onError={this.onError}
+                    />
+                ) : null}
             </div>
         );
     }
 
     private onBlocks = (blocks: BlockDoc[]) => {
         this.setState({ blocks, blockInitialized: true });
-    }
+    };
 
     private onParcels = (parcels: ParcelDoc[]) => {
         this.setState({ parcels, parcelInitialized: true });
-    }
+    };
 
     private onTransactions = (transactions: TransactionDoc[]) => {
         this.setState({ transactions, transactionInitialized: true });
-    }
+    };
     private onBlock = (block: BlockDoc) => {
-        this.setState({ blocks: [block, ...this.state.blocks], requestNewBlock: false });
+        this.setState({
+            blocks: [block, ...this.state.blocks],
+            requestNewBlock: false
+        });
         if (block.parcels.length > 0) {
-            this.setState({ parcels: _.concat(_.reverse(block.parcels), this.state.parcels) });
+            this.setState({
+                parcels: _.concat(_.reverse(block.parcels), this.state.parcels)
+            });
         }
-        const transactions = _.chain(block.parcels).filter(parcel => Type.isChangeShardStateDoc(parcel.action))
-            .flatMap(parcel => (parcel.action as ChangeShardStateDoc).transactions).value();
+        const transactions = _.chain(block.parcels)
+            .filter(parcel => Type.isChangeShardStateDoc(parcel.action))
+            .flatMap(
+                parcel => (parcel.action as ChangeShardStateDoc).transactions
+            )
+            .value();
         if (transactions.length > 0) {
-            this.setState({ transactions: _.concat(_.reverse(transactions), this.state.transactions) });
+            this.setState({
+                transactions: _.concat(
+                    _.reverse(transactions),
+                    this.state.transactions
+                )
+            });
         }
-    }
+    };
 
     private onBlockNotExist = () => {
         // TODO
-    }
+    };
 
     private onBlockNumber = (n: number) => {
         if (this.state.blocks[0].number < n) {
             this.setState({ bestBlockNumber: n, requestNewBlock: true });
         }
-    }
+    };
 
-    private onError = (e: any) => (console.log(e))
+    private onError = (e: any) => console.log(e);
 }
 
 export default Home;

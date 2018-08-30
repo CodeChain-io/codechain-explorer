@@ -1,7 +1,7 @@
 import * as React from "react";
 
 import { connect, Dispatch } from "react-redux";
-import { apiRequest, ApiError } from "./ApiRequest";
+import { ApiError, apiRequest } from "./ApiRequest";
 
 interface OwnProps {
     onBlockNumber: (n: number) => void;
@@ -55,26 +55,31 @@ class RequestBlockNumberInternal extends React.Component<Props, State> {
     }
 
     public render() {
-        return (null);
+        return null;
     }
 
     private request() {
         const { dispatch, onBlockNumber, onError } = this.props;
-        apiRequest({ path: "blockNumber", showProgressBar: false, dispatch }).then((response: string) => {
-            const num = Number.parseInt(response)
-            dispatch({
-                type: "BEST_BLOCK_NUMBER_ACTION",
-                data: num
+        apiRequest({ path: "blockNumber", showProgressBar: false, dispatch })
+            .then((response: string) => {
+                const num = Number.parseInt(response);
+                dispatch({
+                    type: "BEST_BLOCK_NUMBER_ACTION",
+                    data: num
+                });
+                onBlockNumber(num);
+            })
+            .catch((error: ApiError) => {
+                onError(error);
             });
-            onBlockNumber(num);
-        }).catch((error: ApiError) => {
-            onError(error);
-        });
     }
 }
 
-const RequestBlockNumber = connect(null, ((dispatch: Dispatch) => {
-    return { dispatch }
-}))(RequestBlockNumberInternal);
+const RequestBlockNumber = connect(
+    null,
+    (dispatch: Dispatch) => {
+        return { dispatch };
+    }
+)(RequestBlockNumberInternal);
 
 export default RequestBlockNumber;

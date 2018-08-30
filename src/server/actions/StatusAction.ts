@@ -30,9 +30,13 @@ function handle(context: ServerContext, router: Router) {
     router.get("/status/sync", async (req, res, next) => {
         try {
             const codechainBestBlockNumber = await context.codechainSdk.rpc.chain.getBestBlockNumber();
-            const codechainBestBlockHash = await context.codechainSdk.rpc.chain.getBlockHash(codechainBestBlockNumber);
+            const codechainBestBlockHash = await context.codechainSdk.rpc.chain.getBlockHash(
+                codechainBestBlockNumber
+            );
             const explorerLastBlockNumber = await context.db.getLastBlockNumber();
-            const explorerLastBlock = await context.db.getBlock(explorerLastBlockNumber);
+            const explorerLastBlock = await context.db.getBlock(
+                explorerLastBlockNumber
+            );
 
             res.send({
                 codechainBestBlockNumber,
@@ -70,4 +74,4 @@ function handle(context: ServerContext, router: Router) {
 
 export const StatusAction = {
     handle
-}
+};

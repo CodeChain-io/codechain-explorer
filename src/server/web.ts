@@ -18,9 +18,11 @@ export async function run(options: ServerConfig) {
     // http://expressjs.com/api#app-settings for more details.
     app.enable("trust proxy");
     app.use(bodyParser.urlencoded({ extended: true }));
-    app.use(bodyParser.json({
-        type: () => true // Treat all other content types as application/json
-    }));
+    app.use(
+        bodyParser.json({
+            type: () => true // Treat all other content types as application/json
+        })
+    );
 
     const cwd = process.cwd();
     app.use("/", express.static(path.resolve(cwd, "build")));

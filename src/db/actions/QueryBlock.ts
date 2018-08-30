@@ -1,9 +1,9 @@
+import { H256 } from "codechain-sdk/lib/core/classes";
+import { Client, CountResponse, SearchResponse } from "elasticsearch";
 import * as _ from "lodash";
 import { BlockDoc } from "../DocType";
-import { SearchResponse, Client, CountResponse } from "elasticsearch";
-import { H256 } from "codechain-sdk/lib/core/classes";
-import { BaseAction } from "./BaseAction";
 import { ElasticSearchAgent } from "../ElasticSearchAgent";
+import { BaseAction } from "./BaseAction";
 
 export class QueryBlock implements BaseAction {
     public agent: ElasticSearchAgent;
@@ -11,17 +11,17 @@ export class QueryBlock implements BaseAction {
 
     public async getLastBlockNumber(): Promise<number> {
         return this.searchBlock({
-            "sort": [
+            sort: [
                 {
-                    "number": { "order": "desc" }
+                    number: { order: "desc" }
                 }
             ],
-            "size": 1,
-            "query": {
-                "bool": {
-                    "must": {
-                        "term": {
-                            "isRetracted": false
+            size: 1,
+            query: {
+                bool: {
+                    must: {
+                        term: {
+                            isRetracted: false
                         }
                     }
                 }
@@ -36,17 +36,17 @@ export class QueryBlock implements BaseAction {
 
     public async getBlock(blockNumber: number): Promise<BlockDoc | null> {
         return this.searchBlock({
-            "sort": [
+            sort: [
                 {
-                    "number": { "order": "desc" }
+                    number: { order: "desc" }
                 }
             ],
-            "size": 1,
-            "query": {
-                "bool": {
-                    "must": [
-                        { "term": { "number": blockNumber } },
-                        { "term": { "isRetracted": false } }
+            size: 1,
+            query: {
+                bool: {
+                    must: [
+                        { term: { number: blockNumber } },
+                        { term: { isRetracted: false } }
                     ]
                 }
             }
@@ -60,17 +60,17 @@ export class QueryBlock implements BaseAction {
 
     public async getBlockByHash(hash: H256): Promise<BlockDoc | null> {
         return this.searchBlock({
-            "sort": [
+            sort: [
                 {
-                    "number": { "order": "desc" }
+                    number: { order: "desc" }
                 }
             ],
-            "size": 1,
-            "query": {
-                "bool": {
-                    "must": [
-                        { "term": { "hash": hash.value } },
-                        { "term": { "isRetracted": false } }
+            size: 1,
+            query: {
+                bool: {
+                    must: [
+                        { term: { hash: hash.value } },
+                        { term: { isRetracted: false } }
                     ]
                 }
             }
@@ -82,20 +82,21 @@ export class QueryBlock implements BaseAction {
         });
     }
 
-    public async getBlocks(page: number = 1, itemsPerPage: number = 25): Promise<BlockDoc[]> {
+    public async getBlocks(
+        page: number = 1,
+        itemsPerPage: number = 25
+    ): Promise<BlockDoc[]> {
         return this.searchBlock({
-            "sort": [
+            sort: [
                 {
-                    "number": { "order": "desc" }
+                    number: { order: "desc" }
                 }
             ],
-            "from": (page - 1) * itemsPerPage,
-            "size": itemsPerPage,
-            "query": {
-                "bool": {
-                    "must": [
-                        { "term": { "isRetracted": false } }
-                    ]
+            from: (page - 1) * itemsPerPage,
+            size: itemsPerPage,
+            query: {
+                bool: {
+                    must: [{ term: { isRetracted: false } }]
                 }
             }
         }).then((response: SearchResponse<BlockDoc>) => {
@@ -108,27 +109,31 @@ export class QueryBlock implements BaseAction {
 
     public async getTotalBlockCount(): Promise<number> {
         const count = await this.countBlock({
-            "query": {
-                "term": { "isRetracted": false }
+            query: {
+                term: { isRetracted: false }
             }
         });
         return count.count;
     }
 
-    public async getBlocksByPlatformAddress(address: string, page: number = 1, itemsPerPage: number = 6): Promise<BlockDoc[]> {
+    public async getBlocksByPlatformAddress(
+        address: string,
+        page: number = 1,
+        itemsPerPage: number = 6
+    ): Promise<BlockDoc[]> {
         return this.searchBlock({
-            "sort": [
+            sort: [
                 {
-                    "number": { "order": "desc" }
+                    number: { order: "desc" }
                 }
             ],
-            "from": (page - 1) * itemsPerPage,
-            "size": itemsPerPage,
-            "query": {
-                "bool": {
-                    "must": [
-                        { "term": { "author": address } },
-                        { "term": { "isRetracted": false } }
+            from: (page - 1) * itemsPerPage,
+            size: itemsPerPage,
+            query: {
+                bool: {
+                    must: [
+                        { term: { author: address } },
+                        { term: { isRetracted: false } }
                     ]
                 }
             }
@@ -140,13 +145,15 @@ export class QueryBlock implements BaseAction {
         });
     }
 
-    public async getTotalBlockCountByPlatformAddress(address: string): Promise<number> {
+    public async getTotalBlockCountByPlatformAddress(
+        address: string
+    ): Promise<number> {
         const count = await this.countBlock({
-            "query": {
-                "bool": {
-                    "must": [
-                        { "term": { "author": address } },
-                        { "term": { "isRetracted": false } }
+            query: {
+                bool: {
+                    must: [
+                        { term: { author: address } },
+                        { term: { isRetracted: false } }
                     ]
                 }
             }
@@ -155,7 +162,7 @@ export class QueryBlock implements BaseAction {
     }
 
     public async retractBlock(blockHash: H256): Promise<void> {
-        return this.updateBlock(blockHash, { "isRetracted": true });
+        return this.updateBlock(blockHash, { isRetracted: true });
     }
 
     public async indexBlock(blockDoc: BlockDoc): Promise<any> {

@@ -1,8 +1,8 @@
 import * as React from "react";
-import { Dispatch, connect } from "react-redux";
+import { connect, Dispatch } from "react-redux";
 
-import { apiRequest, ApiError } from "./ApiRequest";
 import { AssetBundleDoc } from "../../db/DocType";
+import { ApiError, apiRequest } from "./ApiRequest";
 
 interface OwnProps {
     itemsPerPage: number;
@@ -20,19 +20,35 @@ type Props = OwnProps & DispatchProps;
 
 class RequestPlatformAddressAssetsInternal extends React.Component<Props> {
     public componentWillMount() {
-        const { address, onAssetBundles, onError, dispatch, page, itemsPerPage } = this.props;
-        apiRequest({ path: `addr-platform-assets/${address}?page=${page}&itemsPerPage=${itemsPerPage}`, dispatch, showProgressBar: true }).then((response: AssetBundleDoc[]) => {
-            onAssetBundles(response);
-        }).catch(onError);
+        const {
+            address,
+            onAssetBundles,
+            onError,
+            dispatch,
+            page,
+            itemsPerPage
+        } = this.props;
+        apiRequest({
+            path: `addr-platform-assets/${address}?page=${page}&itemsPerPage=${itemsPerPage}`,
+            dispatch,
+            showProgressBar: true
+        })
+            .then((response: AssetBundleDoc[]) => {
+                onAssetBundles(response);
+            })
+            .catch(onError);
     }
 
     public render() {
-        return (null);
+        return null;
     }
 }
 
-const RequestPlatformAddressAssets = connect(null, ((dispatch: Dispatch) => {
-    return { dispatch }
-}))(RequestPlatformAddressAssetsInternal);
+const RequestPlatformAddressAssets = connect(
+    null,
+    (dispatch: Dispatch) => {
+        return { dispatch };
+    }
+)(RequestPlatformAddressAssetsInternal);
 
 export default RequestPlatformAddressAssets;

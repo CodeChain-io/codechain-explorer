@@ -1,7 +1,7 @@
 import * as React from "react";
-import { Dispatch, connect } from "react-redux";
+import { connect, Dispatch } from "react-redux";
 
-import { apiRequest, ApiError } from "./ApiRequest";
+import { ApiError, apiRequest } from "./ApiRequest";
 
 interface OwnProps {
     address: string;
@@ -18,18 +18,27 @@ type Props = OwnProps & DispatchProps;
 class RequestTotalPlatfromAssetCountInternal extends React.Component<Props> {
     public componentWillMount() {
         const { onError, onTotalCount, dispatch, address } = this.props;
-        apiRequest({ path: `addr-platform-assets/${address}/totalCount`, dispatch, showProgressBar: true }).then((response: any) => {
-            onTotalCount(response);
-        }).catch(onError);
+        apiRequest({
+            path: `addr-platform-assets/${address}/totalCount`,
+            dispatch,
+            showProgressBar: true
+        })
+            .then((response: any) => {
+                onTotalCount(response);
+            })
+            .catch(onError);
     }
 
     public render() {
-        return (null);
+        return null;
     }
 }
 
-const RequestTotalPlatfromAssetCount = connect(null, ((dispatch: Dispatch) => {
-    return { dispatch }
-}))(RequestTotalPlatfromAssetCountInternal);
+const RequestTotalPlatfromAssetCount = connect(
+    null,
+    (dispatch: Dispatch) => {
+        return { dispatch };
+    }
+)(RequestTotalPlatfromAssetCountInternal);
 
 export default RequestTotalPlatfromAssetCount;

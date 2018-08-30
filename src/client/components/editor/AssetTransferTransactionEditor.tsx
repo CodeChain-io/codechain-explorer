@@ -14,26 +14,31 @@ interface State {
     networkId: string;
 }
 
-export default class AssetTransferTransactionEditor extends React.Component<Props, State> {
+export default class AssetTransferTransactionEditor extends React.Component<
+    Props,
+    State
+> {
     constructor(props: Props) {
         super(props);
         this.state = {
             nonce: 0,
-            networkId: "c",
+            networkId: "c"
         };
     }
     public render() {
         const { nonce, networkId } = this.state;
-        return <div>
-            <span>Nonce</span>
-            <input onChange={this.onChangeNonce} value={nonce} />
-            <br />
-            <span>Network ID</span>
-            <input onChange={this.onChangeNetworkId} value={networkId} />
-            <br />
-            <span>Inputs</span>
-            <AssetTransferInputListEditor onChange={this.onChangeInputs} />
-        </div>
+        return (
+            <div>
+                <span>Nonce</span>
+                <input onChange={this.onChangeNonce} value={nonce} />
+                <br />
+                <span>Network ID</span>
+                <input onChange={this.onChangeNetworkId} value={networkId} />
+                <br />
+                <span>Inputs</span>
+                <AssetTransferInputListEditor onChange={this.onChangeInputs} />
+            </div>
+        );
     }
 
     private onChangeNonce = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -41,17 +46,19 @@ export default class AssetTransferTransactionEditor extends React.Component<Prop
             ...this.state,
             nonce: Number.parseInt(event.target.value)
         });
-    }
+    };
 
-    private onChangeNetworkId = (event: React.ChangeEvent<HTMLInputElement>) => {
+    private onChangeNetworkId = (
+        event: React.ChangeEvent<HTMLInputElement>
+    ) => {
         this.setState({
             ...this.state,
             networkId: event.target.value
         });
-    }
+    };
 
     // FIXME: any[]
     private onChangeInputs = (inputs: any[]) => {
         console.log(inputs);
-    }
+    };
 }

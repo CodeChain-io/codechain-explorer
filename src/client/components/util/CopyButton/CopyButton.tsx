@@ -1,8 +1,8 @@
-import * as React from "react";
+import { faCopy } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCopy } from '@fortawesome/free-solid-svg-icons'
-import { Popover, PopoverBody } from "reactstrap";
+import * as React from "react";
 import * as CopyToClipboard from "react-copy-to-clipboard";
+import { Popover, PopoverBody } from "reactstrap";
 import "./CopyButton.scss";
 
 interface Props {
@@ -26,11 +26,21 @@ class CopyButton extends React.Component<Props, State> {
         const { copyString, className } = this.props;
         const { copyPopoverOpen } = this.state;
         return (
-            <div className={`copy-button ${className}`} >
-                <CopyToClipboard text={copyString} onCopy={this.toggleCopyPopover}>
-                    <button className="btn btn-primary copy" id="copy-btn"><FontAwesomeIcon icon={faCopy} /></button>
+            <div className={`copy-button ${className}`}>
+                <CopyToClipboard
+                    text={copyString}
+                    onCopy={this.toggleCopyPopover}
+                >
+                    <button className="btn btn-primary copy" id="copy-btn">
+                        <FontAwesomeIcon icon={faCopy} />
+                    </button>
                 </CopyToClipboard>
-                <Popover placement="top" isOpen={copyPopoverOpen} target="copy-btn" toggle={this.toggleCopyPopover}>
+                <Popover
+                    placement="top"
+                    isOpen={copyPopoverOpen}
+                    target="copy-btn"
+                    toggle={this.toggleCopyPopover}
+                >
                     <PopoverBody>Copied to clipboard</PopoverBody>
                 </Popover>
             </div>
@@ -41,7 +51,7 @@ class CopyButton extends React.Component<Props, State> {
         this.setState({
             copyPopoverOpen: !this.state.copyPopoverOpen
         });
-    }
+    };
 }
 
 export default CopyButton;

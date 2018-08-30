@@ -17,7 +17,7 @@ class RequestTransactionInvoice extends React.Component<OwnProps> {
     }
 
     public render() {
-        return (null);
+        return null;
     }
 }
 

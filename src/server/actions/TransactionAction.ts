@@ -1,7 +1,7 @@
-import { Router } from "express";
-import { ServerContext } from "../ServerContext";
-import { Type } from "../../db/DocType";
 import { H256 } from "codechain-sdk/lib/core/classes";
+import { Router } from "express";
+import { Type } from "../../db/DocType";
+import { ServerContext } from "../ServerContext";
 
 function handle(context: ServerContext, router: Router) {
     router.get("/tx/:hash", async (req, res, next) => {
@@ -12,7 +12,9 @@ function handle(context: ServerContext, router: Router) {
                 return;
             }
             const transaction = await context.db.getTransaction(new H256(hash));
-            transaction ? res.send(transaction) : res.send(JSON.stringify(null));
+            transaction
+                ? res.send(transaction)
+                : res.send(JSON.stringify(null));
         } catch (e) {
             next(e);
         }
@@ -21,7 +23,10 @@ function handle(context: ServerContext, router: Router) {
     router.get("/txs", async (req, res, next) => {
         const { page, itemsPerPage } = req.query;
         try {
-            const transactions = await context.db.getTransactions(page, itemsPerPage);
+            const transactions = await context.db.getTransactions(
+                page,
+                itemsPerPage
+            );
             res.send(transactions);
         } catch (e) {
             next(e);
@@ -44,14 +49,18 @@ function handle(context: ServerContext, router: Router) {
                 res.send(JSON.stringify(null));
                 return;
             }
-            const pendingTransaction = await context.db.getPendingTransaction(new H256(hash));
-            pendingTransaction ? res.send(pendingTransaction) : res.send(JSON.stringify(null));
+            const pendingTransaction = await context.db.getPendingTransaction(
+                new H256(hash)
+            );
+            pendingTransaction
+                ? res.send(pendingTransaction)
+                : res.send(JSON.stringify(null));
         } catch (e) {
             next(e);
         }
-    })
+    });
 }
 
 export const TransactionAction = {
     handle
-}
+};

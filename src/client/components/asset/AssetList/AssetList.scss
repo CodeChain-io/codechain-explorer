@@ -2,7 +2,7 @@
 @import "../../../variables.scss";
 .asset-list {
   .asset-item {
-    background-color: #F2F2F2;
+    background-color: #f2f2f2;
     width: 100%;
     height: 66px;
     padding: 8px;
@@ -12,7 +12,7 @@
     .asset-text-container {
       flex-grow: 1;
       overflow: hidden;
-      &>div {
+      & > div {
         overflow: hidden;
       }
       .asset-name {

@@ -1,8 +1,8 @@
 import * as React from "react";
-import { Dispatch, connect } from "react-redux";
+import { connect, Dispatch } from "react-redux";
 
-import { apiRequest, ApiError } from "./ApiRequest";
 import { BlockDoc } from "../../db/DocType";
+import { ApiError, apiRequest } from "./ApiRequest";
 
 interface OwnProps {
     page: number;
@@ -20,18 +20,27 @@ type Props = OwnProps & DispatchProps;
 class RequestBlocksInternal extends React.Component<Props> {
     public componentWillMount() {
         const { onError, onBlocks, dispatch, page, itemsPerPage } = this.props;
-        apiRequest({ path: `blocks?page=${page}&itemsPerPage=${itemsPerPage}`, dispatch, showProgressBar: true }).then((response: any) => {
-            onBlocks(response);
-        }).catch(onError);
+        apiRequest({
+            path: `blocks?page=${page}&itemsPerPage=${itemsPerPage}`,
+            dispatch,
+            showProgressBar: true
+        })
+            .then((response: any) => {
+                onBlocks(response);
+            })
+            .catch(onError);
     }
 
     public render() {
-        return (null);
+        return null;
     }
 }
 
-const RequestBlocks = connect(null, ((dispatch: Dispatch) => {
-    return { dispatch }
-}))(RequestBlocksInternal);
+const RequestBlocks = connect(
+    null,
+    (dispatch: Dispatch) => {
+        return { dispatch };
+    }
+)(RequestBlocksInternal);
 
 export default RequestBlocks;
