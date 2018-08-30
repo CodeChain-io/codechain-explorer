@@ -64,6 +64,8 @@ class TypeConverter {
                 owner = AssetTransferAddress.fromPublicKeyHash(
                     new H256(Buffer.from(transaction.output.parameters[0]).toString("hex"))
                 ).value;
+            } else if (transaction.output.parameters.length === 0) {
+                owner = AssetTransferAddress.fromLockScriptHash(transaction.output.lockScriptHash).value;
             }
         } else if (transaction instanceof AssetTransferTransaction) {
             if (
@@ -76,6 +78,10 @@ class TypeConverter {
                     new H256(
                         Buffer.from(transaction.outputs[assetTransferInput.prevOut.index].parameters[0]).toString("hex")
                     )
+                ).value;
+            } else if (transaction.outputs[assetTransferInput.prevOut.index].parameters.length === 0) {
+                owner = AssetTransferAddress.fromLockScriptHash(
+                    transaction.outputs[assetTransferInput.prevOut.index].lockScriptHash
                 ).value;
             }
         } else {
@@ -99,13 +105,18 @@ class TypeConverter {
         assetTransferOutput: AssetTransferOutput
     ): Promise<AssetTransferOutputDoc> => {
         const assetScheme = await this.getAssetScheme(assetTransferOutput.assetType);
+        let owner = "";
+        if (_.includes(this.STANDARD_SCRIPT_LIST, assetTransferOutput.lockScriptHash.value)) {
+            owner = AssetTransferAddress.fromPublicKeyHash(
+                new H256(Buffer.from(assetTransferOutput.parameters[0]).toString("hex"))
+            ).value;
+        } else if (assetTransferOutput.parameters.length === 0) {
+            owner = AssetTransferAddress.fromLockScriptHash(assetTransferOutput.lockScriptHash).value;
+        }
+
         return {
             lockScriptHash: assetTransferOutput.lockScriptHash.value,
-            owner: _.includes(this.STANDARD_SCRIPT_LIST, assetTransferOutput.lockScriptHash.value)
-                ? AssetTransferAddress.fromPublicKeyHash(
-                      new H256(Buffer.from(assetTransferOutput.parameters[0]).toString("hex"))
-                  ).value
-                : "",
+            owner,
             parameters: _.map(assetTransferOutput.parameters, p => Buffer.from(p)),
             assetType: assetTransferOutput.assetType.value,
             assetScheme,

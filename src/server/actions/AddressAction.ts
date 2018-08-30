@@ -133,19 +133,13 @@ function handle(context: ServerContext, router: Router) {
     router.get("/addr-asset-utxo/:address", async (req, res, next) => {
         const { address } = req.params;
         const { lastTransactionHash, itemsPerPage } = req.query;
-        let lockscriptHashAndParams;
         try {
-            lockscriptHashAndParams = AssetTransferAddress.fromString(address).getLockScriptHashAndParameters();
+            AssetTransferAddress.fromString(address).getLockScriptHashAndParameters();
         } catch (e) {
             res.send([]);
             return;
         }
         try {
-            if (!_.includes(STANDARD_SCRIPT_LIST, lockscriptHashAndParams.lockScriptHash.value)) {
-                // FIXME : Currently only standard scripts are available
-                res.send([]);
-                return;
-            }
             let utxoList = [];
             let lastSelectedTransactionHash = lastTransactionHash;
             while (utxoList.length < itemsPerPage) {
@@ -202,19 +196,13 @@ function handle(context: ServerContext, router: Router) {
     router.get("/addr-asset-txs/:address", async (req, res, next) => {
         const { address } = req.params;
         const { page, itemsPerPage } = req.query;
-        let lockscriptHashAndParams;
         try {
-            lockscriptHashAndParams = AssetTransferAddress.fromString(address).getLockScriptHashAndParameters();
+            AssetTransferAddress.fromString(address).getLockScriptHashAndParameters();
         } catch (e) {
             res.send([]);
             return;
         }
         try {
-            if (!_.includes(STANDARD_SCRIPT_LIST, lockscriptHashAndParams.lockScriptHash.value)) {
-                // FIXME : Currently only standard scripts are available
-                res.send([]);
-                return;
-            }
             const transactions: TransactionDoc[] = await context.db.getTransactionsByAssetTransferAddress(
                 address,
                 page,
@@ -228,19 +216,13 @@ function handle(context: ServerContext, router: Router) {
 
     router.get("/addr-asset-txs/:address/totalCount", async (req, res, next) => {
         const { address } = req.params;
-        let lockscriptHashAndParams;
         try {
-            lockscriptHashAndParams = AssetTransferAddress.fromString(address).getLockScriptHashAndParameters();
+            AssetTransferAddress.fromString(address).getLockScriptHashAndParameters();
         } catch (e) {
             res.send([]);
             return;
         }
         try {
-            if (!_.includes(STANDARD_SCRIPT_LIST, lockscriptHashAndParams.lockScriptHash.value)) {
-                // FIXME : Currently only standard scripts are available
-                res.send([]);
-                return;
-            }
             const count = await context.db.getTotalTxCountByAssetTransferAddress(address);
             res.send(JSON.stringify(count));
         } catch (e) {
