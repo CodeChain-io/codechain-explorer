@@ -1,8 +1,8 @@
 import * as React from "react";
-import { Dispatch, connect } from "react-redux";
+import { connect, Dispatch } from "react-redux";
 
-import { apiRequest, ApiError } from "./ApiRequest";
 import { AssetBundleDoc } from "../../db/DocType";
+import { ApiError, apiRequest } from "./ApiRequest";
 
 interface OwnProps {
     lastTransactionHash?: string;
@@ -20,23 +20,35 @@ type Props = OwnProps & DispatchProps;
 
 class RequestAssetTransferAddressUTXOInternal extends React.Component<Props> {
     public componentWillMount() {
-        const { address, onUTXO, onError, dispatch, lastTransactionHash, itemsPerPage } = this.props;
+        const {
+            address,
+            onUTXO,
+            onError,
+            dispatch,
+            lastTransactionHash,
+            itemsPerPage
+        } = this.props;
         let path = `addr-asset-utxo/${address}?itemsPerPage=${itemsPerPage}`;
         if (lastTransactionHash) {
             path += `&lastTransactionHash=${lastTransactionHash}`;
         }
-        apiRequest({ path, dispatch, showProgressBar: true }).then((response: AssetBundleDoc[]) => {
-            onUTXO(response);
-        }).catch(onError);
+        apiRequest({ path, dispatch, showProgressBar: true })
+            .then((response: AssetBundleDoc[]) => {
+                onUTXO(response);
+            })
+            .catch(onError);
     }
 
     public render() {
-        return (null);
+        return null;
     }
 }
 
-const RequestAssetTransferAddressUTXO = connect(null, ((dispatch: Dispatch) => {
-    return { dispatch }
-}))(RequestAssetTransferAddressUTXOInternal);
+const RequestAssetTransferAddressUTXO = connect(
+    null,
+    (dispatch: Dispatch) => {
+        return { dispatch };
+    }
+)(RequestAssetTransferAddressUTXOInternal);
 
 export default RequestAssetTransferAddressUTXO;

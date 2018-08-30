@@ -1,8 +1,8 @@
 import * as React from "react";
-import { Dispatch, connect } from "react-redux";
+import { connect, Dispatch } from "react-redux";
 
-import { apiRequest, ApiError } from "./ApiRequest";
 import { PendingParcelDoc } from "../../db/DocType";
+import { ApiError, apiRequest } from "./ApiRequest";
 
 interface OwnProps {
     onPendingParcel: (parcel: PendingParcelDoc) => void;
@@ -20,22 +20,39 @@ type Props = OwnProps & DispatchProps;
 
 class RequestPendingParcelInternal extends React.Component<Props> {
     public componentWillMount() {
-        const { onPendingParcel, onError, onPendingParcelNotExist, hash, dispatch, progressBarTarget } = this.props;
-        apiRequest({ path: `parcel/pending/${hash}`, dispatch, progressBarTarget, showProgressBar: true }).then((response: any) => {
-            if (response === null) {
-                return onPendingParcelNotExist();
-            }
-            onPendingParcel(response);
-        }).catch(onError);
+        const {
+            onPendingParcel,
+            onError,
+            onPendingParcelNotExist,
+            hash,
+            dispatch,
+            progressBarTarget
+        } = this.props;
+        apiRequest({
+            path: `parcel/pending/${hash}`,
+            dispatch,
+            progressBarTarget,
+            showProgressBar: true
+        })
+            .then((response: any) => {
+                if (response === null) {
+                    return onPendingParcelNotExist();
+                }
+                onPendingParcel(response);
+            })
+            .catch(onError);
     }
 
     public render() {
-        return (null);
+        return null;
     }
 }
 
-const RequestPendingParcel = connect(null, ((dispatch: Dispatch) => {
-    return { dispatch }
-}))(RequestPendingParcelInternal);
+const RequestPendingParcel = connect(
+    null,
+    (dispatch: Dispatch) => {
+        return { dispatch };
+    }
+)(RequestPendingParcelInternal);
 
 export default RequestPendingParcel;

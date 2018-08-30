@@ -1,8 +1,8 @@
 import * as React from "react";
-import { Dispatch, connect } from "react-redux";
+import { connect, Dispatch } from "react-redux";
 
-import { apiRequest, ApiError } from "./ApiRequest";
 import { ParcelDoc } from "../../db/DocType";
+import { ApiError, apiRequest } from "./ApiRequest";
 
 interface OwnProps {
     itemsPerPage: number;
@@ -20,19 +20,35 @@ type Props = OwnProps & DispatchProps;
 
 class RequestPlatformAddressParcelsInternal extends React.Component<Props> {
     public componentWillMount() {
-        const { address, onParcels, onError, dispatch, page, itemsPerPage } = this.props;
-        apiRequest({ path: `addr-platform-parcels/${address}?page=${page}&itemsPerPage=${itemsPerPage}`, dispatch, showProgressBar: true }).then((response: ParcelDoc[]) => {
-            onParcels(response);
-        }).catch(onError);
+        const {
+            address,
+            onParcels,
+            onError,
+            dispatch,
+            page,
+            itemsPerPage
+        } = this.props;
+        apiRequest({
+            path: `addr-platform-parcels/${address}?page=${page}&itemsPerPage=${itemsPerPage}`,
+            dispatch,
+            showProgressBar: true
+        })
+            .then((response: ParcelDoc[]) => {
+                onParcels(response);
+            })
+            .catch(onError);
     }
 
     public render() {
-        return (null);
+        return null;
     }
 }
 
-const RequestPlatformAddressParcels = connect(null, ((dispatch: Dispatch) => {
-    return { dispatch }
-}))(RequestPlatformAddressParcelsInternal);
+const RequestPlatformAddressParcels = connect(
+    null,
+    (dispatch: Dispatch) => {
+        return { dispatch };
+    }
+)(RequestPlatformAddressParcelsInternal);
 
 export default RequestPlatformAddressParcels;

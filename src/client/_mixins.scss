@@ -3,7 +3,7 @@
 }
 
 @mixin data-font() {
-  font-family: 'Roboto Mono', monospace;
+  font-family: "Roboto Mono", monospace;
   font-weight: 300;
 }
 
@@ -17,15 +17,19 @@
   white-space: nowrap;
 }
 
-$breakpoints: ( xs: 576px, sm: 768px, md: 992px, lg: 1200px);
+$breakpoints: (
+  xs: 576px,
+  sm: 768px,
+  md: 992px,
+  lg: 1200px
+);
 @mixin respond-above($breakpoint) {
   @if map-has-key($breakpoints, $breakpoint) {
     $breakpoint-value: map-get($breakpoints, $breakpoint);
     @media (min-width: $breakpoint-value) {
       @content;
     }
-  }
-  @else {
+  } @else {
     @warn 'Invalid breakpoint: #{$breakpoint}.';
   }
 }
@@ -36,8 +40,7 @@ $breakpoints: ( xs: 576px, sm: 768px, md: 992px, lg: 1200px);
     @media (max-width: ($breakpoint-value - 1)) {
       @content;
     }
-  }
-  @else {
+  } @else {
     @warn 'Invalid breakpoint: #{$breakpoint}.';
   }
 }

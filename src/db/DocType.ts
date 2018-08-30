@@ -33,7 +33,11 @@ export interface ParcelDoc {
     isRetracted: boolean;
 }
 
-export type ActionDoc = ChangeShardStateDoc | PaymentDoc | SetRegularKeyDoc | CreateShardDoc
+export type ActionDoc =
+    | ChangeShardStateDoc
+    | PaymentDoc
+    | SetRegularKeyDoc
+    | CreateShardDoc;
 
 export interface ChangeShardStateDoc {
     action: string;
@@ -64,7 +68,9 @@ export interface CreateShardDoc {
     errorType?: string;
 }
 
-export type TransactionDoc = AssetMintTransactionDoc | AssetTransferTransactionDoc;
+export type TransactionDoc =
+    | AssetMintTransactionDoc
+    | AssetTransferTransactionDoc;
 
 export interface AssetSchemeDoc {
     metadata: string;
@@ -97,7 +103,7 @@ export interface AssetMintTransactionDoc {
             /* custom field for indexing */
             owner: string;
             assetType: string;
-        }
+        };
         networkId: string;
         metadata: string;
         registrar: string | null;
@@ -197,13 +203,15 @@ function isAssetMintTransactionDoc(transaction: TransactionDoc) {
     return transaction.type === "assetMint";
 }
 
-function getAssetSchemeDoc(transaction: AssetMintTransactionDoc): AssetSchemeDoc {
+function getAssetSchemeDoc(
+    transaction: AssetMintTransactionDoc
+): AssetSchemeDoc {
     return {
         metadata: transaction.data.metadata,
         registrar: transaction.data.registrar,
         amount: transaction.data.output.amount,
         networkId: transaction.data.networkId
-    }
+    };
 }
 
 function isH256String(data: string) {
@@ -224,7 +232,7 @@ const getMetadata = (data: string): MetadataFormat => {
         // nothing
     }
     return {};
-}
+};
 
 export let Type = {
     isChangeShardStateDoc,
@@ -236,4 +244,4 @@ export let Type = {
     getAssetSchemeDoc,
     getMetadata,
     isH256String
-}
+};

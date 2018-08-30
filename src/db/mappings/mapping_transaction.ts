@@ -1,241 +1,241 @@
 export const getMappingTransaction = () => {
     return {
-        "properties": {
-            "data": {
-                "properties": {
-                    "parcelHash": {
-                        "type": "keyword",
+        properties: {
+            data: {
+                properties: {
+                    parcelHash: {
+                        type: "keyword"
                     },
-                    "blockNumber": {
-                        "type": "long"
+                    blockNumber: {
+                        type: "long"
                     },
-                    "invoice": {
-                        "type": "boolean"
+                    invoice: {
+                        type: "boolean"
                     },
-                    "errorType": {
-                        "type": "keyword"
+                    errorType: {
+                        type: "keyword"
                     },
-                    "parcelIndex": {
-                        "type": "long"
+                    parcelIndex: {
+                        type: "long"
                     },
-                    "transactionIndex": {
-                        "type": "long"
+                    transactionIndex: {
+                        type: "long"
                     },
-                    "hash": {
-                        "type": "keyword",
+                    hash: {
+                        type: "keyword"
                     },
-                    "inputs": {
-                        "properties": {
-                            "unlockScript": {
-                                "properties": {
-                                    "data": {
-                                        "type": "long"
+                    inputs: {
+                        properties: {
+                            unlockScript: {
+                                properties: {
+                                    data: {
+                                        type: "long"
                                     },
-                                    "type": {
-                                        "type": "keyword",
+                                    type: {
+                                        type: "keyword"
                                     }
                                 }
                             },
-                            "lockScript": {
-                                "properties": {
-                                    "data": {
-                                        "type": "long"
+                            lockScript: {
+                                properties: {
+                                    data: {
+                                        type: "long"
                                     },
-                                    "type": {
-                                        "type": "keyword",
+                                    type: {
+                                        type: "keyword"
                                     }
                                 }
                             },
-                            "prevOut": {
-                                "properties": {
-                                    "amount": {
-                                        "type": "long"
+                            prevOut: {
+                                properties: {
+                                    amount: {
+                                        type: "long"
                                     },
-                                    "assetType": {
-                                        "type": "keyword",
+                                    assetType: {
+                                        type: "keyword"
                                     },
-                                    "assetScheme": {
-                                        "properties": {
-                                            "metadata": {
-                                                "type": "text"
+                                    assetScheme: {
+                                        properties: {
+                                            metadata: {
+                                                type: "text"
                                             },
-                                            "registrar": {
-                                                "type": "keyword",
+                                            registrar: {
+                                                type: "keyword"
                                             },
-                                            "amount": {
-                                                "type": "long"
+                                            amount: {
+                                                type: "long"
                                             },
-                                            "networkId": {
-                                                "type": "keyword"
+                                            networkId: {
+                                                type: "keyword"
                                             }
                                         }
                                     },
-                                    "index": {
-                                        "type": "long"
+                                    index: {
+                                        type: "long"
                                     },
-                                    "owner": {
-                                        "type": "keyword",
+                                    owner: {
+                                        type: "keyword"
                                     },
-                                    "transactionHash": {
-                                        "type": "keyword",
+                                    transactionHash: {
+                                        type: "keyword"
                                     }
                                 }
                             }
                         }
                     },
-                    "burns": {
-                        "properties": {
-                            "unlockScript": {
-                                "properties": {
-                                    "data": {
-                                        "type": "long"
+                    burns: {
+                        properties: {
+                            unlockScript: {
+                                properties: {
+                                    data: {
+                                        type: "long"
                                     },
-                                    "type": {
-                                        "type": "keyword",
+                                    type: {
+                                        type: "keyword"
                                     }
                                 }
                             },
-                            "lockScript": {
-                                "properties": {
-                                    "data": {
-                                        "type": "long"
+                            lockScript: {
+                                properties: {
+                                    data: {
+                                        type: "long"
                                     },
-                                    "type": {
-                                        "type": "keyword",
+                                    type: {
+                                        type: "keyword"
                                     }
                                 }
                             },
-                            "prevOut": {
-                                "properties": {
-                                    "amount": {
-                                        "type": "long"
+                            prevOut: {
+                                properties: {
+                                    amount: {
+                                        type: "long"
                                     },
-                                    "assetType": {
-                                        "type": "keyword",
+                                    assetType: {
+                                        type: "keyword"
                                     },
-                                    "assetScheme": {
-                                        "properties": {
-                                            "metadata": {
-                                                "type": "text"
+                                    assetScheme: {
+                                        properties: {
+                                            metadata: {
+                                                type: "text"
                                             },
-                                            "registrar": {
-                                                "type": "keyword",
+                                            registrar: {
+                                                type: "keyword"
                                             },
-                                            "amount": {
-                                                "type": "long"
+                                            amount: {
+                                                type: "long"
                                             },
-                                            "networkId": {
-                                                "type": "keyword"
+                                            networkId: {
+                                                type: "keyword"
                                             }
                                         }
                                     },
-                                    "index": {
-                                        "type": "long"
+                                    index: {
+                                        type: "long"
                                     },
-                                    "owner": {
-                                        "type": "keyword",
+                                    owner: {
+                                        type: "keyword"
                                     },
-                                    "transactionHash": {
-                                        "type": "keyword",
+                                    transactionHash: {
+                                        type: "keyword"
                                     }
                                 }
                             }
                         }
                     },
-                    "metadata": {
-                        "type": "text"
+                    metadata: {
+                        type: "text"
                     },
-                    "assetName": {
-                        "type": "keyword",
+                    assetName: {
+                        type: "keyword"
                     },
-                    "networkId": {
-                        "type": "keyword"
+                    networkId: {
+                        type: "keyword"
                     },
-                    "nonce": {
-                        "type": "long"
+                    nonce: {
+                        type: "long"
                     },
-                    "output": {
-                        "properties": {
-                            "owner": {
-                                "type": "keyword",
+                    output: {
+                        properties: {
+                            owner: {
+                                type: "keyword"
                             },
-                            "lockScriptHash": {
-                                "type": "keyword",
+                            lockScriptHash: {
+                                type: "keyword"
                             },
-                            "parameters": {
-                                "properties": {
-                                    "data": {
-                                        "type": "long"
+                            parameters: {
+                                properties: {
+                                    data: {
+                                        type: "long"
                                     },
-                                    "type": {
-                                        "type": "keyword",
+                                    type: {
+                                        type: "keyword"
                                     }
                                 }
                             },
-                            "amount": {
-                                "type": "long"
+                            amount: {
+                                type: "long"
                             },
-                            "assetType": {
-                                "type": "keyword",
+                            assetType: {
+                                type: "keyword"
                             }
                         }
                     },
-                    "outputs": {
-                        "properties": {
-                            "owner": {
-                                "type": "keyword",
+                    outputs: {
+                        properties: {
+                            owner: {
+                                type: "keyword"
                             },
-                            "amount": {
-                                "type": "long"
+                            amount: {
+                                type: "long"
                             },
-                            "assetType": {
-                                "type": "keyword",
+                            assetType: {
+                                type: "keyword"
                             },
-                            "assetScheme": {
-                                "properties": {
-                                    "metadata": {
-                                        "type": "text"
+                            assetScheme: {
+                                properties: {
+                                    metadata: {
+                                        type: "text"
                                     },
-                                    "registrar": {
-                                        "type": "keyword",
+                                    registrar: {
+                                        type: "keyword"
                                     },
-                                    "amount": {
-                                        "type": "long"
+                                    amount: {
+                                        type: "long"
                                     },
-                                    "networkId": {
-                                        "type": "keyword"
+                                    networkId: {
+                                        type: "keyword"
                                     }
                                 }
                             },
-                            "lockScriptHash": {
-                                "type": "keyword",
+                            lockScriptHash: {
+                                type: "keyword"
                             },
-                            "parameters": {
-                                "properties": {
-                                    "data": {
-                                        "type": "long"
+                            parameters: {
+                                properties: {
+                                    data: {
+                                        type: "long"
                                     },
-                                    "type": {
-                                        "type": "keyword",
+                                    type: {
+                                        type: "keyword"
                                     }
                                 }
                             }
                         }
                     },
-                    "timestamp": {
-                        "type": "long"
+                    timestamp: {
+                        type: "long"
                     },
-                    "registrar": {
-                        "type": "keyword",
+                    registrar: {
+                        type: "keyword"
                     }
                 }
             },
-            "type": {
-                "type": "keyword",
+            type: {
+                type: "keyword"
             },
-            "isRetracted": {
-                "type": "boolean"
+            isRetracted: {
+                type: "boolean"
             }
         }
-    }
-}
+    };
+};

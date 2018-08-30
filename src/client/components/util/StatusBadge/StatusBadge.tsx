@@ -1,6 +1,6 @@
-import * as React from "react";
+import { faCircle } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCircle } from '@fortawesome/free-solid-svg-icons'
+import * as React from "react";
 
 interface Props {
     status: string;
@@ -16,7 +16,7 @@ const getBadgeBackgroundColorClassByStatus = (status: string) => {
             return "text-danger";
     }
     return "";
-}
+};
 const getStatusString = (status: string) => {
     switch (status) {
         case "confirmed":
@@ -27,9 +27,17 @@ const getStatusString = (status: string) => {
             return "Dead";
     }
     return "";
-}
+};
 
 export const StatusBadge = (props: Props) => {
     const { className, status } = props;
-    return <span className={className}><FontAwesomeIcon className={getBadgeBackgroundColorClassByStatus(status)} icon={faCircle} /> {getStatusString(status)}</span>
-}
+    return (
+        <span className={className}>
+            <FontAwesomeIcon
+                className={getBadgeBackgroundColorClassByStatus(status)}
+                icon={faCircle}
+            />{" "}
+            {getStatusString(status)}
+        </span>
+    );
+};

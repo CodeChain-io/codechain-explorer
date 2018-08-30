@@ -1,6 +1,6 @@
+import { SDK } from "codechain-sdk";
 import { ServerConfig } from ".";
 import { ElasticSearchAgent } from "../db/ElasticSearchAgent";
-import { SDK } from "codechain-sdk";
 
 export class ServerContext {
     public static async newInstance(options: ServerConfig) {
@@ -26,5 +26,5 @@ export class ServerContext {
 
     public destroy = async () => {
         // Do nothing
-    }
+    };
 }

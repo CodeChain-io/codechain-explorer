@@ -1,7 +1,7 @@
 import * as React from "react";
-import { Dispatch, connect } from "react-redux";
+import { connect, Dispatch } from "react-redux";
 
-import { apiRequest, ApiError } from "./ApiRequest";
+import { ApiError, apiRequest } from "./ApiRequest";
 
 interface OwnProps {
     onBlockTotalCount: (blockTotalCount: number) => void;
@@ -17,18 +17,27 @@ type Props = OwnProps & DispatchProps;
 class RequestTotalBlockCountInternal extends React.Component<Props> {
     public componentWillMount() {
         const { onError, onBlockTotalCount, dispatch } = this.props;
-        apiRequest({ path: `blocks/totalCount`, dispatch, showProgressBar: true }).then((response: any) => {
-            onBlockTotalCount(response);
-        }).catch(onError);
+        apiRequest({
+            path: `blocks/totalCount`,
+            dispatch,
+            showProgressBar: true
+        })
+            .then((response: any) => {
+                onBlockTotalCount(response);
+            })
+            .catch(onError);
     }
 
     public render() {
-        return (null);
+        return null;
     }
 }
 
-const RequestTotalBlockCount = connect(null, ((dispatch: Dispatch) => {
-    return { dispatch }
-}))(RequestTotalBlockCountInternal);
+const RequestTotalBlockCount = connect(
+    null,
+    (dispatch: Dispatch) => {
+        return { dispatch };
+    }
+)(RequestTotalBlockCountInternal);
 
 export default RequestTotalBlockCount;

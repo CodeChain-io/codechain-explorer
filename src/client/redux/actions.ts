@@ -1,6 +1,11 @@
-import { BlockDoc, ParcelDoc, TransactionDoc, AssetSchemeDoc } from "../../db/DocType";
+import { loadingBarReducer } from "react-redux-loading-bar";
 import { combineReducers } from "redux";
-import { loadingBarReducer } from "react-redux-loading-bar"
+import {
+    AssetSchemeDoc,
+    BlockDoc,
+    ParcelDoc,
+    TransactionDoc
+} from "../../db/DocType";
 
 export interface RootState {
     appReducer: AppReducer;
@@ -19,7 +24,7 @@ interface AppReducer {
     };
     transactionByHash: {
         [hash: string]: TransactionDoc;
-    }
+    };
     assetSchemeByAssetType: {
         [assetType: string]: AssetSchemeDoc;
     };
@@ -48,12 +53,12 @@ interface BestBlockNumberAction {
 interface CacheBlockAction {
     type: "CACHE_BLOCK";
     data: BlockDoc;
-};
+}
 
 interface CacheParcelAction {
     type: "CACHE_PARCEL";
     data: ParcelDoc;
-};
+}
 
 interface CacheTransactionAction {
     type: "CACHE_TRANSACTION";
@@ -81,12 +86,18 @@ interface MoveToSectionAction {
     data: string;
 }
 
-
-type Action = BestBlockNumberAction | CacheAssetSchemeAction | CacheBlockAction | CacheParcelAction | CacheTransactionAction | CacheAssetTransactionsAction | MoveToSectionAction;
+type Action =
+    | BestBlockNumberAction
+    | CacheAssetSchemeAction
+    | CacheBlockAction
+    | CacheParcelAction
+    | CacheTransactionAction
+    | CacheAssetTransactionsAction
+    | MoveToSectionAction;
 
 const appReducer = (state = initialState, action: Action) => {
     if (action.type === "BEST_BLOCK_NUMBER_ACTION") {
-        return { ...state, bestBlockNumber: action.data }
+        return { ...state, bestBlockNumber: action.data };
     } else if (action.type === "CACHE_BLOCK") {
         const { number: n, hash } = action.data as BlockDoc;
         const blocksByNumber = { ...state.blocksByNumber, [n]: action.data };
@@ -98,18 +109,33 @@ const appReducer = (state = initialState, action: Action) => {
         return { ...state, parcelByHash };
     } else if (action.type === "CACHE_TRANSACTION") {
         const transaction = action.data as TransactionDoc;
-        const transactionByHash = { ...state.transactionByHash, [transaction.data.hash]: transaction };
+        const transactionByHash = {
+            ...state.transactionByHash,
+            [transaction.data.hash]: transaction
+        };
         return { ...state, transactionByHash };
     } else if (action.type === "CACHE_ASSET_SCHEME") {
-        const { assetType, assetScheme } = (action as CacheAssetSchemeAction).data;
-        const assetSchemeByAssetType = { ...state.assetSchemeByAssetType, [assetType]: assetScheme };
+        const {
+            assetType,
+            assetScheme
+        } = (action as CacheAssetSchemeAction).data;
+        const assetSchemeByAssetType = {
+            ...state.assetSchemeByAssetType,
+            [assetType]: assetScheme
+        };
         return { ...state, assetSchemeByAssetType };
     } else if (action.type === "CACHE_ASSET_TRANSACTIONS") {
-        const { assetType, transactions } = (action as CacheAssetTransactionsAction).data;
-        const transactionsByAssetType = { ...state.transactionsByAssetType, [assetType]: transactions };
+        const {
+            assetType,
+            transactions
+        } = (action as CacheAssetTransactionsAction).data;
+        const transactionsByAssetType = {
+            ...state.transactionsByAssetType,
+            [assetType]: transactions
+        };
         return { ...state, transactionsByAssetType };
     } else if (action.type === "MOVE_TO_SECTION") {
-        return { ...state, moveToSectionRef: action.data }
+        return { ...state, moveToSectionRef: action.data };
     } else {
         return state;
     }
@@ -118,4 +144,4 @@ const appReducer = (state = initialState, action: Action) => {
 export const rootReducer = combineReducers({
     appReducer,
     loadingBar: loadingBarReducer
-})
+});

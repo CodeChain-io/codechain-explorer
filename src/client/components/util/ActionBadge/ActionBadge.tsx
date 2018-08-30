@@ -1,6 +1,6 @@
-import * as React from "react";
+import { faSquare } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faSquare } from '@fortawesome/free-solid-svg-icons'
+import * as React from "react";
 import { ParcelDoc } from "../../../../db/DocType";
 
 interface Props {
@@ -18,7 +18,7 @@ const getBadgeClassNameByAction = (action: string) => {
             return "set-regular-key-action-text-color";
     }
     return "";
-}
+};
 
 const getActionString = (action: string) => {
     switch (action) {
@@ -30,9 +30,17 @@ const getActionString = (action: string) => {
             return "SetRegularKey";
     }
     return "";
-}
+};
 
 export const ActionBadge = (props: Props) => {
     const { className, parcel, simple } = props;
-    return <span className={className}><FontAwesomeIcon className={getBadgeClassNameByAction(parcel.action.action)} icon={faSquare} /> {simple ? "" : getActionString(parcel.action.action)}</span>
-}
+    return (
+        <span className={className}>
+            <FontAwesomeIcon
+                className={getBadgeClassNameByAction(parcel.action.action)}
+                icon={faSquare}
+            />{" "}
+            {simple ? "" : getActionString(parcel.action.action)}
+        </span>
+    );
+};

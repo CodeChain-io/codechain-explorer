@@ -1,7 +1,7 @@
 import * as yargs from "yargs";
 
-import * as web from "./web";
 import config from "./config";
+import * as web from "./web";
 
 export interface ServerConfig {
     httpPort: number;
@@ -10,16 +10,18 @@ export interface ServerConfig {
     };
     elasticSearch: {
         host: string;
-    }
+    };
 }
 
 const main = () => {
-    const _ = yargs.command({
-        command: "*",
-        handler: () => {
-            web.run(config);
-        }
-    }).help().argv;
+    const _ = yargs
+        .command({
+            command: "*",
+            handler: () => {
+                web.run(config);
+            }
+        })
+        .help().argv;
 };
 
 main();

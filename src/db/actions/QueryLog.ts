@@ -1,13 +1,13 @@
+import { Client, SearchResponse } from "elasticsearch";
 import * as _ from "lodash";
-import { SearchResponse, Client } from "elasticsearch";
-import { BaseAction } from "./BaseAction";
 import { ElasticSearchAgent } from "../ElasticSearchAgent";
+import { BaseAction } from "./BaseAction";
 
 export interface LogData {
-    date: string,
-    count: number,
-    type: LogType,
-    value: string
+    date: string;
+    count: number;
+    type: LogType;
+    value: string;
 }
 
 export enum LogType {
@@ -26,7 +26,12 @@ export class QueryLog implements BaseAction {
     public agent: ElasticSearchAgent;
     public client: Client;
 
-    public async increaseLogCount(date: string, logType: LogType, count: number, value?: string): Promise<void> {
+    public async increaseLogCount(
+        date: string,
+        logType: LogType,
+        count: number,
+        value?: string
+    ): Promise<void> {
         if (count === 0) {
             return;
         }
@@ -40,7 +45,12 @@ export class QueryLog implements BaseAction {
         }
     }
 
-    public async decreaseLogCount(date: string, logType: LogType, count: number, value?: string): Promise<void> {
+    public async decreaseLogCount(
+        date: string,
+        logType: LogType,
+        count: number,
+        value?: string
+    ): Promise<void> {
         if (count === 0) {
             return;
         }
@@ -64,17 +74,17 @@ export class QueryLog implements BaseAction {
 
     public async getBestMiners(date: string): Promise<LogData[]> {
         const response = await this.searchLog({
-            "sort": [
+            sort: [
                 {
-                    "count": { "order": "desc" }
+                    count: { order: "desc" }
                 }
             ],
-            "size": 5,
-            "query": {
-                "bool": {
-                    "must": [
-                        { "term": { "date": date } },
-                        { "term": { "type": "BLOCK_MINING_COUNT" } }
+            size: 5,
+            query: {
+                bool: {
+                    must: [
+                        { term: { date } },
+                        { term: { type: "BLOCK_MINING_COUNT" } }
                     ]
                 }
             }
@@ -87,48 +97,57 @@ export class QueryLog implements BaseAction {
 
     public async searchLog(body: any): Promise<SearchResponse<any>> {
         return this.client.search({
-            "index": "log",
-            "type": "_doc",
+            index: "log",
+            type: "_doc",
             body
-        })
+        });
     }
 
-    public async indexLog(date: string, logType: LogType, count: number, value?: string): Promise<any> {
+    public async indexLog(
+        date: string,
+        logType: LogType,
+        count: number,
+        value?: string
+    ): Promise<any> {
         return this.client.index({
-            "index": "log",
-            "type": "_doc",
-            "id": `${date}_${logType}_${value || "N"}`,
-            "body": {
-                "date": date,
-                "count": count,
-                "type": logType,
-                "value": value
+            index: "log",
+            type: "_doc",
+            id: `${date}_${logType}_${value || "N"}`,
+            body: {
+                date,
+                count,
+                type: logType,
+                value
             },
-            "refresh": "wait_for"
+            refresh: "wait_for"
         });
     }
 
     public async updateLog(logData: LogData, doc: any): Promise<void> {
         return this.client.update({
-            "index": "log",
-            "type": "_doc",
-            "id": `${logData.date}_${logData.type}_${logData.value || "N"}`,
-            "body": {
+            index: "log",
+            type: "_doc",
+            id: `${logData.date}_${logData.type}_${logData.value || "N"}`,
+            body: {
                 doc
             },
-            "refresh": "wait_for"
+            refresh: "wait_for"
         });
     }
 
-    public async getLog(date: string, logType: LogType, value?: string): Promise<LogData | null> {
+    public async getLog(
+        date: string,
+        logType: LogType,
+        value?: string
+    ): Promise<LogData | null> {
         const response = await this.client.search<LogData>({
-            "index": "log",
-            "type": "_doc",
-            "body": {
-                "size": 1,
-                "query": {
-                    "term": {
-                        "_id": `${date}_${logType}_${value || "N"}`
+            index: "log",
+            type: "_doc",
+            body: {
+                size: 1,
+                query: {
+                    term: {
+                        _id: `${date}_${logType}_${value || "N"}`
                     }
                 }
             }

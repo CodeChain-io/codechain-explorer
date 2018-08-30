@@ -2,14 +2,14 @@ import { getMappingParcel } from "./mapping_parcel";
 
 export const getMappingPendingParcel = () => {
     return {
-        "properties": {
-            "status": {
-                "type": "keyword",
+        properties: {
+            status: {
+                type: "keyword"
             },
-            "timestamp": {
-                "type": "long"
+            timestamp: {
+                type: "long"
             },
-            "parcel": getMappingParcel()
+            parcel: getMappingParcel()
         }
-    }
-}
+    };
+};

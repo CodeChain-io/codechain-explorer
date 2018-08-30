@@ -5,9 +5,9 @@ import "./DifficultyChart.scss";
 
 interface Props {
     difficulty: Array<{
-        x: string,
-        y: string
-    }>
+        x: string;
+        y: string;
+    }>;
 }
 
 class DifficultyChart extends React.Component<Props, {}> {
@@ -27,43 +27,41 @@ class DifficultyChart extends React.Component<Props, {}> {
                         </div>
                         <div className="chart-item">
                             <ResponsiveLine
-                                data={
-                                    [
-                                        {
-                                            "id": "Score",
-                                            "color": "hsl(237, 49%, 45%)",
-                                            "data": difficulty
-                                        }
-                                    ]
-                                }
+                                data={[
+                                    {
+                                        id: "Score",
+                                        color: "hsl(237, 49%, 45%)",
+                                        data: difficulty
+                                    }
+                                ]}
                                 margin={{
-                                    "top": 20,
-                                    "right": 30,
-                                    "bottom": 50,
-                                    "left": 80
+                                    top: 20,
+                                    right: 30,
+                                    bottom: 50,
+                                    left: 80
                                 }}
                                 minY="0"
                                 axisBottom={{
-                                    "orient": "bottom",
-                                    "tickSize": 5,
-                                    "tickPadding": 5,
-                                    "tickRotation": 0,
-                                    "legendOffset": 36,
-                                    "legend": "Block number",
+                                    orient: "bottom",
+                                    tickSize: 5,
+                                    tickPadding: 5,
+                                    tickRotation: 0,
+                                    legendOffset: 36,
+                                    legend: "Block number"
                                 }}
                                 axisLeft={{
-                                    "orient": "left",
-                                    "tickSize": 5,
-                                    "tickPadding": 5,
-                                    "tickRotation": 0,
-                                    "legendOffset": -60,
-                                    "legend": "Score",
+                                    orient: "left",
+                                    tickSize: 5,
+                                    tickPadding: 5,
+                                    tickRotation: 0,
+                                    legendOffset: -60,
+                                    legend: "Score"
                                 }}
                                 enableDots={false}
                                 enableArea={true}
                                 curve="natural"
                                 // tslint:disable-next-line:jsx-no-lambda
-                                colorBy={(e: any) => (e.color)}
+                                colorBy={(e: any) => e.color}
                                 dotSize={10}
                                 dotColor="inherit:darker(0.3)"
                                 dotBorderWidth={2}
@@ -78,8 +76,8 @@ class DifficultyChart extends React.Component<Props, {}> {
                     </div>
                 </div>
             </div>
-        )
+        );
     }
-};
+}
 
 export default DifficultyChart;

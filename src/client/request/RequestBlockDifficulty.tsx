@@ -1,12 +1,12 @@
-import * as React from "react";
 import * as _ from "lodash";
-import { Dispatch, connect } from "react-redux";
+import * as React from "react";
+import { connect, Dispatch } from "react-redux";
 
-import { apiRequest, ApiError } from "./ApiRequest";
 import { BlockDoc } from "../../db/DocType";
+import { ApiError, apiRequest } from "./ApiRequest";
 
 interface OwnProps {
-    onBlockDifficulty: (difficulty: Array<{ x: string, y: string }>) => void;
+    onBlockDifficulty: (difficulty: Array<{ x: string; y: string }>) => void;
     onError: (e: ApiError) => void;
 }
 
@@ -27,24 +27,33 @@ class RequestBlockDifficultyInternal extends React.Component<Props> {
     }
 
     public render() {
-        return (null);
+        return null;
     }
 
     private requestNodeStat = async () => {
         const { onBlockDifficulty, dispatch } = this.props;
-        const blocks: any = await apiRequest({ path: `/blocks?page=1&itmesPerBlock=10`, dispatch, showProgressBar: true });
+        const blocks: any = await apiRequest({
+            path: `/blocks?page=1&itmesPerBlock=10`,
+            dispatch,
+            showProgressBar: true
+        });
 
-        onBlockDifficulty(_.map(_.reverse(blocks), (block: BlockDoc) => {
-            return {
-                x: block.number.toString(),
-                y: block.score
-            };
-        }))
-    }
+        onBlockDifficulty(
+            _.map(_.reverse(blocks), (block: BlockDoc) => {
+                return {
+                    x: block.number.toString(),
+                    y: block.score
+                };
+            })
+        );
+    };
 }
 
-const RequestBlockDifficulty = connect(null, ((dispatch: Dispatch) => {
-    return { dispatch }
-}))(RequestBlockDifficultyInternal);
+const RequestBlockDifficulty = connect(
+    null,
+    (dispatch: Dispatch) => {
+        return { dispatch };
+    }
+)(RequestBlockDifficultyInternal);
 
 export default RequestBlockDifficulty;

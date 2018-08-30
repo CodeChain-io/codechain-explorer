@@ -1,173 +1,173 @@
 {
-    "name": "codechain-explorer",
-    "version": "0.1.0",
-    "description": "Block Explorer for CodeChain",
-    "repository": {
-        "type": "git",
-        "url": "git+https://github.com/kodebox-io/codechain-explorer.git"
+  "name": "codechain-explorer",
+  "version": "0.1.0",
+  "description": "Block Explorer for CodeChain",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kodebox-io/codechain-explorer.git"
+  },
+  "author": "CodeChain Team <codechain@kodebox.io>",
+  "license": "Apache-2.0",
+  "dependencies": {
+    "@fortawesome/fontawesome-svg-core": "^1.2.0-14",
+    "@fortawesome/free-brands-svg-icons": "^5.1.0-11",
+    "@fortawesome/free-solid-svg-icons": "^5.1.0-11",
+    "@fortawesome/react-fontawesome": "^0.1.0-11",
+    "@nivo/line": "^0.42.1",
+    "@nivo/pie": "^0.42.1",
+    "autoprefixer": "7.1.6",
+    "babel-jest": "^22.1.0",
+    "babel-loader": "^7.1.2",
+    "babel-preset-react-app": "^3.1.1",
+    "bignumber.js": "^7.2.1",
+    "body-parser": "^1.18.2",
+    "bootstrap": "^4.1.1",
+    "buffer": "^5.1.0",
+    "case-sensitive-paths-webpack-plugin": "2.1.1",
+    "chalk": "1.1.3",
+    "codechain-sdk": "^0.1.0",
+    "concurrently": "^3.6.0",
+    "cors": "^2.8.4",
+    "css-loader": "0.28.7",
+    "dotenv": "^6.0.0",
+    "dotenv-expand": "4.2.0",
+    "elasticsearch": "^15.0.0",
+    "express": "^4.16.3",
+    "extract-text-webpack-plugin": "3.0.2",
+    "file-loader": "0.11.2",
+    "fork-ts-checker-webpack-plugin": "^0.2.8",
+    "fs-extra": "3.0.1",
+    "html-webpack-plugin": "2.29.0",
+    "identicon.js": "^2.3.2",
+    "jest": "22.1.4",
+    "js-sha256": "^0.9.0",
+    "moment": "^2.22.2",
+    "node-sass": "^4.9.1",
+    "node-schedule": "^1.3.0",
+    "object-assign": "4.1.1",
+    "postcss-flexbugs-fixes": "3.2.0",
+    "postcss-loader": "2.0.8",
+    "promise": "8.0.1",
+    "qrcode.react": "^0.8.0",
+    "raf": "3.4.0",
+    "react": "^16.3.2",
+    "react-autosuggest": "^9.3.4",
+    "react-copy-to-clipboard": "^5.0.1",
+    "react-dev-utils": "^5.0.1",
+    "react-dom": "^16.3.2",
+    "react-redux": "^5.0.7",
+    "react-redux-loading-bar": "^4.0.5",
+    "react-router-bootstrap": "^0.24.4",
+    "react-router-dom": "^4.2.2",
+    "reactstrap": "^6.1.0",
+    "redux": "^4.0.0",
+    "resolve": "1.6.0",
+    "sass-loader": "^7.0.3",
+    "source-map-loader": "^0.2.1",
+    "style-loader": "0.19.0",
+    "sw-precache-webpack-plugin": "0.11.4",
+    "ts-jest": "22.0.1",
+    "ts-loader": "^2.3.7",
+    "ts-node": "6.1.2",
+    "tsconfig-paths-webpack-plugin": "^2.0.0",
+    "uglifyjs-webpack-plugin": "^1.1.8",
+    "url-loader": "0.6.2",
+    "webpack": "3.8.1",
+    "webpack-dev-server": "2.9.4",
+    "webpack-manifest-plugin": "1.3.2",
+    "whatwg-fetch": "2.0.3",
+    "yargs": "^11.0.0"
+  },
+  "scripts": {
+    "start": "concurrently --kill-others \"yarn start-worker\" \"yarn start-server\" \"yarn start-client\"",
+    "start-client": "node scripts/start.js",
+    "start-server": "ts-node --project tsconfig.server.json src/server/index.ts",
+    "start-worker": "ts-node --project tsconfig.worker.json src/worker/index.ts",
+    "build": "node scripts/build.js",
+    "test": "yarn lint && node scripts/test.js --env=jsdom",
+    "clear-index": "node scripts/clear_elasticsearch.js",
+    "lint": "tslint -p tsconfig.client.json && tslint -p tsconfig.server.json && tslint -p tsconfig.worker.json && prettier 'src/**/*.{ts,tsx,scss,json,html,js,jsx}' -l",
+    "fmt": "tslint -p tsconfig.client.json --fix && tslint -p tsconfig.server.json --fix && tslint -p tsconfig.worker.json --fix && prettier 'src/**/*.{ts,tsx,scss,json,html,js,jsx}' --write"
+  },
+  "devDependencies": {
+    "@types/bignumber.js": "^5.0.0",
+    "@types/body-parser": "^1.17.0",
+    "@types/cors": "^2.8.4",
+    "@types/dotenv": "^4.0.3",
+    "@types/elasticsearch": "^5.0.24",
+    "@types/express": "^4.11.1",
+    "@types/jest": "^22.2.3",
+    "@types/lodash": "^4.14.108",
+    "@types/node": "^10.5.2",
+    "@types/node-schedule": "^1.2.2",
+    "@types/qrcode.react": "^0.8.1",
+    "@types/react": "^16.3.13",
+    "@types/react-autosuggest": "^9.3.4",
+    "@types/react-copy-to-clipboard": "^4.2.6",
+    "@types/react-dom": "^16.0.5",
+    "@types/react-fontawesome": "^1.6.3",
+    "@types/react-redux": "^6.0.0",
+    "@types/react-router-bootstrap": "^0.24.5",
+    "@types/react-router-dom": "^4.2.6",
+    "@types/reactstrap": "^6.0.0",
+    "@types/redux": "^3.6.0",
+    "@types/yargs": "^11.0.0",
+    "prettier": "1.14.2",
+    "tslint": "^5.7.0",
+    "tslint-config-prettier": "^1.10.0",
+    "tslint-react": "^3.2.0",
+    "typescript": "2.9.2"
+  },
+  "jest": {
+    "collectCoverageFrom": [
+      "client/**/*.{js,jsx,ts,tsx}"
+    ],
+    "setupFiles": [
+      "<rootDir>/config/polyfills.js"
+    ],
+    "testMatch": [
+      "<rootDir>/client/**/__tests__/**/*.(j|t)s?(x)",
+      "<rootDir>/client/**/?(*.)(spec|test).(j|t)s?(x)"
+    ],
+    "testEnvironment": "node",
+    "testURL": "http://localhost",
+    "transform": {
+      "^.+\\.(js|jsx|mjs)$": "<rootDir>/node_modules/babel-jest",
+      "^.+\\.tsx?$": "<rootDir>/config/jest/typescriptTransform.js",
+      "^.+\\.css$": "<rootDir>/config/jest/cssTransform.js",
+      "^(?!.*\\.(js|jsx|mjs|css|json)$)": "<rootDir>/config/jest/fileTransform.js"
     },
-    "author": "CodeChain Team <codechain@kodebox.io>",
-    "license": "Apache-2.0",
-    "dependencies": {
-        "@fortawesome/fontawesome-svg-core": "^1.2.0-14",
-        "@fortawesome/free-brands-svg-icons": "^5.1.0-11",
-        "@fortawesome/free-solid-svg-icons": "^5.1.0-11",
-        "@fortawesome/react-fontawesome": "^0.1.0-11",
-        "@nivo/line": "^0.42.1",
-        "@nivo/pie": "^0.42.1",
-        "autoprefixer": "7.1.6",
-        "babel-jest": "^22.1.0",
-        "babel-loader": "^7.1.2",
-        "babel-preset-react-app": "^3.1.1",
-        "bignumber.js": "^7.2.1",
-        "body-parser": "^1.18.2",
-        "bootstrap": "^4.1.1",
-        "buffer": "^5.1.0",
-        "case-sensitive-paths-webpack-plugin": "2.1.1",
-        "chalk": "1.1.3",
-        "codechain-sdk": "^0.1.0",
-        "concurrently": "^3.6.0",
-        "cors": "^2.8.4",
-        "css-loader": "0.28.7",
-        "dotenv": "^6.0.0",
-        "dotenv-expand": "4.2.0",
-        "elasticsearch": "^15.0.0",
-        "express": "^4.16.3",
-        "extract-text-webpack-plugin": "3.0.2",
-        "file-loader": "0.11.2",
-        "fork-ts-checker-webpack-plugin": "^0.2.8",
-        "fs-extra": "3.0.1",
-        "html-webpack-plugin": "2.29.0",
-        "identicon.js": "^2.3.2",
-        "jest": "22.1.4",
-        "js-sha256": "^0.9.0",
-        "moment": "^2.22.2",
-        "node-sass": "^4.9.1",
-        "node-schedule": "^1.3.0",
-        "object-assign": "4.1.1",
-        "postcss-flexbugs-fixes": "3.2.0",
-        "postcss-loader": "2.0.8",
-        "promise": "8.0.1",
-        "qrcode.react": "^0.8.0",
-        "raf": "3.4.0",
-        "react": "^16.3.2",
-        "react-autosuggest": "^9.3.4",
-        "react-copy-to-clipboard": "^5.0.1",
-        "react-dev-utils": "^5.0.1",
-        "react-dom": "^16.3.2",
-        "react-redux": "^5.0.7",
-        "react-redux-loading-bar": "^4.0.5",
-        "react-router-bootstrap": "^0.24.4",
-        "react-router-dom": "^4.2.2",
-        "reactstrap": "^6.1.0",
-        "redux": "^4.0.0",
-        "resolve": "1.6.0",
-        "sass-loader": "^7.0.3",
-        "source-map-loader": "^0.2.1",
-        "style-loader": "0.19.0",
-        "sw-precache-webpack-plugin": "0.11.4",
-        "ts-jest": "22.0.1",
-        "ts-loader": "^2.3.7",
-        "ts-node": "6.1.2",
-        "tsconfig-paths-webpack-plugin": "^2.0.0",
-        "uglifyjs-webpack-plugin": "^1.1.8",
-        "url-loader": "0.6.2",
-        "webpack": "3.8.1",
-        "webpack-dev-server": "2.9.4",
-        "webpack-manifest-plugin": "1.3.2",
-        "whatwg-fetch": "2.0.3",
-        "yargs": "^11.0.0"
+    "transformIgnorePatterns": [
+      "[/\\\\]node_modules[/\\\\].+\\.(js|jsx|mjs|ts|tsx)$"
+    ],
+    "moduleNameMapper": {
+      "^react-native$": "react-native-web"
     },
-    "scripts": {
-        "start": "concurrently --kill-others \"yarn start-worker\" \"yarn start-server\" \"yarn start-client\"",
-        "start-client": "node scripts/start.js",
-        "start-server": "ts-node --project tsconfig.server.json src/server/index.ts",
-        "start-worker": "ts-node --project tsconfig.worker.json src/worker/index.ts",
-        "build": "node scripts/build.js",
-        "test": "yarn lint && node scripts/test.js --env=jsdom",
-        "clear-index": "node scripts/clear_elasticsearch.js",
-        "lint": "tslint -p tsconfig.client.json && tslint -p tsconfig.server.json && tslint -p tsconfig.worker.json && prettier 'src/**/*.{ts,tsx,scss,json,html,js,jsx}' -l",
-        "fmt": "tslint -p tsconfig.client.json --fix && tslint -p tsconfig.server.json --fix && tslint -p tsconfig.worker.json --fix && prettier 'src/**/*.{ts,tsx,scss,json,html,js,jsx}' --write"
-    },
-    "devDependencies": {
-        "@types/bignumber.js": "^5.0.0",
-        "@types/body-parser": "^1.17.0",
-        "@types/cors": "^2.8.4",
-        "@types/dotenv": "^4.0.3",
-        "@types/elasticsearch": "^5.0.24",
-        "@types/express": "^4.11.1",
-        "@types/jest": "^22.2.3",
-        "@types/lodash": "^4.14.108",
-        "@types/node": "^10.5.2",
-        "@types/node-schedule": "^1.2.2",
-        "@types/qrcode.react": "^0.8.1",
-        "@types/react": "^16.3.13",
-        "@types/react-autosuggest": "^9.3.4",
-        "@types/react-copy-to-clipboard": "^4.2.6",
-        "@types/react-dom": "^16.0.5",
-        "@types/react-fontawesome": "^1.6.3",
-        "@types/react-redux": "^6.0.0",
-        "@types/react-router-bootstrap": "^0.24.5",
-        "@types/react-router-dom": "^4.2.6",
-        "@types/reactstrap": "^6.0.0",
-        "@types/redux": "^3.6.0",
-        "@types/yargs": "^11.0.0",
-        "prettier": "1.14.2",
-        "tslint": "^5.7.0",
-        "tslint-config-prettier": "^1.10.0",
-        "tslint-react": "^3.2.0",
-        "typescript": "2.9.2"
-    },
-    "jest": {
-        "collectCoverageFrom": [
-            "client/**/*.{js,jsx,ts,tsx}"
-        ],
-        "setupFiles": [
-            "<rootDir>/config/polyfills.js"
-        ],
-        "testMatch": [
-            "<rootDir>/client/**/__tests__/**/*.(j|t)s?(x)",
-            "<rootDir>/client/**/?(*.)(spec|test).(j|t)s?(x)"
-        ],
-        "testEnvironment": "node",
-        "testURL": "http://localhost",
-        "transform": {
-            "^.+\\.(js|jsx|mjs)$": "<rootDir>/node_modules/babel-jest",
-            "^.+\\.tsx?$": "<rootDir>/config/jest/typescriptTransform.js",
-            "^.+\\.css$": "<rootDir>/config/jest/cssTransform.js",
-            "^(?!.*\\.(js|jsx|mjs|css|json)$)": "<rootDir>/config/jest/fileTransform.js"
-        },
-        "transformIgnorePatterns": [
-            "[/\\\\]node_modules[/\\\\].+\\.(js|jsx|mjs|ts|tsx)$"
-        ],
-        "moduleNameMapper": {
-            "^react-native$": "react-native-web"
-        },
-        "moduleFileExtensions": [
-            "web.ts",
-            "ts",
-            "web.tsx",
-            "tsx",
-            "web.js",
-            "js",
-            "web.jsx",
-            "jsx",
-            "json",
-            "node",
-            "mjs"
-        ],
-        "globals": {
-            "ts-jest": {
-                "tsConfigFile": "/Users/jeongjingyeong/workspace/research/codechain-explorer/tsconfig.client.test.json"
-            }
-        }
-    },
-    "babel": {
-        "presets": [
-            "react-app"
-        ]
-    },
-    "eslintConfig": {
-        "extends": "react-app"
+    "moduleFileExtensions": [
+      "web.ts",
+      "ts",
+      "web.tsx",
+      "tsx",
+      "web.js",
+      "js",
+      "web.jsx",
+      "jsx",
+      "json",
+      "node",
+      "mjs"
+    ],
+    "globals": {
+      "ts-jest": {
+        "tsConfigFile": "/Users/jeongjingyeong/workspace/research/codechain-explorer/tsconfig.client.test.json"
+      }
     }
+  },
+  "babel": {
+    "presets": [
+      "react-app"
+    ]
+  },
+  "eslintConfig": {
+    "extends": "react-app"
+  }
 }

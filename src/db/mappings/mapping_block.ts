@@ -2,61 +2,61 @@ import { getMappingParcel } from "./mapping_parcel";
 
 export const getMappingBlock = () => {
     return {
-        "properties": {
-            "author": {
-                "type": "keyword",
+        properties: {
+            author: {
+                type: "keyword"
             },
-            "extraData": {
-                "properties": {
-                    "data": {
-                        "type": "long"
+            extraData: {
+                properties: {
+                    data: {
+                        type: "long"
                     },
-                    "type": {
-                        "type": "keyword",
+                    type: {
+                        type: "keyword"
                     }
                 }
             },
-            "hash": {
-                "type": "keyword",
+            hash: {
+                type: "keyword"
             },
-            "invoicesRoot": {
-                "type": "keyword",
+            invoicesRoot: {
+                type: "keyword"
             },
-            "isRetracted": {
-                "type": "boolean"
+            isRetracted: {
+                type: "boolean"
             },
-            "number": {
-                "type": "long"
+            number: {
+                type: "long"
             },
-            "miningReward": {
-                "type": "keyword"
+            miningReward: {
+                type: "keyword"
             },
-            "parcelsRoot": {
-                "type": "keyword",
+            parcelsRoot: {
+                type: "keyword"
             },
-            "parentHash": {
-                "type": "keyword",
+            parentHash: {
+                type: "keyword"
             },
-            "score": {
-                "type": "keyword",
+            score: {
+                type: "keyword"
             },
-            "seal": {
-                "properties": {
-                    "data": {
-                        "type": "long"
+            seal: {
+                properties: {
+                    data: {
+                        type: "long"
                     },
-                    "type": {
-                        "type": "keyword",
+                    type: {
+                        type: "keyword"
                     }
                 }
             },
-            "stateRoot": {
-                "type": "keyword",
+            stateRoot: {
+                type: "keyword"
             },
-            "timestamp": {
-                "type": "long"
+            timestamp: {
+                type: "long"
             },
-            "parcels": getMappingParcel()
+            parcels: getMappingParcel()
         }
-    }
-}
+    };
+};

@@ -1,11 +1,11 @@
 import * as React from "react";
-import { Row, Col } from "reactstrap";
+import { Col, Row } from "reactstrap";
 
-import "./ChainInfo.scss";
 import { CodeChainData } from "../../../request/RequestCodeChainStatus";
+import "./ChainInfo.scss";
 
 interface Props {
-    chainInfo: CodeChainData
+    chainInfo: CodeChainData;
 }
 
 class ChainInfo extends React.Component<Props, {}> {
@@ -23,45 +23,36 @@ class ChainInfo extends React.Component<Props, {}> {
                 </div>
                 <div className="data-set-for-status">
                     <div className="one-line-data-set">
+                        <div>Network ID</div>
+                        <div>{chainInfo.networkId}</div>
+                    </div>
+                    <hr />
+                    <div className="one-line-data-set">
+                        <div>Version</div>
+                        <div>v{chainInfo.nodeVersion}</div>
+                    </div>
+                    <hr />
+                    <div className="one-line-data-set">
+                        <div>Git hash</div>
                         <div>
-                            Network ID
-                        </div>
-                        <div>
-                            {chainInfo.networkId}
+                            <a
+                                href={`https://github.com/CodeChain-io/codechain/commit/${
+                                    chainInfo.commitHash
+                                }`}
+                                target="_black"
+                            >
+                                {chainInfo.commitHash}
+                            </a>
                         </div>
                     </div>
                     <hr />
                     <div className="one-line-data-set">
-                        <div>
-                            Version
-                        </div>
-                        <div>
-                            v{chainInfo.nodeVersion}
-                        </div>
-                    </div>
-                    <hr />
-                    <div className="one-line-data-set">
-                        <div>
-                            Git hash
-                        </div>
-                        <div>
-                            <a href={`https://github.com/CodeChain-io/codechain/commit/${chainInfo.commitHash}`} target="_black">{chainInfo.commitHash}</a>
-                        </div>
-                    </div>
-                    <hr />
-                    <div className="one-line-data-set">
-                        <div>
-                            Peer count
-                        </div>
-                        <div>
-                            {chainInfo.peerCount}
-                        </div>
+                        <div>Peer count</div>
+                        <div>{chainInfo.peerCount}</div>
                     </div>
                     <hr />
                     <Row>
-                        <Col md="12">
-                            Peer list
-                        </Col>
+                        <Col md="12">Peer list</Col>
                         <Col md="12">
                             <div className="text-area text-left">
                                 {chainInfo.peers.join(", ")}
@@ -70,18 +61,16 @@ class ChainInfo extends React.Component<Props, {}> {
                     </Row>
                     <hr />
                     <div className="one-line-data-set">
+                        <div>White list status</div>
                         <div>
-                            White list status
-                        </div>
-                        <div>
-                            {chainInfo.whiteList.enabled ? "enabled" : "disabled"}
+                            {chainInfo.whiteList.enabled
+                                ? "enabled"
+                                : "disabled"}
                         </div>
                     </div>
                     <hr />
                     <Row>
-                        <Col md="12">
-                            White list
-                        </Col>
+                        <Col md="12">White list</Col>
                         <Col md="12">
                             <div className="text-area text-left">
                                 {chainInfo.whiteList.list.join(", ")}
@@ -90,18 +79,16 @@ class ChainInfo extends React.Component<Props, {}> {
                     </Row>
                     <hr />
                     <div className="one-line-data-set">
+                        <div>Black list status</div>
                         <div>
-                            Black list status
-                        </div>
-                        <div>
-                            {chainInfo.blackList.enabled ? "enabled" : "disabled"}
+                            {chainInfo.blackList.enabled
+                                ? "enabled"
+                                : "disabled"}
                         </div>
                     </div>
                     <hr />
                     <Row>
-                        <Col md="12">
-                            Black list
-                        </Col>
+                        <Col md="12">Black list</Col>
                         <Col md="12">
                             <div className="text-area text-left">
                                 {chainInfo.blackList.list.join(", ")}
@@ -111,8 +98,8 @@ class ChainInfo extends React.Component<Props, {}> {
                     <hr />
                 </div>
             </div>
-        )
+        );
     }
-};
+}
 
 export default ChainInfo;

@@ -1,22 +1,22 @@
 import * as React from "react";
-import { Dispatch, connect } from "react-redux";
+import { connect, Dispatch } from "react-redux";
 
-import { apiRequest, ApiError } from "./ApiRequest";
+import { ApiError, apiRequest } from "./ApiRequest";
 
 export interface CodeChainData {
-    nodeVersion: string,
-    commitHash: string,
-    networkId: string,
-    peerCount: number,
-    peers: string[],
+    nodeVersion: string;
+    commitHash: string;
+    networkId: string;
+    peerCount: number;
+    peers: string[];
     whiteList: {
-        enabled: boolean,
-        list: string[]
-    },
+        enabled: boolean;
+        list: string[];
+    };
     blackList: {
-        enabled: boolean,
-        list: string[]
-    }
+        enabled: boolean;
+        list: string[];
+    };
 }
 
 interface OwnProps {
@@ -33,18 +33,27 @@ type Props = OwnProps & DispatchProps;
 class RequestCodeChainStatusInternal extends React.Component<Props> {
     public componentWillMount() {
         const { onError, dispatch, onCodeChain } = this.props;
-        apiRequest({ path: `status/codechain`, dispatch, showProgressBar: true }).then((response: any) => {
-            onCodeChain(response);
-        }).catch(onError);
+        apiRequest({
+            path: `status/codechain`,
+            dispatch,
+            showProgressBar: true
+        })
+            .then((response: any) => {
+                onCodeChain(response);
+            })
+            .catch(onError);
     }
 
     public render() {
-        return (null);
+        return null;
     }
 }
 
-const RequestCodeChainStatus = connect(null, ((dispatch: Dispatch) => {
-    return { dispatch }
-}))(RequestCodeChainStatusInternal);
+const RequestCodeChainStatus = connect(
+    null,
+    (dispatch: Dispatch) => {
+        return { dispatch };
+    }
+)(RequestCodeChainStatusInternal);
 
 export default RequestCodeChainStatus;

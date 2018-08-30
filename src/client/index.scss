@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css?family=Montserrat:300,400,600,700|Roboto+Mono:300,400');
+@import url("https://fonts.googleapis.com/css?family=Montserrat:300,400,600,700|Roboto+Mono:300,400");
 @import "mixins.scss";
 @import "variables.scss";
 @import "globals.scss";
@@ -9,12 +9,12 @@ html {
 body {
   margin: 0;
   padding: 0;
-  font-family: 'Montserrat', sans-serif;
+  font-family: "Montserrat", sans-serif;
   color: $dark-color;
 }
 
 a {
-  color: #2D9CDB;
+  color: #2d9cdb;
   &:hover {
     text-decoration: none;
   }
@@ -34,26 +34,26 @@ a {
   }
 }
 
-.table-striped>tbody>tr:nth-child(odd)>td,
-.table-striped>tbody>tr:nth-child(odd)>th {
+.table-striped > tbody > tr:nth-child(odd) > td,
+.table-striped > tbody > tr:nth-child(odd) > th {
   background-color: white;
 }
 
-.table-striped>tbody>tr:nth-child(even)>td,
-.table-striped>tbody>tr:nth-child(even)>th {
-  background-color: #F2F2F2;
+.table-striped > tbody > tr:nth-child(even) > td,
+.table-striped > tbody > tr:nth-child(even) > th {
+  background-color: #f2f2f2;
 }
 
 // Typography
 h1 {
-  font-family: 'Montserrat', sans-serif;
+  font-family: "Montserrat", sans-serif;
   font-weight: 700;
   margin-bottom: 0;
 }
 
 h2,
 h3 {
-  font-family: 'Montserrat', sans-serif;
+  font-family: "Montserrat", sans-serif;
   font-weight: 600;
   margin-bottom: 0;
 }

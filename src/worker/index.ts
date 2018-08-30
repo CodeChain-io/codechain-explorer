@@ -1,34 +1,41 @@
+import { ElasticSearchAgent } from "../db/ElasticSearchAgent";
 import { BlockSyncWorker } from "./BlockSyncWorker";
 import { CodeChainAgent } from "./CodeChainAgent";
-import { ElasticSearchAgent } from "../db/ElasticSearchAgent";
 import config from "./config";
 import TypeConverter from "./TypeConverter";
 
 export interface WorkerConfig {
     elasticSearch: {
-        host: string
-    },
+        host: string;
+    };
     codeChain: {
-        host: string
-    },
+        host: string;
+    };
     cron: {
-        blockWatch: string
-    }
+        blockWatch: string;
+    };
     miningReward: {
-        solo: number,
-        husky: number
-    },
+        solo: number;
+        husky: number;
+    };
     genesisAddressList: {
-        solo: string[],
-        husky: string[]
-    }
+        solo: string[];
+        husky: string[];
+    };
 }
 
 const app = () => {
-    const elasticSearchAgent = new ElasticSearchAgent(config.elasticSearch.host);
+    const elasticSearchAgent = new ElasticSearchAgent(
+        config.elasticSearch.host
+    );
     const codeChainAgent = new CodeChainAgent(config.codeChain.host);
-    const typeConverter = new TypeConverter(elasticSearchAgent, codeChainAgent);
-    const worker = new BlockSyncWorker(config, codeChainAgent, elasticSearchAgent, typeConverter);
+    const typeConverter = new TypeConverter(codeChainAgent);
+    const worker = new BlockSyncWorker(
+        config,
+        codeChainAgent,
+        elasticSearchAgent,
+        typeConverter
+    );
     worker.start();
 };
 

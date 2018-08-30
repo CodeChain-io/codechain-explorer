@@ -1,7 +1,7 @@
 import * as React from "react";
-import { Dispatch, connect } from "react-redux";
+import { connect, Dispatch } from "react-redux";
 
-import { apiRequest, ApiError } from "./ApiRequest";
+import { ApiError, apiRequest } from "./ApiRequest";
 
 interface OwnProps {
     onPong: () => void;
@@ -48,7 +48,7 @@ class RequestPingInternal extends React.Component<Props, State> {
     }
 
     public render() {
-        return (null);
+        return null;
     }
 
     public componentWillUnmount() {
@@ -60,18 +60,23 @@ class RequestPingInternal extends React.Component<Props, State> {
 
     private request = () => {
         const { onPong, onError, dispatch } = this.props;
-        apiRequest({ path: `ping`, showProgressBar: false, dispatch }).then((response: string) => {
-            if (response === "pong") {
-                onPong();
-            } else {
-                onError({ message: `Expected "pong" but "${response}"` });
-            }
-        }).catch(onError);
-    }
+        apiRequest({ path: `ping`, showProgressBar: false, dispatch })
+            .then((response: string) => {
+                if (response === "pong") {
+                    onPong();
+                } else {
+                    onError({ message: `Expected "pong" but "${response}"` });
+                }
+            })
+            .catch(onError);
+    };
 }
 
-const RequestPing = connect(null, ((dispatch: Dispatch) => {
-    return { dispatch }
-}))(RequestPingInternal);
+const RequestPing = connect(
+    null,
+    (dispatch: Dispatch) => {
+        return { dispatch };
+    }
+)(RequestPingInternal);
 
 export default RequestPing;

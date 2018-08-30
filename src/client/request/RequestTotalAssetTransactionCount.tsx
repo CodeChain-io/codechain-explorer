@@ -1,7 +1,7 @@
 import * as React from "react";
-import { Dispatch, connect } from "react-redux";
+import { connect, Dispatch } from "react-redux";
 
-import { apiRequest, ApiError } from "./ApiRequest";
+import { ApiError, apiRequest } from "./ApiRequest";
 
 interface OwnProps {
     assetType: string;
@@ -18,18 +18,27 @@ type Props = OwnProps & DispatchProps;
 class RequestTotalAssetTransactionCountInternal extends React.Component<Props> {
     public componentWillMount() {
         const { onError, onTotalCount, dispatch, assetType } = this.props;
-        apiRequest({ path: `asset-txs/${assetType}/totalCount`, dispatch, showProgressBar: true }).then((response: any) => {
-            onTotalCount(response);
-        }).catch(onError);
+        apiRequest({
+            path: `asset-txs/${assetType}/totalCount`,
+            dispatch,
+            showProgressBar: true
+        })
+            .then((response: any) => {
+                onTotalCount(response);
+            })
+            .catch(onError);
     }
 
     public render() {
-        return (null);
+        return null;
     }
 }
 
-const RequestTotalAssetTransactionCount = connect(null, ((dispatch: Dispatch) => {
-    return { dispatch }
-}))(RequestTotalAssetTransactionCountInternal);
+const RequestTotalAssetTransactionCount = connect(
+    null,
+    (dispatch: Dispatch) => {
+        return { dispatch };
+    }
+)(RequestTotalAssetTransactionCountInternal);
 
 export default RequestTotalAssetTransactionCount;

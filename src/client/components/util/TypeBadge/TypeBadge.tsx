@@ -1,6 +1,6 @@
-import * as React from "react";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSquare } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import * as React from "react";
 import { TransactionDoc } from "../../../../db/DocType";
 
 interface Props {
@@ -15,7 +15,7 @@ const getBadgeBackgroundColorClassByType = (type: string) => {
             return "asset-mint-transaction-text-color";
     }
     return "";
-}
+};
 const getTypeString = (type: string) => {
     switch (type) {
         case "assetTransfer":
@@ -24,9 +24,17 @@ const getTypeString = (type: string) => {
             return "Mint";
     }
     return "";
-}
+};
 
 export const TypeBadge = (props: Props) => {
     const { className, transaction } = props;
-    return <span className={className}><FontAwesomeIcon className={getBadgeBackgroundColorClassByType(transaction.type)} icon={faSquare} /> {getTypeString(transaction.type)}</span>
-}
+    return (
+        <span className={className}>
+            <FontAwesomeIcon
+                className={getBadgeBackgroundColorClassByType(transaction.type)}
+                icon={faSquare}
+            />{" "}
+            {getTypeString(transaction.type)}
+        </span>
+    );
+};

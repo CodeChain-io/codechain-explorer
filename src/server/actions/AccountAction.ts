@@ -14,4 +14,4 @@ function handle(context: ServerContext, router: Router) {
 
 export const AccountAction = {
     handle
-}
+};

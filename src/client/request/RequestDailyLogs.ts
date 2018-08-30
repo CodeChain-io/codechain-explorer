@@ -1,8 +1,8 @@
-import * as React from "react";
 import * as _ from "lodash";
+import * as React from "react";
 
-import { Dispatch, connect } from "react-redux";
-import { apiRequest, ApiError } from "./ApiRequest";
+import { connect, Dispatch } from "react-redux";
+import { ApiError, apiRequest } from "./ApiRequest";
 
 export enum DailyLogType {
     BEST_MINER = "BEST_MINER",
@@ -13,12 +13,14 @@ export enum DailyLogType {
 interface OwnProps {
     date: string;
     type: DailyLogType;
-    onData: (dailyLogs: Array<{
-        id: string,
-        label: string,
-        value: number,
-        color: string
-    }>) => void;
+    onData: (
+        dailyLogs: Array<{
+            id: string;
+            label: string;
+            value: number;
+            color: string;
+        }>
+    ) => void;
     onEmptyResult: () => void;
     onError: (e: ApiError) => void;
 }
@@ -28,9 +30,9 @@ interface DispatchProps {
 }
 
 interface MinerLog {
-    date: string,
-    count: number,
-    value: string
+    date: string;
+    count: number;
+    value: string;
 }
 
 type Props = OwnProps & DispatchProps;
@@ -45,65 +47,110 @@ class RequestDailyLogsInternal extends React.Component<Props> {
     }
 
     public render() {
-        return (null);
+        return null;
     }
 
     private getColor = (index: number) => {
-        const colorSet = ["hsl(238, 100%, 73%)", "hsl(237, 100%, 78%)", "hsl(238, 100%, 85%)", "hsl(238, 100%, 89%)", "hsl(238, 100%, 94%)"];
+        const colorSet = [
+            "hsl(238, 100%, 73%)",
+            "hsl(237, 100%, 78%)",
+            "hsl(238, 100%, 85%)",
+            "hsl(238, 100%, 89%)",
+            "hsl(238, 100%, 94%)"
+        ];
         return colorSet[index];
-    }
+    };
 
     private queryDailyLog = async () => {
         const { onData, dispatch, type, date, onEmptyResult } = this.props;
 
         if (type === DailyLogType.BEST_MINER) {
-            const bestMineres = await apiRequest({ path: `log/bestMiners?date=${date}`, dispatch, showProgressBar: true }) as MinerLog[];
+            const bestMineres = (await apiRequest({
+                path: `log/bestMiners?date=${date}`,
+                dispatch,
+                showProgressBar: true
+            })) as MinerLog[];
             if (bestMineres.length === 0) {
                 onEmptyResult();
                 return;
             }
-            const total = _.sumBy(bestMineres, (miner) => miner.count);
+            const total = _.sumBy(bestMineres, miner => miner.count);
             const results = _.map(bestMineres, (bestMiner, index) => {
                 return {
-                    id: `${bestMiner.value.slice(0, 7)}... (${(bestMiner.count / total * 100).toFixed(1)}%)`,
+                    id: `${bestMiner.value.slice(0, 7)}... (${(
+                        (bestMiner.count / total) *
+                        100
+                    ).toFixed(1)}%)`,
                     label: `${bestMiner.value.slice(0, 7)}...`,
                     value: bestMiner.count,
                     color: this.getColor(index)
-                }
-            })
+                };
+            });
             onData(results);
         } else if (type === DailyLogType.PARCEL_ACTION) {
-            const paymentParcelCount = await apiRequest({ path: `log/paymentCount?date=${date}`, dispatch, showProgressBar: true }) as number;
-            const changeShardStateScount = await apiRequest({ path: `log/changeShardStateCount?date=${date}`, dispatch, showProgressBar: true }) as number;
-            const setRegularKeyCount = await apiRequest({ path: `log/setRegularKeyCount?date=${date}`, dispatch, showProgressBar: true }) as number;
-            const total = paymentParcelCount + changeShardStateScount + setRegularKeyCount;
+            const paymentParcelCount = (await apiRequest({
+                path: `log/paymentCount?date=${date}`,
+                dispatch,
+                showProgressBar: true
+            })) as number;
+            const changeShardStateScount = (await apiRequest({
+                path: `log/changeShardStateCount?date=${date}`,
+                dispatch,
+                showProgressBar: true
+            })) as number;
+            const setRegularKeyCount = (await apiRequest({
+                path: `log/setRegularKeyCount?date=${date}`,
+                dispatch,
+                showProgressBar: true
+            })) as number;
+            const total =
+                paymentParcelCount +
+                changeShardStateScount +
+                setRegularKeyCount;
             if (total === 0) {
                 onEmptyResult();
                 return;
             }
             onData([
                 {
-                    id: `Payment (${(paymentParcelCount / total * 100).toFixed(1)}%)`,
+                    id: `Payment (${(
+                        (paymentParcelCount / total) *
+                        100
+                    ).toFixed(1)}%)`,
                     label: "Payment",
                     value: paymentParcelCount,
                     color: "hsl(36, 86%, 62%)"
                 },
                 {
-                    id: `ChangeShardState (${(changeShardStateScount / total * 100).toFixed(1)}%)`,
+                    id: `ChangeShardState (${(
+                        (changeShardStateScount / total) *
+                        100
+                    ).toFixed(1)}%)`,
                     label: "ChangeShardState",
                     value: changeShardStateScount,
                     color: "hsl(90, 100%, 42%)"
                 },
                 {
-                    id: `SetRegularKey (${(setRegularKeyCount / total * 100).toFixed(1)}%)`,
+                    id: `SetRegularKey (${(
+                        (setRegularKeyCount / total) *
+                        100
+                    ).toFixed(1)}%)`,
                     label: "SetRegularKey",
                     value: setRegularKeyCount,
                     color: "hsl(11, 100%, 71%)"
                 }
-            ])
+            ]);
         } else if (type === DailyLogType.TX_TYPE) {
-            const transferCount = await apiRequest({ path: `log/transferTxCount?date=${date}`, dispatch, showProgressBar: true }) as number;
-            const mintCount = await apiRequest({ path: `log/mintTxCount?date=${date}`, dispatch, showProgressBar: true }) as number;
+            const transferCount = (await apiRequest({
+                path: `log/transferTxCount?date=${date}`,
+                dispatch,
+                showProgressBar: true
+            })) as number;
+            const mintCount = (await apiRequest({
+                path: `log/mintTxCount?date=${date}`,
+                dispatch,
+                showProgressBar: true
+            })) as number;
             const total = mintCount + transferCount;
             if (total === 0) {
                 onEmptyResult();
@@ -111,24 +158,29 @@ class RequestDailyLogsInternal extends React.Component<Props> {
             }
             onData([
                 {
-                    id: `Transfer (${(transferCount / total * 100).toFixed(1)}%)`,
+                    id: `Transfer (${((transferCount / total) * 100).toFixed(
+                        1
+                    )}%)`,
                     label: "Transfer",
                     value: transferCount,
                     color: "hsl(263, 83%, 68%)"
                 },
                 {
-                    id: `Mint (${(mintCount / total * 100).toFixed(1)}%)`,
+                    id: `Mint (${((mintCount / total) * 100).toFixed(1)}%)`,
                     label: "Mint",
                     value: mintCount,
                     color: "hsl(169, 100%, 43%)"
                 }
-            ])
+            ]);
         }
-    }
+    };
 }
 
-const RequestDailyLogs = connect(null, ((dispatch: Dispatch) => {
-    return { dispatch }
-}))(RequestDailyLogsInternal);
+const RequestDailyLogs = connect(
+    null,
+    (dispatch: Dispatch) => {
+        return { dispatch };
+    }
+)(RequestDailyLogsInternal);
 
 export default RequestDailyLogs;

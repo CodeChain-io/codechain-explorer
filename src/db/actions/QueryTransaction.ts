@@ -1,9 +1,17 @@
-import * as _ from "lodash";
 import { H256 } from "codechain-sdk/lib/core/classes";
-import { TransactionDoc, AssetTransferTransactionDoc, AssetMintTransactionDoc, AssetBundleDoc, Type, AssetDoc, AssetSchemeDoc } from "../DocType";
-import { BaseAction } from "./BaseAction";
-import { Client, SearchResponse, CountResponse } from "elasticsearch";
+import { Client, CountResponse, SearchResponse } from "elasticsearch";
+import * as _ from "lodash";
+import {
+    AssetBundleDoc,
+    AssetDoc,
+    AssetMintTransactionDoc,
+    AssetSchemeDoc,
+    AssetTransferTransactionDoc,
+    TransactionDoc,
+    Type
+} from "../DocType";
 import { ElasticSearchAgent } from "../ElasticSearchAgent";
+import { BaseAction } from "./BaseAction";
 
 export class QueryTransaction implements BaseAction {
     public agent: ElasticSearchAgent;
@@ -11,11 +19,11 @@ export class QueryTransaction implements BaseAction {
 
     public async getTransaction(hash: H256): Promise<TransactionDoc | null> {
         const response = await this.searchTransaction({
-            "query": {
-                "bool": {
-                    "must": [
-                        { "term": { "data.hash": hash.value } },
-                        { "term": { "isRetracted": false } }
+            query: {
+                bool: {
+                    must: [
+                        { term: { "data.hash": hash.value } },
+                        { term: { isRetracted: false } }
                     ]
                 }
             }
@@ -26,20 +34,21 @@ export class QueryTransaction implements BaseAction {
         return response.hits.hits[0]._source;
     }
 
-    public async getTransactions(page: number = 1, itemsPerPage: number = 25): Promise<TransactionDoc[]> {
+    public async getTransactions(
+        page: number = 1,
+        itemsPerPage: number = 25
+    ): Promise<TransactionDoc[]> {
         const response = await this.searchTransaction({
-            "sort": [
-                { "data.blockNumber": { "order": "desc" } },
-                { "data.parcelIndex": { "order": "desc" } },
-                { "data.transactionIndex": { "order": "desc" } }
+            sort: [
+                { "data.blockNumber": { order: "desc" } },
+                { "data.parcelIndex": { order: "desc" } },
+                { "data.transactionIndex": { order: "desc" } }
             ],
-            "from": (page - 1) * itemsPerPage,
-            "size": itemsPerPage,
-            "query": {
-                "bool": {
-                    "must": [
-                        { "term": { "isRetracted": false } }
-                    ]
+            from: (page - 1) * itemsPerPage,
+            size: itemsPerPage,
+            query: {
+                bool: {
+                    must: [{ term: { isRetracted: false } }]
                 }
             }
         });
@@ -48,32 +57,51 @@ export class QueryTransaction implements BaseAction {
 
     public async getTotalTransactionCount(): Promise<number> {
         const count = await this.countTransaction({
-            "query": {
-                "term": { "isRetracted": false }
+            query: {
+                term: { isRetracted: false }
             }
         });
         return count.count;
     }
 
-    public async getTransactionsByAssetType(assetType: H256, page: number = 1, itemsPerPage: number = 6): Promise<TransactionDoc[]> {
+    public async getTransactionsByAssetType(
+        assetType: H256,
+        page: number = 1,
+        itemsPerPage: number = 6
+    ): Promise<TransactionDoc[]> {
         const response = await this.searchTransaction({
-            "sort": [
-                { "data.blockNumber": { "order": "desc" } },
-                { "data.parcelIndex": { "order": "desc" } },
-                { "data.transactionIndex": { "order": "desc" } }
+            sort: [
+                { "data.blockNumber": { order: "desc" } },
+                { "data.parcelIndex": { order: "desc" } },
+                { "data.transactionIndex": { order: "desc" } }
             ],
-            "from": (page - 1) * itemsPerPage,
-            "size": itemsPerPage,
-            "query": {
-                "bool": {
-                    "must": [
-                        { "term": { "isRetracted": false } },
+            from: (page - 1) * itemsPerPage,
+            size: itemsPerPage,
+            query: {
+                bool: {
+                    must: [
+                        { term: { isRetracted: false } },
                         {
-                            "bool": {
-                                "should": [
-                                    { "term": { "data.inputs.assetType": assetType.value } },
-                                    { "term": { "data.burns.assetType": assetType.value } },
-                                    { "term": { "data.output.assetType": assetType.value } }
+                            bool: {
+                                should: [
+                                    {
+                                        term: {
+                                            "data.inputs.assetType":
+                                                assetType.value
+                                        }
+                                    },
+                                    {
+                                        term: {
+                                            "data.burns.assetType":
+                                                assetType.value
+                                        }
+                                    },
+                                    {
+                                        term: {
+                                            "data.output.assetType":
+                                                assetType.value
+                                        }
+                                    }
                                 ]
                             }
                         }
@@ -84,18 +112,35 @@ export class QueryTransaction implements BaseAction {
         return _.map(response.hits.hits, hit => hit._source);
     }
 
-    public async getTotalTransactionCountByAssetType(assetType: H256): Promise<number> {
+    public async getTotalTransactionCountByAssetType(
+        assetType: H256
+    ): Promise<number> {
         const count = await this.countTransaction({
-            "query": {
-                "bool": {
-                    "must": [
-                        { "term": { "isRetracted": false } },
+            query: {
+                bool: {
+                    must: [
+                        { term: { isRetracted: false } },
                         {
-                            "bool": {
-                                "should": [
-                                    { "term": { "data.inputs.assetType": assetType.value } },
-                                    { "term": { "data.burns.assetType": assetType.value } },
-                                    { "term": { "data.output.assetType": assetType.value } }
+                            bool: {
+                                should: [
+                                    {
+                                        term: {
+                                            "data.inputs.assetType":
+                                                assetType.value
+                                        }
+                                    },
+                                    {
+                                        term: {
+                                            "data.burns.assetType":
+                                                assetType.value
+                                        }
+                                    },
+                                    {
+                                        term: {
+                                            "data.output.assetType":
+                                                assetType.value
+                                        }
+                                    }
                                 ]
                             }
                         }
@@ -106,26 +151,30 @@ export class QueryTransaction implements BaseAction {
         return count.count;
     }
 
-    public async getTransactionsByAssetTransferAddress(address: string, page: number = 1, itemsPerPage: number = 6): Promise<TransactionDoc[]> {
+    public async getTransactionsByAssetTransferAddress(
+        address: string,
+        page: number = 1,
+        itemsPerPage: number = 6
+    ): Promise<TransactionDoc[]> {
         const response = await this.searchTransaction({
-            "sort": [
-                { "data.blockNumber": { "order": "desc" } },
-                { "data.parcelIndex": { "order": "desc" } },
-                { "data.transactionIndex": { "order": "desc" } }
+            sort: [
+                { "data.blockNumber": { order: "desc" } },
+                { "data.parcelIndex": { order: "desc" } },
+                { "data.transactionIndex": { order: "desc" } }
             ],
-            "from": (page - 1) * itemsPerPage,
-            "size": itemsPerPage,
-            "query": {
-                "bool": {
-                    "must": [
-                        { "term": { "isRetracted": false } },
+            from: (page - 1) * itemsPerPage,
+            size: itemsPerPage,
+            query: {
+                bool: {
+                    must: [
+                        { term: { isRetracted: false } },
                         {
-                            "bool": {
-                                "should": [
-                                    { "term": { "data.outputs.owner": address } },
-                                    { "term": { "data.inputs.owner": address } },
-                                    { "term": { "data.burns.owner": address } },
-                                    { "term": { "data.output.owner": address } }
+                            bool: {
+                                should: [
+                                    { term: { "data.outputs.owner": address } },
+                                    { term: { "data.inputs.owner": address } },
+                                    { term: { "data.burns.owner": address } },
+                                    { term: { "data.output.owner": address } }
                                 ]
                             }
                         }
@@ -136,19 +185,21 @@ export class QueryTransaction implements BaseAction {
         return _.map(response.hits.hits, hit => hit._source);
     }
 
-    public async getTotalTxCountByAssetTransferAddress(address: string): Promise<number> {
+    public async getTotalTxCountByAssetTransferAddress(
+        address: string
+    ): Promise<number> {
         const count = await this.countTransaction({
-            "query": {
-                "bool": {
-                    "must": [
-                        { "term": { "isRetracted": false } },
+            query: {
+                bool: {
+                    must: [
+                        { term: { isRetracted: false } },
                         {
-                            "bool": {
-                                "should": [
-                                    { "term": { "data.outputs.owner": address } },
-                                    { "term": { "data.inputs.owner": address } },
-                                    { "term": { "data.burns.owner": address } },
-                                    { "term": { "data.output.owner": address } }
+                            bool: {
+                                should: [
+                                    { term: { "data.outputs.owner": address } },
+                                    { term: { "data.inputs.owner": address } },
+                                    { term: { "data.burns.owner": address } },
+                                    { term: { "data.output.owner": address } }
                                 ]
                             }
                         }
@@ -159,20 +210,24 @@ export class QueryTransaction implements BaseAction {
         return count.count;
     }
 
-    public async getAssetBundlesByPlatformAddress(address: string, page: number = 1, itemsPerPage: number = 6): Promise<AssetBundleDoc[]> {
+    public async getAssetBundlesByPlatformAddress(
+        address: string,
+        page: number = 1,
+        itemsPerPage: number = 6
+    ): Promise<AssetBundleDoc[]> {
         const response = await this.searchTransaction({
-            "sort": [
-                { "data.blockNumber": { "order": "desc" } },
-                { "data.parcelIndex": { "order": "desc" } },
-                { "data.transactionIndex": { "order": "desc" } }
+            sort: [
+                { "data.blockNumber": { order: "desc" } },
+                { "data.parcelIndex": { order: "desc" } },
+                { "data.transactionIndex": { order: "desc" } }
             ],
-            "from": (page - 1) * itemsPerPage,
-            "size": itemsPerPage,
-            "query": {
-                "bool": {
-                    "must": [
-                        { "term": { "isRetracted": false } },
-                        { "term": { "data.registrar": address } }
+            from: (page - 1) * itemsPerPage,
+            size: itemsPerPage,
+            query: {
+                bool: {
+                    must: [
+                        { term: { isRetracted: false } },
+                        { term: { "data.registrar": address } }
                     ]
                 }
             }
@@ -180,7 +235,7 @@ export class QueryTransaction implements BaseAction {
         if (response.hits.total === 0) {
             return [];
         }
-        return _.map(response.hits.hits, (hit) => {
+        return _.map(response.hits.hits, hit => {
             const tx = hit._source;
             const assetScheme = Type.getAssetSchemeDoc(tx);
             return {
@@ -193,17 +248,19 @@ export class QueryTransaction implements BaseAction {
                     transactionHash: tx.data.hash,
                     transactionOutputIndex: 0
                 }
-            }
+            };
         });
     }
 
-    public async getTotalAssetBundleCountByPlatformAddress(address: string): Promise<number> {
+    public async getTotalAssetBundleCountByPlatformAddress(
+        address: string
+    ): Promise<number> {
         const count = await this.countTransaction({
-            "query": {
-                "bool": {
-                    "must": [
-                        { "term": { "isRetracted": false } },
-                        { "term": { "data.registrar": address } }
+            query: {
+                bool: {
+                    must: [
+                        { term: { isRetracted: false } },
+                        { term: { "data.registrar": address } }
                     ]
                 }
             }
@@ -211,24 +268,34 @@ export class QueryTransaction implements BaseAction {
         return count.count;
     }
 
-    public async getAssetsByAssetTransferAddress(address: string, lastBlockNumber: number = Number.MAX_VALUE, lastParcelIndex: number = Number.MAX_VALUE, lastTransactionIndex: number = Number.MAX_VALUE, itemsPerPage: number = 6): Promise<AssetDoc[]> {
+    public async getAssetsByAssetTransferAddress(
+        address: string,
+        lastBlockNumber: number = Number.MAX_VALUE,
+        lastParcelIndex: number = Number.MAX_VALUE,
+        lastTransactionIndex: number = Number.MAX_VALUE,
+        itemsPerPage: number = 6
+    ): Promise<AssetDoc[]> {
         const response = await this.searchTransaction({
-            "sort": [
-                { "data.blockNumber": { "order": "desc" } },
-                { "data.parcelIndex": { "order": "desc" } },
-                { "data.transactionIndex": { "order": "desc" } }
+            sort: [
+                { "data.blockNumber": { order: "desc" } },
+                { "data.parcelIndex": { order: "desc" } },
+                { "data.transactionIndex": { order: "desc" } }
             ],
-            "search_after": [lastBlockNumber, lastParcelIndex, lastTransactionIndex],
-            "size": itemsPerPage,
-            "query": {
-                "bool": {
-                    "must": [
-                        { "term": { "isRetracted": false } },
+            search_after: [
+                lastBlockNumber,
+                lastParcelIndex,
+                lastTransactionIndex
+            ],
+            size: itemsPerPage,
+            query: {
+                bool: {
+                    must: [
+                        { term: { isRetracted: false } },
                         {
-                            "bool": {
-                                "should": [
-                                    { "term": { "data.outputs.owner": address } },
-                                    { "term": { "data.output.owner": address } }
+                            bool: {
+                                should: [
+                                    { term: { "data.outputs.owner": address } },
+                                    { term: { "data.output.owner": address } }
                                 ]
                             }
                         }
@@ -242,7 +309,9 @@ export class QueryTransaction implements BaseAction {
         return _.flatMap(response.hits.hits, hit => {
             const transaction = hit._source;
             if (Type.isAssetTransferTransactionDoc(transaction)) {
-                return _.chain((transaction as AssetTransferTransactionDoc).data.outputs)
+                return _.chain(
+                    (transaction as AssetTransferTransactionDoc).data.outputs
+                )
                     .filter(output => output.owner === address)
                     .map((output, index) => {
                         return {
@@ -252,40 +321,44 @@ export class QueryTransaction implements BaseAction {
                             amount: output.amount,
                             transactionHash: transaction.data.hash,
                             transactionOutputIndex: index
-                        }
-                    }).value();
+                        };
+                    })
+                    .value();
             } else if (Type.isAssetMintTransactionDoc(transaction)) {
                 const retAssetDoc: AssetDoc[] = [];
-                const transactionDoc = (transaction as AssetMintTransactionDoc);
+                const transactionDoc = transaction as AssetMintTransactionDoc;
                 if (transactionDoc.data.output.owner === address) {
                     retAssetDoc.push({
                         assetType: transactionDoc.data.output.assetType,
-                        lockScriptHash: transactionDoc.data.output.lockScriptHash,
+                        lockScriptHash:
+                            transactionDoc.data.output.lockScriptHash,
                         parameters: transactionDoc.data.output.parameters,
                         amount: transactionDoc.data.output.amount || 0,
                         transactionHash: transactionDoc.data.hash,
                         transactionOutputIndex: 0
-                    })
+                    });
                 }
                 return retAssetDoc;
             }
-            throw new Error("Unexpected transaction")
+            throw new Error("Unexpected transaction");
         });
     }
 
-    public async getAssetScheme(assetType: H256): Promise<AssetSchemeDoc | null> {
+    public async getAssetScheme(
+        assetType: H256
+    ): Promise<AssetSchemeDoc | null> {
         const response = await this.searchTransaction({
-            "sort": [
-                { "data.blockNumber": { "order": "desc" } },
-                { "data.parcelIndex": { "order": "desc" } },
-                { "data.transactionIndex": { "order": "desc" } }
+            sort: [
+                { "data.blockNumber": { order: "desc" } },
+                { "data.parcelIndex": { order: "desc" } },
+                { "data.transactionIndex": { order: "desc" } }
             ],
-            "size": 1,
-            "query": {
-                "bool": {
-                    "must": [
-                        { "term": { "isRetracted": false } },
-                        { "term": { "data.output.assetType": assetType.value } }
+            size: 1,
+            query: {
+                bool: {
+                    must: [
+                        { term: { isRetracted: false } },
+                        { term: { "data.output.assetType": assetType.value } }
                     ]
                 }
             }
@@ -296,19 +369,25 @@ export class QueryTransaction implements BaseAction {
         return Type.getAssetSchemeDoc(response.hits.hits[0]._source);
     }
 
-    public async getAssetBundlesByAssetName(name: string): Promise<AssetBundleDoc[]> {
+    public async getAssetBundlesByAssetName(
+        name: string
+    ): Promise<AssetBundleDoc[]> {
         const response = await this.searchTransaction({
-            "sort": [
-                { "data.blockNumber": { "order": "desc" } },
-                { "data.parcelIndex": { "order": "desc" } },
-                { "data.transactionIndex": { "order": "desc" } }
+            sort: [
+                { "data.blockNumber": { order: "desc" } },
+                { "data.parcelIndex": { order: "desc" } },
+                { "data.transactionIndex": { order: "desc" } }
             ],
-            "size": 10,
-            "query": {
-                "bool": {
-                    "must": [
-                        { "term": { "isRetracted": false } },
-                        { "match": { "data.assetName": { "query": name, "fuzziness": 3 } } }
+            size: 10,
+            query: {
+                bool: {
+                    must: [
+                        { term: { isRetracted: false } },
+                        {
+                            match: {
+                                "data.assetName": { query: name, fuzziness: 3 }
+                            }
+                        }
                     ]
                 }
             }
@@ -316,7 +395,7 @@ export class QueryTransaction implements BaseAction {
         if (response.hits.total === 0) {
             return [];
         }
-        return _.map(response.hits.hits, (hit) => {
+        return _.map(response.hits.hits, hit => {
             const tx = hit._source;
             const assetScheme = Type.getAssetSchemeDoc(tx);
             return {
@@ -329,7 +408,7 @@ export class QueryTransaction implements BaseAction {
                     transactionHash: tx.data.hash,
                     transactionOutputIndex: 0
                 }
-            }
+            };
         });
     }
 
@@ -342,10 +421,12 @@ export class QueryTransaction implements BaseAction {
     }
 
     public async retractTransaction(transactionHash: H256): Promise<void> {
-        return this.updateTransaction(transactionHash, { "isRetracted": true });
+        return this.updateTransaction(transactionHash, { isRetracted: true });
     }
 
-    public async indexTransaction(transactionDoc: TransactionDoc): Promise<any> {
+    public async indexTransaction(
+        transactionDoc: TransactionDoc
+    ): Promise<any> {
         return this.client.index({
             index: "transaction",
             type: "_doc",
