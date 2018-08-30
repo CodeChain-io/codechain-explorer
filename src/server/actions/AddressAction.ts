@@ -9,6 +9,10 @@ import { AssetDoc, TransactionDoc } from "../../db/DocType";
 import { ServerContext } from "../ServerContext";
 
 function handle(context: ServerContext, router: Router) {
+    const STANDARD_SCRIPT_LIST = [
+        "f42a65ea518ba236c08b261c34af0521fa3cd1aa505e1c18980919cb8945f8f3",
+        "41a872156efc1dbd45a85b49896e9349a4e8f3fb1b8f3ed38d5e13ef675bcd5a"
+    ];
     router.get("/addr-platform-account/:address", async (req, res, next) => {
         const { address } = req.params;
         try {
@@ -174,8 +178,10 @@ function handle(context: ServerContext, router: Router) {
         }
         try {
             if (
-                lockscriptHashAndParams.lockScriptHash.value !==
-                "f42a65ea518ba236c08b261c34af0521fa3cd1aa505e1c18980919cb8945f8f3"
+                !_.includes(
+                    STANDARD_SCRIPT_LIST,
+                    lockscriptHashAndParams.lockScriptHash.value
+                )
             ) {
                 // FIXME : Currently only standard scripts are available
                 res.send([]);
@@ -255,8 +261,10 @@ function handle(context: ServerContext, router: Router) {
         }
         try {
             if (
-                lockscriptHashAndParams.lockScriptHash.value !==
-                "f42a65ea518ba236c08b261c34af0521fa3cd1aa505e1c18980919cb8945f8f3"
+                !_.includes(
+                    STANDARD_SCRIPT_LIST,
+                    lockscriptHashAndParams.lockScriptHash.value
+                )
             ) {
                 // FIXME : Currently only standard scripts are available
                 res.send([]);
@@ -288,8 +296,10 @@ function handle(context: ServerContext, router: Router) {
             }
             try {
                 if (
-                    lockscriptHashAndParams.lockScriptHash.value !==
-                    "f42a65ea518ba236c08b261c34af0521fa3cd1aa505e1c18980919cb8945f8f3"
+                    !_.includes(
+                        STANDARD_SCRIPT_LIST,
+                        lockscriptHashAndParams.lockScriptHash.value
+                    )
                 ) {
                     // FIXME : Currently only standard scripts are available
                     res.send([]);

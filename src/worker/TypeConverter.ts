@@ -33,8 +33,10 @@ import {
 import { CodeChainAgent } from "./CodeChainAgent";
 
 class TypeConverter {
-    private P2PKH_HASH =
-        "f42a65ea518ba236c08b261c34af0521fa3cd1aa505e1c18980919cb8945f8f3";
+    private STANDARD_SCRIPT_LIST = [
+        "f42a65ea518ba236c08b261c34af0521fa3cd1aa505e1c18980919cb8945f8f3",
+        "41a872156efc1dbd45a85b49896e9349a4e8f3fb1b8f3ed38d5e13ef675bcd5a"
+    ];
     private codechainAgent: CodeChainAgent;
 
     public constructor(codechainAgent: CodeChainAgent) {
@@ -72,7 +74,12 @@ class TypeConverter {
 
         let owner = "";
         if (transaction instanceof AssetMintTransaction) {
-            if (transaction.output.lockScriptHash.value === this.P2PKH_HASH) {
+            if (
+                _.includes(
+                    this.STANDARD_SCRIPT_LIST,
+                    transaction.output.lockScriptHash.value
+                )
+            ) {
                 owner = AssetTransferAddress.fromPublicKeyHash(
                     new H256(
                         Buffer.from(transaction.output.parameters[0]).toString(
@@ -83,8 +90,11 @@ class TypeConverter {
             }
         } else if (transaction instanceof AssetTransferTransaction) {
             if (
-                transaction.outputs[assetTransferInput.prevOut.index]
-                    .lockScriptHash.value === this.P2PKH_HASH
+                _.includes(
+                    this.STANDARD_SCRIPT_LIST,
+                    transaction.outputs[assetTransferInput.prevOut.index]
+                        .lockScriptHash.value
+                )
             ) {
                 owner = AssetTransferAddress.fromPublicKeyHash(
                     new H256(
@@ -122,16 +132,18 @@ class TypeConverter {
         );
         return {
             lockScriptHash: assetTransferOutput.lockScriptHash.value,
-            owner:
-                assetTransferOutput.lockScriptHash.value === this.P2PKH_HASH
-                    ? AssetTransferAddress.fromPublicKeyHash(
-                          new H256(
-                              Buffer.from(
-                                  assetTransferOutput.parameters[0]
-                              ).toString("hex")
-                          )
-                      ).value
-                    : "",
+            owner: _.includes(
+                this.STANDARD_SCRIPT_LIST,
+                assetTransferOutput.lockScriptHash.value
+            )
+                ? AssetTransferAddress.fromPublicKeyHash(
+                      new H256(
+                          Buffer.from(
+                              assetTransferOutput.parameters[0]
+                          ).toString("hex")
+                      )
+                  ).value
+                : "",
             parameters: _.map(assetTransferOutput.parameters, p =>
                 Buffer.from(p)
             ),
@@ -165,17 +177,18 @@ class TypeConverter {
                         ),
                         amount: transaction.output.amount,
                         assetType: transaction.getAssetSchemeAddress().value,
-                        owner:
-                            transaction.output.lockScriptHash.value ===
-                            this.P2PKH_HASH
-                                ? AssetTransferAddress.fromPublicKeyHash(
-                                      new H256(
-                                          Buffer.from(
-                                              transaction.output.parameters[0]
-                                          ).toString("hex")
-                                      )
-                                  ).value
-                                : ""
+                        owner: _.includes(
+                            this.STANDARD_SCRIPT_LIST,
+                            transaction.output.lockScriptHash.value
+                        )
+                            ? AssetTransferAddress.fromPublicKeyHash(
+                                  new H256(
+                                      Buffer.from(
+                                          transaction.output.parameters[0]
+                                      ).toString("hex")
+                                  )
+                              ).value
+                            : ""
                     },
                     networkId: transaction.networkId,
                     metadata: transaction.metadata,

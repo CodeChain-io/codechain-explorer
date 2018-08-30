@@ -66,6 +66,16 @@ class TransactionDetailsInternal extends React.Component<Props, State> {
         );
     }
 
+    private getLockScriptName = (lockScriptHash: string) => {
+        switch (lockScriptHash) {
+            case "f42a65ea518ba236c08b261c34af0521fa3cd1aa505e1c18980919cb8945f8f3":
+                return "P2PKH(0xf42a65ea518ba236c08b261c34af0521fa3cd1aa505e1c18980919cb8945f8f3)";
+            case "41a872156efc1dbd45a85b49896e9349a4e8f3fb1b8f3ed38d5e13ef675bcd5a":
+                return "P2PKHBurn(0x41a872156efc1dbd45a85b49896e9349a4e8f3fb1b8f3ed38d5e13ef675bcd5a)";
+        }
+        return `0x${lockScriptHash}`;
+    };
+
     private getTransactionInfoByType = (
         transaction: TransactionDoc,
         status: string
@@ -541,15 +551,8 @@ class TransactionDetailsInternal extends React.Component<Props, State> {
                                             <Row>
                                                 <Col md="3">LockScriptHash</Col>
                                                 <Col md="9">
-                                                    {output.lockScriptHash ===
-                                                    "f42a65ea518ba236c08b261c34af0521fa3cd1aa505e1c18980919cb8945f8f3" ? (
-                                                        "P2PKH"
-                                                    ) : (
-                                                        <HexString
-                                                            text={
-                                                                output.lockScriptHash
-                                                            }
-                                                        />
+                                                    {this.getLockScriptName(
+                                                        output.lockScriptHash
                                                     )}
                                                 </Col>
                                             </Row>
@@ -672,17 +675,9 @@ class TransactionDetailsInternal extends React.Component<Props, State> {
                             <Row>
                                 <Col md="3">LockScriptHash</Col>
                                 <Col md="9">
-                                    {transactionDoc.data.output
-                                        .lockScriptHash ===
-                                    "f42a65ea518ba236c08b261c34af0521fa3cd1aa505e1c18980919cb8945f8f3" ? (
-                                        "P2PKH"
-                                    ) : (
-                                        <HexString
-                                            text={
-                                                transactionDoc.data.output
-                                                    .lockScriptHash
-                                            }
-                                        />
+                                    {this.getLockScriptName(
+                                        transactionDoc.data.output
+                                            .lockScriptHash
                                     )}
                                 </Col>
                             </Row>

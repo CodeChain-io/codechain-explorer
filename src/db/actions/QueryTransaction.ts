@@ -86,13 +86,13 @@ export class QueryTransaction implements BaseAction {
                                 should: [
                                     {
                                         term: {
-                                            "data.inputs.assetType":
+                                            "data.inputs.prevOut.assetType":
                                                 assetType.value
                                         }
                                     },
                                     {
                                         term: {
-                                            "data.burns.assetType":
+                                            "data.burns.prevOut.assetType":
                                                 assetType.value
                                         }
                                     },
@@ -125,13 +125,13 @@ export class QueryTransaction implements BaseAction {
                                 should: [
                                     {
                                         term: {
-                                            "data.inputs.assetType":
+                                            "data.inputs.prevOut.assetType":
                                                 assetType.value
                                         }
                                     },
                                     {
                                         term: {
-                                            "data.burns.assetType":
+                                            "data.burns.prevOut.assetType":
                                                 assetType.value
                                         }
                                     },
@@ -172,8 +172,16 @@ export class QueryTransaction implements BaseAction {
                             bool: {
                                 should: [
                                     { term: { "data.outputs.owner": address } },
-                                    { term: { "data.inputs.owner": address } },
-                                    { term: { "data.burns.owner": address } },
+                                    {
+                                        term: {
+                                            "data.inputs.prevOut.owner": address
+                                        }
+                                    },
+                                    {
+                                        term: {
+                                            "data.burns.prevOut.owner": address
+                                        }
+                                    },
                                     { term: { "data.output.owner": address } }
                                 ]
                             }
@@ -197,8 +205,16 @@ export class QueryTransaction implements BaseAction {
                             bool: {
                                 should: [
                                     { term: { "data.outputs.owner": address } },
-                                    { term: { "data.inputs.owner": address } },
-                                    { term: { "data.burns.owner": address } },
+                                    {
+                                        term: {
+                                            "data.inputs.prevOut.owner": address
+                                        }
+                                    },
+                                    {
+                                        term: {
+                                            "data.burns.prevOut.owner": address
+                                        }
+                                    },
                                     { term: { "data.output.owner": address } }
                                 ]
                             }
