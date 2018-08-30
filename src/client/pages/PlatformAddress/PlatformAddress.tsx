@@ -138,10 +138,7 @@ class Address extends React.Component<Props, State> {
         if (notFound) {
             return (
                 <div>
-                    <Error
-                        content={address}
-                        title="The address does not exist."
-                    />
+                    <Error content={address} title="The address does not exist." />
                 </div>
             );
         }
@@ -169,10 +166,7 @@ class Address extends React.Component<Props, State> {
                                     <div className="d-inline-block hash">
                                         <span>{address}</span>
                                     </div>
-                                    <CopyButton
-                                        className="d-inline-block"
-                                        copyString={address}
-                                    />
+                                    <CopyButton className="d-inline-block" copyString={address} />
                                 </div>
                             </div>
                             <div className="d-inline-block qrcode-container">

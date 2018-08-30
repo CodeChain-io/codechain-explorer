@@ -5,10 +5,7 @@ import { match } from "react-router";
 import { Col, Container, Row } from "reactstrap";
 
 import { AssetBundleDoc, TransactionDoc } from "../../../db/DocType";
-import {
-    RequestAssetTransferAddressTransactions,
-    RequestAssetTransferAddressUTXO
-} from "../../request";
+import { RequestAssetTransferAddressTransactions, RequestAssetTransferAddressUTXO } from "../../request";
 
 import AssetList from "../../components/asset/AssetList/AssetList";
 import AddressDetails from "../../components/assetTransferAddress/AddressDetails/AddressDetails";
@@ -105,10 +102,7 @@ class AssetTransferAddress extends React.Component<Props, State> {
                                     <div className="d-inline-block hash">
                                         <span>{address}</span>
                                     </div>
-                                    <CopyButton
-                                        className="d-inline-block"
-                                        copyString={address}
-                                    />
+                                    <CopyButton className="d-inline-block" copyString={address} />
                                 </div>
                             </div>
                             <div className="d-inline-block qrcode-container">
@@ -124,9 +118,7 @@ class AssetTransferAddress extends React.Component<Props, State> {
                 </Row>
                 <Row className="mt-large">
                     <Col>
-                        <AddressDetails
-                            totalTransactionCount={totalTransactionCount}
-                        />
+                        <AddressDetails totalTransactionCount={totalTransactionCount} />
                     </Col>
                 </Row>
                 <Row>
@@ -135,10 +127,7 @@ class AssetTransferAddress extends React.Component<Props, State> {
                             <RequestAssetTransferAddressUTXO
                                 address={address}
                                 lastTransactionHash={
-                                    utxo.length > 0
-                                        ? utxo[utxo.length - 1].asset
-                                              .transactionHash
-                                        : undefined
+                                    utxo.length > 0 ? utxo[utxo.length - 1].asset.transactionHash : undefined
                                 }
                                 itemsPerPage={this.utxoItemsPerPage}
                                 onUTXO={this.onUTXO}
@@ -204,9 +193,7 @@ class AssetTransferAddress extends React.Component<Props, State> {
             transactions: this.state.transactions.concat(transactions),
             loadTransaction: false
         });
-        if (
-            this.state.transactions.length >= this.state.totalTransactionCount
-        ) {
+        if (this.state.transactions.length >= this.state.totalTransactionCount) {
             this.setState({ noMoreTransaction: true });
         }
     };

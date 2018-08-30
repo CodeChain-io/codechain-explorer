@@ -21,10 +21,7 @@ export class QueryTransaction implements BaseAction {
         const response = await this.searchTransaction({
             query: {
                 bool: {
-                    must: [
-                        { term: { "data.hash": hash.value } },
-                        { term: { isRetracted: false } }
-                    ]
+                    must: [{ term: { "data.hash": hash.value } }, { term: { isRetracted: false } }]
                 }
             }
         });
@@ -34,10 +31,7 @@ export class QueryTransaction implements BaseAction {
         return response.hits.hits[0]._source;
     }
 
-    public async getTransactions(
-        page: number = 1,
-        itemsPerPage: number = 25
-    ): Promise<TransactionDoc[]> {
+    public async getTransactions(page: number = 1, itemsPerPage: number = 25): Promise<TransactionDoc[]> {
         const response = await this.searchTransaction({
             sort: [
                 { "data.blockNumber": { order: "desc" } },
@@ -86,20 +80,17 @@ export class QueryTransaction implements BaseAction {
                                 should: [
                                     {
                                         term: {
-                                            "data.inputs.prevOut.assetType":
-                                                assetType.value
+                                            "data.inputs.prevOut.assetType": assetType.value
                                         }
                                     },
                                     {
                                         term: {
-                                            "data.burns.prevOut.assetType":
-                                                assetType.value
+                                            "data.burns.prevOut.assetType": assetType.value
                                         }
                                     },
                                     {
                                         term: {
-                                            "data.output.assetType":
-                                                assetType.value
+                                            "data.output.assetType": assetType.value
                                         }
                                     }
                                 ]
@@ -112,9 +103,7 @@ export class QueryTransaction implements BaseAction {
         return _.map(response.hits.hits, hit => hit._source);
     }
 
-    public async getTotalTransactionCountByAssetType(
-        assetType: H256
-    ): Promise<number> {
+    public async getTotalTransactionCountByAssetType(assetType: H256): Promise<number> {
         const count = await this.countTransaction({
             query: {
                 bool: {
@@ -125,20 +114,17 @@ export class QueryTransaction implements BaseAction {
                                 should: [
                                     {
                                         term: {
-                                            "data.inputs.prevOut.assetType":
-                                                assetType.value
+                                            "data.inputs.prevOut.assetType": assetType.value
                                         }
                                     },
                                     {
                                         term: {
-                                            "data.burns.prevOut.assetType":
-                                                assetType.value
+                                            "data.burns.prevOut.assetType": assetType.value
                                         }
                                     },
                                     {
                                         term: {
-                                            "data.output.assetType":
-                                                assetType.value
+                                            "data.output.assetType": assetType.value
                                         }
                                     }
                                 ]
@@ -193,9 +179,7 @@ export class QueryTransaction implements BaseAction {
         return _.map(response.hits.hits, hit => hit._source);
     }
 
-    public async getTotalTxCountByAssetTransferAddress(
-        address: string
-    ): Promise<number> {
+    public async getTotalTxCountByAssetTransferAddress(address: string): Promise<number> {
         const count = await this.countTransaction({
             query: {
                 bool: {
@@ -241,10 +225,7 @@ export class QueryTransaction implements BaseAction {
             size: itemsPerPage,
             query: {
                 bool: {
-                    must: [
-                        { term: { isRetracted: false } },
-                        { term: { "data.registrar": address } }
-                    ]
+                    must: [{ term: { isRetracted: false } }, { term: { "data.registrar": address } }]
                 }
             }
         });
@@ -268,16 +249,11 @@ export class QueryTransaction implements BaseAction {
         });
     }
 
-    public async getTotalAssetBundleCountByPlatformAddress(
-        address: string
-    ): Promise<number> {
+    public async getTotalAssetBundleCountByPlatformAddress(address: string): Promise<number> {
         const count = await this.countTransaction({
             query: {
                 bool: {
-                    must: [
-                        { term: { isRetracted: false } },
-                        { term: { "data.registrar": address } }
-                    ]
+                    must: [{ term: { isRetracted: false } }, { term: { "data.registrar": address } }]
                 }
             }
         });
@@ -297,11 +273,7 @@ export class QueryTransaction implements BaseAction {
                 { "data.parcelIndex": { order: "desc" } },
                 { "data.transactionIndex": { order: "desc" } }
             ],
-            search_after: [
-                lastBlockNumber,
-                lastParcelIndex,
-                lastTransactionIndex
-            ],
+            search_after: [lastBlockNumber, lastParcelIndex, lastTransactionIndex],
             size: itemsPerPage,
             query: {
                 bool: {
@@ -325,9 +297,7 @@ export class QueryTransaction implements BaseAction {
         return _.flatMap(response.hits.hits, hit => {
             const transaction = hit._source;
             if (Type.isAssetTransferTransactionDoc(transaction)) {
-                return _.chain(
-                    (transaction as AssetTransferTransactionDoc).data.outputs
-                )
+                return _.chain((transaction as AssetTransferTransactionDoc).data.outputs)
                     .filter(output => output.owner === address)
                     .map((output, index) => {
                         return {
@@ -346,8 +316,7 @@ export class QueryTransaction implements BaseAction {
                 if (transactionDoc.data.output.owner === address) {
                     retAssetDoc.push({
                         assetType: transactionDoc.data.output.assetType,
-                        lockScriptHash:
-                            transactionDoc.data.output.lockScriptHash,
+                        lockScriptHash: transactionDoc.data.output.lockScriptHash,
                         parameters: transactionDoc.data.output.parameters,
                         amount: transactionDoc.data.output.amount || 0,
                         transactionHash: transactionDoc.data.hash,
@@ -360,9 +329,7 @@ export class QueryTransaction implements BaseAction {
         });
     }
 
-    public async getAssetScheme(
-        assetType: H256
-    ): Promise<AssetSchemeDoc | null> {
+    public async getAssetScheme(assetType: H256): Promise<AssetSchemeDoc | null> {
         const response = await this.searchTransaction({
             sort: [
                 { "data.blockNumber": { order: "desc" } },
@@ -372,10 +339,7 @@ export class QueryTransaction implements BaseAction {
             size: 1,
             query: {
                 bool: {
-                    must: [
-                        { term: { isRetracted: false } },
-                        { term: { "data.output.assetType": assetType.value } }
-                    ]
+                    must: [{ term: { isRetracted: false } }, { term: { "data.output.assetType": assetType.value } }]
                 }
             }
         });
@@ -385,9 +349,7 @@ export class QueryTransaction implements BaseAction {
         return Type.getAssetSchemeDoc(response.hits.hits[0]._source);
     }
 
-    public async getAssetBundlesByAssetName(
-        name: string
-    ): Promise<AssetBundleDoc[]> {
+    public async getAssetBundlesByAssetName(name: string): Promise<AssetBundleDoc[]> {
         const response = await this.searchTransaction({
             sort: [
                 { "data.blockNumber": { order: "desc" } },
@@ -440,9 +402,7 @@ export class QueryTransaction implements BaseAction {
         return this.updateTransaction(transactionHash, { isRetracted: true });
     }
 
-    public async indexTransaction(
-        transactionDoc: TransactionDoc
-    ): Promise<any> {
+    public async indexTransaction(transactionDoc: TransactionDoc): Promise<any> {
         return this.client.index({
             index: "transaction",
             type: "_doc",

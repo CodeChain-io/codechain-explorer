@@ -1,8 +1,5 @@
 import { H256 } from "codechain-sdk/lib/core/classes";
-import {
-    AssetTransferAddress,
-    PlatformAddress
-} from "codechain-sdk/lib/key/classes";
+import { AssetTransferAddress, PlatformAddress } from "codechain-sdk/lib/key/classes";
 import { Router } from "express";
 import * as _ from "lodash";
 import { AssetDoc, TransactionDoc } from "../../db/DocType";
@@ -22,12 +19,8 @@ function handle(context: ServerContext, router: Router) {
             return;
         }
         try {
-            const balance = await context.codechainSdk.rpc.chain.getBalance(
-                address
-            );
-            const nonce = await context.codechainSdk.rpc.chain.getNonce(
-                address
-            );
+            const balance = await context.codechainSdk.rpc.chain.getBalance(address);
+            const nonce = await context.codechainSdk.rpc.chain.getNonce(address);
             const account = {
                 balance: balance.value,
                 nonce: nonce.value
@@ -48,37 +41,28 @@ function handle(context: ServerContext, router: Router) {
             return;
         }
         try {
-            const blocks = await context.db.getBlocksByPlatformAddress(
-                address,
-                page,
-                itemsPerPage
-            );
+            const blocks = await context.db.getBlocksByPlatformAddress(address, page, itemsPerPage);
             res.send(blocks);
         } catch (e) {
             next(e);
         }
     });
 
-    router.get(
-        "/addr-platform-blocks/:address/totalCount",
-        async (req, res, next) => {
-            const { address } = req.params;
-            try {
-                PlatformAddress.fromString(address).getAccountId();
-            } catch (e) {
-                res.send(JSON.stringify(0));
-                return;
-            }
-            try {
-                const count = await context.db.getTotalBlockCountByPlatformAddress(
-                    address
-                );
-                res.send(JSON.stringify(count));
-            } catch (e) {
-                next(e);
-            }
+    router.get("/addr-platform-blocks/:address/totalCount", async (req, res, next) => {
+        const { address } = req.params;
+        try {
+            PlatformAddress.fromString(address).getAccountId();
+        } catch (e) {
+            res.send(JSON.stringify(0));
+            return;
         }
-    );
+        try {
+            const count = await context.db.getTotalBlockCountByPlatformAddress(address);
+            res.send(JSON.stringify(count));
+        } catch (e) {
+            next(e);
+        }
+    });
 
     router.get("/addr-platform-parcels/:address", async (req, res, next) => {
         const { address } = req.params;
@@ -90,37 +74,28 @@ function handle(context: ServerContext, router: Router) {
             return;
         }
         try {
-            const parcels = await context.db.getParcelsByPlatformAddress(
-                address,
-                page,
-                itemsPerPage
-            );
+            const parcels = await context.db.getParcelsByPlatformAddress(address, page, itemsPerPage);
             res.send(parcels);
         } catch (e) {
             next(e);
         }
     });
 
-    router.get(
-        "/addr-platform-parcels/:address/totalCount",
-        async (req, res, next) => {
-            const { address } = req.params;
-            try {
-                PlatformAddress.fromString(address).getAccountId();
-            } catch (e) {
-                res.send(JSON.stringify(0));
-                return;
-            }
-            try {
-                const count = await context.db.getTotalParcelCountByPlatformAddress(
-                    address
-                );
-                res.send(JSON.stringify(count));
-            } catch (e) {
-                next(e);
-            }
+    router.get("/addr-platform-parcels/:address/totalCount", async (req, res, next) => {
+        const { address } = req.params;
+        try {
+            PlatformAddress.fromString(address).getAccountId();
+        } catch (e) {
+            res.send(JSON.stringify(0));
+            return;
         }
-    );
+        try {
+            const count = await context.db.getTotalParcelCountByPlatformAddress(address);
+            res.send(JSON.stringify(count));
+        } catch (e) {
+            next(e);
+        }
+    });
 
     router.get("/addr-platform-assets/:address", async (req, res, next) => {
         const { address } = req.params;
@@ -132,57 +107,41 @@ function handle(context: ServerContext, router: Router) {
             return;
         }
         try {
-            const assetBundles = await context.db.getAssetBundlesByPlatformAddress(
-                address,
-                page,
-                itemsPerPage
-            );
+            const assetBundles = await context.db.getAssetBundlesByPlatformAddress(address, page, itemsPerPage);
             res.send(assetBundles);
         } catch (e) {
             next(e);
         }
     });
 
-    router.get(
-        "/addr-platform-assets/:address/totalCount",
-        async (req, res, next) => {
-            const { address } = req.params;
-            try {
-                PlatformAddress.fromString(address).getAccountId();
-            } catch (e) {
-                res.send(JSON.stringify(0));
-                return;
-            }
-            try {
-                const count = await context.db.getTotalAssetBundleCountByPlatformAddress(
-                    address
-                );
-                res.send(JSON.stringify(count));
-            } catch (e) {
-                next(e);
-            }
+    router.get("/addr-platform-assets/:address/totalCount", async (req, res, next) => {
+        const { address } = req.params;
+        try {
+            PlatformAddress.fromString(address).getAccountId();
+        } catch (e) {
+            res.send(JSON.stringify(0));
+            return;
         }
-    );
+        try {
+            const count = await context.db.getTotalAssetBundleCountByPlatformAddress(address);
+            res.send(JSON.stringify(count));
+        } catch (e) {
+            next(e);
+        }
+    });
 
     router.get("/addr-asset-utxo/:address", async (req, res, next) => {
         const { address } = req.params;
         const { lastTransactionHash, itemsPerPage } = req.query;
         let lockscriptHashAndParams;
         try {
-            lockscriptHashAndParams = AssetTransferAddress.fromString(
-                address
-            ).getLockScriptHashAndParameters();
+            lockscriptHashAndParams = AssetTransferAddress.fromString(address).getLockScriptHashAndParameters();
         } catch (e) {
             res.send([]);
             return;
         }
         try {
-            if (
-                !_.includes(
-                    STANDARD_SCRIPT_LIST,
-                    lockscriptHashAndParams.lockScriptHash.value
-                )
-            ) {
+            if (!_.includes(STANDARD_SCRIPT_LIST, lockscriptHashAndParams.lockScriptHash.value)) {
                 // FIXME : Currently only standard scripts are available
                 res.send([]);
                 return;
@@ -192,9 +151,7 @@ function handle(context: ServerContext, router: Router) {
             while (utxoList.length < itemsPerPage) {
                 let assets: AssetDoc[];
                 if (lastSelectedTransactionHash) {
-                    const transaction = await context.db.getTransaction(
-                        new H256(lastSelectedTransactionHash)
-                    );
+                    const transaction = await context.db.getTransaction(new H256(lastSelectedTransactionHash));
                     assets = await context.db.getAssetsByAssetTransferAddress(
                         address,
                         transaction.data.blockNumber,
@@ -229,17 +186,12 @@ function handle(context: ServerContext, router: Router) {
                 const validUTXOSet = _.compact(utxoResult);
                 utxoList = utxoList.concat(validUTXOSet);
             }
-            const utxoResponsePromise = _.map(
-                utxoList.slice(0, itemsPerPage),
-                async utxo => {
-                    return {
-                        asset: utxo,
-                        assetScheme: await context.db.getAssetScheme(
-                            new H256(utxo.assetType)
-                        )
-                    };
-                }
-            );
+            const utxoResponsePromise = _.map(utxoList.slice(0, itemsPerPage), async utxo => {
+                return {
+                    asset: utxo,
+                    assetScheme: await context.db.getAssetScheme(new H256(utxo.assetType))
+                };
+            });
             const utxoPresponse = await Promise.all(utxoResponsePromise);
             res.send(utxoPresponse);
         } catch (e) {
@@ -252,20 +204,13 @@ function handle(context: ServerContext, router: Router) {
         const { page, itemsPerPage } = req.query;
         let lockscriptHashAndParams;
         try {
-            lockscriptHashAndParams = AssetTransferAddress.fromString(
-                address
-            ).getLockScriptHashAndParameters();
+            lockscriptHashAndParams = AssetTransferAddress.fromString(address).getLockScriptHashAndParameters();
         } catch (e) {
             res.send([]);
             return;
         }
         try {
-            if (
-                !_.includes(
-                    STANDARD_SCRIPT_LIST,
-                    lockscriptHashAndParams.lockScriptHash.value
-                )
-            ) {
+            if (!_.includes(STANDARD_SCRIPT_LIST, lockscriptHashAndParams.lockScriptHash.value)) {
                 // FIXME : Currently only standard scripts are available
                 res.send([]);
                 return;
@@ -281,39 +226,27 @@ function handle(context: ServerContext, router: Router) {
         }
     });
 
-    router.get(
-        "/addr-asset-txs/:address/totalCount",
-        async (req, res, next) => {
-            const { address } = req.params;
-            let lockscriptHashAndParams;
-            try {
-                lockscriptHashAndParams = AssetTransferAddress.fromString(
-                    address
-                ).getLockScriptHashAndParameters();
-            } catch (e) {
+    router.get("/addr-asset-txs/:address/totalCount", async (req, res, next) => {
+        const { address } = req.params;
+        let lockscriptHashAndParams;
+        try {
+            lockscriptHashAndParams = AssetTransferAddress.fromString(address).getLockScriptHashAndParameters();
+        } catch (e) {
+            res.send([]);
+            return;
+        }
+        try {
+            if (!_.includes(STANDARD_SCRIPT_LIST, lockscriptHashAndParams.lockScriptHash.value)) {
+                // FIXME : Currently only standard scripts are available
                 res.send([]);
                 return;
             }
-            try {
-                if (
-                    !_.includes(
-                        STANDARD_SCRIPT_LIST,
-                        lockscriptHashAndParams.lockScriptHash.value
-                    )
-                ) {
-                    // FIXME : Currently only standard scripts are available
-                    res.send([]);
-                    return;
-                }
-                const count = await context.db.getTotalTxCountByAssetTransferAddress(
-                    address
-                );
-                res.send(JSON.stringify(count));
-            } catch (e) {
-                next(e);
-            }
+            const count = await context.db.getTotalTxCountByAssetTransferAddress(address);
+            res.send(JSON.stringify(count));
+        } catch (e) {
+            next(e);
         }
-    );
+    });
 }
 
 export const AddressAction = {

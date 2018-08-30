@@ -1,10 +1,6 @@
 import * as React from "react";
 
-import {
-    AssetMintTransaction,
-    H256,
-    Transaction
-} from "codechain-sdk/lib/core/classes";
+import { AssetMintTransaction, H256, Transaction } from "codechain-sdk/lib/core/classes";
 import { Link } from "react-router-dom";
 import { Container } from "reactstrap";
 import TransactionEditor from "../components/editor/TransactionEditor";
@@ -35,8 +31,7 @@ export default class SendSignedParcel extends React.Component<{}, State> {
             nonce: 0,
             fee: 10,
             networkId: 17,
-            secret:
-                "ede1d4ccb4ec9a8bbbae9a13db3f4a7b56ea04189be86ac3a6a439d9a0a1addd",
+            secret: "ede1d4ccb4ec9a8bbbae9a13db3f4a7b56ea04189be86ac3a6a439d9a0a1addd",
             status: "input",
             transaction: new AssetMintTransaction({
                 nonce: 1,
@@ -44,9 +39,7 @@ export default class SendSignedParcel extends React.Component<{}, State> {
                 output: {
                     amount: 10,
                     parameters: [],
-                    lockScriptHash: new H256(
-                        "563d207a7b1d91f9b4440536bc4818e90263ada0707b41d119e667ed35524b68"
-                    )
+                    lockScriptHash: new H256("563d207a7b1d91f9b4440536bc4818e90263ada0707b41d119e667ed35524b68")
                 },
                 worldId: 1,
                 shardId: 0,
@@ -57,35 +50,20 @@ export default class SendSignedParcel extends React.Component<{}, State> {
     }
 
     public render() {
-        const {
-            transactionType,
-            nonce,
-            fee,
-            networkId,
-            secret,
-            status,
-            sentHash,
-            errorMessage
-        } = this.state;
+        const { transactionType, nonce, fee, networkId, secret, status, sentHash, errorMessage } = this.state;
 
         if (status === "sent" && sentHash) {
             return (
                 <div>
                     <Container>
-                        <Link to={`/parcel/${sentHash.value}`}>
-                            {sentHash.value}
-                        </Link>
+                        <Link to={`/parcel/${sentHash.value}`}>{sentHash.value}</Link>
                     </Container>
                 </div>
             );
         }
 
         if (status === "error") {
-            return (
-                <div>
-                    SendSignedParcel Error: {JSON.stringify(errorMessage)}
-                </div>
-            );
+            return <div>SendSignedParcel Error: {JSON.stringify(errorMessage)}</div>;
         }
 
         /*
@@ -113,10 +91,7 @@ export default class SendSignedParcel extends React.Component<{}, State> {
                     <input onChange={this.onChangeFee} value={fee} />
                     <br />
                     <span>Network Id</span>
-                    <input
-                        onChange={this.onChangeNetworkId}
-                        value={networkId}
-                    />
+                    <input onChange={this.onChangeNetworkId} value={networkId} />
                     <br />
                     <span>Secret</span>
                     <input onChange={this.onChangeSecret} value={secret} />
@@ -124,9 +99,7 @@ export default class SendSignedParcel extends React.Component<{}, State> {
                     <hr />
                     <select onChange={this.onChangeTransactionType}>
                         <option value="assetMint">Asset Mint</option>
-                        <option value="assetTransfer">
-                            (Not implemented)Asset Transfer
-                        </option>
+                        <option value="assetTransfer">(Not implemented)Asset Transfer</option>
                     </select>
                     <TransactionEditor
                         type={transactionType}
@@ -140,9 +113,7 @@ export default class SendSignedParcel extends React.Component<{}, State> {
         );
     }
 
-    private onChangeTransactionType = (
-        event: React.ChangeEvent<HTMLSelectElement>
-    ) => {
+    private onChangeTransactionType = (event: React.ChangeEvent<HTMLSelectElement>) => {
         this.setState({
             ...this.state,
             transactionType: event.target.value as TransactionType
@@ -170,9 +141,7 @@ export default class SendSignedParcel extends React.Component<{}, State> {
         });
     };
 
-    private onChangeNetworkId = (
-        event: React.ChangeEvent<HTMLInputElement>
-    ) => {
+    private onChangeNetworkId = (event: React.ChangeEvent<HTMLInputElement>) => {
         this.setState({
             ...this.state,
             networkId: Number.parseInt(event.target.value)

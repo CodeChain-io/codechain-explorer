@@ -20,14 +20,7 @@ type Props = OwnProps & DispatchProps;
 
 class RequestPlatformAddressAssetsInternal extends React.Component<Props> {
     public componentWillMount() {
-        const {
-            address,
-            onAssetBundles,
-            onError,
-            dispatch,
-            page,
-            itemsPerPage
-        } = this.props;
+        const { address, onAssetBundles, onError, dispatch, page, itemsPerPage } = this.props;
         apiRequest({
             path: `addr-platform-assets/${address}?page=${page}&itemsPerPage=${itemsPerPage}`,
             dispatch,

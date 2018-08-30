@@ -30,10 +30,7 @@ class BlockDetails extends React.Component<OwnProps> {
                             <Row>
                                 <Col md="3">Parent Block Hash</Col>
                                 <Col md="9">
-                                    <HexString
-                                        link={`/block/0x${block.parentHash}`}
-                                        text={block.parentHash}
-                                    />
+                                    <HexString link={`/block/0x${block.parentHash}`} text={block.parentHash} />
                                 </Col>
                             </Row>
                             <hr />
@@ -61,9 +58,7 @@ class BlockDetails extends React.Component<OwnProps> {
                             <Row>
                                 <Col md="3">Author</Col>
                                 <Col md="9">
-                                    <Link to={`/addr-platform/${block.author}`}>
-                                        {block.author}
-                                    </Link>
+                                    <Link to={`/addr-platform/${block.author}`}>{block.author}</Link>
                                 </Col>
                             </Row>
                             <hr />
@@ -78,9 +73,7 @@ class BlockDetails extends React.Component<OwnProps> {
                                 <Col md="3">Seal</Col>
                                 <Col md="9">
                                     <div className="text-area">
-                                        {_.map(block.seal, s =>
-                                            Buffer.from(s).toString("hex")
-                                        ).join(" ")}
+                                        {_.map(block.seal, s => Buffer.from(s).toString("hex")).join(" ")}
                                     </div>
                                 </Col>
                             </Row>
@@ -88,17 +81,13 @@ class BlockDetails extends React.Component<OwnProps> {
                             <Row>
                                 <Col md="3">Extra Data</Col>
                                 <Col md="9">
-                                    <div className="text-area">
-                                        {Buffer.from(block.extraData)}
-                                    </div>
+                                    <div className="text-area">{Buffer.from(block.extraData)}</div>
                                 </Col>
                             </Row>
                             <hr />
                             <Row>
                                 <Col md="3"># of Parcels</Col>
-                                <Col md="9">
-                                    {block.parcels.length.toLocaleString()}
-                                </Col>
+                                <Col md="9">{block.parcels.length.toLocaleString()}</Col>
                             </Row>
                             <hr />
                             <Row>
@@ -107,15 +96,9 @@ class BlockDetails extends React.Component<OwnProps> {
                                     {_.reduce(
                                         block.parcels,
                                         (memo, parcel) => {
-                                            if (
-                                                Type.isChangeShardStateDoc(
-                                                    parcel.action
-                                                )
-                                            ) {
+                                            if (Type.isChangeShardStateDoc(parcel.action)) {
                                                 return (
-                                                    (parcel.action as ChangeShardStateDoc)
-                                                        .transactions.length +
-                                                    memo
+                                                    (parcel.action as ChangeShardStateDoc).transactions.length + memo
                                                 );
                                             } else {
                                                 return memo;

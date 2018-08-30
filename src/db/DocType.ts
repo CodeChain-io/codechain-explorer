@@ -33,11 +33,7 @@ export interface ParcelDoc {
     isRetracted: boolean;
 }
 
-export type ActionDoc =
-    | ChangeShardStateDoc
-    | PaymentDoc
-    | SetRegularKeyDoc
-    | CreateShardDoc;
+export type ActionDoc = ChangeShardStateDoc | PaymentDoc | SetRegularKeyDoc | CreateShardDoc;
 
 export interface ChangeShardStateDoc {
     action: string;
@@ -68,9 +64,7 @@ export interface CreateShardDoc {
     errorType?: string;
 }
 
-export type TransactionDoc =
-    | AssetMintTransactionDoc
-    | AssetTransferTransactionDoc;
+export type TransactionDoc = AssetMintTransactionDoc | AssetTransferTransactionDoc;
 
 export interface AssetSchemeDoc {
     metadata: string;
@@ -203,9 +197,7 @@ function isAssetMintTransactionDoc(transaction: TransactionDoc) {
     return transaction.type === "assetMint";
 }
 
-function getAssetSchemeDoc(
-    transaction: AssetMintTransactionDoc
-): AssetSchemeDoc {
+function getAssetSchemeDoc(transaction: AssetMintTransactionDoc): AssetSchemeDoc {
     return {
         metadata: transaction.data.metadata,
         registrar: transaction.data.registrar,

@@ -5,11 +5,7 @@ import { Col, Row } from "reactstrap";
 const { ResponsiveLine } = require("@nivo/line");
 const { ResponsivePie } = require("@nivo/pie");
 
-import {
-    RequestBlockNumber,
-    RequestDailyLogs,
-    RequestWeeklyLogs
-} from "../../../request";
+import { RequestBlockNumber, RequestDailyLogs, RequestWeeklyLogs } from "../../../request";
 import { DailyLogType } from "../../../request/RequestDailyLogs";
 import { WeeklyLogType } from "../../../request/RequestWeeklyLogs";
 import * as emptyImage from "./img/empty.png";
@@ -74,17 +70,9 @@ class Summary extends React.Component<{}, State> {
         const lastWeeklyLog = _.last(weeklyLogs);
         return (
             <div className="summary">
-                <RequestBlockNumber
-                    repeat={10000}
-                    onBlockNumber={this.onBlockNumber}
-                    onError={this.onError}
-                />
+                <RequestBlockNumber repeat={10000} onBlockNumber={this.onBlockNumber} onError={this.onError} />
                 {!isWeeklyLogRequested ? (
-                    <RequestWeeklyLogs
-                        type={type}
-                        onData={this.onWeeklyLogData}
-                        onError={this.onError}
-                    />
+                    <RequestWeeklyLogs type={type} onData={this.onWeeklyLogData} onError={this.onError} />
                 ) : null}
                 {!isDailyLogRequested ? (
                     <RequestDailyLogs
@@ -100,10 +88,7 @@ class Summary extends React.Component<{}, State> {
                         <div className="chart-container">
                             <div className="chart">
                                 <div className="header-part">
-                                    <h2 className="title">
-                                        Weekly {this.getWeeklyLogTitle(type)}{" "}
-                                        log
-                                    </h2>
+                                    <h2 className="title">Weekly {this.getWeeklyLogTitle(type)} log</h2>
                                     <p className="week">
                                         {before7days} ~ {today} (UTC+0000)
                                     </p>
@@ -112,28 +97,16 @@ class Summary extends React.Component<{}, State> {
                                         defaultValue={type}
                                         onChange={this.onWeeklyLogTypeChanged}
                                     >
-                                        <option
-                                            value={WeeklyLogType.BLOCK_COUNT}
-                                        >
-                                            Block
-                                        </option>
-                                        <option
-                                            value={WeeklyLogType.PARCEL_COUNT}
-                                        >
-                                            Parcel
-                                        </option>
-                                        <option value={WeeklyLogType.TX_COUNT}>
-                                            Tx
-                                        </option>
+                                        <option value={WeeklyLogType.BLOCK_COUNT}>Block</option>
+                                        <option value={WeeklyLogType.PARCEL_COUNT}>Parcel</option>
+                                        <option value={WeeklyLogType.TX_COUNT}>Tx</option>
                                     </select>
                                 </div>
                                 <div className="chart-item">
                                     <ResponsiveLine
                                         data={[
                                             {
-                                                id: this.getWeeklyLogTitle(
-                                                    type
-                                                ),
+                                                id: this.getWeeklyLogTitle(type),
                                                 color: "hsl(237, 49%, 45%)",
                                                 data: weeklyLogs
                                             }
@@ -176,15 +149,10 @@ class Summary extends React.Component<{}, State> {
                                     Weekly total{" "}
                                     {_.reduce(
                                         weeklyLogs,
-                                        (memo, log) =>
-                                            parseInt(log.y, 10) + memo,
+                                        (memo, log) => parseInt(log.y, 10) + memo,
                                         0
                                     ).toLocaleString()}{" "}
-                                    blocks (Total{" "}
-                                    {bestBlockNumber
-                                        ? bestBlockNumber.toLocaleString()
-                                        : 0}{" "}
-                                    blocks)
+                                    blocks (Total {bestBlockNumber ? bestBlockNumber.toLocaleString() : 0} blocks)
                                 </div>
                             </div>
                         </div>
@@ -193,42 +161,22 @@ class Summary extends React.Component<{}, State> {
                         <div className="chart-container">
                             <div className="chart">
                                 <div className="header-part">
-                                    <h2 className="title">
-                                        Daily{" "}
-                                        {this.getDailyLogTitle(dailyLogType)}{" "}
-                                        log
-                                    </h2>
-                                    <p className="week">
-                                        {selectedDate} (UTC+0000)
-                                    </p>
-                                    <span className="subtitle">
-                                        {this.getDailyLogSubTitle(dailyLogType)}
-                                    </span>
+                                    <h2 className="title">Daily {this.getDailyLogTitle(dailyLogType)} log</h2>
+                                    <p className="week">{selectedDate} (UTC+0000)</p>
+                                    <span className="subtitle">{this.getDailyLogSubTitle(dailyLogType)}</span>
                                     <span className="subtitle-amount">
-                                        {lastWeeklyLog
-                                            ? parseInt(
-                                                  lastWeeklyLog.y,
-                                                  10
-                                              ).toLocaleString()
-                                            : 0}
+                                        {lastWeeklyLog ? parseInt(lastWeeklyLog.y, 10).toLocaleString() : 0}
                                     </span>
                                     <hr />
-                                    <span className="subname">
-                                        {this.getDailyLogSubName(dailyLogType)}
-                                    </span>
+                                    <span className="subname">{this.getDailyLogSubName(dailyLogType)}</span>
                                 </div>
                                 <div className="chart-item">
                                     {isEmptyForDailyLog ? (
                                         <div className="empty-container align-items-center justify-content-center">
-                                            <img
-                                                className="empty-icon"
-                                                src={emptyImage}
-                                            />
+                                            <img className="empty-icon" src={emptyImage} />
                                             <div>
                                                 <h3>Empty!</h3>
-                                                <span>
-                                                    There is no data to display.
-                                                </span>
+                                                <span>There is no data to display.</span>
                                             </div>
                                         </div>
                                     ) : (
@@ -252,9 +200,7 @@ class Summary extends React.Component<{}, State> {
                                             radialLabelsTextColor="#333333"
                                             radialLabelsLinkOffset={0}
                                             radialLabelsLinkDiagonalLength={16}
-                                            radialLabelsLinkHorizontalLength={
-                                                24
-                                            }
+                                            radialLabelsLinkHorizontalLength={24}
                                             radialLabelsLinkStrokeWidth={1}
                                             radialLabelsLinkColor="inherit"
                                             slicesLabelsSkipAngle={10}

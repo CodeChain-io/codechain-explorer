@@ -10,12 +10,7 @@ import { Error } from "../../components/error/Error/Error";
 import ParcelDetails from "../../components/parcel/ParcelDetails/ParcelDetails";
 import { RequestParcel, RequestPendingParcel } from "../../request";
 
-import {
-    ChangeShardStateDoc,
-    ParcelDoc,
-    PendingParcelDoc,
-    Type
-} from "../../../db/DocType";
+import { ChangeShardStateDoc, ParcelDoc, PendingParcelDoc, Type } from "../../../db/DocType";
 import TransactionList from "../../components/transaction/TransactionList/TransactionList";
 import CopyButton from "../../components/util/CopyButton/CopyButton";
 import HexString from "../../components/util/HexString/HexString";
@@ -71,11 +66,7 @@ class Parcel extends React.Component<Props, State> {
                 params: { hash }
             }
         } = this.props;
-        const {
-            parcelResult,
-            notExistedInBlock,
-            notExistedInPendingParcel
-        } = this.state;
+        const { parcelResult, notExistedInBlock, notExistedInPendingParcel } = this.state;
         if (!parcelResult) {
             if (!notExistedInBlock) {
                 return (
@@ -98,10 +89,7 @@ class Parcel extends React.Component<Props, State> {
             } else {
                 return (
                     <div>
-                        <Error
-                            content={hash}
-                            title="The parcel does not exist."
-                        />
+                        <Error content={hash} title="The parcel does not exist." />
                     </div>
                 );
             }
@@ -111,14 +99,10 @@ class Parcel extends React.Component<Props, State> {
                 <Row>
                     <Col md="8" xl="7">
                         <div className="d-flex title-container">
-                            <h1 className="d-inline-block align-self-center mr-auto">
-                                Parcel
-                            </h1>
+                            <h1 className="d-inline-block align-self-center mr-auto">Parcel</h1>
                             {parcelResult.status === "confirmed" ? (
                                 <span className="timestamp align-self-end">
-                                    {moment
-                                        .unix(parcelResult.parcel.timestamp)
-                                        .format("YYYY-MM-DD HH:mm:ssZ")}
+                                    {moment.unix(parcelResult.parcel.timestamp).format("YYYY-MM-DD HH:mm:ssZ")}
                                 </span>
                             ) : null}
                         </div>
@@ -129,26 +113,12 @@ class Parcel extends React.Component<Props, State> {
                         <div className="d-inline-block hash">
                             <HexString text={parcelResult.parcel.hash} />
                         </div>
-                        <CopyButton
-                            className="d-inline-block"
-                            copyString={`0x${parcelResult.parcel.hash}`}
-                        />
+                        <CopyButton className="d-inline-block" copyString={`0x${parcelResult.parcel.hash}`} />
                     </Col>
                 </Row>
                 <Row className="mt-large">
-                    <Col
-                        lg={
-                            Type.isChangeShardStateDoc(
-                                parcelResult.parcel.action
-                            )
-                                ? "9"
-                                : "12"
-                        }
-                    >
-                        <ParcelDetails
-                            parcel={parcelResult.parcel}
-                            status={parcelResult.status}
-                        />
+                    <Col lg={Type.isChangeShardStateDoc(parcelResult.parcel.action) ? "9" : "12"}>
+                        <ParcelDetails parcel={parcelResult.parcel} status={parcelResult.status} />
                     </Col>
                     {Type.isChangeShardStateDoc(parcelResult.parcel.action) ? (
                         <Col lg="3">
@@ -160,19 +130,12 @@ class Parcel extends React.Component<Props, State> {
                                         className="square asset-transfer-transaction-text-color"
                                         icon={faSquare}
                                     />
-                                    <span className="mr-auto item-name">
-                                        Transfer
-                                    </span>
+                                    <span className="mr-auto item-name">Transfer</span>
                                     <span>
                                         {
                                             _.filter(
-                                                (parcelResult.parcel
-                                                    .action as ChangeShardStateDoc)
-                                                    .transactions,
-                                                tx =>
-                                                    Type.isAssetTransferTransactionDoc(
-                                                        tx
-                                                    )
+                                                (parcelResult.parcel.action as ChangeShardStateDoc).transactions,
+                                                tx => Type.isAssetTransferTransactionDoc(tx)
                                             ).length
                                         }
                                     </span>
@@ -183,19 +146,12 @@ class Parcel extends React.Component<Props, State> {
                                         className="square asset-mint-transaction-text-color"
                                         icon={faSquare}
                                     />
-                                    <span className="mr-auto item-name">
-                                        Mint
-                                    </span>
+                                    <span className="mr-auto item-name">Mint</span>
                                     <span>
                                         {
                                             _.filter(
-                                                (parcelResult.parcel
-                                                    .action as ChangeShardStateDoc)
-                                                    .transactions,
-                                                tx =>
-                                                    Type.isAssetMintTransactionDoc(
-                                                        tx
-                                                    )
+                                                (parcelResult.parcel.action as ChangeShardStateDoc).transactions,
+                                                tx => Type.isAssetMintTransactionDoc(tx)
                                             ).length
                                         }
                                     </span>
@@ -205,9 +161,7 @@ class Parcel extends React.Component<Props, State> {
                     ) : null}
                 </Row>
                 <Row>
-                    <Col lg="9">
-                        {this.showTransactionList(parcelResult.parcel)}
-                    </Col>
+                    <Col lg="9">{this.showTransactionList(parcelResult.parcel)}</Col>
                 </Row>
             </Container>
         );
@@ -218,13 +172,8 @@ class Parcel extends React.Component<Props, State> {
             return [
                 <div key="parcel-transaction" className="mt-large">
                     <TransactionList
-                        transactions={
-                            (parcel.action as ChangeShardStateDoc).transactions
-                        }
-                        totalCount={
-                            (parcel.action as ChangeShardStateDoc).transactions
-                                .length
-                        }
+                        transactions={(parcel.action as ChangeShardStateDoc).transactions}
+                        totalCount={(parcel.action as ChangeShardStateDoc).transactions.length}
                     />
                 </div>
             ];

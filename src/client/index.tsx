@@ -35,27 +35,15 @@ ReactDOM.render(
                     <div id="content">
                         <Switch>
                             <Route exact={true} path="/" component={Home} />
-                            <Route
-                                path="/send_signed_parcel"
-                                component={SendSignedParcel}
-                            />
+                            <Route path="/send_signed_parcel" component={SendSignedParcel} />
                             <Route path="/status" component={Status} />
                             <Route path="/block/:id" component={Block} />
                             <Route path="/parcel/:hash" component={Parcel} />
                             <Route path="/asset/:assetType" component={Asset} />
                             <Route path="/tx/:hash" component={Transaction} />
-                            <Route
-                                path="/addr-platform/:address"
-                                component={PlatformAddress}
-                            />
-                            <Route
-                                path="/addr-asset/:address"
-                                component={AssetTransferAddress}
-                            />
-                            <Route
-                                path="/parcels-pending"
-                                component={PendingParcels}
-                            />
+                            <Route path="/addr-platform/:address" component={PlatformAddress} />
+                            <Route path="/addr-asset/:address" component={AssetTransferAddress} />
+                            <Route path="/parcels-pending" component={PendingParcels} />
                             <Route path="/parcels" component={Parcels} />
                             <Route path="/txs" component={Transactions} />
                             <Route path="/blocks" component={Blocks} />

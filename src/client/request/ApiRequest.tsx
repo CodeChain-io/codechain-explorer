@@ -13,30 +13,16 @@ export interface ApiError {
     message: string;
 }
 
-export const apiRequest = ({
-    path,
-    body,
-    dispatch,
-    progressBarTarget,
-    showProgressBar
-}: ApiRequestData) => {
-    const host = process.env.REACT_APP_SERVER_HOST
-        ? process.env.REACT_APP_SERVER_HOST
-        : "http://localhost:8081";
+export const apiRequest = ({ path, body, dispatch, progressBarTarget, showProgressBar }: ApiRequestData) => {
+    const host = process.env.REACT_APP_SERVER_HOST ? process.env.REACT_APP_SERVER_HOST : "http://localhost:8081";
     return new Promise((resolve, reject) => {
         if (showProgressBar) {
-            dispatch(
-                showLoading(progressBarTarget ? progressBarTarget : undefined)
-            );
+            dispatch(showLoading(progressBarTarget ? progressBarTarget : undefined));
         }
 
         const timeout = setTimeout(() => {
             if (showProgressBar) {
-                dispatch(
-                    hideLoading(
-                        progressBarTarget ? progressBarTarget : undefined
-                    )
-                );
+                dispatch(hideLoading(progressBarTarget ? progressBarTarget : undefined));
             }
             reject(new Error("Request timed out"));
         }, 10000);
@@ -52,11 +38,7 @@ export const apiRequest = ({
             .then(async res => {
                 clearTimeout(timeout);
                 if (dispatch) {
-                    dispatch(
-                        hideLoading(
-                            progressBarTarget ? progressBarTarget : undefined
-                        )
-                    );
+                    dispatch(hideLoading(progressBarTarget ? progressBarTarget : undefined));
                 }
                 if (res.status < 300) {
                     resolve(await res.json());
@@ -69,11 +51,7 @@ export const apiRequest = ({
             .catch(err => {
                 clearTimeout(timeout);
                 if (showProgressBar) {
-                    dispatch(
-                        hideLoading(
-                            progressBarTarget ? progressBarTarget : undefined
-                        )
-                    );
+                    dispatch(hideLoading(progressBarTarget ? progressBarTarget : undefined));
                 }
                 reject(err);
             });

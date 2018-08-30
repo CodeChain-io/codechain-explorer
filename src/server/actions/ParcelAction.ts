@@ -14,17 +14,8 @@ function handle(context: ServerContext, router: Router) {
     });
 
     router.get("/parcels/pending", async (req, res, next) => {
-        const {
-            page,
-            itemsPerPage,
-            actionFilters,
-            signerFiter,
-            sorting,
-            orderBy
-        } = req.query;
-        const parsedActionFilters = actionFilters
-            ? actionFilters.split(",")
-            : [];
+        const { page, itemsPerPage, actionFilters, signerFiter, sorting, orderBy } = req.query;
+        const parsedActionFilters = actionFilters ? actionFilters.split(",") : [];
         try {
             const pendingParcels = await context.db.getCurrentPendingParcels(
                 page,
@@ -42,14 +33,9 @@ function handle(context: ServerContext, router: Router) {
 
     router.get("/parcels/pending/totalCount", async (req, res, next) => {
         const { actionFilters, signerFiter } = req.query;
-        const parsedActionFilters = actionFilters
-            ? actionFilters.split(",")
-            : [];
+        const parsedActionFilters = actionFilters ? actionFilters.split(",") : [];
         try {
-            const count = await context.db.getTotalPendingParcelCount(
-                parsedActionFilters,
-                signerFiter
-            );
+            const count = await context.db.getTotalPendingParcelCount(parsedActionFilters, signerFiter);
             res.send(JSON.stringify(count));
         } catch (e) {
             next(e);
@@ -63,12 +49,8 @@ function handle(context: ServerContext, router: Router) {
                 res.send(JSON.stringify(null));
                 return;
             }
-            const pendingParcel = await context.db.getPendingParcel(
-                new H256(hash)
-            );
-            pendingParcel
-                ? res.send(pendingParcel)
-                : res.send(JSON.stringify(null));
+            const pendingParcel = await context.db.getPendingParcel(new H256(hash));
+            pendingParcel ? res.send(pendingParcel) : res.send(JSON.stringify(null));
         } catch (e) {
             next(e);
         }

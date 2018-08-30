@@ -1,9 +1,4 @@
-import {
-    faAngleDoubleLeft,
-    faAngleDoubleRight,
-    faAngleLeft,
-    faAngleRight
-} from "@fortawesome/free-solid-svg-icons";
+import { faAngleDoubleLeft, faAngleDoubleRight, faAngleLeft, faAngleRight } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import * as _ from "lodash";
 import * as moment from "moment";
@@ -11,19 +6,11 @@ import * as React from "react";
 import { Redirect } from "react-router";
 import { Container, Table } from "reactstrap";
 
-import {
-    AssetMintTransactionDoc,
-    AssetTransferTransactionDoc,
-    TransactionDoc,
-    Type
-} from "../../../db/DocType";
+import { AssetMintTransactionDoc, AssetTransferTransactionDoc, TransactionDoc, Type } from "../../../db/DocType";
 import HexString from "../../components/util/HexString/HexString";
 import { ImageLoader } from "../../components/util/ImageLoader/ImageLoader";
 import { TypeBadge } from "../../components/util/TypeBadge/TypeBadge";
-import {
-    RequestTotalTransactionCount,
-    RequestTransactions
-} from "../../request";
+import { RequestTotalTransactionCount, RequestTransactions } from "../../request";
 import "./Transactions.scss";
 
 interface State {
@@ -76,12 +63,8 @@ class Transactions extends React.Component<Props, State> {
             location: { search }
         } = this.props;
         const params = new URLSearchParams(search);
-        const currentPage = params.get("page")
-            ? parseInt(params.get("page") as string, 10)
-            : 1;
-        const itemsPerPage = params.get("itemsPerPage")
-            ? parseInt(params.get("itemsPerPage") as string, 10)
-            : 25;
+        const currentPage = params.get("page") ? parseInt(params.get("page") as string, 10) : 1;
+        const itemsPerPage = params.get("itemsPerPage") ? parseInt(params.get("itemsPerPage") as string, 10) : 25;
         const {
             transactions,
             totalTransactionCount,
@@ -95,9 +78,7 @@ class Transactions extends React.Component<Props, State> {
             return (
                 <Redirect
                     push={true}
-                    to={`/txs?page=${redirectPage ||
-                        currentPage}&itemsPerPage=${redirectItemsPerPage ||
-                        itemsPerPage}`}
+                    to={`/txs?page=${redirectPage || currentPage}&itemsPerPage=${redirectItemsPerPage || itemsPerPage}`}
                 />
             );
         }
@@ -109,9 +90,7 @@ class Transactions extends React.Component<Props, State> {
                 />
             );
         }
-        const maxPage =
-            Math.floor(Math.max(0, totalTransactionCount - 1) / itemsPerPage) +
-            1;
+        const maxPage = Math.floor(Math.max(0, totalTransactionCount - 1) / itemsPerPage) + 1;
         return (
             <Container className="transactions">
                 {!isTransactionRequested ? (
@@ -128,10 +107,7 @@ class Transactions extends React.Component<Props, State> {
                         <div>
                             <div className="float-right">
                                 <span>Show </span>
-                                <select
-                                    onChange={this.handleOptionChange}
-                                    defaultValue={itemsPerPage.toString()}
-                                >
+                                <select onChange={this.handleOptionChange} defaultValue={itemsPerPage.toString()}>
                                     <option value="25">25</option>
                                     <option value="50">50</option>
                                     <option value="75">75</option>
@@ -154,48 +130,19 @@ class Transactions extends React.Component<Props, State> {
                                 <tbody>
                                     {_.map(transactions, transaction => {
                                         return (
-                                            <tr
-                                                key={`transaction-${
-                                                    transaction.data.hash
-                                                }`}
-                                            >
+                                            <tr key={`transaction-${transaction.data.hash}`}>
                                                 <td>
-                                                    <TypeBadge
-                                                        transaction={
-                                                            transaction
-                                                        }
-                                                    />
+                                                    <TypeBadge transaction={transaction} />
                                                 </td>
                                                 <td scope="row">
                                                     <HexString
-                                                        link={`/tx/0x${
-                                                            transaction.data
-                                                                .hash
-                                                        }`}
-                                                        text={
-                                                            transaction.data
-                                                                .hash
-                                                        }
+                                                        link={`/tx/0x${transaction.data.hash}`}
+                                                        text={transaction.data.hash}
                                                     />
                                                 </td>
-                                                <td>
-                                                    {this.getAssetInfo(
-                                                        transaction
-                                                    )}
-                                                </td>
-                                                <td>
-                                                    {this.getTotalAssetCount(
-                                                        transaction
-                                                    ).toLocaleString()}
-                                                </td>
-                                                <td>
-                                                    {moment
-                                                        .unix(
-                                                            transaction.data
-                                                                .timestamp
-                                                        )
-                                                        .fromNow()}
-                                                </td>
+                                                <td>{this.getAssetInfo(transaction)}</td>
+                                                <td>{this.getTotalAssetCount(transaction).toLocaleString()}</td>
+                                                <td>{moment.unix(transaction.data.timestamp).fromNow()}</td>
                                             </tr>
                                         );
                                     })}
@@ -209,39 +156,24 @@ class Transactions extends React.Component<Props, State> {
                                         <button
                                             disabled={currentPage === 1}
                                             className={`btn btn-primary page-btn ${
-                                                currentPage === 1
-                                                    ? "disabled"
-                                                    : ""
+                                                currentPage === 1 ? "disabled" : ""
                                             }`}
                                             type="button"
-                                            onClick={_.partial(
-                                                this.moveFirst,
-                                                currentPage
-                                            )}
+                                            onClick={_.partial(this.moveFirst, currentPage)}
                                         >
-                                            <FontAwesomeIcon
-                                                icon={faAngleDoubleLeft}
-                                            />
+                                            <FontAwesomeIcon icon={faAngleDoubleLeft} />
                                         </button>
                                     </li>
                                     <li className="list-inline-item">
                                         <button
                                             disabled={currentPage === 1}
                                             className={`btn btn-primary page-btn ${
-                                                currentPage === 1
-                                                    ? "disabled"
-                                                    : ""
+                                                currentPage === 1 ? "disabled" : ""
                                             }`}
                                             type="button"
-                                            onClick={_.partial(
-                                                this.moveBefore,
-                                                currentPage
-                                            )}
+                                            onClick={_.partial(this.moveBefore, currentPage)}
                                         >
-                                            <FontAwesomeIcon
-                                                icon={faAngleLeft}
-                                            />{" "}
-                                            Prev
+                                            <FontAwesomeIcon icon={faAngleLeft} /> Prev
                                         </button>
                                     </li>
                                     <li className="list-inline-item">
@@ -253,41 +185,24 @@ class Transactions extends React.Component<Props, State> {
                                         <button
                                             disabled={currentPage === maxPage}
                                             className={`btn btn-primary page-btn ${
-                                                currentPage === maxPage
-                                                    ? "disabled"
-                                                    : ""
+                                                currentPage === maxPage ? "disabled" : ""
                                             }`}
                                             type="button"
-                                            onClick={_.partial(
-                                                this.moveNext,
-                                                currentPage,
-                                                maxPage
-                                            )}
+                                            onClick={_.partial(this.moveNext, currentPage, maxPage)}
                                         >
-                                            Next{" "}
-                                            <FontAwesomeIcon
-                                                icon={faAngleRight}
-                                            />
+                                            Next <FontAwesomeIcon icon={faAngleRight} />
                                         </button>
                                     </li>
                                     <li className="list-inline-item">
                                         <button
                                             disabled={currentPage === maxPage}
                                             className={`btn btn-primary page-btn ${
-                                                currentPage === maxPage
-                                                    ? "disabled"
-                                                    : ""
+                                                currentPage === maxPage ? "disabled" : ""
                                             }`}
                                             type="button"
-                                            onClick={_.partial(
-                                                this.moveLast,
-                                                currentPage,
-                                                maxPage
-                                            )}
+                                            onClick={_.partial(this.moveLast, currentPage, maxPage)}
                                         >
-                                            <FontAwesomeIcon
-                                                icon={faAngleDoubleRight}
-                                            />
+                                            <FontAwesomeIcon icon={faAngleDoubleRight} />
                                         </button>
                                     </li>
                                 </ul>
@@ -302,9 +217,7 @@ class Transactions extends React.Component<Props, State> {
     private getTotalAssetCount(transaction: TransactionDoc) {
         let totalInputCount = 0;
         if (Type.isAssetMintTransactionDoc(transaction)) {
-            totalInputCount =
-                (transaction as AssetMintTransactionDoc).data.output.amount ||
-                0;
+            totalInputCount = (transaction as AssetMintTransactionDoc).data.output.amount || 0;
         } else if (Type.isAssetTransferTransactionDoc(transaction)) {
             totalInputCount = _.sumBy(
                 (transaction as AssetTransferTransactionDoc).data.inputs,
@@ -312,10 +225,7 @@ class Transactions extends React.Component<Props, State> {
             );
         }
         const totalBurnCount = Type.isAssetTransferTransactionDoc(transaction)
-            ? _.sumBy(
-                  (transaction as AssetTransferTransactionDoc).data.burns,
-                  burn => burn.prevOut.amount
-              )
+            ? _.sumBy((transaction as AssetTransferTransactionDoc).data.burns, burn => burn.prevOut.amount)
             : 0;
         return totalInputCount + totalBurnCount;
     }
@@ -324,42 +234,24 @@ class Transactions extends React.Component<Props, State> {
         let assetType = "";
         let assetIamge;
         if (Type.isAssetMintTransactionDoc(transaction)) {
-            assetType = (transaction as AssetMintTransactionDoc).data.output
-                .assetType;
-            assetIamge = Type.getMetadata(
-                (transaction as AssetMintTransactionDoc).data.metadata
-            ).icon_url;
+            assetType = (transaction as AssetMintTransactionDoc).data.output.assetType;
+            assetIamge = Type.getMetadata((transaction as AssetMintTransactionDoc).data.metadata).icon_url;
         } else {
-            if (
-                (transaction as AssetTransferTransactionDoc).data.inputs
-                    .length > 0
-            ) {
-                assetType = (transaction as AssetTransferTransactionDoc).data
-                    .inputs[0].prevOut.assetType;
+            if ((transaction as AssetTransferTransactionDoc).data.inputs.length > 0) {
+                assetType = (transaction as AssetTransferTransactionDoc).data.inputs[0].prevOut.assetType;
                 assetIamge = Type.getMetadata(
-                    (transaction as AssetTransferTransactionDoc).data.inputs[0]
-                        .prevOut.assetScheme.metadata
+                    (transaction as AssetTransferTransactionDoc).data.inputs[0].prevOut.assetScheme.metadata
                 ).icon_url;
-            } else if (
-                (transaction as AssetTransferTransactionDoc).data.burns.length >
-                0
-            ) {
-                assetType = (transaction as AssetTransferTransactionDoc).data
-                    .burns[0].prevOut.assetType;
+            } else if ((transaction as AssetTransferTransactionDoc).data.burns.length > 0) {
+                assetType = (transaction as AssetTransferTransactionDoc).data.burns[0].prevOut.assetType;
                 assetIamge = Type.getMetadata(
-                    (transaction as AssetTransferTransactionDoc).data.burns[0]
-                        .prevOut.assetScheme.metadata
+                    (transaction as AssetTransferTransactionDoc).data.burns[0].prevOut.assetScheme.metadata
                 ).icon_url;
             }
         }
         return (
             <span>
-                <ImageLoader
-                    className="mr-2"
-                    data={assetType}
-                    url={assetIamge}
-                    size={18}
-                />
+                <ImageLoader className="mr-2" data={assetType} url={assetIamge} size={18} />
                 <HexString link={`/asset/0x${assetType}`} text={assetType} />
             </span>
         );

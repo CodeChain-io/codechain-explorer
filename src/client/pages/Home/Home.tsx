@@ -4,21 +4,9 @@ import { Container } from "reactstrap";
 import LatestBlocks from "../../components/home/LatestBlocks/LatestBlocks";
 import LatestParcels from "../../components/home/LatestParcels/LatestParcels";
 import LatestTransactions from "../../components/home/LatestTransactions/LatestTransactions";
-import {
-    RequestBlock,
-    RequestBlockNumber,
-    RequestBlocks,
-    RequestParcels,
-    RequestTransactions
-} from "../../request";
+import { RequestBlock, RequestBlockNumber, RequestBlocks, RequestParcels, RequestTransactions } from "../../request";
 
-import {
-    BlockDoc,
-    ChangeShardStateDoc,
-    ParcelDoc,
-    TransactionDoc,
-    Type
-} from "../../../db/DocType";
+import { BlockDoc, ChangeShardStateDoc, ParcelDoc, TransactionDoc, Type } from "../../../db/DocType";
 import Summary from "../../components/home/Summary/Summary";
 import "./Home.scss";
 
@@ -67,21 +55,11 @@ class Home extends React.Component<{}, State> {
                     </div>
                     <div className="home-element-container">
                         <LatestBlocks blocks={blocks} />
-                        <RequestBlocks
-                            page={1}
-                            itemsPerPage={10}
-                            onBlocks={this.onBlocks}
-                            onError={this.onError}
-                        />
+                        <RequestBlocks page={1} itemsPerPage={10} onBlocks={this.onBlocks} onError={this.onError} />
                     </div>
                     <div className="home-element-container">
                         <LatestParcels parcels={parcels} />
-                        <RequestParcels
-                            page={1}
-                            itemsPerPage={10}
-                            onParcels={this.onParcels}
-                            onError={this.onError}
-                        />
+                        <RequestParcels page={1} itemsPerPage={10} onParcels={this.onParcels} onError={this.onError} />
                     </div>
                     <div className="home-element-container">
                         <LatestTransactions transactions={transactions} />
@@ -101,14 +79,8 @@ class Home extends React.Component<{}, State> {
                         />
                     ) : null}
                 </Container>
-                {blockInitialized &&
-                parcelInitialized &&
-                transactionInitialized ? (
-                    <RequestBlockNumber
-                        repeat={10000}
-                        onBlockNumber={this.onBlockNumber}
-                        onError={this.onError}
-                    />
+                {blockInitialized && parcelInitialized && transactionInitialized ? (
+                    <RequestBlockNumber repeat={10000} onBlockNumber={this.onBlockNumber} onError={this.onError} />
                 ) : null}
             </div>
         );
@@ -137,16 +109,11 @@ class Home extends React.Component<{}, State> {
         }
         const transactions = _.chain(block.parcels)
             .filter(parcel => Type.isChangeShardStateDoc(parcel.action))
-            .flatMap(
-                parcel => (parcel.action as ChangeShardStateDoc).transactions
-            )
+            .flatMap(parcel => (parcel.action as ChangeShardStateDoc).transactions)
             .value();
         if (transactions.length > 0) {
             this.setState({
-                transactions: _.concat(
-                    _.reverse(transactions),
-                    this.state.transactions
-                )
+                transactions: _.concat(_.reverse(transactions), this.state.transactions)
             });
         }
     };

@@ -61,10 +61,7 @@ class Block extends React.Component<Props, State> {
         if (notFound) {
             return (
                 <div>
-                    <Error
-                        content={id.toString()}
-                        title="The block does not exist."
-                    />
+                    <Error content={id.toString()} title="The block does not exist." />
                 </div>
             );
         }
@@ -84,15 +81,10 @@ class Block extends React.Component<Props, State> {
                     <Col md="8" xl="7">
                         <div className="d-flex align-items-end title-container">
                             <h1 className="d-inline-block mr-auto">
-                                Block{" "}
-                                <span className="block-number">
-                                    #{block.number}
-                                </span>
+                                Block <span className="block-number">#{block.number}</span>
                             </h1>
                             <span className="timestamp">
-                                {moment
-                                    .unix(block.timestamp)
-                                    .format("YYYY-MM-DD HH:mm:ssZ")}
+                                {moment.unix(block.timestamp).format("YYYY-MM-DD HH:mm:ssZ")}
                             </span>
                         </div>
                     </Col>
@@ -102,29 +94,18 @@ class Block extends React.Component<Props, State> {
                         <div className="d-inline-block hash">
                             <HexString text={block.hash} />
                         </div>
-                        <CopyButton
-                            className="d-inline-block"
-                            copyString={`0x${block.hash}`}
-                        />
+                        <CopyButton className="d-inline-block" copyString={`0x${block.hash}`} />
                     </Col>
                     <Col
                         md="3"
                         xl="2"
                         className="d-flex align-items-center justify-content-between offset-md-1 offset-xl-3 mt-2 mt-md-0"
                     >
-                        <Link
-                            to={
-                                block.number !== 0
-                                    ? `/block/${block.number - 1}`
-                                    : "#"
-                            }
-                        >
+                        <Link to={block.number !== 0 ? `/block/${block.number - 1}` : "#"}>
                             <button
                                 type="button"
                                 disabled={block.number === 0}
-                                className={`btn btn-primary ${
-                                    block.number === 0 ? "disabled" : ""
-                                }`}
+                                className={`btn btn-primary ${block.number === 0 ? "disabled" : ""}`}
                             >
                                 &lt; Prev
                             </button>
@@ -145,13 +126,8 @@ class Block extends React.Component<Props, State> {
                             <h2># of Parcel types</h2>
                             <hr />
                             <div className="d-flex align-items-center">
-                                <FontAwesomeIcon
-                                    className="square payment-action-text-color"
-                                    icon={faSquare}
-                                />
-                                <span className="mr-auto item-name">
-                                    Payment
-                                </span>
+                                <FontAwesomeIcon className="square payment-action-text-color" icon={faSquare} />
+                                <span className="mr-auto item-name">Payment</span>
                                 <span>
                                     {_.filter(block.parcels, parcel =>
                                         Type.isPaymentDoc(parcel.action)
@@ -164,26 +140,17 @@ class Block extends React.Component<Props, State> {
                                     className="square change-shard-state-action-text-color"
                                     icon={faSquare}
                                 />
-                                <span className="mr-auto item-name">
-                                    ChangeShardState
-                                </span>
+                                <span className="mr-auto item-name">ChangeShardState</span>
                                 <span>
                                     {_.filter(block.parcels, parcel =>
-                                        Type.isChangeShardStateDoc(
-                                            parcel.action
-                                        )
+                                        Type.isChangeShardStateDoc(parcel.action)
                                     ).length.toLocaleString()}
                                 </span>
                             </div>
                             <hr />
                             <div className="d-flex align-items-center">
-                                <FontAwesomeIcon
-                                    className="square set-regular-key-action-text-color"
-                                    icon={faSquare}
-                                />
-                                <span className="mr-auto item-name">
-                                    SetRegularKey
-                                </span>
+                                <FontAwesomeIcon className="square set-regular-key-action-text-color" icon={faSquare} />
+                                <span className="mr-auto item-name">SetRegularKey</span>
                                 <span>
                                     {_.filter(block.parcels, parcel =>
                                         Type.isSetRegularKeyDoc(parcel.action)
@@ -199,31 +166,18 @@ class Block extends React.Component<Props, State> {
                                     className="square asset-transfer-transaction-text-color"
                                     icon={faSquare}
                                 />
-                                <span className="mr-auto item-name">
-                                    Transfer
-                                </span>
+                                <span className="mr-auto item-name">Transfer</span>
                                 <span>
                                     {_.reduce(
                                         block.parcels,
                                         (memo, parcel) => {
-                                            if (
-                                                Type.isChangeShardStateDoc(
-                                                    parcel.action
-                                                )
-                                            ) {
+                                            if (Type.isChangeShardStateDoc(parcel.action)) {
                                                 const transactions = (parcel.action as ChangeShardStateDoc)
                                                     .transactions;
-                                                const assetTransferTransaction = _.filter(
-                                                    transactions,
-                                                    tx =>
-                                                        Type.isAssetTransferTransactionDoc(
-                                                            tx
-                                                        )
+                                                const assetTransferTransaction = _.filter(transactions, tx =>
+                                                    Type.isAssetTransferTransactionDoc(tx)
                                                 ).length;
-                                                return (
-                                                    assetTransferTransaction +
-                                                    memo
-                                                );
+                                                return assetTransferTransaction + memo;
                                             } else {
                                                 return memo;
                                             }
@@ -234,33 +188,19 @@ class Block extends React.Component<Props, State> {
                             </div>
                             <hr />
                             <div className="d-flex align-items-center">
-                                <FontAwesomeIcon
-                                    className="square asset-mint-transaction-text-color"
-                                    icon={faSquare}
-                                />
+                                <FontAwesomeIcon className="square asset-mint-transaction-text-color" icon={faSquare} />
                                 <span className="mr-auto item-name">Mint</span>
                                 <span>
                                     {_.reduce(
                                         block.parcels,
                                         (memo, parcel) => {
-                                            if (
-                                                Type.isChangeShardStateDoc(
-                                                    parcel.action
-                                                )
-                                            ) {
+                                            if (Type.isChangeShardStateDoc(parcel.action)) {
                                                 const transactions = (parcel.action as ChangeShardStateDoc)
                                                     .transactions;
-                                                const assetTransferTransaction = _.filter(
-                                                    transactions,
-                                                    tx =>
-                                                        Type.isAssetMintTransactionDoc(
-                                                            tx
-                                                        )
+                                                const assetTransferTransaction = _.filter(transactions, tx =>
+                                                    Type.isAssetMintTransactionDoc(tx)
                                                 ).length;
-                                                return (
-                                                    assetTransferTransaction +
-                                                    memo
-                                                );
+                                                return assetTransferTransaction + memo;
                                             } else {
                                                 return memo;
                                             }
@@ -274,10 +214,7 @@ class Block extends React.Component<Props, State> {
                 </Row>
                 <Row className="mt-large">
                     <Col lg="9">
-                        <ParcelList
-                            parcels={block.parcels}
-                            totalCount={block.parcels.length}
-                        />
+                        <ParcelList parcels={block.parcels} totalCount={block.parcels.length} />
                     </Col>
                 </Row>
             </Container>

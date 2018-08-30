@@ -18,20 +18,12 @@ type Props = OwnProps & DispatchProps;
 
 class RequestTotalPendingParcelCountInternal extends React.Component<Props> {
     public componentWillMount() {
-        const {
-            onError,
-            onPendingParcelTotalCount,
-            dispatch,
-            actionFilters,
-            signerFiter
-        } = this.props;
+        const { onError, onPendingParcelTotalCount, dispatch, actionFilters, signerFiter } = this.props;
 
         if (actionFilters.length === 0) {
             onPendingParcelTotalCount(0);
         }
-        let path = `parcels/pending/totalCount?actionFilters=${actionFilters.join(
-            ","
-        )}`;
+        let path = `parcels/pending/totalCount?actionFilters=${actionFilters.join(",")}`;
         if (signerFiter) {
             path += `&signerFiter=${signerFiter}`;
         }

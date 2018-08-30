@@ -19,19 +19,9 @@ interface DispatchProps {
 
 type Props = OwnProps & DispatchProps;
 
-class RequestAssetTransferAddressTransactionsInternal extends React.Component<
-    Props
-> {
+class RequestAssetTransferAddressTransactionsInternal extends React.Component<Props> {
     public componentWillMount() {
-        const {
-            address,
-            onTransactions,
-            onError,
-            dispatch,
-            progressBarTarget,
-            page,
-            itemsPerPage
-        } = this.props;
+        const { address, onTransactions, onError, dispatch, progressBarTarget, page, itemsPerPage } = this.props;
         apiRequest({
             path: `addr-asset-txs/${address}?page=${page}&itemsPerPage=${itemsPerPage}`,
             dispatch,

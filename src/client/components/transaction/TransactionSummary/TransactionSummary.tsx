@@ -2,10 +2,7 @@ import * as _ from "lodash";
 import * as React from "react";
 import { connect, Dispatch } from "react-redux";
 
-import {
-    faChevronCircleDown,
-    faChevronCircleRight
-} from "@fortawesome/free-solid-svg-icons";
+import { faChevronCircleDown, faChevronCircleRight } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 import { Col, Popover, PopoverBody, Row } from "reactstrap";
@@ -56,25 +53,14 @@ class TransactionSummaryInternal extends React.Component<Props, State> {
             return (
                 <div className="transaction-summary">
                     {this.state.popoverTarget ? (
-                        <Popover
-                            placement="right"
-                            isOpen={this.state.popoverOpen}
-                            target={this.state.popoverTarget}
-                        >
+                        <Popover placement="right" isOpen={this.state.popoverOpen} target={this.state.popoverTarget}>
                             <PopoverBody>
                                 <div>
+                                    <p className="mb-0">{this.state.popoverName}</p>
                                     <p className="mb-0">
-                                        {this.state.popoverName}
+                                        x{this.state.popoverAmount ? this.state.popoverAmount.toLocaleString() : 0}
                                     </p>
-                                    <p className="mb-0">
-                                        x
-                                        {this.state.popoverAmount
-                                            ? this.state.popoverAmount.toLocaleString()
-                                            : 0}
-                                    </p>
-                                    <p className="mb-0 popover-detail-label">
-                                        click item to view detail
-                                    </p>
+                                    <p className="mb-0 popover-detail-label">click item to view detail</p>
                                 </div>
                             </PopoverBody>
                         </Popover>
@@ -88,58 +74,30 @@ class TransactionSummaryInternal extends React.Component<Props, State> {
                                               <h3>Inputs</h3>
                                           </div>
                                           <div className="item-panel">
-                                              {_.map(
-                                                  transactionDoc.data.inputs.slice(
-                                                      0,
-                                                      this.itemLimit
-                                                  ),
-                                                  (input, i) =>
-                                                      this.getAssetIcon(
-                                                          Type.getMetadata(
-                                                              input.prevOut
-                                                                  .assetScheme
-                                                                  .metadata
-                                                          ),
-                                                          input.prevOut
-                                                              .assetType,
-                                                          i,
-                                                          input.prevOut.amount,
-                                                          "input",
-                                                          _.partial(
-                                                              this.onClickItem,
-                                                              "input",
-                                                              i
-                                                          )
-                                                      )
+                                              {_.map(transactionDoc.data.inputs.slice(0, this.itemLimit), (input, i) =>
+                                                  this.getAssetIcon(
+                                                      Type.getMetadata(input.prevOut.assetScheme.metadata),
+                                                      input.prevOut.assetType,
+                                                      i,
+                                                      input.prevOut.amount,
+                                                      "input",
+                                                      _.partial(this.onClickItem, "input", i)
+                                                  )
                                               )}
-                                              {transactionDoc.data.inputs
-                                                  .length > this.itemLimit ? (
+                                              {transactionDoc.data.inputs.length > this.itemLimit ? (
                                                   <p className="mb-0">
-                                                      {transactionDoc.data
-                                                          .inputs.length -
-                                                          this.itemLimit}{" "}
-                                                      more inputs
+                                                      {transactionDoc.data.inputs.length - this.itemLimit} more inputs
                                                   </p>
                                               ) : null}
                                           </div>
                                       </div>
                                   </Col>,
-                                  <Col
-                                      key="col-2"
-                                      lg="3"
-                                      className="d-flex align-items-center justify-content-center"
-                                  >
+                                  <Col key="col-2" lg="3" className="d-flex align-items-center justify-content-center">
                                       <div className="text-center d-none d-lg-block arrow-icon">
-                                          <FontAwesomeIcon
-                                              icon={faChevronCircleRight}
-                                              size="2x"
-                                          />
+                                          <FontAwesomeIcon icon={faChevronCircleRight} size="2x" />
                                       </div>
                                       <div className="d-lg-none text-center pt-2 pb-2 arrow-icon">
-                                          <FontAwesomeIcon
-                                              icon={faChevronCircleDown}
-                                              size="2x"
-                                          />
+                                          <FontAwesomeIcon icon={faChevronCircleDown} size="2x" />
                                       </div>
                                   </Col>,
                                   <Col key="col-3" lg="3">
@@ -149,34 +107,20 @@ class TransactionSummaryInternal extends React.Component<Props, State> {
                                           </div>
                                           <div className="item-panel">
                                               {_.map(
-                                                  transactionDoc.data.outputs.slice(
-                                                      0,
-                                                      this.itemLimit
-                                                  ),
+                                                  transactionDoc.data.outputs.slice(0, this.itemLimit),
                                                   (output, i) =>
                                                       this.getAssetIcon(
-                                                          Type.getMetadata(
-                                                              output.assetScheme
-                                                                  .metadata
-                                                          ),
+                                                          Type.getMetadata(output.assetScheme.metadata),
                                                           output.assetType,
                                                           i,
                                                           output.amount,
                                                           "output",
-                                                          _.partial(
-                                                              this.onClickItem,
-                                                              "output",
-                                                              i
-                                                          )
+                                                          _.partial(this.onClickItem, "output", i)
                                                       )
                                               )}
-                                              {transactionDoc.data.outputs
-                                                  .length > this.itemLimit ? (
+                                              {transactionDoc.data.outputs.length > this.itemLimit ? (
                                                   <p className="mb-0">
-                                                      {transactionDoc.data
-                                                          .outputs.length -
-                                                          this.itemLimit}{" "}
-                                                      more outputs
+                                                      {transactionDoc.data.outputs.length - this.itemLimit} more outputs
                                                   </p>
                                               ) : null}
                                           </div>
@@ -191,24 +135,15 @@ class TransactionSummaryInternal extends React.Component<Props, State> {
                                         <h3 className="burn-title">Burns</h3>
                                     </div>
                                     <div className="item-panel">
-                                        {_.map(
-                                            transactionDoc.data.burns,
-                                            (burn, i) =>
-                                                this.getAssetIcon(
-                                                    Type.getMetadata(
-                                                        burn.prevOut.assetScheme
-                                                            .metadata
-                                                    ),
-                                                    burn.prevOut.assetType,
-                                                    i,
-                                                    burn.prevOut.amount,
-                                                    "burn",
-                                                    _.partial(
-                                                        this.onClickItem,
-                                                        "burn",
-                                                        i
-                                                    )
-                                                )
+                                        {_.map(transactionDoc.data.burns, (burn, i) =>
+                                            this.getAssetIcon(
+                                                Type.getMetadata(burn.prevOut.assetScheme.metadata),
+                                                burn.prevOut.assetType,
+                                                i,
+                                                burn.prevOut.amount,
+                                                "burn",
+                                                _.partial(this.onClickItem, "burn", i)
+                                            )
                                         )}
                                     </div>
                                 </div>
@@ -233,48 +168,25 @@ class TransactionSummaryInternal extends React.Component<Props, State> {
                                         <ImageLoader
                                             className="mr-3"
                                             size={42}
-                                            data={
-                                                transactionDoc.data.output
-                                                    .assetType
-                                            }
+                                            data={transactionDoc.data.output.assetType}
                                             url={metadata.icon_url}
                                         />
                                         <div className="content-title d-inline-block text-left">
-                                            <Link
-                                                to={`/asset/0x${
-                                                    transactionDoc.data.output
-                                                        .assetType
-                                                }`}
-                                            >
-                                                {metadata.name ||
-                                                    transactionDoc.data.output
-                                                        .assetType}
+                                            <Link to={`/asset/0x${transactionDoc.data.output.assetType}`}>
+                                                {metadata.name || transactionDoc.data.output.assetType}
                                             </Link>
                                             <div>
-                                                <span>
-                                                    x
-                                                    {
-                                                        transactionDoc.data
-                                                            .output.amount
-                                                    }
-                                                </span>
+                                                <span>x{transactionDoc.data.output.amount}</span>
                                             </div>
                                         </div>
                                     </div>
-                                    <div className="content-description">
-                                        {metadata.description}
-                                    </div>
+                                    <div className="content-description">{metadata.description}</div>
                                 </div>
                                 <div className="registrar-panel d-flex">
                                     <div>Registrar</div>
                                     <div className="registrar-text">
                                         {transactionDoc.data.registrar ? (
-                                            <Link
-                                                to={`/addr-platform/${
-                                                    transactionDoc.data
-                                                        .registrar
-                                                }`}
-                                            >
+                                            <Link to={`/addr-platform/${transactionDoc.data.registrar}`}>
                                                 {transactionDoc.data.registrar}
                                             </Link>
                                         ) : (
@@ -307,18 +219,9 @@ class TransactionSummaryInternal extends React.Component<Props, State> {
                 id={targetId}
                 onClick={onClick}
                 onMouseLeave={this.onMouseLeave}
-                onMouseEnter={_.partial(
-                    this.onMouseEnter,
-                    targetId,
-                    metadata.name || `0x${assetType}`,
-                    amount
-                )}
+                onMouseEnter={_.partial(this.onMouseEnter, targetId, metadata.name || `0x${assetType}`, amount)}
             >
-                <ImageLoader
-                    size={42}
-                    data={assetType}
-                    url={metadata.icon_url}
-                />
+                <ImageLoader size={42} data={assetType} url={metadata.icon_url} />
             </div>
         );
     };

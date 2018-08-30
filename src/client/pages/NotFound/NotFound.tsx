@@ -16,10 +16,7 @@ class NotFound extends React.Component<Props> {
         const { location } = this.props;
         return (
             <div>
-                <Error
-                    content={location.pathname}
-                    title="The URL that you’ve entered is invalid."
-                />
+                <Error content={location.pathname} title="The URL that you’ve entered is invalid." />
             </div>
         );
     }

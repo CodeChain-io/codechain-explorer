@@ -30,10 +30,7 @@ export const TypeBadge = (props: Props) => {
     const { className, transaction } = props;
     return (
         <span className={className}>
-            <FontAwesomeIcon
-                className={getBadgeBackgroundColorClassByType(transaction.type)}
-                icon={faSquare}
-            />{" "}
+            <FontAwesomeIcon className={getBadgeBackgroundColorClassByType(transaction.type)} icon={faSquare} />{" "}
             {getTypeString(transaction.type)}
         </span>
     );

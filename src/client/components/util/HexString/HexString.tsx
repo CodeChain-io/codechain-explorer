@@ -16,17 +16,11 @@ const HexString = (props: Props) => {
     if (link) {
         return (
             <span>
-                <Link to={link}>{`0x${
-                    length ? text.slice(0, sliceLength) + "..." : text
-                }`}</Link>
+                <Link to={link}>{`0x${length ? text.slice(0, sliceLength) + "..." : text}`}</Link>
             </span>
         );
     } else {
-        return (
-            <span>{`0x${
-                length ? text.slice(0, sliceLength) + "..." : text
-            }`}</span>
-        );
+        return <span>{`0x${length ? text.slice(0, sliceLength) + "..." : text}`}</span>;
     }
 };
 

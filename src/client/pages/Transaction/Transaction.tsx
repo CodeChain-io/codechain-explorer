@@ -65,11 +65,7 @@ class Transaction extends React.Component<Props, State> {
                 params: { hash }
             }
         } = this.props;
-        const {
-            transactionResult,
-            notExistedInBlock,
-            notExistedInPendingParcel
-        } = this.state;
+        const { transactionResult, notExistedInBlock, notExistedInPendingParcel } = this.state;
         if (!transactionResult) {
             if (!notExistedInBlock) {
                 return (
@@ -86,18 +82,13 @@ class Transaction extends React.Component<Props, State> {
                         hash={hash}
                         onError={this.onError}
                         onPendingTransaction={this.onPendingTransaction}
-                        onPendingTransactionNotExist={
-                            this.onPendingTransactionNotExist
-                        }
+                        onPendingTransactionNotExist={this.onPendingTransactionNotExist}
                     />
                 );
             } else {
                 return (
                     <div>
-                        <Error
-                            content={hash}
-                            title="The transaction does not exist."
-                        />
+                        <Error content={hash} title="The transaction does not exist." />
                     </div>
                 );
             }
@@ -107,16 +98,11 @@ class Transaction extends React.Component<Props, State> {
                 <Row>
                     <Col md="8" xl="7">
                         <div className="d-flex title-container">
-                            <h1 className="d-inline-block align-self-center mr-auto">
-                                Transaction
-                            </h1>
+                            <h1 className="d-inline-block align-self-center mr-auto">Transaction</h1>
                             {transactionResult.status === "confirmed" ? (
                                 <span className="timestamp align-self-end">
                                     {moment
-                                        .unix(
-                                            transactionResult.transaction.data
-                                                .timestamp
-                                        )
+                                        .unix(transactionResult.transaction.data.timestamp)
                                         .format("YYYY-MM-DD HH:mm:ssZ")}
                                 </span>
                             ) : null}
@@ -126,28 +112,19 @@ class Transaction extends React.Component<Props, State> {
                 <Row>
                     <Col md="8" xl="7" className="hash-container d-flex">
                         <div className="d-inline-block hash">
-                            <HexString
-                                text={transactionResult.transaction.data.hash}
-                            />
+                            <HexString text={transactionResult.transaction.data.hash} />
                         </div>
                         <CopyButton
                             className="d-inline-block"
-                            copyString={`0x${
-                                transactionResult.transaction.data.hash
-                            }`}
+                            copyString={`0x${transactionResult.transaction.data.hash}`}
                         />
                     </Col>
                 </Row>
                 <div className="mt-large">
-                    <TransactionSummary
-                        transaction={transactionResult.transaction}
-                    />
+                    <TransactionSummary transaction={transactionResult.transaction} />
                 </div>
                 <div className="mt-large">
-                    <TransactionDetails
-                        transaction={transactionResult.transaction}
-                        status={transactionResult.status}
-                    />
+                    <TransactionDetails transaction={transactionResult.transaction} status={transactionResult.status} />
                 </div>
             </Container>
         );
@@ -157,9 +134,7 @@ class Transaction extends React.Component<Props, State> {
         this.setState({ notExistedInPendingParcel: true });
     };
 
-    private onPendingTransaction = (
-        pendingTransaction: PendingTransactionDoc
-    ) => {
+    private onPendingTransaction = (pendingTransaction: PendingTransactionDoc) => {
         const transactionResult = {
             transaction: pendingTransaction.transaction,
             status: pendingTransaction.status

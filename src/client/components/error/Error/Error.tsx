@@ -20,9 +20,7 @@ export const Error = (props: Props) => {
                 <Col md="8" className="d-flex align-items-center">
                     <div>
                         <h1 className="mb-2">Error!</h1>
-                        <h2 className="mb-3 sub-title">
-                            We can’t find the page you’re looking for.
-                        </h2>
+                        <h2 className="mb-3 sub-title">We can’t find the page you’re looking for.</h2>
                         <p className="title mb-1 text-danger">{title}</p>
                         <p className="content">{content}</p>
                     </div>

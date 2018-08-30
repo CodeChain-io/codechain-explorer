@@ -17,34 +17,24 @@ export class QueryAccount implements BaseAction {
     public agent: ElasticSearchAgent;
     public client: Client;
 
-    public async increaseBalance(
-        address: string,
-        balance: string
-    ): Promise<void> {
+    public async increaseBalance(address: string, balance: string): Promise<void> {
         const account = await this.getAccount(address);
         if (account) {
             await this.updateAccount(
                 account.address,
-                new BigNumber(account.balance)
-                    .plus(new BigNumber(balance))
-                    .toString(10)
+                new BigNumber(account.balance).plus(new BigNumber(balance)).toString(10)
             );
         } else {
             await this.indexAccount(address, balance);
         }
     }
 
-    public async decreaseBalance(
-        address: string,
-        balance: string
-    ): Promise<void> {
+    public async decreaseBalance(address: string, balance: string): Promise<void> {
         const account = await this.getAccount(address);
         if (account) {
             await this.updateAccount(
                 account.address,
-                new BigNumber(account.balance)
-                    .minus(new BigNumber(balance))
-                    .toString(10)
+                new BigNumber(account.balance).minus(new BigNumber(balance)).toString(10)
             );
         } else {
             throw new Error(`Invalid decreasing balance action => ${address}`);
@@ -82,10 +72,7 @@ export class QueryAccount implements BaseAction {
         });
     }
 
-    public async updateAccount(
-        address: string,
-        balance: string
-    ): Promise<void> {
+    public async updateAccount(address: string, balance: string): Promise<void> {
         return this.client.update({
             index: "account",
             type: "_doc",

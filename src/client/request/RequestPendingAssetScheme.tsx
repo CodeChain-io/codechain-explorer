@@ -20,14 +20,7 @@ type Props = OwnProps & DispatchProps;
 
 class RequestPendingAssetSchemeInternal extends React.Component<Props> {
     public componentWillMount() {
-        const {
-            dispatch,
-            assetType,
-            onAssetScheme,
-            onAssetSchemeNotExist,
-            onError,
-            progressBarTarget
-        } = this.props;
+        const { dispatch, assetType, onAssetScheme, onAssetSchemeNotExist, onError, progressBarTarget } = this.props;
         apiRequest({
             path: `asset/pending/${assetType}`,
             dispatch,

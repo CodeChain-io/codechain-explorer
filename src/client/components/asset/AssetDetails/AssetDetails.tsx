@@ -25,39 +25,27 @@ const AssetDetails = (prop: OwnProps) => {
                     <div className="data-set">
                         <Row>
                             <Col md="3">Name</Col>
-                            <Col md="9">
-                                {metadata.name ? metadata.name : "None"}
-                            </Col>
+                            <Col md="9">{metadata.name ? metadata.name : "None"}</Col>
                         </Row>
                         <hr />
                         <Row>
                             <Col md="3">Description</Col>
                             <Col md="9">
-                                <div className="text-area">
-                                    {metadata.description
-                                        ? metadata.description
-                                        : "None"}
-                                </div>
+                                <div className="text-area">{metadata.description ? metadata.description : "None"}</div>
                             </Col>
                         </Row>
                         <hr />
                         <Row>
                             <Col md="3">Icon</Col>
                             <Col md="9">
-                                <div className="text-area">
-                                    {metadata.icon_url
-                                        ? metadata.icon_url
-                                        : "None"}
-                                </div>
+                                <div className="text-area">{metadata.icon_url ? metadata.icon_url : "None"}</div>
                             </Col>
                         </Row>
                         <hr />
                         <Row>
                             <Col md="3">Raw metadata</Col>
                             <Col md="9">
-                                <div className="text-area">
-                                    {prop.assetScheme.metadata}
-                                </div>
+                                <div className="text-area">{prop.assetScheme.metadata}</div>
                             </Col>
                         </Row>
                         <hr />
@@ -65,11 +53,7 @@ const AssetDetails = (prop: OwnProps) => {
                             <Col md="3">Registrar</Col>
                             <Col md="9">
                                 {prop.assetScheme.registrar ? (
-                                    <Link
-                                        to={`/addr-platform/${
-                                            prop.assetScheme.registrar
-                                        }`}
-                                    >
+                                    <Link to={`/addr-platform/${prop.assetScheme.registrar}`}>
                                         {prop.assetScheme.registrar}
                                     </Link>
                                 ) : (
@@ -80,11 +64,7 @@ const AssetDetails = (prop: OwnProps) => {
                         <hr />
                         <Row>
                             <Col md="3">Total Supply</Col>
-                            <Col md="9">
-                                {prop.assetScheme.amount
-                                    ? prop.assetScheme.amount.toLocaleString()
-                                    : 0}
-                            </Col>
+                            <Col md="9">{prop.assetScheme.amount ? prop.assetScheme.amount.toLocaleString() : 0}</Col>
                         </Row>
                         <hr />
                     </div>

@@ -15,10 +15,6 @@ export const CommaNumberString = (props: Props) => {
     if (splitedText.length === 1) {
         return <span className={className}>{numberWithCommas(text)}</span>;
     } else {
-        return (
-            <span className={className}>{`${numberWithCommas(splitedText[0])}.${
-                splitedText[1]
-            }`}</span>
-        );
+        return <span className={className}>{`${numberWithCommas(splitedText[0])}.${splitedText[1]}`}</span>;
     }
 };

@@ -4,12 +4,7 @@ import * as React from "react";
 import { Table } from "reactstrap";
 
 import { Link } from "react-router-dom";
-import {
-    AssetMintTransactionDoc,
-    AssetTransferTransactionDoc,
-    TransactionDoc,
-    Type
-} from "../../../../db/DocType";
+import { AssetMintTransactionDoc, AssetTransferTransactionDoc, TransactionDoc, Type } from "../../../../db/DocType";
 import HexString from "../../util/HexString/HexString";
 import { ImageLoader } from "../../util/ImageLoader/ImageLoader";
 import { TypeBadge } from "../../util/TypeBadge/TypeBadge";
@@ -22,8 +17,7 @@ interface Props {
 function getTotalAssetCount(transaction: TransactionDoc) {
     let totalInputCount = 0;
     if (Type.isAssetMintTransactionDoc(transaction)) {
-        totalInputCount =
-            (transaction as AssetMintTransactionDoc).data.output.amount || 0;
+        totalInputCount = (transaction as AssetMintTransactionDoc).data.output.amount || 0;
     } else if (Type.isAssetTransferTransactionDoc(transaction)) {
         totalInputCount = _.sumBy(
             (transaction as AssetTransferTransactionDoc).data.inputs,
@@ -31,10 +25,7 @@ function getTotalAssetCount(transaction: TransactionDoc) {
         );
     }
     const totalBurnCount = Type.isAssetTransferTransactionDoc(transaction)
-        ? _.sumBy(
-              (transaction as AssetTransferTransactionDoc).data.burns,
-              burn => burn.prevOut.amount
-          )
+        ? _.sumBy((transaction as AssetTransferTransactionDoc).data.burns, burn => burn.prevOut.amount)
         : 0;
     return totalInputCount + totalBurnCount;
 }
@@ -43,40 +34,24 @@ function getAssetInfo(transaction: TransactionDoc) {
     let assetType = "";
     let assetIamge;
     if (Type.isAssetMintTransactionDoc(transaction)) {
-        assetType = (transaction as AssetMintTransactionDoc).data.output
-            .assetType;
-        assetIamge = Type.getMetadata(
-            (transaction as AssetMintTransactionDoc).data.metadata
-        ).icon_url;
+        assetType = (transaction as AssetMintTransactionDoc).data.output.assetType;
+        assetIamge = Type.getMetadata((transaction as AssetMintTransactionDoc).data.metadata).icon_url;
     } else {
-        if (
-            (transaction as AssetTransferTransactionDoc).data.inputs.length > 0
-        ) {
-            assetType = (transaction as AssetTransferTransactionDoc).data
-                .inputs[0].prevOut.assetType;
+        if ((transaction as AssetTransferTransactionDoc).data.inputs.length > 0) {
+            assetType = (transaction as AssetTransferTransactionDoc).data.inputs[0].prevOut.assetType;
             assetIamge = Type.getMetadata(
-                (transaction as AssetTransferTransactionDoc).data.inputs[0]
-                    .prevOut.assetScheme.metadata
+                (transaction as AssetTransferTransactionDoc).data.inputs[0].prevOut.assetScheme.metadata
             ).icon_url;
-        } else if (
-            (transaction as AssetTransferTransactionDoc).data.burns.length > 0
-        ) {
-            assetType = (transaction as AssetTransferTransactionDoc).data
-                .burns[0].prevOut.assetType;
+        } else if ((transaction as AssetTransferTransactionDoc).data.burns.length > 0) {
+            assetType = (transaction as AssetTransferTransactionDoc).data.burns[0].prevOut.assetType;
             assetIamge = Type.getMetadata(
-                (transaction as AssetTransferTransactionDoc).data.burns[0]
-                    .prevOut.assetScheme.metadata
+                (transaction as AssetTransferTransactionDoc).data.burns[0].prevOut.assetScheme.metadata
             ).icon_url;
         }
     }
     return (
         <span>
-            <ImageLoader
-                className="mr-2"
-                data={assetType}
-                url={assetIamge}
-                size={18}
-            />
+            <ImageLoader className="mr-2" data={assetType} url={assetIamge} size={18} />
             <HexString link={`/asset/0x${assetType}`} text={assetType} />
         </span>
     );
@@ -101,33 +76,19 @@ const LatestTransactions = (props: Props) => {
                     <tbody>
                         {_.map(transactions.slice(0, 10), transaction => {
                             return (
-                                <tr
-                                    key={`home-transaction-hash-${
-                                        transaction.data.hash
-                                    }`}
-                                >
+                                <tr key={`home-transaction-hash-${transaction.data.hash}`}>
                                     <td>
                                         <TypeBadge transaction={transaction} />{" "}
                                     </td>
                                     <td scope="row">
                                         <HexString
-                                            link={`/tx/0x${
-                                                transaction.data.hash
-                                            }`}
+                                            link={`/tx/0x${transaction.data.hash}`}
                                             text={transaction.data.hash}
                                         />
                                     </td>
                                     <td>{getAssetInfo(transaction)}</td>
-                                    <td>
-                                        {getTotalAssetCount(
-                                            transaction
-                                        ).toLocaleString()}
-                                    </td>
-                                    <td>
-                                        {moment
-                                            .unix(transaction.data.timestamp)
-                                            .fromNow()}
-                                    </td>
+                                    <td>{getTotalAssetCount(transaction).toLocaleString()}</td>
+                                    <td>{moment.unix(transaction.data.timestamp).fromNow()}</td>
                                 </tr>
                             );
                         })}
@@ -136,10 +97,7 @@ const LatestTransactions = (props: Props) => {
                 {
                     <div className="mt-small">
                         <Link to={"/txs"}>
-                            <button
-                                type="button"
-                                className="btn btn-primary w-100"
-                            >
+                            <button type="button" className="btn btn-primary w-100">
                                 <span>View all transactions</span>
                             </button>
                         </Link>

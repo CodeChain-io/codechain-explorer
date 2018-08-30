@@ -42,8 +42,7 @@ class Header extends React.Component<{}, State> {
                     <Container>
                         <IndexLinkContainer to="/">
                             <NavbarBrand>
-                                <img src={logo} className="logo" /> CodeChain
-                                Explorer
+                                <img src={logo} className="logo" /> CodeChain Explorer
                             </NavbarBrand>
                         </IndexLinkContainer>
                         <NavbarToggler onClick={this.toggle} />
@@ -54,33 +53,22 @@ class Header extends React.Component<{}, State> {
                                         <NavLink>Home</NavLink>
                                     </NavItem>
                                 </IndexLinkContainer>
-                                <UncontrolledDropdown
-                                    nav={true}
-                                    inNavbar={true}
-                                >
+                                <UncontrolledDropdown nav={true} inNavbar={true}>
                                     <DropdownToggle nav={true} caret={true}>
                                         Explorer
                                     </DropdownToggle>
                                     <DropdownMenu right={false}>
                                         <IndexLinkContainer to="/blocks">
-                                            <DropdownItem>
-                                                Latest Blocks
-                                            </DropdownItem>
+                                            <DropdownItem>Latest Blocks</DropdownItem>
                                         </IndexLinkContainer>
                                         <IndexLinkContainer to="/parcels">
-                                            <DropdownItem>
-                                                Latest Parcels
-                                            </DropdownItem>
+                                            <DropdownItem>Latest Parcels</DropdownItem>
                                         </IndexLinkContainer>
                                         <IndexLinkContainer to="/txs">
-                                            <DropdownItem>
-                                                Latest Transactions
-                                            </DropdownItem>
+                                            <DropdownItem>Latest Transactions</DropdownItem>
                                         </IndexLinkContainer>
                                         <IndexLinkContainer to="/parcels-pending">
-                                            <DropdownItem>
-                                                Pending Parcels
-                                            </DropdownItem>
+                                            <DropdownItem>Pending Parcels</DropdownItem>
                                         </IndexLinkContainer>
                                     </DropdownMenu>
                                 </UncontrolledDropdown>
