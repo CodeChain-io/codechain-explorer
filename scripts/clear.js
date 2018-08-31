@@ -15,7 +15,7 @@ const clearIndex = async () => {
     index: "_all"
   });
   try {
-    const imageDir = path.join(__dirname, "../", "/public/assetImage");
+    const imageDir = path.join(__dirname, "../", "/download");
     const isExists = await fs.pathExists(imageDir);
     if (isExists) {
       await fs.remove(imageDir);

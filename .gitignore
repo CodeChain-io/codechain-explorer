@@ -26,4 +26,5 @@ client/db
 # dotenv
 .env
 
-/public/assetImage
+# asset image
+download/

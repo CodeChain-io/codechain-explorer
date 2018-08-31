@@ -86,10 +86,11 @@
   },
   "scripts": {
     "start": "concurrently --kill-others \"yarn start-worker\" \"yarn start-server\" \"yarn start-client\"",
-    "start-client": "node scripts/start.js",
+    "start-client": "concurrently --kill-others \"node scripts/start.js\" \"node scripts/serve.js\"",
     "start-server": "ts-node --project tsconfig.server.json src/server/index.ts",
     "start-worker": "ts-node --project tsconfig.worker.json src/worker/index.ts",
     "build": "node scripts/build.js",
+    "serve": "node scripts/serve.js",
     "test": "yarn lint && node scripts/test.js --env=jsdom",
     "clear": "node scripts/clear.js",
     "lint": "tslint -p tsconfig.client.json && tslint -p tsconfig.server.json && tslint -p tsconfig.worker.json && prettier 'src/**/*.{ts,tsx,scss,json,html,js,jsx}' -l",
@@ -176,5 +177,11 @@
   },
   "eslintConfig": {
     "extends": "react-app"
+  },
+  "proxy": {
+    "/assetImage": {
+      "target": "http://localhost:5000",
+      "ws": true
+    }
   }
 }

@@ -278,7 +278,7 @@ export class BlockSyncWorker {
             return;
         }
         const iconUrl = metadata.icon_url;
-        const imageDir = path.join(__dirname, "../../", "/public/assetImage");
+        const imageDir = path.join(__dirname, "../../", "/download/assetImage");
         const imagePath = path.join(imageDir, `${assetMintTx.data.output.assetType}.png`);
         if (!isRetract) {
             try {
