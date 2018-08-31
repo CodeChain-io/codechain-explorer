@@ -3,7 +3,7 @@ import { match } from "react-router";
 import { Col, Container, Row } from "reactstrap";
 import { Error } from "../../components/error/Error/Error";
 
-import { AssetSchemeDoc, TransactionDoc, Type } from "../../../db/DocType";
+import { AssetSchemeDoc, TransactionDoc } from "../../../db/DocType";
 import AssetDetails from "../../components/asset/AssetDetails/AssetDetails";
 import TransactionList from "../../components/transaction/TransactionList/TransactionList";
 import { RequestAssetScheme, RequestTotalAssetTransactionCount } from "../../request";
@@ -122,11 +122,7 @@ class Asset extends React.Component<Props, State> {
                     <Col>
                         <div className="title-container d-flex">
                             <div className="d-inline-block left-container">
-                                <ImageLoader
-                                    size={65}
-                                    data={new H256(assetType).value}
-                                    url={Type.getMetadata(assetScheme.metadata).icon_url}
-                                />
+                                <ImageLoader size={65} data={new H256(assetType).value} isAssetImage={true} />
                             </div>
                             <div className="d-inline-block right-container">
                                 <h1>Asset</h1>

@@ -32,26 +32,18 @@ function getTotalAssetCount(transaction: TransactionDoc) {
 
 function getAssetInfo(transaction: TransactionDoc) {
     let assetType = "";
-    let assetIamge;
     if (Type.isAssetMintTransactionDoc(transaction)) {
         assetType = (transaction as AssetMintTransactionDoc).data.output.assetType;
-        assetIamge = Type.getMetadata((transaction as AssetMintTransactionDoc).data.metadata).icon_url;
     } else {
         if ((transaction as AssetTransferTransactionDoc).data.inputs.length > 0) {
             assetType = (transaction as AssetTransferTransactionDoc).data.inputs[0].prevOut.assetType;
-            assetIamge = Type.getMetadata(
-                (transaction as AssetTransferTransactionDoc).data.inputs[0].prevOut.assetScheme.metadata
-            ).icon_url;
         } else if ((transaction as AssetTransferTransactionDoc).data.burns.length > 0) {
             assetType = (transaction as AssetTransferTransactionDoc).data.burns[0].prevOut.assetType;
-            assetIamge = Type.getMetadata(
-                (transaction as AssetTransferTransactionDoc).data.burns[0].prevOut.assetScheme.metadata
-            ).icon_url;
         }
     }
     return (
         <span>
-            <ImageLoader className="mr-2" data={assetType} url={assetIamge} size={18} />
+            <ImageLoader className="mr-2" data={assetType} size={18} isAssetImage={true} />
             <HexString link={`/asset/0x${assetType}`} text={assetType} />
         </span>
     );

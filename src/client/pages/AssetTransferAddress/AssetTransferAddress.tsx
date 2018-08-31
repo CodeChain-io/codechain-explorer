@@ -94,7 +94,7 @@ class AssetTransferAddress extends React.Component<Props, State> {
                     <Col>
                         <div className="title-container d-flex">
                             <div className="d-inline-block left-container">
-                                <ImageLoader size={65} data={address} />
+                                <ImageLoader size={65} data={address} isAssetImage={false} />
                             </div>
                             <div className="d-inline-block right-container">
                                 <h1>Asset Address</h1>

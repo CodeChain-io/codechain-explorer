@@ -5,8 +5,8 @@ const sha256 = require("js-sha256");
 interface Props {
     data: string;
     className?: string;
-    url?: string;
     size: number;
+    isAssetImage: boolean;
 }
 interface State {
     requestUrl?: string;
@@ -16,8 +16,8 @@ export class ImageLoader extends React.Component<Props, State> {
     constructor(prop: Props) {
         super(prop);
         let requestUrl;
-        if (prop.url) {
-            requestUrl = prop.url;
+        if (prop.isAssetImage) {
+            requestUrl = `${process.env.PUBLIC_URL}/assetImage/${prop.data}.png`;
         } else {
             requestUrl = this.getDefaultImage();
         }

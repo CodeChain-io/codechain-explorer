@@ -58,9 +58,9 @@ class AssetList extends React.Component<Props, State> {
                                             <div className="d-inline-block">
                                                 <ImageLoader
                                                     size={50}
-                                                    url={metadata.icon_url}
                                                     data={assetBundle.asset.assetType}
                                                     className="icon"
+                                                    isAssetImage={true}
                                                 />
                                             </div>
                                             <div className="d-inline-block d-flex align-items-center asset-text-container">

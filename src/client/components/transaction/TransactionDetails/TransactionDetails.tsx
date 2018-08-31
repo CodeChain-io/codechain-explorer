@@ -172,7 +172,7 @@ class TransactionDetailsInternal extends React.Component<Props, State> {
                                                     className="mr-2"
                                                     size={18}
                                                     data={input.prevOut.assetType}
-                                                    url={Type.getMetadata(input.prevOut.assetScheme.metadata).icon_url}
+                                                    isAssetImage={true}
                                                 />
                                                 <HexString
                                                     link={`/asset/0x${input.prevOut.assetType}`}
@@ -272,7 +272,7 @@ class TransactionDetailsInternal extends React.Component<Props, State> {
                                                     className="mr-2"
                                                     size={18}
                                                     data={burn.prevOut.assetType}
-                                                    url={Type.getMetadata(burn.prevOut.assetScheme.metadata).icon_url}
+                                                    isAssetImage={true}
                                                 />
                                                 <HexString
                                                     link={`/asset/0x${burn.prevOut.assetType}`}
@@ -371,8 +371,8 @@ class TransactionDetailsInternal extends React.Component<Props, State> {
                                                 <ImageLoader
                                                     size={18}
                                                     data={output.assetType}
-                                                    url={Type.getMetadata(output.assetScheme.metadata).icon_url}
                                                     className="mr-2"
+                                                    isAssetImage={true}
                                                 />
                                                 <HexString
                                                     link={`/asset/0x${output.assetType}`}
@@ -519,9 +519,9 @@ class TransactionDetailsInternal extends React.Component<Props, State> {
                                 <Col md="9">
                                     <ImageLoader
                                         data={transactionDoc.data.output.assetType}
-                                        url={Type.getMetadata(transactionDoc.data.metadata).icon_url}
                                         size={18}
                                         className="mr-2"
+                                        isAssetImage={true}
                                     />
                                     <HexString
                                         link={`/asset/0x${transactionDoc.data.output.assetType}`}

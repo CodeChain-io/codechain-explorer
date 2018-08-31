@@ -1,13 +1,18 @@
 import { Block, H256, Invoice } from "codechain-sdk/lib/core/classes";
+import * as fs from "fs-extra";
 import * as _ from "lodash";
 import * as moment from "moment";
 import { Job, scheduleJob } from "node-schedule";
+import * as path from "path";
+import * as sharp from "sharp";
 import { LogType } from "../db/actions/QueryLog";
-import { BlockDoc, ChangeShardStateDoc, PaymentDoc, Type } from "../db/DocType";
+import { AssetMintTransactionDoc, BlockDoc, ChangeShardStateDoc, PaymentDoc, Type } from "../db/DocType";
 import { ElasticSearchAgent } from "../db/ElasticSearchAgent";
 import { WorkerConfig } from "./";
 import { CodeChainAgent } from "./CodeChainAgent";
 import TypeConverter from "./TypeConverter";
+const request = require("request-promise-native");
+const mkdirp = require("mkdirp-promise");
 
 export class BlockSyncWorker {
     private watchJob: Job;
@@ -114,6 +119,15 @@ export class BlockSyncWorker {
                 if (blockedParcel) {
                     return this.elasticSearchAgent.removePendingParcel(new H256(removedPendingParcel.parcel.hash));
                 } else {
+                    if (Type.isChangeShardStateDoc(removedPendingParcel.parcel.action)) {
+                        const changeShardStateAction = removedPendingParcel.parcel.action as ChangeShardStateDoc;
+                        const mintTxs = _.filter(changeShardStateAction.transactions, tx =>
+                            Type.isAssetMintTransactionDoc(tx)
+                        );
+                        for (const mintTx of mintTxs) {
+                            await this.handleAssetImage(mintTx as AssetMintTransactionDoc, true);
+                        }
+                    }
                     return this.elasticSearchAgent.deadPendingParcel(new H256(removedPendingParcel.parcel.hash));
                 }
             })
@@ -128,6 +142,15 @@ export class BlockSyncWorker {
         await Promise.all(
             _.map(newPendingParcels, async pendingParcel => {
                 const pendingParcelDoc = await this.typeConverter.fromPendingParcel(pendingParcel);
+                if (Type.isChangeShardStateDoc(pendingParcelDoc.parcel.action)) {
+                    const changeShardStateAction = pendingParcelDoc.parcel.action as ChangeShardStateDoc;
+                    const mintTxs = _.filter(changeShardStateAction.transactions, tx =>
+                        Type.isAssetMintTransactionDoc(tx)
+                    );
+                    for (const mintTx of mintTxs) {
+                        await this.handleAssetImage(mintTx as AssetMintTransactionDoc, false);
+                    }
+                }
                 return this.elasticSearchAgent.indexPendingParcel(pendingParcelDoc);
             })
         );
@@ -166,33 +189,15 @@ export class BlockSyncWorker {
             nextBlock,
             this.config.miningReward[process.env.CODECHAIN_CHAIN || "solo"]
         );
-        // indexing blocks
         await this.elasticSearchAgent.indexBlock(blockDoc);
-        // index genesis block
         if (blockDoc.number === 0) {
-            const addressListJob = _.map(
-                this.config.genesisAddressList[process.env.CODECHAIN_CHAIN || "solo"],
-                async address => {
-                    const balance = await this.codeChainAgent.getBalance(address, 0);
-                    return {
-                        address,
-                        balance: balance.value.toString(10)
-                    };
-                }
-            );
-            const addressList = await Promise.all(addressListJob);
-            const updateAddressJob = _.map(addressList, address =>
-                this.elasticSearchAgent.increaseBalance(address.address, address.balance)
-            );
-            await Promise.all(updateAddressJob);
+            await this.handleGenesisBlock(false);
         }
-        // indexing parcels
         await Promise.all(
             _.map(blockDoc.parcels, async parcel => {
                 return this.elasticSearchAgent.indexParcel(parcel);
             })
         );
-        // indexing transactions
         const transactions = _.chain(blockDoc.parcels)
             .filter(parcel => Type.isChangeShardStateDoc(parcel.action))
             .flatMap(parcel => (parcel.action as ChangeShardStateDoc).transactions)
@@ -200,6 +205,10 @@ export class BlockSyncWorker {
         await Promise.all(
             _.map(transactions, async transaction => await this.elasticSearchAgent.indexTransaction(transaction))
         );
+        const assetMintTransactions = _.filter(transactions, tx => Type.isAssetMintTransactionDoc(tx));
+        for (const mintTx of assetMintTransactions) {
+            await this.handleAssetImage(mintTx as AssetMintTransactionDoc, false);
+        }
         // index log
         const dateString = moment
             .unix(blockDoc.timestamp)
@@ -207,7 +216,6 @@ export class BlockSyncWorker {
             .format("YYYY-MM-DD");
         await this.elasticSearchAgent.increaseLogCount(dateString, LogType.BLOCK_COUNT, 1);
         await this.elasticSearchAgent.increaseLogCount(dateString, LogType.BLOCK_MINING_COUNT, 1, blockDoc.author);
-
         const parcelCount = blockDoc.parcels.length;
         if (parcelCount > 0) {
             await this.elasticSearchAgent.increaseLogCount(dateString, LogType.PARCEL_COUNT, parcelCount);
@@ -231,7 +239,6 @@ export class BlockSyncWorker {
                 changeShardStateParcelCount
             );
         }
-
         const txCount = transactions.length;
         if (txCount > 0) {
             await this.elasticSearchAgent.increaseLogCount(dateString, LogType.TX_COUNT, txCount);
@@ -244,15 +251,10 @@ export class BlockSyncWorker {
                 assetTransferTxCount
             );
         }
-
-        // index account
         await this.elasticSearchAgent.increaseBalance(blockDoc.author, blockDoc.miningReward);
-
-        // Resolve sequentially
         for (const parcel of blockDoc.parcels) {
             await this.elasticSearchAgent.decreaseBalance(parcel.sender, parcel.fee);
         }
-
         const paymentParcels = _.filter(blockDoc.parcels, parcel => Type.isPaymentDoc(parcel.action));
         const succeedPaymentParcelJob = _.map(paymentParcels, async parcel => {
             const invoices = (await this.codeChainAgent.getParcelInvoice(new H256(parcel.hash))) as Invoice;
@@ -263,7 +265,6 @@ export class BlockSyncWorker {
             }
         });
         const succeedPaymentParcels = _.compact(await Promise.all(succeedPaymentParcelJob));
-        // Resolve sequentially
         for (const parcel of succeedPaymentParcels) {
             const paymentAction = parcel.action as PaymentDoc;
             await this.elasticSearchAgent.increaseBalance(paymentAction.receiver, paymentAction.amount);
@@ -271,16 +272,71 @@ export class BlockSyncWorker {
         }
     };
 
-    private retractBlock = async (lastSynchronizedBlock: BlockDoc) => {
-        await this.elasticSearchAgent.retractBlock(new H256(lastSynchronizedBlock.hash));
+    private handleAssetImage = async (assetMintTx: AssetMintTransactionDoc, isRetract: boolean) => {
+        const metadata = Type.getMetadata(assetMintTx.data.metadata);
+        if (!metadata || !metadata.icon_url) {
+            return;
+        }
+        const iconUrl = metadata.icon_url;
+        const imageDir = path.join(__dirname, "../../", "/public/assetImage");
+        const imagePath = path.join(imageDir, `${assetMintTx.data.output.assetType}.png`);
+        if (!isRetract) {
+            try {
+                await mkdirp(imageDir);
+                const isExists = await fs.pathExists(imagePath);
+                if (!isExists) {
+                    const imageBuffer = await request({ url: iconUrl, encoding: null });
+                    await sharp(imageBuffer)
+                        .resize(65, 65)
+                        .png()
+                        .toFile(imagePath);
+                }
+            } catch (e) {
+                // nothing
+            }
+        } else {
+            try {
+                await fs.remove(imagePath);
+            } catch (e) {
+                // nothing
+            }
+        }
+    };
+
+    private handleGenesisBlock = async (isRetract: boolean) => {
+        const addressListJob = _.map(
+            this.config.genesisAddressList[process.env.CODECHAIN_CHAIN || "solo"],
+            async address => {
+                const balance = await this.codeChainAgent.getBalance(address, 0);
+                return {
+                    address,
+                    balance: balance.value.toString(10)
+                };
+            }
+        );
+        const addressList = await Promise.all(addressListJob);
+        const updateAddressJob = _.map(
+            addressList,
+            address =>
+                isRetract
+                    ? this.elasticSearchAgent.decreaseBalance(address.address, address.balance)
+                    : this.elasticSearchAgent.increaseBalance(address.address, address.balance)
+        );
+        await Promise.all(updateAddressJob);
+    };
+
+    private retractBlock = async (retractedBlock: BlockDoc) => {
+        await this.elasticSearchAgent.retractBlock(new H256(retractedBlock.hash));
+        if (retractedBlock.number === 0) {
+            await this.handleGenesisBlock(true);
+        }
         await Promise.all(
             _.map(
-                lastSynchronizedBlock.parcels,
+                retractedBlock.parcels,
                 async parcel => await this.elasticSearchAgent.retractParcel(new H256(parcel.hash))
             )
         );
-
-        const transactions = _.chain(lastSynchronizedBlock.parcels)
+        const transactions = _.chain(retractedBlock.parcels)
             .filter(parcel => Type.isChangeShardStateDoc(parcel.action))
             .flatMap(parcel => (parcel.action as ChangeShardStateDoc).transactions)
             .value();
@@ -290,10 +346,9 @@ export class BlockSyncWorker {
                 async transaction => await this.elasticSearchAgent.retractTransaction(new H256(transaction.data.hash))
             )
         );
-
-        // retract log
+        // Retract log
         const dateString = moment
-            .unix(lastSynchronizedBlock.timestamp)
+            .unix(retractedBlock.timestamp)
             .utc()
             .format("YYYY-MM-DD");
         await this.elasticSearchAgent.decreaseLogCount(dateString, LogType.BLOCK_COUNT, 1);
@@ -301,26 +356,25 @@ export class BlockSyncWorker {
             dateString,
             LogType.BLOCK_MINING_COUNT,
             1,
-            lastSynchronizedBlock.author
+            retractedBlock.author
         );
-        const parcelCount = lastSynchronizedBlock.parcels.length;
+        const parcelCount = retractedBlock.parcels.length;
         if (parcelCount > 0) {
             await this.elasticSearchAgent.decreaseLogCount(dateString, LogType.PARCEL_COUNT, parcelCount);
-            const paymentParcelCount = _.filter(lastSynchronizedBlock.parcels, p => Type.isPaymentDoc(p.action)).length;
+            const paymentParcelCount = _.filter(retractedBlock.parcels, p => Type.isPaymentDoc(p.action)).length;
             await this.elasticSearchAgent.decreaseLogCount(
                 dateString,
                 LogType.PARCEL_PAYMENT_COUNT,
                 paymentParcelCount
             );
-            const setRegularKeyParcelCount = _.filter(lastSynchronizedBlock.parcels, p =>
-                Type.isSetRegularKeyDoc(p.action)
-            ).length;
+            const setRegularKeyParcelCount = _.filter(retractedBlock.parcels, p => Type.isSetRegularKeyDoc(p.action))
+                .length;
             await this.elasticSearchAgent.decreaseLogCount(
                 dateString,
                 LogType.PARCEL_SET_REGULAR_KEY_COUNT,
                 setRegularKeyParcelCount
             );
-            const changeShardStateParcelCount = _.filter(lastSynchronizedBlock.parcels, p =>
+            const changeShardStateParcelCount = _.filter(retractedBlock.parcels, p =>
                 Type.isChangeShardStateDoc(p.action)
             ).length;
             await this.elasticSearchAgent.decreaseLogCount(
@@ -329,8 +383,7 @@ export class BlockSyncWorker {
                 changeShardStateParcelCount
             );
         }
-
-        const txs = _.chain(lastSynchronizedBlock.parcels)
+        const txs = _.chain(retractedBlock.parcels)
             .filter(parcel => Type.isChangeShardStateDoc(parcel.action))
             .flatMap(parcel => (parcel.action as ChangeShardStateDoc).transactions)
             .value();
@@ -346,19 +399,14 @@ export class BlockSyncWorker {
                 assetTransferTxCount
             );
         }
-
-        // retract account
-        const blockMiner = lastSynchronizedBlock.author;
-        await this.elasticSearchAgent.decreaseBalance(blockMiner, lastSynchronizedBlock.miningReward);
-
-        // Resolve sequentially
-        for (const parcel of lastSynchronizedBlock.parcels) {
+        const blockMiner = retractedBlock.author;
+        await this.elasticSearchAgent.decreaseBalance(blockMiner, retractedBlock.miningReward);
+        for (const parcel of retractedBlock.parcels) {
             const signer = parcel.sender;
             const fee = parcel.fee;
             await this.elasticSearchAgent.increaseBalance(signer, fee);
         }
-
-        const paymentParcels = _.filter(lastSynchronizedBlock.parcels, parcel => Type.isPaymentDoc(parcel.action));
+        const paymentParcels = _.filter(retractedBlock.parcels, parcel => Type.isPaymentDoc(parcel.action));
         const succeedPaymentParcelJob = _.map(paymentParcels, async parcel => {
             const invoices = await this.codeChainAgent.getParcelInvoice(new H256(parcel.hash));
             if (invoices[0].success) {
@@ -368,7 +416,6 @@ export class BlockSyncWorker {
             }
         });
         const succeedPaymentParcels = _.compact(await Promise.all(succeedPaymentParcelJob));
-        // Resolve sequentially
         for (const parcel of succeedPaymentParcels) {
             const action = parcel.action as PaymentDoc;
             await this.elasticSearchAgent.decreaseBalance(action.receiver, action.amount);

@@ -324,8 +324,8 @@ class Search extends React.Component<Props, State> {
             <ImageLoader
                 className="icon"
                 size={20}
-                url={Type.getMetadata(suggestion.assetScheme.metadata).icon_url}
                 data={new H256(suggestion.asset.assetType).value}
+                isAssetImage={true}
             />
             <span className="name">{Type.getMetadata(suggestion.assetScheme.metadata).name}</span>
         </div>

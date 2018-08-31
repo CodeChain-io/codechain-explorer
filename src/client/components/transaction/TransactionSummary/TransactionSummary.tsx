@@ -169,7 +169,7 @@ class TransactionSummaryInternal extends React.Component<Props, State> {
                                             className="mr-3"
                                             size={42}
                                             data={transactionDoc.data.output.assetType}
-                                            url={metadata.icon_url}
+                                            isAssetImage={true}
                                         />
                                         <div className="content-title d-inline-block text-left">
                                             <Link to={`/asset/0x${transactionDoc.data.output.assetType}`}>
@@ -221,7 +221,7 @@ class TransactionSummaryInternal extends React.Component<Props, State> {
                 onMouseLeave={this.onMouseLeave}
                 onMouseEnter={_.partial(this.onMouseEnter, targetId, metadata.name || `0x${assetType}`, amount)}
             >
-                <ImageLoader size={42} data={assetType} url={metadata.icon_url} />
+                <ImageLoader size={42} data={assetType} isAssetImage={true} />
             </div>
         );
     };

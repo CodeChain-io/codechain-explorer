@@ -45,7 +45,12 @@ class TypeConverter {
 
     public fromAssetTransferInput = async (assetTransferInput: AssetTransferInput): Promise<AssetTransferInputDoc> => {
         const assetScheme = await this.getAssetScheme(assetTransferInput.prevOut.assetType);
-        let transaction = await this.codechainAgent.getTransaction(assetTransferInput.prevOut.transactionHash);
+        let transaction;
+        try {
+            transaction = await this.codechainAgent.getTransaction(assetTransferInput.prevOut.transactionHash);
+        } catch (e) {
+            // nothing
+        }
         if (!transaction) {
             const pendingParcels = await this.codechainAgent.getPendingParcels();
             const pendingTransactions = _.chain(pendingParcels)

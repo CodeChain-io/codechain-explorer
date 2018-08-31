@@ -126,9 +126,9 @@ class TransactionList extends React.Component<Props, State> {
                     <Col md="9">
                         <ImageLoader
                             data={transactionDoc.data.output.assetType}
-                            url={Type.getMetadata(transactionDoc.data.metadata).icon_url}
                             className="icon mr-2"
                             size={18}
+                            isAssetImage={true}
                         />
                         {assetType && assetType.value === transactionDoc.data.output.assetType ? (
                             <HexString text={transactionDoc.data.output.assetType} />
@@ -218,13 +218,9 @@ class TransactionList extends React.Component<Props, State> {
                                                           <Col md="12">
                                                               <ImageLoader
                                                                   data={input.prevOut.assetType}
-                                                                  url={
-                                                                      Type.getMetadata(
-                                                                          input.prevOut.assetScheme.metadata
-                                                                      ).icon_url
-                                                                  }
                                                                   className="icon mr-2"
                                                                   size={18}
+                                                                  isAssetImage={true}
                                                               />
                                                               {assetType &&
                                                               assetType.value === input.prevOut.assetType ? (
@@ -294,12 +290,9 @@ class TransactionList extends React.Component<Props, State> {
                                                           <Col md="12">
                                                               <ImageLoader
                                                                   data={output.assetType}
-                                                                  url={
-                                                                      Type.getMetadata(output.assetScheme.metadata)
-                                                                          .icon_url
-                                                                  }
                                                                   className="icon mr-2"
                                                                   size={18}
+                                                                  isAssetImage={true}
                                                               />
                                                               {assetType && assetType.value === output.assetType ? (
                                                                   <HexString text={output.assetType} />
@@ -369,13 +362,9 @@ class TransactionList extends React.Component<Props, State> {
                                                           <Col md="12">
                                                               <ImageLoader
                                                                   data={burn.prevOut.assetType}
-                                                                  url={
-                                                                      Type.getMetadata(
-                                                                          burn.prevOut.assetScheme.metadata
-                                                                      ).icon_url
-                                                                  }
                                                                   className="icon mr-2"
                                                                   size={18}
+                                                                  isAssetImage={true}
                                                               />
                                                               {assetType &&
                                                               assetType.value === burn.prevOut.assetType ? (
