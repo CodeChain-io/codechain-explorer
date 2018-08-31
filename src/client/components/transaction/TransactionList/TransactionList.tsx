@@ -142,7 +142,7 @@ class TransactionList extends React.Component<Props, State> {
                 </Row>,
                 <hr key="line3" />,
                 <Row key="amount">
-                    <Col md="3">Amount</Col>
+                    <Col md="3">Quantity</Col>
                     <Col md="9">
                         {transactionDoc.data.output.amount ? transactionDoc.data.output.amount.toLocaleString() : 0}
                     </Col>
@@ -255,7 +255,7 @@ class TransactionList extends React.Component<Props, State> {
                                                       </Row>
                                                       <hr />
                                                       <Row>
-                                                          <Col md="4">Amount</Col>
+                                                          <Col md="4">Quantity</Col>
                                                           <Col md="8">{input.prevOut.amount.toLocaleString()}</Col>
                                                       </Row>
                                                   </div>
@@ -329,7 +329,7 @@ class TransactionList extends React.Component<Props, State> {
                                                       </Row>
                                                       <hr />
                                                       <Row>
-                                                          <Col md="4">Amount</Col>
+                                                          <Col md="4">Quantity</Col>
                                                           <Col md="8">{output.amount.toLocaleString()}</Col>
                                                       </Row>
                                                   </div>
@@ -406,7 +406,7 @@ class TransactionList extends React.Component<Props, State> {
                                                       </Row>
                                                       <hr />
                                                       <Row>
-                                                          <Col md="4">Amount</Col>
+                                                          <Col md="4">Quantity</Col>
                                                           <Col md="8">{burn.prevOut.amount.toLocaleString()}</Col>
                                                       </Row>
                                                   </div>

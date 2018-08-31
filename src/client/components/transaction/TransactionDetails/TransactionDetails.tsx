@@ -195,7 +195,7 @@ class TransactionDetailsInternal extends React.Component<Props, State> {
                                         </Row>
                                         <hr />
                                         <Row>
-                                            <Col md="3">Amount</Col>
+                                            <Col md="3">Quantity</Col>
                                             <Col md="9">{input.prevOut.amount.toLocaleString()}</Col>
                                         </Row>
                                         <hr />
@@ -295,7 +295,7 @@ class TransactionDetailsInternal extends React.Component<Props, State> {
                                         </Row>
                                         <hr />
                                         <Row>
-                                            <Col md="3">Amount</Col>
+                                            <Col md="3">Quantity</Col>
                                             <Col md="9">{burn.prevOut.amount.toLocaleString()}</Col>
                                         </Row>
                                         <hr />
@@ -393,7 +393,7 @@ class TransactionDetailsInternal extends React.Component<Props, State> {
                                         </Row>
                                         <hr />
                                         <Row>
-                                            <Col md="3">Amount</Col>
+                                            <Col md="3">Quantity</Col>
                                             <Col md="9">{output.amount.toLocaleString()}</Col>
                                         </Row>
                                         <hr />
@@ -531,7 +531,7 @@ class TransactionDetailsInternal extends React.Component<Props, State> {
                             </Row>
                             <hr />
                             <Row>
-                                <Col md="3">Amount</Col>
+                                <Col md="3">Quantity</Col>
                                 <Col md="9">
                                     {transactionDoc.data.output.amount
                                         ? transactionDoc.data.output.amount.toLocaleString()
