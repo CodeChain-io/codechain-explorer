@@ -99,7 +99,7 @@ class Summary extends React.Component<{}, State> {
                                 <div className="header-part">
                                     <h2 className="title">Weekly {this.getWeeklyLogTitle(type)} log</h2>
                                     <p className="week">
-                                        {before7days} ~ {today} (UTC+0000)
+                                        {before7days} ~ {today} (UTC)
                                     </p>
                                     <select
                                         className="select"
@@ -148,13 +148,19 @@ class Summary extends React.Component<{}, State> {
                                     />
                                 </div>
                                 <div className="weekly-total">
-                                    Weekly total{" "}
+                                    This week:{" "}
                                     {_.reduce(
                                         weeklyLogs,
                                         (memo, log) => parseInt(log["#"], 10) + memo,
                                         0
                                     ).toLocaleString()}{" "}
-                                    blocks (Total {bestBlockNumber ? bestBlockNumber.toLocaleString() : 0} blocks)
+                                    {this.getWeeklyTotalLabel(type)}
+                                    {type === WeeklyLogType.BLOCK_COUNT ? (
+                                        <span>
+                                            &nbsp;(Total acc.: {bestBlockNumber ? bestBlockNumber.toLocaleString() : 0}{" "}
+                                            blocks)
+                                        </span>
+                                    ) : null}
                                 </div>
                             </div>
                         </div>
@@ -164,7 +170,7 @@ class Summary extends React.Component<{}, State> {
                             <div className="chart">
                                 <div className="header-part">
                                     <h2 className="title">Daily {this.getDailyLogTitle(dailyLogType)} log</h2>
-                                    <p className="week">{selectedDate} (UTC+0000)</p>
+                                    <p className="week">{selectedDate} (UTC)</p>
                                     <span className="subtitle">{this.getDailyLogSubTitle(dailyLogType)}</span>
                                     <span className="subtitle-amount">
                                         {weeklyLogs.length > 0
@@ -235,7 +241,12 @@ class Summary extends React.Component<{}, State> {
     }
 
     private onClickWeeklyLog = (event: any) => {
-        this.setState({ selectedDate: event.data.fullDate, isDailyLogRequested: false, selectedIndex: event.index });
+        this.setState({
+            selectedDate: event.data.fullDate,
+            isDailyLogRequested: false,
+            selectedIndex: event.index,
+            isEmptyForDailyLog: false
+        });
     };
 
     private onClickDailyLog = (event: any) => {
@@ -276,6 +287,18 @@ class Summary extends React.Component<{}, State> {
                 return "transaction";
             case WeeklyLogType.PARCEL_COUNT:
                 return "parcel";
+        }
+        return "";
+    };
+
+    private getWeeklyTotalLabel = (type: WeeklyLogType) => {
+        switch (type) {
+            case WeeklyLogType.BLOCK_COUNT:
+                return "blocks";
+            case WeeklyLogType.TX_COUNT:
+                return "tx";
+            case WeeklyLogType.PARCEL_COUNT:
+                return "parcels";
         }
         return "";
     };

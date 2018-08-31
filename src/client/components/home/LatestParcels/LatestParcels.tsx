@@ -28,7 +28,7 @@ const LatestParcels = (props: Props) => {
                             <th style={{ width: "25%" }}>Hash</th>
                             <th style={{ width: "20%" }}>Signer</th>
                             <th style={{ width: "15%" }}>Fee</th>
-                            <th style={{ width: "20%" }}>Age</th>
+                            <th style={{ width: "20%" }}>Last seen</th>
                         </tr>
                     </thead>
                     <tbody>

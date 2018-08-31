@@ -124,7 +124,7 @@ class Transactions extends React.Component<Props, State> {
                                         <th style={{ width: "20%" }}>Hash</th>
                                         <th style={{ width: "25%" }}>Assets</th>
                                         <th style={{ width: "15%" }}>Amount</th>
-                                        <th style={{ width: "20%" }}>Age</th>
+                                        <th style={{ width: "20%" }}>Last seen</th>
                                     </tr>
                                 </thead>
                                 <tbody>

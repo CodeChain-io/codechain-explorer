@@ -112,7 +112,7 @@ class Blocks extends React.Component<Props, State> {
                                         <th style={{ width: "15%" }}>Parcels</th>
                                         <th style={{ width: "35%" }}>Author</th>
                                         <th style={{ width: "15%" }}>Reward</th>
-                                        <th style={{ width: "20%" }}>Age</th>
+                                        <th style={{ width: "20%" }}>Last seen</th>
                                     </tr>
                                 </thead>
                                 <tbody>

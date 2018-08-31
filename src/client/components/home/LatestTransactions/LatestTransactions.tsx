@@ -70,7 +70,7 @@ const LatestTransactions = (props: Props) => {
                             <th style={{ width: "20%" }}>Hash</th>
                             <th style={{ width: "25%" }}>Assets</th>
                             <th style={{ width: "15%" }}>Amount</th>
-                            <th style={{ width: "20%" }}>Age</th>
+                            <th style={{ width: "20%" }}>Last seen</th>
                         </tr>
                     </thead>
                     <tbody>

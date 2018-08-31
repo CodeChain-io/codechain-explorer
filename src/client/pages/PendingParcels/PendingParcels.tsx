@@ -216,10 +216,10 @@ class PendingParcels extends React.Component<Props, State> {
                             <Table striped={true} className="data-table">
                                 <thead>
                                     <tr>
-                                        <th style={{ width: "20%" }}>Hash</th>
-                                        <th style={{ width: "20%" }}>Signer</th>
+                                        <th style={{ width: "25%" }}>Hash</th>
+                                        <th style={{ width: "25%" }}>Signer</th>
                                         <th
-                                            style={{ width: "10%" }}
+                                            style={{ width: "15%" }}
                                             className="sort-header"
                                             onClick={_.partial(this.handleSortButton, "fee")}
                                         >
@@ -227,7 +227,7 @@ class PendingParcels extends React.Component<Props, State> {
                                             {this.getSortButton("fee")}
                                         </th>
                                         <th
-                                            style={{ width: "10%" }}
+                                            style={{ width: "15%" }}
                                             className="sort-header"
                                             onClick={_.partial(this.handleSortButton, "txs")}
                                         >
@@ -239,10 +239,9 @@ class PendingParcels extends React.Component<Props, State> {
                                             className="sort-header"
                                             onClick={_.partial(this.handleSortButton, "pendingPeriod")}
                                         >
-                                            Pending Period
+                                            Last seen
                                             {this.getSortButton("pendingPeriod")}
                                         </th>
-                                        <th style={{ width: "20%" }}>Estimated Confirmation Period</th>
                                     </tr>
                                 </thead>
                                 {pendingParcels.length > 0 ? (
@@ -283,7 +282,6 @@ class PendingParcels extends React.Component<Props, State> {
                                                             : 0}
                                                     </td>
                                                     <td>{moment.unix(pendingParcel.timestamp).fromNow()}</td>
-                                                    <td>?</td>
                                                 </tr>
                                             );
                                         })}
