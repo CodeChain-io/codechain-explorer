@@ -22,20 +22,24 @@ interface Props {
 interface TransactionResult {
     transaction: TransactionDoc;
     status: string;
+    timestamp?: number;
 }
 
 interface State {
     transactionResult?: TransactionResult;
     notExistedInBlock: boolean;
     notExistedInPendingParcel: boolean;
+    refresh: boolean;
 }
 
 class Transaction extends React.Component<Props, State> {
+    private interval: NodeJS.Timer;
     constructor(props: Props) {
         super(props);
         this.state = {
             notExistedInBlock: false,
-            notExistedInPendingParcel: false
+            notExistedInPendingParcel: false,
+            refresh: false
         };
     }
 
@@ -59,13 +63,27 @@ class Transaction extends React.Component<Props, State> {
         }
     }
 
+    public componentDidMount() {
+        this.interval = setInterval(() => {
+            if (this.state.transactionResult && this.state.transactionResult.status === "pending") {
+                this.setState({
+                    refresh: true
+                });
+            }
+        }, 5000);
+    }
+
+    public componentWillUnmount() {
+        clearInterval(this.interval);
+    }
+
     public render() {
         const {
             match: {
                 params: { hash }
             }
         } = this.props;
-        const { transactionResult, notExistedInBlock, notExistedInPendingParcel } = this.state;
+        const { transactionResult, notExistedInBlock, notExistedInPendingParcel, refresh } = this.state;
         if (!transactionResult) {
             if (!notExistedInBlock) {
                 return (
@@ -95,6 +113,14 @@ class Transaction extends React.Component<Props, State> {
         }
         return (
             <Container className="transaction">
+                {refresh ? (
+                    <RequestPendingTransaction
+                        hash={hash}
+                        onError={this.onError}
+                        onPendingTransaction={this.onPendingTransaction}
+                        onPendingTransactionNotExist={this.onPendingTransactionNotExist}
+                    />
+                ) : null}
                 <Row>
                     <Col md="8" xl="7">
                         <div className="d-flex title-container">
@@ -124,7 +150,7 @@ class Transaction extends React.Component<Props, State> {
                     <TransactionSummary transaction={transactionResult.transaction} />
                 </div>
                 <div className="mt-large">
-                    <TransactionDetails transaction={transactionResult.transaction} status={transactionResult.status} />
+                    <TransactionDetails transactionResult={transactionResult} />
                 </div>
             </Container>
         );
@@ -137,9 +163,10 @@ class Transaction extends React.Component<Props, State> {
     private onPendingTransaction = (pendingTransaction: PendingTransactionDoc) => {
         const transactionResult = {
             transaction: pendingTransaction.transaction,
-            status: pendingTransaction.status
+            status: pendingTransaction.status,
+            timestamp: pendingTransaction.timestamp
         };
-        this.setState({ transactionResult });
+        this.setState({ transactionResult, refresh: false });
     };
 
     private onTransaction = (transaction: TransactionDoc) => {

@@ -23,20 +23,24 @@ interface Props {
 interface ParcelResult {
     parcel: ParcelDoc;
     status: string;
+    timestamp?: number;
 }
 
 interface State {
     parcelResult?: ParcelResult;
     notExistedInBlock: boolean;
     notExistedInPendingParcel: boolean;
+    refresh: boolean;
 }
 
 class Parcel extends React.Component<Props, State> {
+    private interval: NodeJS.Timer;
     constructor(props: Props) {
         super(props);
         this.state = {
             notExistedInBlock: false,
-            notExistedInPendingParcel: false
+            notExistedInPendingParcel: false,
+            refresh: false
         };
     }
 
@@ -60,13 +64,27 @@ class Parcel extends React.Component<Props, State> {
         }
     }
 
+    public componentDidMount() {
+        this.interval = setInterval(() => {
+            if (this.state.parcelResult && this.state.parcelResult.status === "pending") {
+                this.setState({
+                    refresh: true
+                });
+            }
+        }, 5000);
+    }
+
+    public componentWillUnmount() {
+        clearInterval(this.interval);
+    }
+
     public render() {
         const {
             match: {
                 params: { hash }
             }
         } = this.props;
-        const { parcelResult, notExistedInBlock, notExistedInPendingParcel } = this.state;
+        const { parcelResult, notExistedInBlock, notExistedInPendingParcel, refresh } = this.state;
         if (!parcelResult) {
             if (!notExistedInBlock) {
                 return (
@@ -96,6 +114,14 @@ class Parcel extends React.Component<Props, State> {
         }
         return (
             <Container className="parcel">
+                {refresh ? (
+                    <RequestPendingParcel
+                        hash={hash}
+                        onError={this.onError}
+                        onPendingParcel={this.onPendingParcel}
+                        onPendingParcelNotExist={this.onPendingParcelNotExist}
+                    />
+                ) : null}
                 <Row>
                     <Col md="8" xl="7">
                         <div className="d-flex title-container">
@@ -118,7 +144,7 @@ class Parcel extends React.Component<Props, State> {
                 </Row>
                 <Row className="mt-large">
                     <Col lg={Type.isChangeShardStateDoc(parcelResult.parcel.action) ? "9" : "12"}>
-                        <ParcelDetails parcel={parcelResult.parcel} status={parcelResult.status} />
+                        <ParcelDetails parcelResult={parcelResult} />
                     </Col>
                     {Type.isChangeShardStateDoc(parcelResult.parcel.action) ? (
                         <Col lg="3">
@@ -184,9 +210,10 @@ class Parcel extends React.Component<Props, State> {
     private onPendingParcel = (pendingParcel: PendingParcelDoc) => {
         const parcelResult = {
             parcel: pendingParcel.parcel,
-            status: pendingParcel.status
+            status: pendingParcel.status,
+            timestamp: pendingParcel.timestamp
         };
-        this.setState({ parcelResult });
+        this.setState({ parcelResult, refresh: false });
     };
 
     private onPendingParcelNotExist = () => {

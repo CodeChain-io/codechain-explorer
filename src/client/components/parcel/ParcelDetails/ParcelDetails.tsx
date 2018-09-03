@@ -18,9 +18,14 @@ import HexString from "../../util/HexString/HexString";
 import { StatusBadge } from "../../util/StatusBadge/StatusBadge";
 import "./ParcelDetails.scss";
 
-interface Props {
+interface ParcelResult {
     parcel: ParcelDoc;
     status: string;
+    timestamp?: number;
+}
+
+interface Props {
+    parcelResult: ParcelResult;
 }
 
 const getElementByType = (parcel: ParcelDoc) => {
@@ -94,7 +99,9 @@ const getParcelInvoice = (parcel: ParcelDoc) => {
 };
 
 const ParcelDetails = (props: Props) => {
-    const { parcel, status } = props;
+    const { parcelResult } = props;
+    const parcel = parcelResult.parcel;
+    const status = parcelResult.status;
 
     return (
         <div className="parcel-details">
@@ -156,7 +163,7 @@ const ParcelDetails = (props: Props) => {
                         <Row>
                             <Col md="3">Status</Col>
                             <Col md="9">
-                                <StatusBadge status={status} />
+                                <StatusBadge status={status} timestamp={parcelResult.timestamp} />
                             </Col>
                         </Row>
                         <hr />

@@ -1,10 +1,13 @@
-import { faCircle } from "@fortawesome/free-solid-svg-icons";
+import { faCircle, faSpinner } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import * as moment from "moment";
 import * as React from "react";
+import "./StatusBadge.scss";
 
 interface Props {
     status: string;
     className?: string;
+    timestamp?: number;
 }
 const getBadgeBackgroundColorClassByStatus = (status: string) => {
     switch (status) {
@@ -30,11 +33,17 @@ const getStatusString = (status: string) => {
 };
 
 export const StatusBadge = (props: Props) => {
-    const { className, status } = props;
+    const { className, status, timestamp } = props;
     return (
-        <span className={className}>
+        <span className={`status-badge ${className}`}>
             <FontAwesomeIcon className={getBadgeBackgroundColorClassByStatus(status)} icon={faCircle} />{" "}
-            {getStatusString(status)}
+            {getStatusString(status)}{" "}
+            {timestamp && status === "pending" ? (
+                <span>
+                    (<FontAwesomeIcon className="spin" icon={faSpinner} />
+                    {moment.unix(timestamp).fromNow()})
+                </span>
+            ) : null}
         </span>
     );
 };

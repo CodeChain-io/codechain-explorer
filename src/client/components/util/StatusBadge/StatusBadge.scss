@@ -1,0 +1,22 @@
+.status-badge {
+  @-moz-keyframes spin {
+    to {
+      -moz-transform: rotate(360deg);
+    }
+  }
+  @-webkit-keyframes spin {
+    to {
+      -webkit-transform: rotate(360deg);
+    }
+  }
+  @keyframes spin {
+    to {
+      transform: rotate(360deg);
+    }
+  }
+
+  .spin {
+    animation: spin 2000ms linear infinite;
+    margin-right: 5px;
+  }
+}

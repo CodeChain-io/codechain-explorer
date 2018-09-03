@@ -15,9 +15,14 @@ import { StatusBadge } from "../../util/StatusBadge/StatusBadge";
 import { TypeBadge } from "../../util/TypeBadge/TypeBadge";
 import "./TransactionDetails.scss";
 
-interface Props {
+interface TransactionResult {
     transaction: TransactionDoc;
     status: string;
+    timestamp?: number;
+}
+
+interface Props {
+    transactionResult: TransactionResult;
     moveToSectionRef?: string;
     dispatch: Dispatch;
 }
@@ -47,7 +52,7 @@ class TransactionDetailsInternal extends React.Component<Props, State> {
     }
 
     public render() {
-        const { transaction, status } = this.props;
+        const { transactionResult } = this.props;
         return (
             <div className="transaction-details">
                 <Row>
@@ -56,7 +61,11 @@ class TransactionDetailsInternal extends React.Component<Props, State> {
                         <hr className="heading-hr" />
                     </Col>
                 </Row>
-                {this.getTransactionInfoByType(transaction, status)}
+                {this.getTransactionInfoByType(
+                    transactionResult.transaction,
+                    transactionResult.status,
+                    transactionResult.timestamp
+                )}
             </div>
         );
     }
@@ -71,7 +80,7 @@ class TransactionDetailsInternal extends React.Component<Props, State> {
         return `0x${lockScriptHash}`;
     };
 
-    private getTransactionInfoByType = (transaction: TransactionDoc, status: string) => {
+    private getTransactionInfoByType = (transaction: TransactionDoc, status: string, pendingDuration?: number) => {
         const { pageForBurn, pageForOutput, pageForInput } = this.state;
         if (Type.isAssetTransferTransactionDoc(transaction)) {
             const transactionDoc = transaction as AssetTransferTransactionDoc;
@@ -114,7 +123,7 @@ class TransactionDetailsInternal extends React.Component<Props, State> {
                             <Row>
                                 <Col md="3">Status</Col>
                                 <Col md="9">
-                                    <StatusBadge status={status} />
+                                    <StatusBadge status={status} timestamp={pendingDuration} />
                                 </Col>
                             </Row>
                             <hr />
@@ -477,7 +486,7 @@ class TransactionDetailsInternal extends React.Component<Props, State> {
                             <Row>
                                 <Col md="3">Status</Col>
                                 <Col md="9">
-                                    <StatusBadge status={status} />
+                                    <StatusBadge status={status} timestamp={pendingDuration} />
                                 </Col>
                             </Row>
                             <hr />
