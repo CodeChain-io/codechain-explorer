@@ -108,7 +108,7 @@ export class QueryParcel implements BaseAction {
             type: "_doc",
             id: parcelDoc.hash,
             body: parcelDoc,
-            refresh: "wait_for"
+            refresh: "true"
         });
     }
 
@@ -117,7 +117,7 @@ export class QueryParcel implements BaseAction {
             index: "parcel",
             type: "_doc",
             id: hash.value,
-            refresh: "wait_for",
+            refresh: "true",
             body: {
                 doc: partial
             }

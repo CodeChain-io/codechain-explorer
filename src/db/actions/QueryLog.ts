@@ -101,7 +101,7 @@ export class QueryLog implements BaseAction {
                 type: logType,
                 value
             },
-            refresh: "wait_for"
+            refresh: "true"
         });
     }
 
@@ -113,7 +113,7 @@ export class QueryLog implements BaseAction {
             body: {
                 doc
             },
-            refresh: "wait_for"
+            refresh: "true"
         });
     }
 

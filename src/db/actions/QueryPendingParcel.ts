@@ -207,7 +207,7 @@ export class QueryPendingParcel implements BaseAction {
             index: "pending_parcel",
             type: "_doc",
             id: hash.value,
-            refresh: "wait_for",
+            refresh: "true",
             body: {
                 doc: {
                     status: "dead"
@@ -221,7 +221,7 @@ export class QueryPendingParcel implements BaseAction {
             index: "pending_parcel",
             type: "_doc",
             id: hash.value,
-            refresh: "wait_for"
+            refresh: "true"
         });
     }
 
@@ -231,7 +231,7 @@ export class QueryPendingParcel implements BaseAction {
             type: "_doc",
             id: pendingParcelDoc.parcel.hash,
             body: pendingParcelDoc,
-            refresh: "wait_for"
+            refresh: "true"
         });
     }
 
@@ -240,7 +240,7 @@ export class QueryPendingParcel implements BaseAction {
             index: "pending_parcel",
             type: "_doc",
             id: hash.value,
-            refresh: "wait_for",
+            refresh: "true",
             body: {
                 doc: {
                     status: "pending"

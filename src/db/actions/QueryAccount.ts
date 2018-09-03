@@ -68,7 +68,7 @@ export class QueryAccount implements BaseAction {
             body: {
                 balance
             },
-            refresh: "wait_for"
+            refresh: "true"
         });
     }
 
@@ -82,7 +82,7 @@ export class QueryAccount implements BaseAction {
                     balance
                 }
             },
-            refresh: "wait_for"
+            refresh: "true"
         });
     }
 

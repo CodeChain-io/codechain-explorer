@@ -154,7 +154,7 @@ export class QueryBlock implements BaseAction {
             type: "_doc",
             id: blockDoc.hash,
             body: blockDoc,
-            refresh: "wait_for"
+            refresh: "true"
         });
     }
 
@@ -163,7 +163,7 @@ export class QueryBlock implements BaseAction {
             index: "block",
             type: "_doc",
             id: hash.value,
-            refresh: "wait_for",
+            refresh: "true",
             body: {
                 doc: partial
             }

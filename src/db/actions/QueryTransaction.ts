@@ -408,7 +408,7 @@ export class QueryTransaction implements BaseAction {
             type: "_doc",
             id: transactionDoc.data.hash,
             body: transactionDoc,
-            refresh: "wait_for"
+            refresh: "true"
         });
     }
 
@@ -417,7 +417,7 @@ export class QueryTransaction implements BaseAction {
             index: "transaction",
             type: "_doc",
             id: hash.value,
-            refresh: "wait_for",
+            refresh: "true",
             body: {
                 doc: partial
             }
