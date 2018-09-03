@@ -271,12 +271,13 @@ class TypeConverter {
     public fromBlock = async (block: Block, defaultMiningReward: number): Promise<BlockDoc> => {
         const blockJson = block.toJSON();
         const parcelDocs = await Promise.all(_.map(block.parcels, parcel => this.fromParcel(parcel, block.timestamp)));
+        const chainMiningReward = block.number === 0 ? 0 : defaultMiningReward;
         const miningReward = _.reduce(
             block.parcels,
             (memo, parcel) => new BigNumber((parcel.unsigned.fee as U256).value.toString(10)).plus(memo),
             new BigNumber(0)
         )
-            .plus(defaultMiningReward)
+            .plus(chainMiningReward)
             .toString(10);
         return {
             parentHash: blockJson.parentHash,
