@@ -1,13 +1,13 @@
 import * as _ from "lodash";
 import * as moment from "moment";
 import * as React from "react";
-import { Table } from "reactstrap";
 
 import { Link } from "react-router-dom";
 import { ParcelDoc } from "../../../../db/DocType";
 import { changeQuarkStringToCCC } from "../../../utils/Formatter";
 import { ActionBadge } from "../../util/ActionBadge/ActionBadge";
 import { CommaNumberString } from "../../util/CommaNumberString/CommaNumberString";
+import DataTable from "../../util/DataTable/DataTable";
 import HexString from "../../util/HexString/HexString";
 import "./LatestParcels.scss";
 
@@ -21,7 +21,7 @@ const LatestParcels = (props: Props) => {
         <div className="latest-parcels">
             <h1>Latest Parcels</h1>
             <div className="latest-container">
-                <Table striped={true} className="data-table">
+                <DataTable>
                     <thead>
                         <tr>
                             <th style={{ width: "20%" }}>Type</th>
@@ -53,7 +53,7 @@ const LatestParcels = (props: Props) => {
                             );
                         })}
                     </tbody>
-                </Table>
+                </DataTable>
                 {
                     <div className="mt-small">
                         <Link to={"/parcels"}>

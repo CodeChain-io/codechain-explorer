@@ -4,12 +4,13 @@ import * as _ from "lodash";
 import * as moment from "moment";
 import * as React from "react";
 import { Redirect } from "react-router";
-import { Container, Table } from "reactstrap";
+import { Container } from "reactstrap";
 
 import { Link } from "react-router-dom";
 import { ParcelDoc } from "../../../db/DocType";
 import { ActionBadge } from "../../components/util/ActionBadge/ActionBadge";
 import { CommaNumberString } from "../../components/util/CommaNumberString/CommaNumberString";
+import DataTable from "../../components/util/DataTable/DataTable";
 import HexString from "../../components/util/HexString/HexString";
 import { RequestParcels, RequestTotalParcelCount } from "../../request";
 import { changeQuarkStringToCCC } from "../../utils/Formatter";
@@ -115,7 +116,7 @@ class Parcels extends React.Component<Props, State> {
                             </div>
                         </div>
                         <div>
-                            <Table striped={true} className="data-table">
+                            <DataTable>
                                 <thead>
                                     <tr>
                                         <th style={{ width: "20%" }}>Type</th>
@@ -147,7 +148,7 @@ class Parcels extends React.Component<Props, State> {
                                         );
                                     })}
                                 </tbody>
-                            </Table>
+                            </DataTable>
                         </div>
                         <div className="d-flex mt-small">
                             <div className="d-inline ml-auto pager">

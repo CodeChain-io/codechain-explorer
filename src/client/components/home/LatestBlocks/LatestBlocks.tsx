@@ -2,11 +2,11 @@ import * as _ from "lodash";
 import * as moment from "moment";
 import * as React from "react";
 import { Link } from "react-router-dom";
-import { Table } from "reactstrap";
 
 import { BlockDoc } from "../../../../db/DocType";
 import { changeQuarkStringToCCC } from "../../../utils/Formatter";
 import { CommaNumberString } from "../../util/CommaNumberString/CommaNumberString";
+import DataTable from "../../util/DataTable/DataTable";
 import "./LatestBlocks.scss";
 
 interface Props {
@@ -19,7 +19,7 @@ const LatestBlocks = (props: Props) => {
         <div className="latest-blocks">
             <h1>Latest Blocks</h1>
             <div className="latest-container">
-                <Table striped={true} className="data-table">
+                <DataTable>
                     <thead>
                         <tr>
                             <th style={{ width: "15%" }}>No.</th>
@@ -49,7 +49,7 @@ const LatestBlocks = (props: Props) => {
                             );
                         })}
                     </tbody>
-                </Table>
+                </DataTable>
                 {
                     <div className="mt-small">
                         <Link to={"/blocks"}>

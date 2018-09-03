@@ -1,10 +1,10 @@
 import * as _ from "lodash";
 import * as moment from "moment";
 import * as React from "react";
-import { Table } from "reactstrap";
 
 import { Link } from "react-router-dom";
 import { AssetMintTransactionDoc, AssetTransferTransactionDoc, TransactionDoc, Type } from "../../../../db/DocType";
+import DataTable from "../../util/DataTable/DataTable";
 import HexString from "../../util/HexString/HexString";
 import { ImageLoader } from "../../util/ImageLoader/ImageLoader";
 import { TypeBadge } from "../../util/TypeBadge/TypeBadge";
@@ -55,7 +55,7 @@ const LatestTransactions = (props: Props) => {
         <div className="latest-transactions">
             <h1>Latest Transactions</h1>
             <div className="latest-container">
-                <Table striped={true} className="data-table">
+                <DataTable>
                     <thead>
                         <tr>
                             <th style={{ width: "20%" }}>Type</th>
@@ -85,7 +85,7 @@ const LatestTransactions = (props: Props) => {
                             );
                         })}
                     </tbody>
-                </Table>
+                </DataTable>
                 {
                     <div className="mt-small">
                         <Link to={"/txs"}>

@@ -5,9 +5,10 @@ import * as moment from "moment";
 import * as React from "react";
 import { Redirect } from "react-router";
 import { Link } from "react-router-dom";
-import { Container, Table } from "reactstrap";
+import { Container } from "reactstrap";
 import { BlockDoc } from "../../../db/DocType";
 import { CommaNumberString } from "../../components/util/CommaNumberString/CommaNumberString";
+import DataTable from "../../components/util/DataTable/DataTable";
 import { RequestBlocks, RequestTotalBlockCount } from "../../request";
 import { changeQuarkStringToCCC } from "../../utils/Formatter";
 import "./Blocks.scss";
@@ -105,7 +106,7 @@ class Blocks extends React.Component<Props, State> {
                             </div>
                         </div>
                         <div>
-                            <Table striped={true} className="data-table">
+                            <DataTable>
                                 <thead>
                                     <tr>
                                         <th style={{ width: "15%" }}>No.</th>
@@ -139,7 +140,7 @@ class Blocks extends React.Component<Props, State> {
                                         );
                                     })}
                                 </tbody>
-                            </Table>
+                            </DataTable>
                         </div>
                         <div className="d-flex mt-small">
                             <div className="d-inline ml-auto pager">

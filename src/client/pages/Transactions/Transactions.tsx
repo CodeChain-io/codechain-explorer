@@ -4,9 +4,10 @@ import * as _ from "lodash";
 import * as moment from "moment";
 import * as React from "react";
 import { Redirect } from "react-router";
-import { Container, Table } from "reactstrap";
+import { Container } from "reactstrap";
 
 import { AssetMintTransactionDoc, AssetTransferTransactionDoc, TransactionDoc, Type } from "../../../db/DocType";
+import DataTable from "../../components/util/DataTable/DataTable";
 import HexString from "../../components/util/HexString/HexString";
 import { ImageLoader } from "../../components/util/ImageLoader/ImageLoader";
 import { TypeBadge } from "../../components/util/TypeBadge/TypeBadge";
@@ -117,7 +118,7 @@ class Transactions extends React.Component<Props, State> {
                             </div>
                         </div>
                         <div>
-                            <Table striped={true} className="data-table">
+                            <DataTable>
                                 <thead>
                                     <tr>
                                         <th style={{ width: "20%" }}>Type</th>
@@ -147,7 +148,7 @@ class Transactions extends React.Component<Props, State> {
                                         );
                                     })}
                                 </tbody>
-                            </Table>
+                            </DataTable>
                         </div>
                         <div className="d-flex mt-small">
                             <div className="d-inline ml-auto pager">

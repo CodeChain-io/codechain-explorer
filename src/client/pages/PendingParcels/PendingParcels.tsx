@@ -12,7 +12,7 @@ import * as _ from "lodash";
 import * as moment from "moment";
 import * as React from "react";
 import { Redirect } from "react-router";
-import { Container, Table } from "reactstrap";
+import { Container } from "reactstrap";
 import * as emptyImage from "./img/empty.png";
 
 import { RequestPendingParcels, RequestTotalPendingParcelCount } from "../../request";
@@ -20,6 +20,7 @@ import { RequestPendingParcels, RequestTotalPendingParcelCount } from "../../req
 import { Link } from "react-router-dom";
 import { ChangeShardStateDoc, PendingParcelDoc, Type } from "../../../db/DocType";
 import { ActionBadge } from "../../components/util/ActionBadge/ActionBadge";
+import DataTable from "../../components/util/DataTable/DataTable";
 import HexString from "../../components/util/HexString/HexString";
 import "./PendingParcels.scss";
 
@@ -213,7 +214,7 @@ class PendingParcels extends React.Component<Props, State> {
                             </div>
                         </div>
                         <div>
-                            <Table striped={true} className="data-table">
+                            <DataTable>
                                 <thead>
                                     <tr>
                                         <th style={{ width: "25%" }}>Hash</th>
@@ -287,7 +288,7 @@ class PendingParcels extends React.Component<Props, State> {
                                         })}
                                     </tbody>
                                 ) : null}
-                            </Table>
+                            </DataTable>
                             {pendingParcels.length === 0 ? (
                                 <div className="empty-container align-items-center justify-content-center">
                                     <img className="empty-icon" src={emptyImage} />
