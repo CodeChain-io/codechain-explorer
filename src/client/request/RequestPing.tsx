@@ -6,6 +6,7 @@ import { ApiError, apiRequest } from "./ApiRequest";
 interface OwnProps {
     onPong: () => void;
     onError: (e: ApiError) => void;
+    onDead: () => void;
     repeat?: number;
 }
 
@@ -59,7 +60,7 @@ class RequestPingInternal extends React.Component<Props, State> {
     }
 
     private request = () => {
-        const { onPong, onError, dispatch } = this.props;
+        const { onPong, onError, dispatch, onDead } = this.props;
         apiRequest({ path: `ping`, showProgressBar: false, dispatch })
             .then((response: string) => {
                 if (response === "pong") {
@@ -68,7 +69,7 @@ class RequestPingInternal extends React.Component<Props, State> {
                     onError({ message: `Expected "pong" but "${response}"` });
                 }
             })
-            .catch(onError);
+            .catch(onDead);
     };
 }
 

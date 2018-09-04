@@ -2,6 +2,8 @@ import * as React from "react";
 import * as ReactDOM from "react-dom";
 import { Provider } from "react-redux";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./index.scss";
@@ -49,6 +51,7 @@ ReactDOM.render(
                             <Route path="/blocks" component={Blocks} />
                             <Route component={NotFound} />
                         </Switch>
+                        <ToastContainer autoClose={false} />
                     </div>
                     <Footer />
                 </div>

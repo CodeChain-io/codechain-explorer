@@ -25,7 +25,7 @@ export const apiRequest = ({ path, body, dispatch, progressBarTarget, showProgre
                 dispatch(hideLoading(progressBarTarget ? progressBarTarget : undefined));
             }
             reject(new Error("Request timed out"));
-        }, 10000);
+        }, 20000);
 
         fetch(
             `${host}/api/${path}`,

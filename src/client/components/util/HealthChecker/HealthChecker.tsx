@@ -1,6 +1,7 @@
 import { faCircle } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import * as React from "react";
+import { toast } from "react-toastify";
 
 import { RequestPing } from "../../../request";
 
@@ -8,6 +9,7 @@ import "./HealthChecker.scss";
 
 interface State {
     isNodeAlive?: boolean;
+    isDead: boolean;
 }
 
 interface Props {
@@ -17,17 +19,21 @@ interface Props {
 class HealthChecker extends React.Component<Props, State> {
     constructor(props: {}) {
         super(props);
-        this.state = {};
+        this.state = {
+            isDead: false
+        };
     }
-
     public render() {
         const { isSimple } = this.props;
-        const { isNodeAlive } = this.state;
+        const { isNodeAlive, isDead } = this.state;
         if (isNodeAlive === undefined) {
             return (
                 <div className="health-checker">
-                    {isSimple ? "" : "Status"} <FontAwesomeIcon icon={faCircle} />
-                    <RequestPing onPong={this.onPong} onError={this.onError} />
+                    {isSimple ? "" : "Status"}{" "}
+                    <span className="text-warning">
+                        <FontAwesomeIcon icon={faCircle} />
+                    </span>
+                    <RequestPing onPong={this.onPong} onError={this.onError} onDead={this.serverDeadNotify} />
                 </div>
             );
         }
@@ -48,7 +54,14 @@ class HealthChecker extends React.Component<Props, State> {
                         </span>
                     </div>
                 )}
-                <RequestPing repeat={5000} onPong={this.onPong} onError={this.onError} />
+                {!isDead ? (
+                    <RequestPing
+                        repeat={5000}
+                        onPong={this.onPong}
+                        onError={this.onError}
+                        onDead={this.serverDeadNotify}
+                    />
+                ) : null}
             </div>
         );
     }
@@ -59,6 +72,13 @@ class HealthChecker extends React.Component<Props, State> {
 
     private onError = () => {
         this.setState({ isNodeAlive: false });
+    };
+
+    private serverDeadNotify = () => {
+        this.setState({ isDead: true });
+        toast.error("500. There was an error. Please try again later.", {
+            position: toast.POSITION.BOTTOM_RIGHT
+        });
     };
 }
 
