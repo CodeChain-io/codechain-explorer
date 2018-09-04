@@ -23,9 +23,14 @@ export async function run(options: ServerConfig) {
             type: () => true // Treat all other content types as application/json
         })
     );
+    app.use("*", (req, res, next) => {
+        res.setHeader("Surrogate-Control", "no-store");
+        res.setHeader("Cache-Control", "no-store, no-cache, must-revalidate, proxy-revalidate");
+        res.setHeader("Pragma", "no-cache");
+        res.setHeader("Expires", "0");
 
-    const cwd = process.cwd();
-    app.use("/", express.static(path.resolve(cwd, "build")));
+        next();
+    });
     app.use("/api", createApiRouter(context, true));
 
     const httpServer = http.createServer(app);
