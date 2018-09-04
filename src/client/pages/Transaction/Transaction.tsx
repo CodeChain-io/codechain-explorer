@@ -113,12 +113,12 @@ class Transaction extends React.Component<Props, State> {
         }
         return (
             <Container className="transaction">
-                {refresh ? (
+                {this.state.transactionResult && this.state.transactionResult.status === "pending" && refresh ? (
                     <RequestPendingTransaction
                         hash={hash}
                         onError={this.onError}
                         onPendingTransaction={this.onPendingTransaction}
-                        onPendingTransactionNotExist={this.onPendingTransactionNotExist}
+                        onPendingTransactionNotExist={this.onRefreshPendingTransactionNotExist}
                     />
                 ) : null}
                 <Row>
@@ -157,7 +157,15 @@ class Transaction extends React.Component<Props, State> {
     }
 
     private onPendingTransactionNotExist = () => {
-        this.setState({ notExistedInPendingParcel: true });
+        this.setState({ notExistedInPendingParcel: true, refresh: false });
+    };
+
+    private onRefreshPendingTransactionNotExist = () => {
+        this.setState({
+            transactionResult: undefined,
+            notExistedInBlock: false,
+            notExistedInPendingParcel: false
+        });
     };
 
     private onPendingTransaction = (pendingTransaction: PendingTransactionDoc) => {

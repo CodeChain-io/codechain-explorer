@@ -114,12 +114,12 @@ class Parcel extends React.Component<Props, State> {
         }
         return (
             <Container className="parcel">
-                {refresh ? (
+                {this.state.parcelResult && this.state.parcelResult.status === "pending" && refresh ? (
                     <RequestPendingParcel
                         hash={hash}
                         onError={this.onError}
                         onPendingParcel={this.onPendingParcel}
-                        onPendingParcelNotExist={this.onPendingParcelNotExist}
+                        onPendingParcelNotExist={this.onRefreshPendingParcelNotExist}
                     />
                 ) : null}
                 <Row>
@@ -215,7 +215,13 @@ class Parcel extends React.Component<Props, State> {
         };
         this.setState({ parcelResult, refresh: false });
     };
-
+    private onRefreshPendingParcelNotExist = () => {
+        this.setState({
+            parcelResult: undefined,
+            notExistedInBlock: false,
+            notExistedInPendingParcel: false
+        });
+    };
     private onPendingParcelNotExist = () => {
         this.setState({ notExistedInPendingParcel: true });
     };
