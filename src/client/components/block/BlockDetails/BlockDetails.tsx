@@ -2,6 +2,7 @@ import * as _ from "lodash";
 import * as React from "react";
 
 import { Col, Row } from "reactstrap";
+import DataSet from "../../util/DataSet/DataSet";
 
 import { Link } from "react-router-dom";
 import { BlockDoc, ChangeShardStateDoc, Type } from "../../../../db/DocType";
@@ -26,7 +27,7 @@ class BlockDetails extends React.Component<OwnProps> {
                 </Row>
                 <Row>
                     <Col>
-                        <div className="data-set">
+                        <DataSet>
                             <Row>
                                 <Col md="3">Parent Block Hash</Col>
                                 <Col md="9">
@@ -109,7 +110,7 @@ class BlockDetails extends React.Component<OwnProps> {
                                 </Col>
                             </Row>
                             <hr />
-                        </div>
+                        </DataSet>
                     </Col>
                 </Row>
             </div>

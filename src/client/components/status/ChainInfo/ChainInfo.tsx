@@ -2,6 +2,7 @@ import * as React from "react";
 import { Col, Row } from "reactstrap";
 
 import { CodeChainData } from "../../../request/RequestCodeChainStatus";
+import DataSet from "../../util/DataSet/DataSet";
 import "./ChainInfo.scss";
 
 interface Props {
@@ -21,7 +22,7 @@ class ChainInfo extends React.Component<Props, {}> {
                     <h2>CodeChain Information</h2>
                     <hr className="heading-hr" />
                 </div>
-                <div className="data-set-for-status">
+                <DataSet isStatus={true}>
                     <div className="one-line-data-set">
                         <div>Network ID</div>
                         <div>{chainInfo.networkId}</div>
@@ -80,7 +81,7 @@ class ChainInfo extends React.Component<Props, {}> {
                         </Col>
                     </Row>
                     <hr />
-                </div>
+                </DataSet>
             </div>
         );
     }

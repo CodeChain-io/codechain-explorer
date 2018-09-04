@@ -4,6 +4,7 @@ import { Progress } from "reactstrap";
 
 import { Link } from "react-router-dom";
 import { SyncData } from "../../../request/RequestSyncStatus";
+import DataSet from "../../util/DataSet/DataSet";
 import HexString from "../../util/HexString/HexString";
 import "./SyncStatus.scss";
 
@@ -24,7 +25,7 @@ class SyncStatus extends React.Component<Props, {}> {
                     <h2>Sync Status</h2>
                     <hr className="heading-hr" />
                 </div>
-                <div className="data-set-for-status">
+                <DataSet isStatus={true}>
                     <div className="one-line-data-set">
                         <div>Best block number (CodeChain)</div>
                         <div>{syncStatus.codechainBestBlockNumber.toLocaleString()}</div>
@@ -75,7 +76,7 @@ class SyncStatus extends React.Component<Props, {}> {
                         </Col>
                     </Row>
                     <hr />
-                </div>
+                </DataSet>
             </div>
         );
     }

@@ -12,6 +12,14 @@ class DataTable extends React.Component<Props, {}> {
         super(props);
     }
 
+    public componentDidMount() {
+        _.each(this.refList, ref => {
+            if (ref.current) {
+                ref.current.setAttribute("title", ref.current.innerText);
+            }
+        });
+    }
+
     public componentDidUpdate() {
         _.each(this.refList, ref => {
             if (ref.current) {

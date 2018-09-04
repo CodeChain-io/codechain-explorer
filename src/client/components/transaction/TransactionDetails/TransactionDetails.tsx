@@ -9,6 +9,7 @@ import { Buffer } from "buffer";
 import { Script } from "codechain-sdk/lib/core/classes";
 import { Link } from "react-router-dom";
 import { AssetMintTransactionDoc, AssetTransferTransactionDoc, TransactionDoc, Type } from "../../../../db/DocType";
+import DataSet from "../../util/DataSet/DataSet";
 import HexString from "../../util/HexString/HexString";
 import { ImageLoader } from "../../util/ImageLoader/ImageLoader";
 import { StatusBadge } from "../../util/StatusBadge/StatusBadge";
@@ -87,7 +88,7 @@ class TransactionDetailsInternal extends React.Component<Props, State> {
             return [
                 <Row key="details">
                     <Col lg="12">
-                        <div className="data-set">
+                        <DataSet>
                             <Row>
                                 <Col md="3">Action</Col>
                                 <Col md="9">
@@ -155,7 +156,7 @@ class TransactionDetailsInternal extends React.Component<Props, State> {
                                 <Col md="9">{transactionDoc.data.burns.length.toLocaleString()}</Col>
                             </Row>
                             <hr />
-                        </div>
+                        </DataSet>
                     </Col>
                 </Row>,
                 <div key="input">
@@ -173,7 +174,7 @@ class TransactionDetailsInternal extends React.Component<Props, State> {
                             </div>,
                             <Row key={`transaction-header-table-input-detail-${index}`}>
                                 <Col lg="12">
-                                    <div className="data-set">
+                                    <DataSet>
                                         <Row>
                                             <Col md="3">AssetType</Col>
                                             <Col md="9">
@@ -241,7 +242,7 @@ class TransactionDetailsInternal extends React.Component<Props, State> {
                                             <Col md="9">{input.prevOut.index.toLocaleString()}</Col>
                                         </Row>
                                         <hr />
-                                    </div>
+                                    </DataSet>
                                 </Col>
                             </Row>
                         ];
@@ -273,7 +274,7 @@ class TransactionDetailsInternal extends React.Component<Props, State> {
                             </div>,
                             <Row key={`transaction-header-table-burn-detail-${index}`}>
                                 <Col lg="12">
-                                    <div className="data-set">
+                                    <DataSet>
                                         <Row>
                                             <Col md="3">AssetType</Col>
                                             <Col md="9">
@@ -341,7 +342,7 @@ class TransactionDetailsInternal extends React.Component<Props, State> {
                                             <Col md="9">{burn.prevOut.index.toLocaleString()}</Col>
                                         </Row>
                                         <hr />
-                                    </div>
+                                    </DataSet>
                                 </Col>
                             </Row>
                         ];
@@ -373,7 +374,7 @@ class TransactionDetailsInternal extends React.Component<Props, State> {
                             </div>,
                             <Row key={`transaction-header-table-output-details-${index}`}>
                                 <Col lg="12">
-                                    <div className="data-set">
+                                    <DataSet>
                                         <Row>
                                             <Col md="3">AssetType</Col>
                                             <Col md="9">
@@ -426,7 +427,7 @@ class TransactionDetailsInternal extends React.Component<Props, State> {
                                             </Col>
                                         </Row>
                                         <hr />
-                                    </div>
+                                    </DataSet>
                                 </Col>
                             </Row>
                         ];
@@ -450,7 +451,7 @@ class TransactionDetailsInternal extends React.Component<Props, State> {
             return [
                 <Row key="details">
                     <Col lg="12">
-                        <div className="data-set">
+                        <DataSet>
                             <Row>
                                 <Col md="3">Action</Col>
                                 <Col md="9">
@@ -574,7 +575,7 @@ class TransactionDetailsInternal extends React.Component<Props, State> {
                                 </Col>
                             </Row>
                             <hr />
-                        </div>
+                        </DataSet>
                     </Col>
                 </Row>,
                 <Row key="metadata">
@@ -585,7 +586,7 @@ class TransactionDetailsInternal extends React.Component<Props, State> {
                 </Row>,
                 <Row key="metadata-detail">
                     <Col lg="12">
-                        <div className="data-set">
+                        <DataSet>
                             <Row>
                                 <Col md="3">Name</Col>
                                 <Col md="9">{metadata.name ? metadata.name : "None"}</Col>
@@ -614,7 +615,7 @@ class TransactionDetailsInternal extends React.Component<Props, State> {
                                 </Col>
                             </Row>
                             <hr />
-                        </div>
+                        </DataSet>
                     </Col>
                 </Row>
             ];

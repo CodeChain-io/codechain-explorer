@@ -10,6 +10,7 @@ import { ChangeShardStateDoc, ParcelDoc, PaymentDoc, SetRegularKeyDoc, Type } fr
 import { changeQuarkStringToCCC } from "../../../utils/Formatter";
 import { ActionBadge } from "../../util/ActionBadge/ActionBadge";
 import { CommaNumberString } from "../../util/CommaNumberString/CommaNumberString";
+import DataSet from "../../util/DataSet/DataSet";
 import HexString from "../../util/HexString/HexString";
 import "./ParcelList.scss";
 
@@ -75,7 +76,7 @@ class ParcelList extends React.Component<Props, State> {
                                             </Col>
                                         </Row>
                                     </div>
-                                    <div className="card-list-item-body data-set">
+                                    <DataSet className="card-list-item-body">
                                         <Row>
                                             <Col md="3">Action</Col>
                                             <Col md="9">
@@ -110,7 +111,7 @@ class ParcelList extends React.Component<Props, State> {
                                         </Row>
                                         <hr />
                                         {this.ParcelObjectByType(parcel, address)}
-                                    </div>
+                                    </DataSet>
                                 </div>
                             );
                         })}

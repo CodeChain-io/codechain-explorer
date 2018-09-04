@@ -3,6 +3,7 @@ import * as React from "react";
 import { Link } from "react-router-dom";
 import { Col, Row } from "reactstrap";
 import { AssetSchemeDoc, Type } from "../../../../db/DocType";
+import DataSet from "../../util/DataSet/DataSet";
 import "./AssetDetails.scss";
 
 interface OwnProps {
@@ -22,7 +23,7 @@ const AssetDetails = (prop: OwnProps) => {
             </Row>
             <Row>
                 <Col>
-                    <div className="data-set">
+                    <DataSet>
                         <Row>
                             <Col md="3">Name</Col>
                             <Col md="9">{metadata.name ? metadata.name : "None"}</Col>
@@ -67,7 +68,7 @@ const AssetDetails = (prop: OwnProps) => {
                             <Col md="9">{prop.assetScheme.amount ? prop.assetScheme.amount.toLocaleString() : 0}</Col>
                         </Row>
                         <hr />
-                    </div>
+                    </DataSet>
                 </Col>
             </Row>
         </div>

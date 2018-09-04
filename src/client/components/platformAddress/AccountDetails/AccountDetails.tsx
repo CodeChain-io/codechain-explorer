@@ -3,6 +3,7 @@ import * as React from "react";
 import { Col, Row } from "reactstrap";
 
 import { CommaNumberString } from "../../util/CommaNumberString/CommaNumberString";
+import DataSet from "../../util/DataSet/DataSet";
 import "./AccountDetails.scss";
 
 interface OwnProps {
@@ -24,7 +25,7 @@ const AccountDetails = (prop: OwnProps) => {
             </Row>
             <Row>
                 <Col>
-                    <div className="data-set">
+                    <DataSet>
                         <Row>
                             <Col md="3">Balance</Col>
                             <Col md="9">
@@ -40,7 +41,7 @@ const AccountDetails = (prop: OwnProps) => {
                             </Col>
                         </Row>
                         <hr />
-                    </div>
+                    </DataSet>
                 </Col>
             </Row>
         </div>

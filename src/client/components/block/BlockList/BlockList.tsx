@@ -9,6 +9,7 @@ import { Link } from "react-router-dom";
 import { BlockDoc } from "../../../../db/DocType";
 import { changeQuarkStringToCCC } from "../../../utils/Formatter";
 import { CommaNumberString } from "../../util/CommaNumberString/CommaNumberString";
+import DataSet from "../../util/DataSet/DataSet";
 import HexString from "../../util/HexString/HexString";
 import "./BlockList.scss";
 
@@ -71,7 +72,7 @@ class BlockList extends React.Component<Props, State> {
                                             </Col>
                                         </Row>
                                     </div>
-                                    <div className="card-list-item-body data-set">
+                                    <DataSet className="card-list-item-body">
                                         <Row>
                                             <Col md="2">Hash</Col>
                                             <Col md="10">
@@ -91,7 +92,7 @@ class BlockList extends React.Component<Props, State> {
                                                 CCC
                                             </Col>
                                         </Row>
-                                    </div>
+                                    </DataSet>
                                 </div>
                             );
                         })}

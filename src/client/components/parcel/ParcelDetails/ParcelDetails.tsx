@@ -14,6 +14,7 @@ import {
 import { changeQuarkStringToCCC } from "../../../utils/Formatter";
 import { ActionBadge } from "../../util/ActionBadge/ActionBadge";
 import { CommaNumberString } from "../../util/CommaNumberString/CommaNumberString";
+import DataSet from "../../util/DataSet/DataSet";
 import HexString from "../../util/HexString/HexString";
 import { StatusBadge } from "../../util/StatusBadge/StatusBadge";
 import "./ParcelDetails.scss";
@@ -113,7 +114,7 @@ const ParcelDetails = (props: Props) => {
             </Row>
             <Row>
                 <Col>
-                    <div className="data-set">
+                    <DataSet>
                         <Row>
                             <Col md="3">Action</Col>
                             <Col md="9">
@@ -169,7 +170,7 @@ const ParcelDetails = (props: Props) => {
                         <hr />
                         {status === "confirmed" ? getParcelInvoice(parcel) : null}
                         {getElementByType(parcel)}
-                    </div>
+                    </DataSet>
                 </Col>
             </Row>
         </div>

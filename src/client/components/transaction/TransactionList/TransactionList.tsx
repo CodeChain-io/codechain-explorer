@@ -13,6 +13,7 @@ import "./TransactionList.scss";
 import { H256 } from "codechain-sdk/lib/core/classes";
 import { Link } from "react-router-dom";
 import { AssetMintTransactionDoc, AssetTransferTransactionDoc, TransactionDoc, Type } from "../../../../db/DocType";
+import DataSet from "../../util/DataSet/DataSet";
 import { ImageLoader } from "../../util/ImageLoader/ImageLoader";
 import { TypeBadge } from "../../util/TypeBadge/TypeBadge";
 
@@ -81,7 +82,7 @@ class TransactionList extends React.Component<Props, State> {
                                             </Col>
                                         </Row>
                                     </div>
-                                    <div className="card-list-item-body data-set">
+                                    <DataSet className="card-list-item-body">
                                         <Row>
                                             <Col md="3">Type</Col>
                                             <Col md="9">
@@ -97,7 +98,7 @@ class TransactionList extends React.Component<Props, State> {
                                         </Row>
                                         <hr />
                                         {this.TransactionObjectByType(transaction, assetType, owner)}
-                                    </div>
+                                    </DataSet>
                                 </div>
                             );
                         })}
@@ -205,9 +206,9 @@ class TransactionList extends React.Component<Props, State> {
                                           <p className="mt-1 mb-0">Input</p>
                                           {_.map(transactionDoc.data.inputs.slice(0, 3), (input, i) => {
                                               return (
-                                                  <div
+                                                  <DataSet
                                                       key={`input-${i}`}
-                                                      className={`data-set input-output-container ${
+                                                      className={`input-output-container ${
                                                           owner && input.prevOut.owner === owner
                                                               ? "input-highlight"
                                                               : ""
@@ -254,7 +255,7 @@ class TransactionList extends React.Component<Props, State> {
                                                           <Col md="4">Quantity</Col>
                                                           <Col md="8">{input.prevOut.amount.toLocaleString()}</Col>
                                                       </Row>
-                                                  </div>
+                                                  </DataSet>
                                               );
                                           })}
                                           {transactionDoc.data.inputs.length > 3 ? (
@@ -279,9 +280,9 @@ class TransactionList extends React.Component<Props, State> {
                                           <p className="mt-1 mb-0">Output</p>
                                           {_.map(transactionDoc.data.outputs.slice(0, 3), (output, i) => {
                                               return (
-                                                  <div
+                                                  <DataSet
                                                       key={`output-${i}`}
-                                                      className={`data-set input-output-container ${
+                                                      className={`input-output-container ${
                                                           owner && output.owner === owner ? "output-highlight" : ""
                                                       }`}
                                                   >
@@ -325,7 +326,7 @@ class TransactionList extends React.Component<Props, State> {
                                                           <Col md="4">Quantity</Col>
                                                           <Col md="8">{output.amount.toLocaleString()}</Col>
                                                       </Row>
-                                                  </div>
+                                                  </DataSet>
                                               );
                                           })}
                                           {transactionDoc.data.outputs.length > 3 ? (
@@ -351,9 +352,9 @@ class TransactionList extends React.Component<Props, State> {
                                           <p className="mt-1 mb-0">Burn</p>
                                           {_.map(transactionDoc.data.burns.slice(0, 3), (burn, i) => {
                                               return (
-                                                  <div
+                                                  <DataSet
                                                       key={`burn-${i}`}
-                                                      className={`data-set input-output-container ${
+                                                      className={`input-output-container ${
                                                           owner && burn.prevOut.owner === owner ? "input-highlight" : ""
                                                       }`}
                                                   >
@@ -398,7 +399,7 @@ class TransactionList extends React.Component<Props, State> {
                                                           <Col md="4">Quantity</Col>
                                                           <Col md="8">{burn.prevOut.amount.toLocaleString()}</Col>
                                                       </Row>
-                                                  </div>
+                                                  </DataSet>
                                               );
                                           })}
                                           {transactionDoc.data.burns.length > 3 ? (

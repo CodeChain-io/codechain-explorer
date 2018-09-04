@@ -3,6 +3,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import * as React from "react";
 
 import { NodeStatusData } from "../../../request/RequestNodeStatus";
+import DataSet from "../../util/DataSet/DataSet";
 import "./NodeStatus.scss";
 
 interface Props {
@@ -22,7 +23,7 @@ class NodeStatus extends React.Component<Props, {}> {
                     <h2>Node Status</h2>
                     <hr className="heading-hr" />
                 </div>
-                <div className="data-set-for-status">
+                <DataSet isStatus={true}>
                     <div className="one-line-data-set">
                         <div>Node status</div>
                         <div>
@@ -53,7 +54,7 @@ class NodeStatus extends React.Component<Props, {}> {
                         </div>
                     </div>
                     <hr />
-                </div>
+                </DataSet>
             </div>
         );
     }

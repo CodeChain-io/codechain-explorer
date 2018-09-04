@@ -68,8 +68,10 @@
       @include heading-font;
     }
     & > [class*="col-"]:nth-child(2) {
-      @include data-font;
-      @include ellipsis-block;
+      .wrapper-for-title {
+        @include data-font;
+        @include ellipsis-block;
+      }
     }
   }
   hr {
@@ -99,9 +101,11 @@
       @include heading-font;
     }
     & > [class*="col-"]:nth-child(2) {
-      text-align: right;
-      @include data-font;
-      @include ellipsis-block;
+      .wrapper-for-title {
+        text-align: right;
+        @include data-font;
+        @include ellipsis-block;
+      }
     }
   }
   & > .one-line-data-set {
