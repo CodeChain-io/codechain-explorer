@@ -33,7 +33,7 @@ class RequestBlockDifficultyInternal extends React.Component<Props> {
     private requestNodeStat = async () => {
         const { onBlockDifficulty, dispatch } = this.props;
         const blocks: any = await apiRequest({
-            path: `/blocks?page=1&itmesPerBlock=10`,
+            path: `/blocks?page=1&itemsPerPage=50`,
             dispatch,
             showProgressBar: true
         });
