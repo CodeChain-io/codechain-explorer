@@ -1,4 +1,6 @@
 import { BigNumber } from "bignumber.js";
+import { Buffer } from "buffer";
+
 import {
     Action,
     AssetMintTransaction,
@@ -101,8 +103,8 @@ class TypeConverter {
                 amount: assetTransferInput.prevOut.amount,
                 owner
             },
-            lockScript: assetTransferInput.lockScript,
-            unlockScript: assetTransferInput.unlockScript
+            lockScript: Buffer.from(assetTransferInput.lockScript),
+            unlockScript: Buffer.from(assetTransferInput.unlockScript)
         };
     };
 
