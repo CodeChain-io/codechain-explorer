@@ -15,7 +15,9 @@ function handle(context: ServerContext, router: Router) {
 
     router.get("/parcels/pending", async (req, res, next) => {
         const { page, itemsPerPage, actionFilters, signerFiter, sorting, orderBy } = req.query;
-        const parsedActionFilters = actionFilters ? actionFilters.split(",") : [];
+        const parsedActionFilters = actionFilters
+            ? actionFilters.split(",")
+            : ["payment", "changeShardState", "setRegularKey"];
         try {
             const pendingParcels = await context.db.getCurrentPendingParcels(
                 page,
@@ -33,7 +35,9 @@ function handle(context: ServerContext, router: Router) {
 
     router.get("/parcels/pending/totalCount", async (req, res, next) => {
         const { actionFilters, signerFiter } = req.query;
-        const parsedActionFilters = actionFilters ? actionFilters.split(",") : [];
+        const parsedActionFilters = actionFilters
+            ? actionFilters.split(",")
+            : ["payment", "changeShardState", "setRegularKey"];
         try {
             const count = await context.db.getTotalPendingParcelCount(parsedActionFilters, signerFiter);
             res.send(JSON.stringify(count));

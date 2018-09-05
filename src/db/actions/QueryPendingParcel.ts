@@ -35,7 +35,7 @@ export class QueryPendingParcel implements BaseAction {
     public async getCurrentPendingParcels(
         page: number = 1,
         itemsPerPage: number = 25,
-        actionFilters: string[] = [],
+        actionFilters: string[],
         signerFilter: string,
         sorting: string = "pendingPeriod",
         orderBy: string = "desc"

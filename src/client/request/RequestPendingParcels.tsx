@@ -5,7 +5,7 @@ import { PendingParcelDoc } from "../../db/DocType";
 import { ApiError, apiRequest } from "./ApiRequest";
 
 interface OwnProps {
-    actionFilters: string[];
+    actionFilters?: string[];
     signerFiter?: string;
     sorting: string;
     orderBy: string;
@@ -34,12 +34,10 @@ class RequestPendingParcelsInternal extends React.Component<Props> {
             page,
             itmesPerPage
         } = this.props;
-        if (actionFilters.length === 0) {
-            onPendingParcels([]);
+        let path = `parcels/pending?page=${page}&itemsPerPage=${itmesPerPage}&sorting=${sorting}&orderBy=${orderBy}`;
+        if (actionFilters) {
+            path += `&actionFilters=${actionFilters.join(",")}`;
         }
-        let path = `parcels/pending?page=${page}&itemsPerPage=${itmesPerPage}&actionFilters=${actionFilters.join(
-            ","
-        )}&sorting=${sorting}&orderBy=${orderBy}`;
         if (signerFiter) {
             path += `&signerFiter=${signerFiter}`;
         }

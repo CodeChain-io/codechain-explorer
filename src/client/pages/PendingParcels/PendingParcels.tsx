@@ -39,6 +39,7 @@ interface State {
     currentSenderFilter?: string;
     currentSortType: string;
     isASC: boolean;
+    refreshTotalPendingParcel: boolean;
 }
 
 interface Props {
@@ -64,7 +65,8 @@ class PendingParcels extends React.Component<Props, State> {
             isSenderFilterOn: false,
             currentSortType: "pendingPeriod",
             currentSenderFilter: undefined,
-            isASC: false
+            isASC: false,
+            refreshTotalPendingParcel: false
         };
     }
 
@@ -80,7 +82,8 @@ class PendingParcels extends React.Component<Props, State> {
                 isPendingParcelRequested: false,
                 redirect: false,
                 redirectPage: undefined,
-                redirectItemsPerPage: undefined
+                redirectItemsPerPage: undefined,
+                refreshTotalPendingParcel: false
             });
         }
     }
@@ -106,7 +109,8 @@ class PendingParcels extends React.Component<Props, State> {
             isPaymentFilterOn,
             isSetRegularKeyFilterOn,
             isSenderFilterOn,
-            currentSenderFilter
+            currentSenderFilter,
+            refreshTotalPendingParcel
         } = this.state;
         const actionFilters = this.getActionFilters();
         const orderBy = isASC ? "asc" : "desc";
@@ -122,7 +126,6 @@ class PendingParcels extends React.Component<Props, State> {
         if (totalPendingParcelCount === undefined) {
             return (
                 <RequestTotalPendingParcelCount
-                    actionFilters={actionFilters}
                     onPendingParcelTotalCount={this.onPendingParcelTotalCount}
                     onError={this.onError}
                 />
@@ -131,6 +134,12 @@ class PendingParcels extends React.Component<Props, State> {
         const maxPage = Math.floor(Math.max(0, (filteredPendingParcelCount || 0) - 1) / itemsPerPage) + 1;
         return (
             <Container className="pending-parcels">
+                {refreshTotalPendingParcel ? (
+                    <RequestTotalPendingParcelCount
+                        onPendingParcelTotalCount={this.onPendingParcelTotalCount}
+                        onError={this.onError}
+                    />
+                ) : null}
                 {filteredPendingParcelCount === undefined ? (
                     <RequestTotalPendingParcelCount
                         actionFilters={actionFilters}
@@ -413,7 +422,8 @@ class PendingParcels extends React.Component<Props, State> {
         this.setState({
             isChangeShardStateFilterOn: !this.state.isChangeShardStateFilterOn,
             filteredPendingParcelCount: undefined,
-            isPendingParcelRequested: false
+            isPendingParcelRequested: false,
+            refreshTotalPendingParcel: true
         });
     };
 
@@ -421,7 +431,8 @@ class PendingParcels extends React.Component<Props, State> {
         this.setState({
             isPaymentFilterOn: !this.state.isPaymentFilterOn,
             filteredPendingParcelCount: undefined,
-            isPendingParcelRequested: false
+            isPendingParcelRequested: false,
+            refreshTotalPendingParcel: true
         });
     };
 
@@ -429,7 +440,8 @@ class PendingParcels extends React.Component<Props, State> {
         this.setState({
             isSetRegularKeyFilterOn: !this.state.isSetRegularKeyFilterOn,
             filteredPendingParcelCount: undefined,
-            isPendingParcelRequested: false
+            isPendingParcelRequested: false,
+            refreshTotalPendingParcel: true
         });
     };
 
@@ -438,7 +450,7 @@ class PendingParcels extends React.Component<Props, State> {
     };
 
     private onPendingParcelTotalCount = (pendingParcelTotalCount: number) => {
-        this.setState({ totalPendingParcelCount: pendingParcelTotalCount });
+        this.setState({ totalPendingParcelCount: pendingParcelTotalCount, refreshTotalPendingParcel: false });
     };
 
     private onFilteredPendingParcelTotalCount = (pendingParcelTotalCount: number) => {
@@ -451,14 +463,16 @@ class PendingParcels extends React.Component<Props, State> {
                 isSenderFilterOn: false,
                 currentSenderFilter: "",
                 filteredPendingParcelCount: undefined,
-                isPendingParcelRequested: false
+                isPendingParcelRequested: false,
+                refreshTotalPendingParcel: true
             });
         } else {
             this.setState({
                 isSenderFilterOn: true,
                 currentSenderFilter: sender,
                 filteredPendingParcelCount: undefined,
-                isPendingParcelRequested: false
+                isPendingParcelRequested: false,
+                refreshTotalPendingParcel: true
             });
         }
     };
