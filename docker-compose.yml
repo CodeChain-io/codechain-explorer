@@ -1,0 +1,35 @@
+version: '3'
+services:
+  codechain-explorer:
+    build: .
+    ports:
+      - "3000:3000"
+      - "8081:8081"
+      - "5000:5000"
+    volumes:
+      - $PWD:/code
+    depends_on:
+      - codechain
+      - elasticsearch
+    environment:
+      - CODECHAIN_HOST=http://codechain:8080
+      - ELASTICSEARCH_HOST=http://elasticsearch:9200
+
+  codechain:
+    image: kodebox/codechain:7f3d3030d8d4bb86a5b7025f73877df45d8bd97a
+    ports:
+      - "8080:8080"
+    command:
+      - -csolo
+      - --jsonrpc-interface=0.0.0.0
+      - --db-path=codechaindata:/db
+    volumes:
+      - codechaindata:/db
+
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:6.2.4
+    environment:
+      - ES_HOSTS=0.0.0.0:9200
+
+volumes:
+  codechaindata:
