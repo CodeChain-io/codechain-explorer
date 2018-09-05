@@ -1,3 +1,5 @@
+import * as _ from "lodash";
+
 export interface BlockDoc {
     parentHash: string;
     timestamp: number;
@@ -211,6 +213,23 @@ function isH256String(data: string) {
     return regexp.test(data) && (data.length === 64 || data.length === 66);
 }
 
+function getTransactionsByBlock(blockDoc: BlockDoc): TransactionDoc[] {
+    return _.chain(blockDoc.parcels)
+        .filter(parcel => isChangeShardStateDoc(parcel.action))
+        .flatMap(parcel => (parcel.action as ChangeShardStateDoc).transactions)
+        .value();
+}
+
+function getMintTransactionsByParcel(parcelDoc: ParcelDoc): AssetMintTransactionDoc[] {
+    if (isChangeShardStateDoc(parcelDoc.action)) {
+        const changeShardStateAction = parcelDoc.action as ChangeShardStateDoc;
+        return _.filter(changeShardStateAction.transactions, tx =>
+            Type.isAssetMintTransactionDoc(tx)
+        ) as AssetMintTransactionDoc[];
+    }
+    return [];
+}
+
 export interface MetadataFormat {
     name?: string;
     description?: string;
@@ -235,5 +254,7 @@ export let Type = {
     isAssetMintTransactionDoc,
     getAssetSchemeDoc,
     getMetadata,
-    isH256String
+    isH256String,
+    getTransactionsByBlock,
+    getMintTransactionsByParcel
 };

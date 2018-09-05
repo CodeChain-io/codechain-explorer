@@ -31,7 +31,7 @@ export class QueryAccount implements BaseAction {
 
     public async decreaseBalance(address: string, balance: string): Promise<void> {
         const account = await this.getAccount(address);
-        if (account) {
+        if (account && new BigNumber(account.balance).isGreaterThanOrEqualTo(new BigNumber(balance))) {
             await this.updateAccount(
                 account.address,
                 new BigNumber(account.balance).minus(new BigNumber(balance)).toString(10)
