@@ -124,9 +124,11 @@ Build CodeChain-explorer with following script. You can get optimized, uglified 
 
 ## Custom Configuration
 
-|                       | Default               | Options     |
-| --------------------- | --------------------- | ----------- |
-| REACT_APP_SERVER_HOST | http://127.0.0.1:8081 |             |
-| CODECHAIN_HOST        | http://127.0.0.1:8080 |             |
-| ELASTICSERACH_HOST    | http://127.0.0.1:9200 |             |
-| CODECHAIN_CHAIN       | solo                  | solo, husky |
+|                               | Default               | Options     | Description                         |
+| ----------------------------- | --------------------- | ----------- | ----------------------------------- |
+| REACT_APP_SERVER_HOST         | http://127.0.0.1:8081 |             | Client)                             |
+| REACT_APP_URL                 |                       |             | Client) This is used for open graph |
+| REACT_APP_GOOGLE_ANALYTICS_ID |                       |             | Client)                             |
+| CODECHAIN_HOST                | http://127.0.0.1:8080 |             | Server, Worker)                     |
+| ELASTICSERACH_HOST            | http://127.0.0.1:9200 |             | Server, Worker)                     |
+| CODECHAIN_CHAIN               | solo                  | solo, husky | Worker)                             |
