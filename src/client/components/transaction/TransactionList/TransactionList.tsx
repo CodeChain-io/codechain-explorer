@@ -196,10 +196,10 @@ class TransactionList extends React.Component<Props, State> {
                     <Col md="3"># of Burn</Col>
                     <Col md="9">{transactionDoc.data.burns.length.toLocaleString()}</Col>
                 </Row>,
+                <hr key="line3" />,
                 <div key="input-output-burn">
                     {transactionDoc.data.inputs.length > 0
                         ? [
-                              <hr key="line3" />,
                               <div key="input-output">
                                   <Row>
                                       <Col md="5">
@@ -345,7 +345,6 @@ class TransactionList extends React.Component<Props, State> {
                         : null}
                     {transactionDoc.data.burns.length > 0
                         ? [
-                              <hr key="line3" />,
                               <div key="burn-container">
                                   <Row>
                                       <Col md="5">

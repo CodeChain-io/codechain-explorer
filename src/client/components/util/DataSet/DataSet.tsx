@@ -47,7 +47,7 @@ class DataSet extends React.Component<Props, {}> {
                         if (index === 0) {
                             return childInner;
                         } else {
-                            if (!childInner) {
+                            if (!childInner || !childInner.props.children) {
                                 return null;
                             }
                             if (
