@@ -350,7 +350,12 @@ class Search extends React.Component<Props, State> {
         if (inputValue === "") {
             return;
         }
-        this.setState({ status: "search", requestCount: 8, inputValue });
+        if (this.state.suggestions.length > 0) {
+            const firstSuggestion = this.state.suggestions[0];
+            this.setState({ status: "search", requestCount: 8, inputValue: firstSuggestion.asset.assetType });
+        } else {
+            this.setState({ status: "search", requestCount: 8, inputValue });
+        }
     };
 }
 
