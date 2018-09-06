@@ -7,7 +7,7 @@ const { Client } = require("elasticsearch");
 dotenv.config();
 
 const clearIndex = async () => {
-  const host = process.env.elasticsearch_host || "http://localhost:9200";
+  const host = process.env.ELASTICSEARCH_HOST || "http://localhost:9200";
   const client = new Client({
     host
   });
