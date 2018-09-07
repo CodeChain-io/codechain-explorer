@@ -1,4 +1,4 @@
-# CodeChain Explorer [![Gitter](https://badges.gitter.im/CodeChain-io/codechain-explorer.svg)](https://gitter.im/CodeChain-io/codechain-explorer?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
+# CodeChain Explorer [![Gitter](https://badges.gitter.im/CodeChain-io/codechain-explorer.svg)](https://gitter.im/CodeChain-io/codechain-explorer?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge) [![Build Status](https://travis-ci.org/CodeChain-io/codechain-explorer.svg?branch=master)](https://travis-ci.org/CodeChain-io/codechain-explorer)
 
 CodeChain explorer is a simple, easy to use, an open-source visualization tool for viewing activity on the underlying blockchain network.
 
