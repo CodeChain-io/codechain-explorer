@@ -3,7 +3,7 @@ import { match } from "react-router";
 import { Col, Container, Row } from "reactstrap";
 import { Error } from "../../components/error/Error/Error";
 
-import { AssetSchemeDoc, TransactionDoc } from "codechain-es/lib/types";
+import { AssetSchemeDoc, TransactionDoc } from "codechain-es-temporary/lib/types";
 import AssetDetails from "../../components/asset/AssetDetails/AssetDetails";
 import TransactionList from "../../components/transaction/TransactionList/TransactionList";
 import { RequestAssetScheme, RequestTotalAssetTransactionCount } from "../../request";

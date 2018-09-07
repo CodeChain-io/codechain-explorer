@@ -1,4 +1,4 @@
-import { LogType } from "codechain-es/lib/actions/QueryLog";
+import { LogType } from "codechain-es-temporary/lib/actions/QueryLog";
 import { Router } from "express";
 import { ServerContext } from "../ServerContext";
 

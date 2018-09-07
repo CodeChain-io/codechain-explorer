@@ -6,8 +6,8 @@ import LatestParcels from "../../components/home/LatestParcels/LatestParcels";
 import LatestTransactions from "../../components/home/LatestTransactions/LatestTransactions";
 import { RequestBlock, RequestBlockNumber, RequestBlocks, RequestParcels, RequestTransactions } from "../../request";
 
-import { BlockDoc, ChangeShardStateDoc, ParcelDoc, TransactionDoc } from "codechain-es/lib/types";
-import { Type } from "codechain-es/lib/utils";
+import { BlockDoc, ChangeShardStateDoc, ParcelDoc, TransactionDoc } from "codechain-es-temporary/lib/types";
+import { Type } from "codechain-es-temporary/lib/utils";
 import Summary from "../../components/home/Summary/Summary";
 import "./Home.scss";
 

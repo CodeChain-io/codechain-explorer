@@ -1,7 +1,7 @@
 import * as React from "react";
 import { connect, Dispatch } from "react-redux";
 
-import { AssetBundleDoc } from "codechain-es/lib/types";
+import { AssetBundleDoc } from "codechain-es-temporary/lib/types";
 import { ApiError, apiRequest } from "./ApiRequest";
 
 interface OwnProps {

@@ -4,8 +4,8 @@ import * as _ from "lodash";
 import * as moment from "moment";
 import * as React from "react";
 
-import { ChangeShardStateDoc, ParcelDoc, PaymentDoc, SetRegularKeyDoc } from "codechain-es/lib/types";
-import { Type } from "codechain-es/lib/utils";
+import { ChangeShardStateDoc, ParcelDoc, PaymentDoc, SetRegularKeyDoc } from "codechain-es-temporary/lib/types";
+import { Type } from "codechain-es-temporary/lib/utils";
 import { Link } from "react-router-dom";
 import { Col, Row } from "reactstrap";
 import { changeQuarkStringToCCC } from "../../../utils/Formatter";

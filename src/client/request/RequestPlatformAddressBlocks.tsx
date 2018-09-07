@@ -1,4 +1,4 @@
-import { BlockDoc } from "codechain-es/lib/types";
+import { BlockDoc } from "codechain-es-temporary/lib/types";
 import * as React from "react";
 import { connect, Dispatch } from "react-redux";
 import { ApiError, apiRequest } from "./ApiRequest";

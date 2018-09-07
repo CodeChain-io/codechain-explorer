@@ -6,8 +6,8 @@ import { Col, Row } from "reactstrap";
 import { RootState } from "../../../redux/actions";
 
 import { Buffer } from "buffer";
-import { AssetMintTransactionDoc, AssetTransferTransactionDoc, TransactionDoc } from "codechain-es/lib/types";
-import { Type } from "codechain-es/lib/utils";
+import { AssetMintTransactionDoc, AssetTransferTransactionDoc, TransactionDoc } from "codechain-es-temporary/lib/types";
+import { Type } from "codechain-es-temporary/lib/utils";
 import { Script } from "codechain-sdk/lib/core/classes";
 import { Link } from "react-router-dom";
 import DataSet from "../../util/DataSet/DataSet";

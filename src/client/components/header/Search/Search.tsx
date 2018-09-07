@@ -15,8 +15,8 @@ import {
     PendingParcelDoc,
     PendingTransactionDoc,
     TransactionDoc
-} from "codechain-es/lib/types";
-import { Type } from "codechain-es/lib/utils";
+} from "codechain-es-temporary/lib/types";
+import { Type } from "codechain-es-temporary/lib/utils";
 import { H256, U256 } from "codechain-sdk/lib/core/classes";
 import {
     RequestAssetBundlesByName,

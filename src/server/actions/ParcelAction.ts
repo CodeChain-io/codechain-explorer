@@ -1,4 +1,4 @@
-import { Type } from "codechain-es/lib/utils";
+import { Type } from "codechain-es-temporary/lib/utils";
 import { H256 } from "codechain-sdk/lib/core/classes";
 import { Router } from "express";
 import { ServerContext } from "../ServerContext";

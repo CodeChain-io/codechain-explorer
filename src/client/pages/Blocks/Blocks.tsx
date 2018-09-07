@@ -1,6 +1,6 @@
 import { faAngleDoubleLeft, faAngleDoubleRight, faAngleLeft, faAngleRight } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { BlockDoc } from "codechain-es/lib/types";
+import { BlockDoc } from "codechain-es-temporary/lib/types";
 import * as _ from "lodash";
 import * as moment from "moment";
 import * as React from "react";

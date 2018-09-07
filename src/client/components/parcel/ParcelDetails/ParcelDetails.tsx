@@ -2,8 +2,14 @@ import * as React from "react";
 
 import { Col, Row } from "reactstrap";
 
-import { ChangeShardStateDoc, CreateShardDoc, ParcelDoc, PaymentDoc, SetRegularKeyDoc } from "codechain-es/lib/types";
-import { Type } from "codechain-es/lib/utils";
+import {
+    ChangeShardStateDoc,
+    CreateShardDoc,
+    ParcelDoc,
+    PaymentDoc,
+    SetRegularKeyDoc
+} from "codechain-es-temporary/lib/types";
+import { Type } from "codechain-es-temporary/lib/utils";
 import { Link } from "react-router-dom";
 import { changeQuarkStringToCCC } from "../../../utils/Formatter";
 import { ActionBadge } from "../../util/ActionBadge/ActionBadge";

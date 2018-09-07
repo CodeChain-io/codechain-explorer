@@ -3,7 +3,7 @@ import * as moment from "moment";
 import * as React from "react";
 import { Link } from "react-router-dom";
 
-import { BlockDoc } from "codechain-es/lib/types";
+import { BlockDoc } from "codechain-es-temporary/lib/types";
 import { changeQuarkStringToCCC } from "../../../utils/Formatter";
 import { CommaNumberString } from "../../util/CommaNumberString/CommaNumberString";
 import DataTable from "../../util/DataTable/DataTable";
