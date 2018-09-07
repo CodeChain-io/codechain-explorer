@@ -78,8 +78,8 @@
           width: 20px;
           border: 1px solid white;
         }
-        .filter-input-change-shard-state[type="checkbox"]:checked {
-          background: $change-shard-state-action-primary-color;
+        .filter-input-asset-transaction-group[type="checkbox"]:checked {
+          background: $asset-transaction-group-action-primary-color;
         }
         .filter-input-set-regular-key[type="checkbox"]:checked {
           background: $set-regular-key-action-primary-color;

@@ -3,7 +3,7 @@ import * as _ from "lodash";
 import * as React from "react";
 import { connect, Dispatch } from "react-redux";
 
-import { AssetMintTransactionDoc, ChangeShardStateDoc, ParcelDoc } from "codechain-es-temporary/lib/types";
+import { AssetMintTransactionDoc, AssetTransactionGroupDoc, ParcelDoc } from "codechain-es-temporary/lib/types";
 import { Type } from "codechain-es-temporary/lib/utils";
 import { RootState } from "../redux/actions";
 import { ApiError, apiRequest } from "./ApiRequest";
@@ -48,8 +48,8 @@ class RequestParcelInternal extends React.Component<Props> {
                     type: "CACHE_PARCEL",
                     data: parcel
                 });
-                if (Type.isChangeShardStateDoc(parcel.action)) {
-                    _.each((parcel.action as ChangeShardStateDoc).transactions, transaction => {
+                if (Type.isAssetTransactionGroupDoc(parcel.action)) {
+                    _.each((parcel.action as AssetTransactionGroupDoc).transactions, transaction => {
                         dispatch({
                             type: "CACHE_TRANSACTION",
                             data: transaction

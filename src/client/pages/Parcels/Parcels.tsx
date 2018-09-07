@@ -137,7 +137,7 @@ class Parcels extends React.Component<Props, State> {
                                                     <HexString link={`/parcel/0x${parcel.hash}`} text={parcel.hash} />
                                                 </td>
                                                 <td>
-                                                    <Link to={`/addr-platform/${parcel.sender}`}>{parcel.sender}</Link>
+                                                    <Link to={`/addr-platform/${parcel.signer}`}>{parcel.signer}</Link>
                                                 </td>
                                                 <td>
                                                     <CommaNumberString text={changeQuarkStringToCCC(parcel.fee)} />

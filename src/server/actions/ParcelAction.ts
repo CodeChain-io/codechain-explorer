@@ -17,7 +17,7 @@ function handle(context: ServerContext, router: Router) {
         const { page, itemsPerPage, actionFilters, signerFiter, sorting, orderBy } = req.query;
         const parsedActionFilters = actionFilters
             ? actionFilters.split(",")
-            : ["payment", "changeShardState", "setRegularKey"];
+            : ["payment", "assetTransactionGroup", "setRegularKey"];
         try {
             const pendingParcels = await context.db.getCurrentPendingParcels(
                 page,
@@ -37,7 +37,7 @@ function handle(context: ServerContext, router: Router) {
         const { actionFilters, signerFiter } = req.query;
         const parsedActionFilters = actionFilters
             ? actionFilters.split(",")
-            : ["payment", "changeShardState", "setRegularKey"];
+            : ["payment", "assetTransactionGroup", "setRegularKey"];
         try {
             const count = await context.db.getTotalPendingParcelCount(parsedActionFilters, signerFiter);
             res.send(JSON.stringify(count));

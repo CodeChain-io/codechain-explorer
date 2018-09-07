@@ -92,8 +92,8 @@ class RequestDailyLogsInternal extends React.Component<Props> {
                 dispatch,
                 showProgressBar: true
             })) as number;
-            const changeShardStateScount = (await apiRequest({
-                path: `log/changeShardStateCount?date=${date}`,
+            const assetTransactionGroupScount = (await apiRequest({
+                path: `log/assetTransactionGroupCount?date=${date}`,
                 dispatch,
                 showProgressBar: true
             })) as number;
@@ -102,7 +102,7 @@ class RequestDailyLogsInternal extends React.Component<Props> {
                 dispatch,
                 showProgressBar: true
             })) as number;
-            const total = paymentParcelCount + changeShardStateScount + setRegularKeyCount;
+            const total = paymentParcelCount + assetTransactionGroupScount + setRegularKeyCount;
             if (total === 0) {
                 onEmptyResult();
                 return;
@@ -115,9 +115,9 @@ class RequestDailyLogsInternal extends React.Component<Props> {
                     color: "hsl(36, 86%, 62%)"
                 },
                 {
-                    id: `ChangeShardState (${((changeShardStateScount / total) * 100).toFixed(1)}%)`,
-                    label: "ChangeShardState",
-                    value: changeShardStateScount,
+                    id: `AssetTransactionGroup (${((assetTransactionGroupScount / total) * 100).toFixed(1)}%)`,
+                    label: "AssetTransactionGroup",
+                    value: assetTransactionGroupScount,
                     color: "hsl(90, 100%, 42%)"
                 },
                 {

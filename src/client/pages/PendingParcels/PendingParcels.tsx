@@ -17,7 +17,7 @@ import * as emptyImage from "./img/empty.png";
 
 import { RequestPendingParcels, RequestTotalPendingParcelCount } from "../../request";
 
-import { ChangeShardStateDoc, PendingParcelDoc } from "codechain-es-temporary/lib/types";
+import { AssetTransactionGroupDoc, PendingParcelDoc } from "codechain-es-temporary/lib/types";
 import { Type } from "codechain-es-temporary/lib/utils";
 import { Link } from "react-router-dom";
 import { ActionBadge } from "../../components/util/ActionBadge/ActionBadge";
@@ -28,7 +28,7 @@ import "./PendingParcels.scss";
 interface State {
     pendingParcels: PendingParcelDoc[];
     isPendingParcelRequested: boolean;
-    isChangeShardStateFilterOn: boolean;
+    isAssetTransactionGroupFilterOn: boolean;
     isPaymentFilterOn: boolean;
     isSetRegularKeyFilterOn: boolean;
     redirect: boolean;
@@ -54,7 +54,7 @@ class PendingParcels extends React.Component<Props, State> {
         super(props);
         this.state = {
             pendingParcels: [],
-            isChangeShardStateFilterOn: true,
+            isAssetTransactionGroupFilterOn: true,
             isPaymentFilterOn: true,
             isSetRegularKeyFilterOn: true,
             isPendingParcelRequested: false,
@@ -106,7 +106,7 @@ class PendingParcels extends React.Component<Props, State> {
             redirect,
             redirectItemsPerPage,
             redirectPage,
-            isChangeShardStateFilterOn,
+            isAssetTransactionGroupFilterOn,
             isPaymentFilterOn,
             isSetRegularKeyFilterOn,
             isSenderFilterOn,
@@ -175,14 +175,14 @@ class PendingParcels extends React.Component<Props, State> {
                 <div className="filter-container mt-large">
                     <div className="type-filter">
                         <div className="d-md-inline mr-4">
-                            <span className="filter-item" onClick={this.toggleChangeShardStateFilter}>
+                            <span className="filter-item" onClick={this.toggleAssetTransactionGroupFilter}>
                                 <input
                                     readOnly={true}
-                                    checked={isChangeShardStateFilterOn}
+                                    checked={isAssetTransactionGroupFilterOn}
                                     type="checkbox"
-                                    className="filter-input filter-input-change-shard-state"
+                                    className="filter-input filter-input-asset-transaction-group"
                                 />
-                                <span className="filter-text">ChangeShardState</span>
+                                <span className="filter-text">AssetTransactionGroup</span>
                             </span>
                         </div>
                         <div className="d-md-inline mr-4">
@@ -271,7 +271,7 @@ class PendingParcels extends React.Component<Props, State> {
                                                         <span
                                                             onClick={_.partial(
                                                                 this.toogleFilter,
-                                                                pendingParcel.parcel.sender
+                                                                pendingParcel.parcel.signer
                                                             )}
                                                         >
                                                             <FontAwesomeIcon
@@ -281,15 +281,15 @@ class PendingParcels extends React.Component<Props, State> {
                                                                 icon={faFilter}
                                                             />
                                                         </span>
-                                                        <Link to={`/addr-platform/${pendingParcel.parcel.sender}`}>
-                                                            {pendingParcel.parcel.sender}
+                                                        <Link to={`/addr-platform/${pendingParcel.parcel.signer}`}>
+                                                            {pendingParcel.parcel.signer}
                                                         </Link>
                                                     </td>
                                                     <td>{pendingParcel.parcel.fee.toLocaleString()}</td>
                                                     <td>
-                                                        {Type.isChangeShardStateDoc(pendingParcel.parcel.action)
+                                                        {Type.isAssetTransactionGroupDoc(pendingParcel.parcel.action)
                                                             ? (pendingParcel.parcel
-                                                                  .action as ChangeShardStateDoc).transactions.length.toLocaleString()
+                                                                  .action as AssetTransactionGroupDoc).transactions.length.toLocaleString()
                                                             : 0}
                                                     </td>
                                                     <td>{moment.unix(pendingParcel.timestamp).fromNow()}</td>
@@ -379,8 +379,8 @@ class PendingParcels extends React.Component<Props, State> {
         if (this.state.isPaymentFilterOn) {
             actionFilters.push("payment");
         }
-        if (this.state.isChangeShardStateFilterOn) {
-            actionFilters.push("changeShardState");
+        if (this.state.isAssetTransactionGroupFilterOn) {
+            actionFilters.push("assetTransactionGroup");
         }
         if (this.state.isSetRegularKeyFilterOn) {
             actionFilters.push("setRegularKey");
@@ -419,9 +419,9 @@ class PendingParcels extends React.Component<Props, State> {
         this.setState({ redirectPage: 1, redirect: true });
     };
 
-    private toggleChangeShardStateFilter = () => {
+    private toggleAssetTransactionGroupFilter = () => {
         this.setState({
-            isChangeShardStateFilterOn: !this.state.isChangeShardStateFilterOn,
+            isAssetTransactionGroupFilterOn: !this.state.isAssetTransactionGroupFilterOn,
             filteredPendingParcelCount: undefined,
             isPendingParcelRequested: false,
             refreshTotalPendingParcel: true

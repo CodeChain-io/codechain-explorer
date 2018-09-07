@@ -10,7 +10,7 @@ import { Error } from "../../components/error/Error/Error";
 import ParcelDetails from "../../components/parcel/ParcelDetails/ParcelDetails";
 import { RequestParcel, RequestPendingParcel } from "../../request";
 
-import { ChangeShardStateDoc, ParcelDoc, PendingParcelDoc } from "codechain-es-temporary/lib/types";
+import { AssetTransactionGroupDoc, ParcelDoc, PendingParcelDoc } from "codechain-es-temporary/lib/types";
 import { Type } from "codechain-es-temporary/lib/utils";
 import TransactionList from "../../components/transaction/TransactionList/TransactionList";
 import CopyButton from "../../components/util/CopyButton/CopyButton";
@@ -144,10 +144,10 @@ class Parcel extends React.Component<Props, State> {
                     </Col>
                 </Row>
                 <Row className="mt-large">
-                    <Col lg={Type.isChangeShardStateDoc(parcelResult.parcel.action) ? "9" : "12"}>
+                    <Col lg={Type.isAssetTransactionGroupDoc(parcelResult.parcel.action) ? "9" : "12"}>
                         <ParcelDetails parcelResult={parcelResult} />
                     </Col>
-                    {Type.isChangeShardStateDoc(parcelResult.parcel.action) ? (
+                    {Type.isAssetTransactionGroupDoc(parcelResult.parcel.action) ? (
                         <Col lg="3">
                             <div className="right-panel-item mt-3 mt-lg-0">
                                 <h2># of Transaction types</h2>
@@ -161,7 +161,7 @@ class Parcel extends React.Component<Props, State> {
                                     <span>
                                         {
                                             _.filter(
-                                                (parcelResult.parcel.action as ChangeShardStateDoc).transactions,
+                                                (parcelResult.parcel.action as AssetTransactionGroupDoc).transactions,
                                                 tx => Type.isAssetTransferTransactionDoc(tx)
                                             ).length
                                         }
@@ -177,7 +177,7 @@ class Parcel extends React.Component<Props, State> {
                                     <span>
                                         {
                                             _.filter(
-                                                (parcelResult.parcel.action as ChangeShardStateDoc).transactions,
+                                                (parcelResult.parcel.action as AssetTransactionGroupDoc).transactions,
                                                 tx => Type.isAssetMintTransactionDoc(tx)
                                             ).length
                                         }
@@ -195,12 +195,12 @@ class Parcel extends React.Component<Props, State> {
     }
 
     private showTransactionList = (parcel: ParcelDoc) => {
-        if (Type.isChangeShardStateDoc(parcel.action)) {
+        if (Type.isAssetTransactionGroupDoc(parcel.action)) {
             return [
                 <div key="parcel-transaction" className="mt-large">
                     <TransactionList
-                        transactions={(parcel.action as ChangeShardStateDoc).transactions}
-                        totalCount={(parcel.action as ChangeShardStateDoc).transactions.length}
+                        transactions={(parcel.action as AssetTransactionGroupDoc).transactions}
+                        totalCount={(parcel.action as AssetTransactionGroupDoc).transactions.length}
                     />
                 </div>
             ];

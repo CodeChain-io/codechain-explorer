@@ -10,8 +10,8 @@ interface Props {
 }
 const getBadgeClassNameByAction = (action: string) => {
     switch (action) {
-        case "changeShardState":
-            return "change-shard-state-action-text-color";
+        case "assetTransactionGroup":
+            return "asset-transaction-group-action-text-color";
         case "payment":
             return "payment-action-text-color";
         case "setRegularKey":
@@ -22,8 +22,8 @@ const getBadgeClassNameByAction = (action: string) => {
 
 const getActionString = (action: string) => {
     switch (action) {
-        case "changeShardState":
-            return "ChangeShardState";
+        case "assetTransactionGroup":
+            return "AssetTransactionGroup";
         case "payment":
             return "Payment";
         case "setRegularKey":

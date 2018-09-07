@@ -1,3 +1,4 @@
+import { Buffer } from "buffer";
 import { TransactionDoc } from "codechain-es-temporary/lib/types";
 import { Type } from "codechain-es-temporary/lib/utils";
 import { H256 } from "codechain-sdk/lib/core/classes";
@@ -65,6 +66,29 @@ function handle(context: ServerContext, router: Router) {
             assetScheme ? res.send(assetScheme) : res.send(JSON.stringify(null));
         } catch (e) {
             next(e);
+        }
+    });
+
+    router.get("/asset/image/:assetType", async (req, res, next) => {
+        const { assetType } = req.params;
+        try {
+            if (!Type.isH256String(assetType)) {
+                res.status(404).send("Not found");
+                return;
+            }
+            const assetImage = await context.db.getAssetImageBlob(new H256(assetType));
+            if (!assetImage) {
+                res.status(404).send("Not found");
+                return;
+            }
+            const img = Buffer.from(assetImage, "base64");
+            res.writeHead(200, {
+                "Content-Type": "image/png",
+                "Content-Length": img.length
+            });
+            res.end(img);
+        } catch (e) {
+            res.status(404).send("Not found");
         }
     });
 }

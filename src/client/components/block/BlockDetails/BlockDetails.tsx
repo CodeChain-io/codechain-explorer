@@ -4,7 +4,7 @@ import * as React from "react";
 import { Col, Row } from "reactstrap";
 import DataSet from "../../util/DataSet/DataSet";
 
-import { BlockDoc, ChangeShardStateDoc } from "codechain-es-temporary/lib/types";
+import { AssetTransactionGroupDoc, BlockDoc } from "codechain-es-temporary/lib/types";
 import { Type } from "codechain-es-temporary/lib/utils";
 import { Link } from "react-router-dom";
 import { CommaNumberString } from "../../util/CommaNumberString/CommaNumberString";
@@ -98,9 +98,10 @@ class BlockDetails extends React.Component<OwnProps> {
                                     {_.reduce(
                                         block.parcels,
                                         (memo, parcel) => {
-                                            if (Type.isChangeShardStateDoc(parcel.action)) {
+                                            if (Type.isAssetTransactionGroupDoc(parcel.action)) {
                                                 return (
-                                                    (parcel.action as ChangeShardStateDoc).transactions.length + memo
+                                                    (parcel.action as AssetTransactionGroupDoc).transactions.length +
+                                                    memo
                                                 );
                                             } else {
                                                 return memo;

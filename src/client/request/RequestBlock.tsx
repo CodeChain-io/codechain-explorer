@@ -4,7 +4,7 @@ import { connect, Dispatch } from "react-redux";
 
 import { H256 } from "codechain-sdk/lib/core/classes";
 
-import { AssetMintTransactionDoc, BlockDoc, ChangeShardStateDoc } from "codechain-es-temporary/lib/types";
+import { AssetMintTransactionDoc, AssetTransactionGroupDoc, BlockDoc } from "codechain-es-temporary/lib/types";
 import { Type } from "codechain-es-temporary/lib/utils";
 import { RootState } from "../redux/actions";
 import { apiRequest } from "./ApiRequest";
@@ -52,8 +52,8 @@ class RequestBlockInternal extends React.Component<OwnProps & StateProps & Dispa
                         type: "CACHE_PARCEL",
                         data: parcel
                     });
-                    if (Type.isChangeShardStateDoc(parcel.action)) {
-                        _.each((parcel.action as ChangeShardStateDoc).transactions, transaction => {
+                    if (Type.isAssetTransactionGroupDoc(parcel.action)) {
+                        _.each((parcel.action as AssetTransactionGroupDoc).transactions, transaction => {
                             dispatch({
                                 type: "CACHE_TRANSACTION",
                                 data: transaction

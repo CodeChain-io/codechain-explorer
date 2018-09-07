@@ -11,7 +11,7 @@ import BlockDetails from "../../components/block/BlockDetails/BlockDetails";
 import ParcelList from "../../components/parcel/ParcelList/ParcelList";
 import { RequestBlock } from "../../request";
 
-import { BlockDoc, ChangeShardStateDoc } from "codechain-es-temporary/lib/types";
+import { AssetTransactionGroupDoc, BlockDoc } from "codechain-es-temporary/lib/types";
 import { Type } from "codechain-es-temporary/lib/utils";
 import { Link } from "react-router-dom";
 import CopyButton from "../../components/util/CopyButton/CopyButton";
@@ -138,13 +138,13 @@ class Block extends React.Component<Props, State> {
                             <hr />
                             <div className="d-flex align-items-center">
                                 <FontAwesomeIcon
-                                    className="square change-shard-state-action-text-color"
+                                    className="square asset-transaction-group-action-text-color"
                                     icon={faSquare}
                                 />
-                                <span className="mr-auto item-name">ChangeShardState</span>
+                                <span className="mr-auto item-name">AssetTransactionGroup</span>
                                 <span>
                                     {_.filter(block.parcels, parcel =>
-                                        Type.isChangeShardStateDoc(parcel.action)
+                                        Type.isAssetTransactionGroupDoc(parcel.action)
                                     ).length.toLocaleString()}
                                 </span>
                             </div>
@@ -172,8 +172,8 @@ class Block extends React.Component<Props, State> {
                                     {_.reduce(
                                         block.parcels,
                                         (memo, parcel) => {
-                                            if (Type.isChangeShardStateDoc(parcel.action)) {
-                                                const transactions = (parcel.action as ChangeShardStateDoc)
+                                            if (Type.isAssetTransactionGroupDoc(parcel.action)) {
+                                                const transactions = (parcel.action as AssetTransactionGroupDoc)
                                                     .transactions;
                                                 const assetTransferTransaction = _.filter(transactions, tx =>
                                                     Type.isAssetTransferTransactionDoc(tx)
@@ -195,8 +195,8 @@ class Block extends React.Component<Props, State> {
                                     {_.reduce(
                                         block.parcels,
                                         (memo, parcel) => {
-                                            if (Type.isChangeShardStateDoc(parcel.action)) {
-                                                const transactions = (parcel.action as ChangeShardStateDoc)
+                                            if (Type.isAssetTransactionGroupDoc(parcel.action)) {
+                                                const transactions = (parcel.action as AssetTransactionGroupDoc)
                                                     .transactions;
                                                 const assetTransferTransaction = _.filter(transactions, tx =>
                                                     Type.isAssetMintTransactionDoc(tx)

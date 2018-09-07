@@ -6,7 +6,7 @@ import LatestParcels from "../../components/home/LatestParcels/LatestParcels";
 import LatestTransactions from "../../components/home/LatestTransactions/LatestTransactions";
 import { RequestBlock, RequestBlockNumber, RequestBlocks, RequestParcels, RequestTransactions } from "../../request";
 
-import { BlockDoc, ChangeShardStateDoc, ParcelDoc, TransactionDoc } from "codechain-es-temporary/lib/types";
+import { AssetTransactionGroupDoc, BlockDoc, ParcelDoc, TransactionDoc } from "codechain-es-temporary/lib/types";
 import { Type } from "codechain-es-temporary/lib/utils";
 import Summary from "../../components/home/Summary/Summary";
 import "./Home.scss";
@@ -109,8 +109,8 @@ class Home extends React.Component<{}, State> {
             });
         }
         const transactions = _.chain(block.parcels)
-            .filter(parcel => Type.isChangeShardStateDoc(parcel.action))
-            .flatMap(parcel => (parcel.action as ChangeShardStateDoc).transactions)
+            .filter(parcel => Type.isAssetTransactionGroupDoc(parcel.action))
+            .flatMap(parcel => (parcel.action as AssetTransactionGroupDoc).transactions)
             .value();
         if (transactions.length > 0) {
             this.setState({

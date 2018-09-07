@@ -4,7 +4,7 @@ import * as _ from "lodash";
 import * as moment from "moment";
 import * as React from "react";
 
-import { ChangeShardStateDoc, ParcelDoc, PaymentDoc, SetRegularKeyDoc } from "codechain-es-temporary/lib/types";
+import { AssetTransactionGroupDoc, ParcelDoc, PaymentDoc, SetRegularKeyDoc } from "codechain-es-temporary/lib/types";
 import { Type } from "codechain-es-temporary/lib/utils";
 import { Link } from "react-router-dom";
 import { Col, Row } from "reactstrap";
@@ -95,10 +95,10 @@ class ParcelList extends React.Component<Props, State> {
                                         <Row>
                                             <Col md="3">Signer</Col>
                                             <Col md="9">
-                                                {address && address === parcel.sender ? (
-                                                    parcel.sender
+                                                {address && address === parcel.signer ? (
+                                                    parcel.signer
                                                 ) : (
-                                                    <Link to={`/addr-platform/${parcel.sender}`}>{parcel.sender}</Link>
+                                                    <Link to={`/addr-platform/${parcel.signer}`}>{parcel.signer}</Link>
                                                 )}
                                             </Col>
                                         </Row>
@@ -147,10 +147,10 @@ class ParcelList extends React.Component<Props, State> {
                         <Row>
                             <Col md="5">
                                 <div className="sender-receiver-container">
-                                    {address && address === parcel.sender ? (
-                                        parcel.sender
+                                    {address && address === parcel.signer ? (
+                                        parcel.signer
                                     ) : (
-                                        <Link to={`/addr-platform/${parcel.sender}`}>{parcel.sender}</Link>
+                                        <Link to={`/addr-platform/${parcel.signer}`}>{parcel.signer}</Link>
                                     )}
                                 </div>
                             </Col>
@@ -177,22 +177,22 @@ class ParcelList extends React.Component<Props, State> {
                     </Col>
                 </Row>
             ];
-        } else if (Type.isChangeShardStateDoc(parcel.action)) {
+        } else if (Type.isAssetTransactionGroupDoc(parcel.action)) {
             return (
                 <Row>
                     <Col md="3"># of Txs</Col>
                     <Col md="9">
-                        {(parcel.action as ChangeShardStateDoc).transactions.length.toLocaleString()}
+                        {(parcel.action as AssetTransactionGroupDoc).transactions.length.toLocaleString()}
                         <div className="small-text">
                             <FontAwesomeIcon icon={faSquare} className="asset-transfer-transaction-text-color" />{" "}
                             Transfer:{" "}
-                            {_.filter((parcel.action as ChangeShardStateDoc).transactions, tx =>
+                            {_.filter((parcel.action as AssetTransactionGroupDoc).transactions, tx =>
                                 Type.isAssetTransferTransactionDoc(tx)
                             ).length.toLocaleString()}
                         </div>
                         <div className="small-text">
                             <FontAwesomeIcon icon={faSquare} className="asset-mint-transaction-text-color" /> Mint:{" "}
-                            {_.filter((parcel.action as ChangeShardStateDoc).transactions, tx =>
+                            {_.filter((parcel.action as AssetTransactionGroupDoc).transactions, tx =>
                                 Type.isAssetMintTransactionDoc(tx)
                             ).length.toLocaleString()}
                         </div>

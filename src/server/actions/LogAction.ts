@@ -48,10 +48,10 @@ function handle(context: ServerContext, router: Router) {
             next(e);
         }
     });
-    router.get("/log/changeShardStateCount", async (req, res, next) => {
+    router.get("/log/assetTransactionGroupCount", async (req, res, next) => {
         const { date } = req.query;
         try {
-            const count = await context.db.getLogCount(date, LogType.PARCEL_CHANGE_SHARD_STATE_COUNT);
+            const count = await context.db.getLogCount(date, LogType.PARCEL_ASSET_TRANSACTION_GROUP_COUNT);
             res.send(JSON.stringify(count));
         } catch (e) {
             next(e);

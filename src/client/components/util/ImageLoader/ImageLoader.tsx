@@ -13,11 +13,12 @@ interface State {
 }
 
 export class ImageLoader extends React.Component<Props, State> {
+    private host = process.env.REACT_APP_SERVER_HOST ? process.env.REACT_APP_SERVER_HOST : "http://localhost:8081";
     constructor(prop: Props) {
         super(prop);
         let requestUrl;
         if (prop.isAssetImage) {
-            requestUrl = `${process.env.PUBLIC_URL}/assetImage/${prop.data}.png`;
+            requestUrl = `${this.host}/api/asset/image/${prop.data}`;
         } else {
             requestUrl = this.getDefaultImage();
         }

@@ -3,7 +3,7 @@ import * as React from "react";
 import { Col, Row } from "reactstrap";
 
 import {
-    ChangeShardStateDoc,
+    AssetTransactionGroupDoc,
     CreateShardDoc,
     ParcelDoc,
     PaymentDoc,
@@ -35,7 +35,7 @@ const getElementByType = (parcel: ParcelDoc) => {
             <Row key="parcel-header-table-payment-sender">
                 <Col md="3">Sender</Col>
                 <Col md="9">
-                    <Link to={`/addr-platform/${parcel.sender}`}>{parcel.sender}</Link>
+                    <Link to={`/addr-platform/${parcel.signer}`}>{parcel.signer}</Link>
                 </Col>
             </Row>,
             <hr key="line1" />,
@@ -69,11 +69,11 @@ const getElementByType = (parcel: ParcelDoc) => {
             </Row>,
             <hr key="line" />
         ];
-    } else if (Type.isChangeShardStateDoc(parcel.action)) {
+    } else if (Type.isAssetTransactionGroupDoc(parcel.action)) {
         return [
-            <Row key="parcel-header-table-change-shard-state-key">
+            <Row key="parcel-header-table-asset-transaction-group-key">
                 <Col md="3"># of Transactions</Col>
-                <Col md="9">{(parcel.action as ChangeShardStateDoc).transactions.length.toLocaleString()}</Col>
+                <Col md="9">{(parcel.action as AssetTransactionGroupDoc).transactions.length.toLocaleString()}</Col>
             </Row>,
             <hr key="line" />
         ];
@@ -149,7 +149,7 @@ const ParcelDetails = (props: Props) => {
                         <Row>
                             <Col md="3">Signer</Col>
                             <Col md="9">
-                                <Link to={`/addr-platform/${parcel.sender}`}>{parcel.sender}</Link>
+                                <Link to={`/addr-platform/${parcel.signer}`}>{parcel.signer}</Link>
                             </Col>
                         </Row>
                         <hr />
