@@ -1,8 +1,9 @@
 import * as React from "react";
 
+import { AssetSchemeDoc } from "codechain-es/lib/types";
+import { Type } from "codechain-es/lib/utils";
 import { Link } from "react-router-dom";
 import { Col, Row } from "reactstrap";
-import { AssetSchemeDoc, Type } from "../../../../db/DocType";
 import DataSet from "../../util/DataSet/DataSet";
 import "./AssetDetails.scss";
 

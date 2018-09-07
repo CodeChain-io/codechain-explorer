@@ -2,7 +2,8 @@ import { H256 } from "codechain-sdk/lib/core/classes";
 import * as React from "react";
 import { connect, Dispatch } from "react-redux";
 
-import { AssetMintTransactionDoc, TransactionDoc, Type } from "../../db/DocType";
+import { AssetMintTransactionDoc, TransactionDoc } from "codechain-es/lib/types";
+import { Type } from "codechain-es/lib/utils";
 import { RootState } from "../redux/actions";
 import { ApiError, apiRequest } from "./ApiRequest";
 

@@ -1,11 +1,10 @@
-version: '3'
+version: "3"
 services:
   codechain-explorer:
     build: .
     ports:
       - "3000:3000"
       - "8081:8081"
-      - "5000:5000"
     volumes:
       - $PWD:/code
     depends_on:
@@ -32,4 +31,4 @@ services:
       - ES_HOSTS=0.0.0.0:9200
 
 volumes:
-  codechaindata:
+  ? codechaindata

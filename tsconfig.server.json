@@ -1,8 +1,9 @@
 {
-    "compilerOptions": {
-        "lib": [
-            "es2015"
-        ],
-        "rootDir": "server"
-    }
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "rootDir": "src/server",
+    "types": ["node"],
+    "module": "commonjs"
+  },
+  "exclude": ["node_modules", "build", "scripts", "acceptance-tests", "webpack", "jest", "src/client"]
 }

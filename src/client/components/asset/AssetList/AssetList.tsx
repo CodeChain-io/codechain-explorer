@@ -2,8 +2,9 @@ import * as _ from "lodash";
 import * as React from "react";
 import { Col, Row } from "reactstrap";
 
+import { AssetBundleDoc } from "codechain-es/lib/types";
+import { Type } from "codechain-es/lib/utils";
 import { Link } from "react-router-dom";
-import { AssetBundleDoc, Type } from "../../../../db/DocType";
 import { ImageLoader } from "../../util/ImageLoader/ImageLoader";
 import "./AssetList.scss";
 

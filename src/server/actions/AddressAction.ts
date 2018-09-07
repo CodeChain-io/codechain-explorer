@@ -1,15 +1,11 @@
+import { AssetDoc, TransactionDoc } from "codechain-es/lib/types";
 import { H256 } from "codechain-sdk/lib/core/classes";
 import { AssetTransferAddress, PlatformAddress } from "codechain-sdk/lib/key/classes";
 import { Router } from "express";
 import * as _ from "lodash";
-import { AssetDoc, TransactionDoc } from "../../db/DocType";
 import { ServerContext } from "../ServerContext";
 
 function handle(context: ServerContext, router: Router) {
-    const STANDARD_SCRIPT_LIST = [
-        "f42a65ea518ba236c08b261c34af0521fa3cd1aa505e1c18980919cb8945f8f3",
-        "41a872156efc1dbd45a85b49896e9349a4e8f3fb1b8f3ed38d5e13ef675bcd5a"
-    ];
     router.get("/addr-platform-account/:address", async (req, res, next) => {
         const { address } = req.params;
         try {
@@ -22,7 +18,7 @@ function handle(context: ServerContext, router: Router) {
             const balance = await context.codechainSdk.rpc.chain.getBalance(address);
             const nonce = await context.codechainSdk.rpc.chain.getNonce(address);
             const account = {
-                balance: balance.value,
+                balance: balance ? balance.value : 0,
                 nonce: nonce.value
             };
             res.send(account);
@@ -140,12 +136,15 @@ function handle(context: ServerContext, router: Router) {
             return;
         }
         try {
-            let utxoList = [];
+            let utxoList: AssetDoc[] = [];
             let lastSelectedTransactionHash = lastTransactionHash;
             while (utxoList.length < itemsPerPage) {
                 let assets: AssetDoc[];
                 if (lastSelectedTransactionHash) {
                     const transaction = await context.db.getTransaction(new H256(lastSelectedTransactionHash));
+                    if (!transaction) {
+                        throw new Error("Invalid lastTransactionHash");
+                    }
                     assets = await context.db.getAssetsByAssetTransferAddress(
                         address,
                         transaction.data.blockNumber,
@@ -162,10 +161,11 @@ function handle(context: ServerContext, router: Router) {
                         itemsPerPage
                     );
                 }
-                if (assets.length === 0) {
+                const lastAsset = _.last(assets);
+                if (!lastAsset) {
                     break;
                 }
-                lastSelectedTransactionHash = _.last(assets).transactionHash;
+                lastSelectedTransactionHash = lastAsset.transactionHash;
                 const utxoPromise = _.map(assets, async asset => {
                     const getAssetResult = await context.codechainSdk.rpc.chain.getAsset(
                         new H256(asset.transactionHash),

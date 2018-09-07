@@ -1,7 +1,7 @@
 import { faSquare } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { TransactionDoc } from "codechain-es/lib/types";
 import * as React from "react";
-import { TransactionDoc } from "../../../../db/DocType";
 
 interface Props {
     transaction: TransactionDoc;

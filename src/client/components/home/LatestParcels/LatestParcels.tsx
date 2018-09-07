@@ -2,8 +2,8 @@ import * as _ from "lodash";
 import * as moment from "moment";
 import * as React from "react";
 
+import { ParcelDoc } from "codechain-es/lib/types";
 import { Link } from "react-router-dom";
-import { ParcelDoc } from "../../../../db/DocType";
 import { changeQuarkStringToCCC } from "../../../utils/Formatter";
 import { ActionBadge } from "../../util/ActionBadge/ActionBadge";
 import { CommaNumberString } from "../../util/CommaNumberString/CommaNumberString";

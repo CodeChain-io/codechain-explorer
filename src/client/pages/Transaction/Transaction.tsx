@@ -7,8 +7,8 @@ import { Error } from "../../components/error/Error/Error";
 import TransactionDetails from "../../components/transaction/TransactionDetails/TransactionDetails";
 import { RequestTransaction } from "../../request";
 
-import { TransactionDoc } from "../../../db/DocType";
-import { PendingTransactionDoc } from "../../../db/DocType";
+import { TransactionDoc } from "codechain-es/lib/types";
+import { PendingTransactionDoc } from "codechain-es/lib/types";
 import TransactionSummary from "../../components/transaction/TransactionSummary/TransactionSummary";
 import CopyButton from "../../components/util/CopyButton/CopyButton";
 import HexString from "../../components/util/HexString/HexString";

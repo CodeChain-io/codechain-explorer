@@ -7,14 +7,9 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 import { Col, Popover, PopoverBody, Row } from "reactstrap";
 
+import { AssetMintTransactionDoc, AssetTransferTransactionDoc, TransactionDoc } from "codechain-es/lib/types";
+import { MetadataFormat, Type } from "codechain-es/lib/utils";
 import { Link } from "react-router-dom";
-import {
-    AssetMintTransactionDoc,
-    AssetTransferTransactionDoc,
-    MetadataFormat,
-    TransactionDoc,
-    Type
-} from "../../../../db/DocType";
 import { ImageLoader } from "../../util/ImageLoader/ImageLoader";
 import "./TransactionSummary.scss";
 

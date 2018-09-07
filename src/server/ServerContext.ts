@@ -1,6 +1,6 @@
+import { ElasticSearchAgent } from "codechain-es";
 import { SDK } from "codechain-sdk";
 import { ServerConfig } from ".";
-import { ElasticSearchAgent } from "../db/ElasticSearchAgent";
 
 export class ServerContext {
     public static async newInstance(options: ServerConfig) {

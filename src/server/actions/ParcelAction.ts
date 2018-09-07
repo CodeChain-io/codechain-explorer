@@ -1,6 +1,6 @@
+import { Type } from "codechain-es/lib/utils";
 import { H256 } from "codechain-sdk/lib/core/classes";
 import { Router } from "express";
-import { Type } from "../../db/DocType";
 import { ServerContext } from "../ServerContext";
 
 function handle(context: ServerContext, router: Router) {

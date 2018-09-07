@@ -36,9 +36,9 @@ function handle(context: ServerContext, router: Router) {
 
             res.send({
                 codechainBestBlockNumber,
-                codechainBestBlockHash: codechainBestBlockHash.value,
+                codechainBestBlockHash: codechainBestBlockHash ? codechainBestBlockHash.value : "",
                 explorerLastBlockNumber,
-                explorerLastBlockHash: explorerLastBlock.hash
+                explorerLastBlockHash: explorerLastBlock ? explorerLastBlock.hash : ""
             });
         } catch (e) {
             next(e);

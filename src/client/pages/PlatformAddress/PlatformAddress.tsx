@@ -4,8 +4,8 @@ import { match } from "react-router";
 import { Col, Container, Row } from "reactstrap";
 import { Error } from "../../components/error/Error/Error";
 
+import { AssetBundleDoc, BlockDoc, ParcelDoc } from "codechain-es/lib/types";
 import { U256 } from "codechain-sdk/lib/core/classes";
-import { AssetBundleDoc, BlockDoc, ParcelDoc } from "../../../db/DocType";
 import AssetList from "../../components/asset/AssetList/AssetList";
 import BlockList from "../../components/block/BlockList/BlockList";
 import ParcelList from "../../components/parcel/ParcelList/ParcelList";

@@ -6,8 +6,8 @@ import * as React from "react";
 import { Redirect } from "react-router";
 import { Container } from "reactstrap";
 
+import { ParcelDoc } from "codechain-es/lib/types";
 import { Link } from "react-router-dom";
-import { ParcelDoc } from "../../../db/DocType";
 import { ActionBadge } from "../../components/util/ActionBadge/ActionBadge";
 import { CommaNumberString } from "../../components/util/CommaNumberString/CommaNumberString";
 import DataTable from "../../components/util/DataTable/DataTable";

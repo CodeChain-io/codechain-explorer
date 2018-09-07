@@ -3,7 +3,8 @@ import * as _ from "lodash";
 import * as React from "react";
 import { connect, Dispatch } from "react-redux";
 
-import { AssetMintTransactionDoc, ChangeShardStateDoc, ParcelDoc, Type } from "../../db/DocType";
+import { AssetMintTransactionDoc, ChangeShardStateDoc, ParcelDoc } from "codechain-es/lib/types";
+import { Type } from "codechain-es/lib/utils";
 import { RootState } from "../redux/actions";
 import { ApiError, apiRequest } from "./ApiRequest";
 

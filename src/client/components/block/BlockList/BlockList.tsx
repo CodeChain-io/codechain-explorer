@@ -5,8 +5,8 @@ import { Col, Row } from "reactstrap";
 
 import * as moment from "moment";
 
+import { BlockDoc } from "codechain-es/lib/types";
 import { Link } from "react-router-dom";
-import { BlockDoc } from "../../../../db/DocType";
 import { changeQuarkStringToCCC } from "../../../utils/Formatter";
 import { CommaNumberString } from "../../util/CommaNumberString/CommaNumberString";
 import DataSet from "../../util/DataSet/DataSet";

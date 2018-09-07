@@ -4,8 +4,9 @@ import * as React from "react";
 import { Col, Row } from "reactstrap";
 import DataSet from "../../util/DataSet/DataSet";
 
+import { BlockDoc, ChangeShardStateDoc } from "codechain-es/lib/types";
+import { Type } from "codechain-es/lib/utils";
 import { Link } from "react-router-dom";
-import { BlockDoc, ChangeShardStateDoc, Type } from "../../../../db/DocType";
 import { CommaNumberString } from "../../util/CommaNumberString/CommaNumberString";
 import HexString from "../../util/HexString/HexString";
 import "./BlockDetails.scss";

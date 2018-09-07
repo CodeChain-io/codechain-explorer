@@ -1,7 +1,7 @@
 import * as React from "react";
 import { connect, Dispatch } from "react-redux";
 
-import { TransactionDoc } from "../../db/DocType";
+import { TransactionDoc } from "codechain-es/lib/types";
 import { ApiError, apiRequest } from "./ApiRequest";
 
 interface OwnProps {

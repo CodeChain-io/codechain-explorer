@@ -1,24 +1,17 @@
 {
-    "extends": [
-        "tslint:recommended",
-        "tslint-react",
-        "tslint-config-prettier"
-    ],
-    "rules": {
-        "interface-name": false,
-        "no-console": false,
-        "object-literal-sort-keys": false,
-        "no-var-requires": false,
-        "array-type": false
-    },
-    "jsRules": {
-        "no-console": false,
-        "object-literal-sort-keys": false
-    },
-    "linterOptions": {
-        "exclude": [
-            "config/**/*.js",
-            "node_modules/**/*.ts"
-        ]
-    }
+  "extends": ["tslint:recommended", "tslint-react", "tslint-config-prettier"],
+  "rules": {
+    "interface-name": false,
+    "no-console": false,
+    "object-literal-sort-keys": false,
+    "no-var-requires": false,
+    "array-type": false
+  },
+  "jsRules": {
+    "no-console": false,
+    "object-literal-sort-keys": false
+  },
+  "linterOptions": {
+    "exclude": ["config/**/*.js", "node_modules/**/*.ts"]
+  }
 }

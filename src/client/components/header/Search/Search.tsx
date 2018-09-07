@@ -7,7 +7,6 @@ import LoadingBar from "react-redux-loading-bar";
 import { Redirect } from "react-router";
 import { Button, Form, FormGroup, Popover, PopoverBody } from "reactstrap";
 
-import { H256, U256 } from "codechain-sdk/lib/core/classes";
 import {
     AssetBundleDoc,
     AssetSchemeDoc,
@@ -15,9 +14,10 @@ import {
     ParcelDoc,
     PendingParcelDoc,
     PendingTransactionDoc,
-    TransactionDoc,
-    Type
-} from "../../../../db/DocType";
+    TransactionDoc
+} from "codechain-es/lib/types";
+import { Type } from "codechain-es/lib/utils";
+import { H256, U256 } from "codechain-sdk/lib/core/classes";
 import {
     RequestAssetBundlesByName,
     RequestAssetScheme,

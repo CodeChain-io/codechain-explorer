@@ -1,5 +1,3 @@
-import * as yargs from "yargs";
-
 import config from "./config";
 import * as web from "./web";
 
@@ -14,14 +12,7 @@ export interface ServerConfig {
 }
 
 const main = () => {
-    const _ = yargs
-        .command({
-            command: "*",
-            handler: () => {
-                web.run(config);
-            }
-        })
-        .help().argv;
+    web.run(config);
 };
 
 main();

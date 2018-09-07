@@ -10,9 +10,10 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import HexString from "../../util/HexString/HexString";
 import "./TransactionList.scss";
 
+import { AssetMintTransactionDoc, AssetTransferTransactionDoc, TransactionDoc } from "codechain-es/lib/types";
+import { Type } from "codechain-es/lib/utils";
 import { H256 } from "codechain-sdk/lib/core/classes";
 import { Link } from "react-router-dom";
-import { AssetMintTransactionDoc, AssetTransferTransactionDoc, TransactionDoc, Type } from "../../../../db/DocType";
 import DataSet from "../../util/DataSet/DataSet";
 import { ImageLoader } from "../../util/ImageLoader/ImageLoader";
 import { TypeBadge } from "../../util/TypeBadge/TypeBadge";

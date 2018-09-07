@@ -4,7 +4,7 @@ import * as React from "react";
 import { match } from "react-router";
 import { Col, Container, Row } from "reactstrap";
 
-import { AssetBundleDoc, TransactionDoc } from "../../../db/DocType";
+import { AssetBundleDoc, TransactionDoc } from "codechain-es/lib/types";
 import { RequestAssetTransferAddressTransactions, RequestAssetTransferAddressUTXO } from "../../request";
 
 import AssetList from "../../components/asset/AssetList/AssetList";

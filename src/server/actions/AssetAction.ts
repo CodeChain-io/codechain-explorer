@@ -1,6 +1,7 @@
+import { TransactionDoc } from "codechain-es/lib/types";
+import { Type } from "codechain-es/lib/utils";
 import { H256 } from "codechain-sdk/lib/core/classes";
 import { Router } from "express";
-import { TransactionDoc, Type } from "../../db/DocType";
 import { ServerContext } from "../ServerContext";
 
 function handle(context: ServerContext, router: Router) {

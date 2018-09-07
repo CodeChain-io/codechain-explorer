@@ -11,8 +11,9 @@ import BlockDetails from "../../components/block/BlockDetails/BlockDetails";
 import ParcelList from "../../components/parcel/ParcelList/ParcelList";
 import { RequestBlock } from "../../request";
 
+import { BlockDoc, ChangeShardStateDoc } from "codechain-es/lib/types";
+import { Type } from "codechain-es/lib/utils";
 import { Link } from "react-router-dom";
-import { BlockDoc, ChangeShardStateDoc, Type } from "../../../db/DocType";
 import CopyButton from "../../components/util/CopyButton/CopyButton";
 import HexString from "../../components/util/HexString/HexString";
 import "./Block.scss";

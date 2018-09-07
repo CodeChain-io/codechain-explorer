@@ -14,8 +14,6 @@ CodeChain explorer is a simple, easy to use, an open-source visualization tool f
 
 The following are the software dependencies required to install and run CodeChain-explorer:
 
-- [CodeChain](https://github.com/CodeChain-io/codechain) version of commit [`a47061`](https://github.com/CodeChain-io/codechain/commit/a47061089ac93c238a97c49aa430adec9e1c5c52)
-- ElasticSearch [`v6.2.4`](https://www.elastic.co/guide/en/beats/libbeat/6.2/elasticsearch-installation.html)
 - Nodejs v10.4.1
 - Yarn v1.9.2
 
@@ -40,14 +38,9 @@ Use yarn package manager to install packages
 
 #### Dependency
 
-- Get CodeChain ready with CodeChain RPC server
-- Get ElasticSearch database ready for indexing block data
+- Get CodeChain-indexer ready for indexing block data
 
 #### Processor description
-
-- Worker
-
-  - Data synchronizing tool between CodeChain and ElasticSearch
 
 - Server
 
@@ -59,10 +52,9 @@ Use yarn package manager to install packages
 
 ## Running for development
 
-#### Running worker, server, client at once
+#### Running server, client at once
 
 - Explorer will run at http://localhost:3000
-- Static file server will run at http://localhost:5000 internally for serving asset images
 
 ```
 # yarn run start
@@ -75,27 +67,13 @@ Use yarn package manager to install packages
 
 #### Before start
 
-- Get CodeChain ready with CodeChain RPC server
-- Get ElasticSearch database ready for indexing block data
+- Get CodeChain-indexer ready for indexing block data
 
 ### Running order
 
-1. Worker
+1. Server
 
-2. Server
-
-3. Client
-
-### Worker
-
-Run CodeChain-worker for indexing data to ElasticSearch
-
-```
-# yarn run start-worker
-
-// You can change ElasticSearch and CodeChain host URL using an environment variables.
-# CODECHAIN_CHAIN=huksy CODECHAIN_HOST=http://52.79.108.1:8080 ELASTICSEARCH_HOST=http://127.0.0.1:9200 yarn run start-worker
-```
+2. Client
 
 ### Server
 
@@ -133,23 +111,7 @@ It start the static server serving build directory.
 # SERVE_PORT=8080 yarn run serve
 ```
 
-## Tools
-
-#### Delete all indices in the elasticsearch
-
-```
-# yarn run clear
-```
-
 ## Custom Configuration
-
-#### Worker
-
-|                    | Default               | Options     | Description |
-| ------------------ | --------------------- | ----------- | ----------- |
-| CODECHAIN_HOST     | http://127.0.0.1:8080 |             |             |
-| ELASTICSEARCH_HOST | http://127.0.0.1:9200 |             |             |
-| CODECHAIN_CHAIN    | solo                  | solo, husky |             |
 
 #### Server
 

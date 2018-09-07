@@ -17,8 +17,9 @@ import * as emptyImage from "./img/empty.png";
 
 import { RequestPendingParcels, RequestTotalPendingParcelCount } from "../../request";
 
+import { ChangeShardStateDoc, PendingParcelDoc } from "codechain-es/lib/types";
+import { Type } from "codechain-es/lib/utils";
 import { Link } from "react-router-dom";
-import { ChangeShardStateDoc, PendingParcelDoc, Type } from "../../../db/DocType";
 import { ActionBadge } from "../../components/util/ActionBadge/ActionBadge";
 import DataTable from "../../components/util/DataTable/DataTable";
 import HexString from "../../components/util/HexString/HexString";

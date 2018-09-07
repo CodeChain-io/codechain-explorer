@@ -1,12 +1,12 @@
 import { faAngleDoubleLeft, faAngleDoubleRight, faAngleLeft, faAngleRight } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { BlockDoc } from "codechain-es/lib/types";
 import * as _ from "lodash";
 import * as moment from "moment";
 import * as React from "react";
 import { Redirect } from "react-router";
 import { Link } from "react-router-dom";
 import { Container } from "reactstrap";
-import { BlockDoc } from "../../../db/DocType";
 import { CommaNumberString } from "../../components/util/CommaNumberString/CommaNumberString";
 import DataTable from "../../components/util/DataTable/DataTable";
 import { RequestBlocks, RequestTotalBlockCount } from "../../request";

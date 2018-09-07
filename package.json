@@ -16,7 +16,6 @@
     "@nivo/bar": "^0.47.1",
     "@nivo/line": "^0.42.1",
     "@nivo/pie": "^0.42.1",
-    "@types/mkdirp-promise": "^5.0.0",
     "autoprefixer": "7.1.6",
     "babel-jest": "^22.1.0",
     "babel-loader": "^7.1.2",
@@ -27,13 +26,13 @@
     "buffer": "^5.1.0",
     "case-sensitive-paths-webpack-plugin": "2.1.1",
     "chalk": "1.1.3",
-    "codechain-sdk": "^0.1.1-rc1",
+    "codechain-es": "^0.1.0-rc2",
+    "codechain-sdk": "^0.1.1-rc2",
     "concurrently": "^3.6.0",
     "cors": "^2.8.4",
     "css-loader": "0.28.7",
     "dotenv": "^6.0.0",
     "dotenv-expand": "4.2.0",
-    "elasticsearch": "^15.0.0",
     "express": "^4.16.3",
     "extract-text-webpack-plugin": "3.0.2",
     "file-loader": "0.11.2",
@@ -43,10 +42,8 @@
     "identicon.js": "^2.3.2",
     "jest": "22.1.4",
     "js-sha256": "^0.9.0",
-    "mkdirp-promise": "^5.0.1",
     "moment": "^2.22.2",
     "node-sass": "^4.9.1",
-    "node-schedule": "^1.3.0",
     "object-assign": "4.1.1",
     "postcss-flexbugs-fixes": "3.2.0",
     "postcss-loader": "2.0.8",
@@ -66,10 +63,8 @@
     "reactstrap": "^6.1.0",
     "redux": "^4.0.0",
     "request": "^2.88.0",
-    "request-promise-native": "^1.0.5",
     "resolve": "1.6.0",
     "sass-loader": "^7.0.3",
-    "sharp": "^0.20.7",
     "source-map-loader": "^0.2.1",
     "style-loader": "0.19.0",
     "sw-precache-webpack-plugin": "0.11.4",
@@ -82,32 +77,27 @@
     "webpack": "3.8.1",
     "webpack-dev-server": "2.9.4",
     "webpack-manifest-plugin": "1.3.2",
-    "whatwg-fetch": "2.0.3",
-    "yargs": "^11.0.0"
+    "whatwg-fetch": "2.0.3"
   },
   "scripts": {
-    "start": "concurrently --kill-others \"yarn start-worker\" \"yarn start-server\" \"yarn start-client\"",
-    "start-client": "concurrently --kill-others \"node scripts/start.js\" \"node scripts/serve.js\"",
+    "start": "concurrently --kill-others \"yarn start-server\" \"yarn start-client\"",
+    "start-client": "node scripts/start.js",
     "start-server": "ts-node --project tsconfig.server.json src/server/index.ts",
-    "start-worker": "ts-node --project tsconfig.worker.json src/worker/index.ts",
     "build": "node scripts/build.js",
     "serve": "node scripts/serve.js",
     "test": "yarn lint && node scripts/test.js --env=jsdom",
-    "clear": "node scripts/clear.js",
-    "lint": "tslint -p tsconfig.client.json && tslint -p tsconfig.server.json && tslint -p tsconfig.worker.json && prettier 'src/**/*.{ts,tsx,scss,json,html,js,jsx}' -l",
-    "fmt": "tslint -p tsconfig.client.json --fix && tslint -p tsconfig.server.json --fix && tslint -p tsconfig.worker.json --fix && prettier 'src/**/*.{ts,tsx,scss,json,html,js,jsx}' --write"
+    "lint": "tslint -p tsconfig.client.json && tslint -p tsconfig.server.json && prettier 'src/**/*.{ts,tsx,scss,json,html,js,jsx}' -l",
+    "fmt": "tslint -p tsconfig.client.json --fix && tslint -p tsconfig.server.json --fix && prettier 'src/**/*.{ts,tsx,scss,json,html,js,jsx}' --write"
   },
   "devDependencies": {
     "@types/bignumber.js": "^5.0.0",
     "@types/body-parser": "^1.17.0",
     "@types/cors": "^2.8.4",
     "@types/dotenv": "^4.0.3",
-    "@types/elasticsearch": "^5.0.24",
     "@types/express": "^4.11.1",
     "@types/jest": "^22.2.3",
     "@types/lodash": "^4.14.108",
     "@types/node": "^10.5.2",
-    "@types/node-schedule": "^1.2.2",
     "@types/qrcode.react": "^0.8.1",
     "@types/react": "^16.3.13",
     "@types/react-autosuggest": "^9.3.4",
@@ -119,13 +109,11 @@
     "@types/react-router-dom": "^4.2.6",
     "@types/reactstrap": "^6.0.0",
     "@types/redux": "^3.6.0",
-    "@types/sharp": "^0.17.10",
-    "@types/yargs": "^11.0.0",
     "prettier": "1.14.2",
     "tslint": "^5.7.0",
     "tslint-config-prettier": "^1.10.0",
     "tslint-react": "^3.2.0",
-    "typescript": "2.9.2"
+    "typescript": "^3.0.3"
   },
   "jest": {
     "collectCoverageFrom": [
@@ -178,11 +166,5 @@
   },
   "eslintConfig": {
     "extends": "react-app"
-  },
-  "proxy": {
-    "/assetImage": {
-      "target": "http://localhost:5000",
-      "ws": true
-    }
   }
 }
