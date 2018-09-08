@@ -2,8 +2,8 @@ import * as _ from "lodash";
 import * as moment from "moment";
 import * as React from "react";
 
-import { AssetMintTransactionDoc, AssetTransferTransactionDoc, TransactionDoc } from "codechain-es-temporary/lib/types";
-import { Type } from "codechain-es-temporary/lib/utils";
+import { AssetMintTransactionDoc, AssetTransferTransactionDoc, TransactionDoc } from "codechain-es/lib/types";
+import { Type } from "codechain-es/lib/utils";
 import { Link } from "react-router-dom";
 import DataTable from "../../util/DataTable/DataTable";
 import HexString from "../../util/HexString/HexString";

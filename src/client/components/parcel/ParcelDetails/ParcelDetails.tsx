@@ -8,8 +8,8 @@ import {
     ParcelDoc,
     PaymentDoc,
     SetRegularKeyDoc
-} from "codechain-es-temporary/lib/types";
-import { Type } from "codechain-es-temporary/lib/utils";
+} from "codechain-es/lib/types";
+import { Type } from "codechain-es/lib/utils";
 import { Link } from "react-router-dom";
 import { changeQuarkStringToCCC } from "../../../utils/Formatter";
 import { ActionBadge } from "../../util/ActionBadge/ActionBadge";

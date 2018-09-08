@@ -3,8 +3,8 @@ import { connect, Dispatch } from "react-redux";
 
 import { H256 } from "codechain-sdk/lib/core/classes";
 
-import { AssetSchemeDoc } from "codechain-es-temporary/lib/types";
-import { Type } from "codechain-es-temporary/lib/utils";
+import { AssetSchemeDoc } from "codechain-es/lib/types";
+import { Type } from "codechain-es/lib/utils";
 import { RootState } from "../redux/actions";
 import { ApiError, apiRequest } from "./ApiRequest";
 

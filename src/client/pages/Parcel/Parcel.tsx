@@ -10,8 +10,8 @@ import { Error } from "../../components/error/Error/Error";
 import ParcelDetails from "../../components/parcel/ParcelDetails/ParcelDetails";
 import { RequestParcel, RequestPendingParcel } from "../../request";
 
-import { AssetTransactionGroupDoc, ParcelDoc, PendingParcelDoc } from "codechain-es-temporary/lib/types";
-import { Type } from "codechain-es-temporary/lib/utils";
+import { AssetTransactionGroupDoc, ParcelDoc, PendingParcelDoc } from "codechain-es/lib/types";
+import { Type } from "codechain-es/lib/utils";
 import TransactionList from "../../components/transaction/TransactionList/TransactionList";
 import CopyButton from "../../components/util/CopyButton/CopyButton";
 import HexString from "../../components/util/HexString/HexString";

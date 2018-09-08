@@ -1,4 +1,4 @@
-import { AssetDoc, TransactionDoc } from "codechain-es-temporary/lib/types";
+import { AssetDoc, TransactionDoc } from "codechain-es/lib/types";
 import { H256 } from "codechain-sdk/lib/core/classes";
 import { AssetTransferAddress, PlatformAddress } from "codechain-sdk/lib/key/classes";
 import { Router } from "express";
