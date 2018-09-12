@@ -150,7 +150,9 @@ class ParcelList extends React.Component<Props, State> {
                                     {address && address === parcel.signer ? (
                                         parcel.signer
                                     ) : (
-                                        <Link to={`/addr-platform/${parcel.signer}`}>{parcel.signer}</Link>
+                                        <Link title={parcel.signer} to={`/addr-platform/${parcel.signer}`}>
+                                            {parcel.signer}
+                                        </Link>
                                     )}
                                 </div>
                             </Col>
@@ -165,9 +167,12 @@ class ParcelList extends React.Component<Props, State> {
                             <Col md="5">
                                 <div className="sender-receiver-container">
                                     {address && address === (parcel.action as PaymentDoc).receiver ? (
-                                        (parcel.action as PaymentDoc).receiver
+                                        <span title={address}>{(parcel.action as PaymentDoc).receiver}</span>
                                     ) : (
-                                        <Link to={`/addr-platform/${(parcel.action as PaymentDoc).receiver}`}>
+                                        <Link
+                                            title={address}
+                                            to={`/addr-platform/${(parcel.action as PaymentDoc).receiver}`}
+                                        >
                                             {(parcel.action as PaymentDoc).receiver}
                                         </Link>
                                     )}
