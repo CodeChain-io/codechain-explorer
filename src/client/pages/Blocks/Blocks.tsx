@@ -135,7 +135,7 @@ class Blocks extends React.Component<Props, State> {
                                                     />
                                                     CCC
                                                 </td>
-                                                <td>{moment.unix(block.timestamp).fromNow()}</td>
+                                                <td>{block.timestamp ? moment.unix(block.timestamp).fromNow() : 'Genesis'}</td>
                                             </tr>
                                         );
                                     })}

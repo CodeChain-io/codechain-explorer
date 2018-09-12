@@ -67,7 +67,7 @@ class BlockList extends React.Component<Props, State> {
                                             </Col>
                                             <Col md="9">
                                                 <span className="timestamp float-right">
-                                                    {moment.unix(block.timestamp).format("YYYY-MM-DD HH:mm:ssZ")}
+                                                    {block.timestamp ? moment.unix(block.timestamp).format("YYYY-MM-DD HH:mm:ssZ") : 'Genesis'}
                                                 </span>
                                             </Col>
                                         </Row>

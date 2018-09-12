@@ -44,7 +44,7 @@ const LatestBlocks = (props: Props) => {
                                         <CommaNumberString text={changeQuarkStringToCCC(block.miningReward)} />
                                         CCC
                                     </td>
-                                    <td>{moment.unix(block.timestamp).fromNow()}</td>
+                                    <td>{block.timestamp ? moment.unix(block.timestamp).fromNow() : 'Genesis'}</td>
                                 </tr>
                             );
                         })}
