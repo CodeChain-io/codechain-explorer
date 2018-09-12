@@ -213,11 +213,12 @@ class Block extends React.Component<Props, State> {
                         </div>
                     </Col>
                 </Row>
-                <Row className="mt-large">
+                { block.parcels.length > 0 && <Row className="mt-large">
                     <Col lg="9">
                         <ParcelList parcels={block.parcels} totalCount={block.parcels.length} />
                     </Col>
                 </Row>
+                }
             </Container>
         );
     }
