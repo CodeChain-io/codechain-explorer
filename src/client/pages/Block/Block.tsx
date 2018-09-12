@@ -85,7 +85,9 @@ class Block extends React.Component<Props, State> {
                                 Block <span className="block-number">#{block.number}</span>
                             </h1>
                             <span className="timestamp">
-                                {block.timestamp ? moment.unix(block.timestamp).format("YYYY-MM-DD HH:mm:ssZ") : 'Genesis'}
+                                {block.timestamp
+                                    ? moment.unix(block.timestamp).format("YYYY-MM-DD HH:mm:ssZ")
+                                    : "Genesis"}
                             </span>
                         </div>
                     </Col>
@@ -213,12 +215,13 @@ class Block extends React.Component<Props, State> {
                         </div>
                     </Col>
                 </Row>
-                { block.parcels.length > 0 && <Row className="mt-large">
-                    <Col lg="9">
-                        <ParcelList parcels={block.parcels} totalCount={block.parcels.length} />
-                    </Col>
-                </Row>
-                }
+                {block.parcels.length > 0 && (
+                    <Row className="mt-large">
+                        <Col lg="9">
+                            <ParcelList parcels={block.parcels} totalCount={block.parcels.length} />
+                        </Col>
+                    </Row>
+                )}
             </Container>
         );
     }
