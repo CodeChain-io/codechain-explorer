@@ -18,7 +18,7 @@ import {
 import HealthChecker from "../../util/HealthChecker/HealthChecker";
 import Search from "../Search/Search";
 
-import * as logo from "./img/logo-with-husky.png";
+import * as logo from "./img/logo_testnet.png";
 
 import "./Header.scss";
 
@@ -42,7 +42,7 @@ class Header extends React.Component<{}, State> {
                     <Container>
                         <IndexLinkContainer to="/">
                             <NavbarBrand>
-                                <img src={logo} className="logo" /> CodeChain Explorer
+                                <img src={logo} className="logo" /> CodeChain Explorer - Husky
                             </NavbarBrand>
                         </IndexLinkContainer>
                         <NavbarToggler onClick={this.toggle} />
