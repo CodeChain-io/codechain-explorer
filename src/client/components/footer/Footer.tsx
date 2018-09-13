@@ -38,12 +38,12 @@ const Footer = () => {
                                 </a>
                             </li>
                             <li className="list-inline-item">
-                                <a href="https://github.com/CodeChain-io/codechain" target="_blank">
+                                <a href="https://github.com/CodeChain-io/codechain-explorer" target="_blank">
                                     <FontAwesomeIcon icon={faGithub} />
                                 </a>
                             </li>
                             <li className="list-inline-item">
-                                <a href="https://gitter.im/CodeChain-io/codechain" target="_blank">
+                                <a href="https://gitter.im/CodeChain-io/codechain-explorer" target="_blank">
                                     <FontAwesomeIcon icon={faGitter} />
                                 </a>
                             </li>
