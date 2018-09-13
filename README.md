@@ -60,7 +60,7 @@ Use yarn package manager to install packages
 # yarn run start
 
 // You can chage the port of test server and the host URL with environment variables.
-# PORT=3000 CODECHAIN_CHAIN=husky CODECHAIN_HOST=http://52.79.108.1:8080 ELASTICSEARCH_HOST=http://127.0.0.1:9200 REACT_APP_SERVER_HOST=http://127.0.0.1:8081 yarn run start
+# PORT=3000 CODECHAIN_HOST=http://52.79.108.1:8080 ELASTICSEARCH_HOST=http://127.0.0.1:9200 REACT_APP_SERVER_HOST=http://127.0.0.1:8081 yarn run start
 ```
 
 ## Running for production
