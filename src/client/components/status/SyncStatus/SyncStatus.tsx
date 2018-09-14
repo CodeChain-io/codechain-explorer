@@ -64,13 +64,17 @@ class SyncStatus extends React.Component<Props, {}> {
                             <Progress
                                 className="custom-progress"
                                 color="success"
-                                value={(syncStatus.explorerLastBlockNumber / syncStatus.codechainBestBlockNumber) * 100}
+                                value={
+                                    Math.floor(
+                                        (syncStatus.explorerLastBlockNumber / syncStatus.codechainBestBlockNumber) *
+                                            1000
+                                    ) / 10
+                                }
                             />
                             <span className="progress-value">
-                                {(
-                                    (syncStatus.explorerLastBlockNumber / syncStatus.codechainBestBlockNumber) *
-                                    100
-                                ).toFixed(1)}
+                                {Math.floor(
+                                    (syncStatus.explorerLastBlockNumber / syncStatus.codechainBestBlockNumber) * 1000
+                                ) / 10}
                                 %
                             </span>
                         </Col>
