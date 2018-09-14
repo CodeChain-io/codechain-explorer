@@ -23,8 +23,8 @@ const Footer = () => {
                                 </a>
                             </li>
                             <li>
-                                <a href="https://solo.codechain.io" target="_blank">
-                                    solo.codechain.io
+                                <a href="https://saluki.codechain.io" target="_blank">
+                                    saluki.codechain.io
                                 </a>
                             </li>
                             <li>Powered by Kodebox, Inc.</li>
