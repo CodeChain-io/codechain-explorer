@@ -67,6 +67,15 @@ class Transactions extends React.Component<Props, State> {
         const params = new URLSearchParams(search);
         const currentPage = params.get("page") ? parseInt(params.get("page") as string, 10) : 1;
         const itemsPerPage = params.get("itemsPerPage") ? parseInt(params.get("itemsPerPage") as string, 10) : 25;
+        const lastBlockNumber = params.get("lastBlockNumber")
+            ? parseInt(params.get("lastBlockNumber") as string, 10)
+            : undefined;
+        const lastParcelIndex = params.get("lastParcelIndex")
+            ? parseInt(params.get("lastParcelIndex") as string, 10)
+            : undefined;
+        const lastTransactionIndex = params.get("lastTransactionIndex")
+            ? parseInt(params.get("lastTransactionIndex") as string, 10)
+            : undefined;
         const {
             transactions,
             totalTransactionCount,
@@ -77,7 +86,21 @@ class Transactions extends React.Component<Props, State> {
         } = this.state;
 
         if (redirect) {
-            return (
+            return redirectPage && redirectPage - currentPage === 1 ? (
+                <Redirect
+                    push={true}
+                    to={`/txs?page=${redirectPage || currentPage}&itemsPerPage=${redirectItemsPerPage ||
+                        itemsPerPage}&lastBlockNumber=${
+                        transactions.length > 0 ? transactions[transactions.length - 1].data.blockNumber : undefined
+                    }&lastParcelIndex=${
+                        transactions.length > 0 ? transactions[transactions.length - 1].data.parcelIndex : undefined
+                    }&lastTransactionIndex=${
+                        transactions.length > 0
+                            ? transactions[transactions.length - 1].data.transactionIndex
+                            : undefined
+                    }`}
+                />
+            ) : (
                 <Redirect
                     push={true}
                     to={`/txs?page=${redirectPage || currentPage}&itemsPerPage=${redirectItemsPerPage || itemsPerPage}`}
@@ -101,6 +124,9 @@ class Transactions extends React.Component<Props, State> {
                         page={currentPage}
                         itemsPerPage={itemsPerPage}
                         onError={this.onError}
+                        lastBlockNumber={lastBlockNumber}
+                        lastParcelIndex={lastParcelIndex}
+                        lastTransactionIndex={lastTransactionIndex}
                     />
                 ) : null}
                 <h1>Latest transactions</h1>

@@ -7,6 +7,9 @@ import { ApiError, apiRequest } from "./ApiRequest";
 interface OwnProps {
     page: number;
     itemsPerPage: number;
+    lastBlockNumber?: number;
+    lastParcelIndex?: number;
+    lastTransactionIndex?: number;
     onTransactions: (transactions: TransactionDoc[]) => void;
     onError: (e: ApiError) => void;
 }
@@ -19,9 +22,28 @@ type Props = OwnProps & DispatchProps;
 
 class RequestTransactionsInternal extends React.Component<Props> {
     public componentWillMount() {
-        const { onError, onTransactions, dispatch, page, itemsPerPage } = this.props;
+        const {
+            onError,
+            onTransactions,
+            dispatch,
+            page,
+            itemsPerPage,
+            lastBlockNumber,
+            lastParcelIndex,
+            lastTransactionIndex
+        } = this.props;
+        let path = `txs?page=${page}&itemsPerPage=${itemsPerPage}`;
+        if (lastBlockNumber) {
+            path += `&lastBlockNumber=${lastBlockNumber}`;
+        }
+        if (lastParcelIndex) {
+            path += `&lastParcelIndex=${lastParcelIndex}`;
+        }
+        if (lastTransactionIndex) {
+            path += `&lastTransactionIndex=${lastTransactionIndex}`;
+        }
         apiRequest({
-            path: `txs?page=${page}&itemsPerPage=${itemsPerPage}`,
+            path,
             dispatch,
             showProgressBar: true
         })

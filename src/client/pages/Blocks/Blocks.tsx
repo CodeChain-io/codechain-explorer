@@ -65,10 +65,21 @@ class Blocks extends React.Component<Props, State> {
         const params = new URLSearchParams(search);
         const currentPage = params.get("page") ? parseInt(params.get("page") as string, 10) : 1;
         const itemsPerPage = params.get("itemsPerPage") ? parseInt(params.get("itemsPerPage") as string, 10) : 25;
+        const lastBlockNumber = params.get("lastBlockNumber")
+            ? parseInt(params.get("lastBlockNumber") as string, 10)
+            : undefined;
         const { blocks, totalBlockCount, isBlockRequested, redirect, redirectItemsPerPage, redirectPage } = this.state;
 
         if (redirect) {
-            return (
+            return redirectPage && redirectPage - currentPage === 1 ? (
+                <Redirect
+                    push={true}
+                    to={`/blocks?page=${redirectPage || currentPage}&itemsPerPage=${redirectItemsPerPage ||
+                        itemsPerPage}&lastBlockNumber=${
+                        blocks.length > 0 ? blocks[blocks.length - 1].number : undefined
+                    }`}
+                />
+            ) : (
                 <Redirect
                     push={true}
                     to={`/blocks?page=${redirectPage || currentPage}&itemsPerPage=${redirectItemsPerPage ||
@@ -88,6 +99,7 @@ class Blocks extends React.Component<Props, State> {
                         page={currentPage}
                         itemsPerPage={itemsPerPage}
                         onError={this.onError}
+                        lastBlockNumber={lastBlockNumber}
                     />
                 ) : null}
                 <h1>Latest blocks</h1>

@@ -1,6 +1,7 @@
 import { Type } from "codechain-es/lib/utils";
 import { H256 } from "codechain-sdk/lib/core/classes";
 import { Router } from "express";
+import * as _ from "lodash";
 import { ServerContext } from "../ServerContext";
 
 function handle(context: ServerContext, router: Router) {
@@ -40,9 +41,34 @@ function handle(context: ServerContext, router: Router) {
     });
 
     router.get("/blocks", async (req, res, next) => {
-        const { page, itemsPerPage } = req.query;
+        const { page, itemsPerPage, lastBlockNumber } = req.query;
         try {
-            const blocks = await context.db.getBlocks(page, itemsPerPage);
+            let calculatedLastBlockNumber;
+            if (lastBlockNumber) {
+                calculatedLastBlockNumber = lastBlockNumber;
+            } else if (page === 1 || !page) {
+                calculatedLastBlockNumber = Number.MAX_VALUE;
+            } else {
+                const beforePageBlockCount = (page - 1) * itemsPerPage;
+                let currentBlock = 0;
+                let lastBlockCursor = Number.MAX_VALUE;
+                while (beforePageBlockCount - currentBlock > 10000) {
+                    const cursorblocks = await context.db.getBlocks(lastBlockCursor, 10000);
+                    const lastCursorBlock = _.last(cursorblocks);
+                    if (lastCursorBlock) {
+                        lastBlockCursor = lastCursorBlock.number;
+                    }
+                    currentBlock += 10000;
+                }
+                const skipCount = beforePageBlockCount - currentBlock;
+                const skipBlocks = await context.db.getBlocks(lastBlockCursor, skipCount);
+                const lastSkipBlock = _.last(skipBlocks);
+                if (lastSkipBlock) {
+                    lastBlockCursor = lastSkipBlock.number;
+                }
+                calculatedLastBlockNumber = lastBlockCursor;
+            }
+            const blocks = await context.db.getBlocks(calculatedLastBlockNumber, itemsPerPage);
             res.send(blocks);
         } catch (e) {
             next(e);

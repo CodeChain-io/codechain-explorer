@@ -131,7 +131,7 @@ const ParcelDetails = (props: Props) => {
                         <hr />
                         <Row>
                             <Col md="3">Parcel Index</Col>
-                            <Col md="9">{parcel.parcelIndex ? parcel.parcelIndex.toLocaleString() : 0}</Col>
+                            <Col md="9">{parcel.parcelIndex ? parcel.parcelIndex.toLocaleString() : "0"}</Col>
                         </Row>
                         <hr />
                         <Row>

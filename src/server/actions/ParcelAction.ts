@@ -1,6 +1,7 @@
 import { Type } from "codechain-es/lib/utils";
 import { H256 } from "codechain-sdk/lib/core/classes";
 import { Router } from "express";
+import * as _ from "lodash";
 import { ServerContext } from "../ServerContext";
 
 function handle(context: ServerContext, router: Router) {
@@ -75,9 +76,53 @@ function handle(context: ServerContext, router: Router) {
     });
 
     router.get("/parcels", async (req, res, next) => {
-        const { page, itemsPerPage } = req.query;
+        const { page, itemsPerPage, lastBlockNumber, lastParcelIndex } = req.query;
         try {
-            const parcels = await context.db.getParcels(page, itemsPerPage);
+            let calculatedLastBlockNumber;
+            let calculatedLastParcelIndex;
+            if (lastBlockNumber && lastParcelIndex) {
+                calculatedLastBlockNumber = lastBlockNumber;
+                calculatedLastParcelIndex = lastParcelIndex;
+            } else if (page === 1 || !page) {
+                calculatedLastBlockNumber = Number.MAX_VALUE;
+                calculatedLastParcelIndex = Number.MAX_VALUE;
+            } else {
+                const beforePageParcelCount = (page - 1) * itemsPerPage;
+                let currentParcel = 0;
+                let lastBlockNumberCursor = Number.MAX_VALUE;
+                let lastParcelIndexCursor = Number.MAX_VALUE;
+                while (beforePageParcelCount - currentParcel > 10000) {
+                    const cursorParcel = await context.db.getParcels(
+                        lastBlockNumberCursor,
+                        lastParcelIndexCursor,
+                        10000
+                    );
+                    const lastCursorParcel = _.last(cursorParcel);
+                    if (lastCursorParcel) {
+                        lastBlockNumberCursor = lastCursorParcel.blockNumber as number;
+                        lastParcelIndexCursor = lastCursorParcel.parcelIndex as number;
+                    }
+                    currentParcel += 10000;
+                }
+                const skipCount = beforePageParcelCount - currentParcel;
+                const skipParcels = await context.db.getParcels(
+                    lastBlockNumberCursor,
+                    lastParcelIndexCursor,
+                    skipCount
+                );
+                const lastSkipParcels = _.last(skipParcels);
+                if (lastSkipParcels) {
+                    lastBlockNumberCursor = lastSkipParcels.blockNumber as number;
+                    lastParcelIndexCursor = lastSkipParcels.parcelIndex as number;
+                }
+                calculatedLastBlockNumber = lastBlockNumberCursor;
+                calculatedLastParcelIndex = lastParcelIndexCursor;
+            }
+            const parcels = await context.db.getParcels(
+                calculatedLastBlockNumber,
+                calculatedLastParcelIndex,
+                itemsPerPage
+            );
             res.send(parcels);
         } catch (e) {
             next(e);

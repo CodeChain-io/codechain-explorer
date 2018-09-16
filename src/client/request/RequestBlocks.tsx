@@ -7,6 +7,7 @@ import { ApiError, apiRequest } from "./ApiRequest";
 interface OwnProps {
     page: number;
     itemsPerPage: number;
+    lastBlockNumber?: number;
     onBlocks: (blocks: BlockDoc[]) => void;
     onError: (e: ApiError) => void;
 }
@@ -19,9 +20,13 @@ type Props = OwnProps & DispatchProps;
 
 class RequestBlocksInternal extends React.Component<Props> {
     public componentWillMount() {
-        const { onError, onBlocks, dispatch, page, itemsPerPage } = this.props;
+        const { onError, onBlocks, dispatch, page, itemsPerPage, lastBlockNumber } = this.props;
+        let path = `blocks?page=${page}&itemsPerPage=${itemsPerPage}`;
+        if (lastBlockNumber) {
+            path += `&lastBlockNumber=${lastBlockNumber}`;
+        }
         apiRequest({
-            path: `blocks?page=${page}&itemsPerPage=${itemsPerPage}`,
+            path,
             dispatch,
             showProgressBar: true
         })
