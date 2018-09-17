@@ -15,6 +15,7 @@ import {
     NavLink,
     UncontrolledDropdown
 } from "reactstrap";
+import { Popover, PopoverBody, PopoverHeader } from "reactstrap";
 import HealthChecker from "../../util/HealthChecker/HealthChecker";
 import Search from "../Search/Search";
 
@@ -24,27 +25,38 @@ import "./Header.scss";
 
 interface State {
     isOpen: boolean;
+    popoverOpen: boolean;
 }
 
 class Header extends React.Component<{}, State> {
     constructor(props: {}) {
         super(props);
         this.toggle = this.toggle.bind(this);
+        this.togglePopover = this.togglePopover.bind(this);
         this.state = {
-            isOpen: false
+            isOpen: false,
+            popoverOpen: false
         };
     }
 
     public render() {
         return (
             <div className="header">
-                <Navbar className="header-container" dark={true} expand="lg">
-                    <Container>
-                        <IndexLinkContainer to="/">
-                            <NavbarBrand>
-                                <img src={logo} className="logo" /> CodeChain Explorer - Husky
-                            </NavbarBrand>
-                        </IndexLinkContainer>
+                <Navbar className="header-container" dark={true} expand="xl">
+                    <Container fluid={true}>
+                        <div className="header-title-container">
+                            <IndexLinkContainer to="/">
+                                <NavbarBrand>
+                                    <img src={logo} className="logo" />{" "}
+                                    <div className="d-inline-block header-big">
+                                        <span className="header-title">CodeChain Explorer</span>
+                                    </div>
+                                    <div className="d-inline-block header-small">
+                                        <span className="header-title">Explorer - Husky</span>
+                                    </div>
+                                </NavbarBrand>
+                            </IndexLinkContainer>
+                        </div>
                         <NavbarToggler onClick={this.toggle} />
                         <Collapse isOpen={this.state.isOpen} navbar={true}>
                             <Nav navbar={true} className="mr-auto">
@@ -80,9 +92,21 @@ class Header extends React.Component<{}, State> {
                                     </IndexLinkContainer>
                                 </NavItem>
                             </Nav>
-                            <Nav>
+                            <Nav className="mr-3">
                                 <NavItem className="search-for-large-screen">
                                     <Search idString="large" />
+                                </NavItem>
+                            </Nav>
+                            <Nav>
+                                <NavItem>
+                                    <button
+                                        id="network-description"
+                                        type="button"
+                                        className="btn btn-primary select-nework-btn"
+                                        onClick={this.togglePopover}
+                                    >
+                                        Husky Testnet
+                                    </button>
                                 </NavItem>
                             </Nav>
                         </Collapse>
@@ -92,6 +116,17 @@ class Header extends React.Component<{}, State> {
                     <Search className="ml-auto" idString="small" />
                 </Container>
                 <LoadingBar className="loading-bar" />
+
+                <Popover
+                    className="network-description-popover"
+                    placement="bottom"
+                    isOpen={this.state.popoverOpen}
+                    target="network-description"
+                    toggle={this.togglePopover}
+                >
+                    <PopoverHeader>Husky Testnet</PopoverHeader>
+                    <PopoverBody>This testnet uses the cuckoo hashing for the PoW mining.</PopoverBody>
+                </Popover>
             </div>
         );
     }
@@ -99,6 +134,12 @@ class Header extends React.Component<{}, State> {
     private toggle() {
         this.setState({
             isOpen: !this.state.isOpen
+        });
+    }
+
+    private togglePopover() {
+        this.setState({
+            popoverOpen: !this.state.popoverOpen
         });
     }
 }

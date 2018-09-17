@@ -6,6 +6,30 @@
   top: 0;
   width: 100%;
   z-index: 10000;
+  .header-title {
+    font-weight: 600;
+  }
+  .header-title-container {
+    margin-right: calc(50% - 800px);
+  }
+  @media (max-width: 1600px) {
+    .header-title-container {
+      margin-right: 0;
+    }
+  }
+
+  .select-nework-btn {
+    background-color: $primary-color;
+    border: 1px solid white;
+    color: white !important;
+
+    &:hover {
+      background-color: #7376b9;
+    }
+  }
+  .menu-container {
+    max-width: 1140px;
+  }
   .logo {
     height: 35px;
     width: auto;
@@ -27,6 +51,17 @@
     }
     a.active {
       background-color: white;
+    }
+  }
+  .header-small {
+    display: none !important;
+  }
+  @include respond-below(sm) {
+    .header-big {
+      display: none !important;
+    }
+    .header-small {
+      display: inline-block !important;
     }
   }
   @include respond-below(md) {
@@ -62,4 +97,8 @@
       display: none;
     }
   }
+}
+
+.network-description-popover {
+  z-index: 10001;
 }
