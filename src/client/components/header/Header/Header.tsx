@@ -125,7 +125,7 @@ class Header extends React.Component<{}, State> {
                     toggle={this.togglePopover}
                 >
                     <PopoverHeader>Husky Testnet</PopoverHeader>
-                    <PopoverBody>This testnet uses the cuckoo hashing for the PoW mining.</PopoverBody>
+                    <PopoverBody>This testnet uses a PoW consensus algorithm called Cuckoo Cycle.</PopoverBody>
                 </Popover>
             </div>
         );
