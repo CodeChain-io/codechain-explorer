@@ -55,6 +55,10 @@
   }
   .header-small {
     display: none !important;
+    vertical-align: middle;
+  }
+  .header-big {
+    vertical-align: middle;
   }
   @include respond-below(sm) {
     .header-big {
