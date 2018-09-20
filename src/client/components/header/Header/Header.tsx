@@ -32,6 +32,8 @@ class Header extends React.Component<{}, State> {
     constructor(props: {}) {
         super(props);
         this.toggle = this.toggle.bind(this);
+        this.openToggle = this.openToggle.bind(this);
+        this.closeToggle = this.closeToggle.bind(this);
         this.togglePopover = this.togglePopover.bind(this);
         this.state = {
             isOpen: false,
@@ -48,8 +50,14 @@ class Header extends React.Component<{}, State> {
                             <IndexLinkContainer to="/">
                                 <NavbarBrand>
                                     <img src={logo} className="logo" />{" "}
-                                    <div className="d-inline-block header-big">
-                                        <span className="header-title">CodeChain Explorer</span>
+                                    <div
+                                        onMouseEnter={this.openToggle}
+                                        onMouseLeave={this.closeToggle}
+                                        className="d-inline-block header-big"
+                                    >
+                                        <span id="explorer-title" className="header-title">
+                                            CodeChain Explorer - Husky
+                                        </span>
                                     </div>
                                     <div className="d-inline-block header-small">
                                         <span className="header-title">Explorer - Husky</span>
@@ -97,18 +105,6 @@ class Header extends React.Component<{}, State> {
                                     <Search idString="large" />
                                 </NavItem>
                             </Nav>
-                            <Nav>
-                                <NavItem>
-                                    <button
-                                        id="network-description"
-                                        type="button"
-                                        className="btn btn-primary select-nework-btn"
-                                        onClick={this.togglePopover}
-                                    >
-                                        Husky Testnet
-                                    </button>
-                                </NavItem>
-                            </Nav>
                         </Collapse>
                     </Container>
                 </Navbar>
@@ -121,7 +117,7 @@ class Header extends React.Component<{}, State> {
                     className="network-description-popover"
                     placement="bottom"
                     isOpen={this.state.popoverOpen}
-                    target="network-description"
+                    target="explorer-title"
                     toggle={this.togglePopover}
                 >
                     <PopoverHeader>Husky Testnet</PopoverHeader>
@@ -140,6 +136,18 @@ class Header extends React.Component<{}, State> {
     private togglePopover() {
         this.setState({
             popoverOpen: !this.state.popoverOpen
+        });
+    }
+
+    private openToggle() {
+        this.setState({
+            popoverOpen: true
+        });
+    }
+
+    private closeToggle() {
+        this.setState({
+            popoverOpen: false
         });
     }
 }
