@@ -1853,16 +1853,7 @@ codechain-es@^0.1.0-alpha.4:
     elasticsearch "^15.1.1"
     lodash "^4.17.10"
 
-codechain-keystore@^0.1.0, "codechain-keystore@git://github.com/CodeChain-io/codechain-keystore.git#1483361b94c79e468e055188df0583046d4c9540":
-  version "0.1.0"
-  resolved "git://github.com/CodeChain-io/codechain-keystore.git#1483361b94c79e468e055188df0583046d4c9540"
-  dependencies:
-    codechain-sdk "^0.1.0-alpha.18"
-    config "^2.0.1"
-    lowdb "^1.0.0"
-    uuid "^3.3.2"
-
-"codechain-keystore@git://github.com/CodeChain-io/codechain-keystore.git#7c2f06b7a8885d385e6bb92ff6406a4537977a7a":
+codechain-keystore@^0.1.0, "codechain-keystore@git://github.com/CodeChain-io/codechain-keystore.git#7c2f06b7a8885d385e6bb92ff6406a4537977a7a":
   version "0.1.0"
   resolved "git://github.com/CodeChain-io/codechain-keystore.git#7c2f06b7a8885d385e6bb92ff6406a4537977a7a"
   dependencies:
@@ -1870,6 +1861,28 @@ codechain-keystore@^0.1.0, "codechain-keystore@git://github.com/CodeChain-io/cod
     config "^2.0.1"
     lowdb "^1.0.0"
     uuid "^3.3.2"
+
+codechain-keystore@~0.2.1:
+  version "0.2.2"
+  resolved "https://registry.yarnpkg.com/codechain-keystore/-/codechain-keystore-0.2.2.tgz#22cb1f79a4a35441d9ad28de6fd09a826a070f04"
+  dependencies:
+    codechain-primitives "^0.1.0-rc2"
+    config "^2.0.1"
+    lodash "^4.17.10"
+    lowdb "^1.0.0"
+    uuid "^3.3.2"
+
+codechain-primitives@^0.1.0-rc2:
+  version "0.1.0"
+  resolved "https://registry.yarnpkg.com/codechain-primitives/-/codechain-primitives-0.1.0.tgz#1324596a0d91c15736cc6ea96379d84bcb80f476"
+  dependencies:
+    bignumber.js "^7.2.1"
+    blakejs "^1.1.0"
+    buffer "^5.2.1"
+    elliptic "^6.4.1"
+    lodash "^4.17.11"
+    ripemd160 "^2.0.2"
+    rlp "^2.1.0"
 
 codechain-sdk@^0.1.0-alpha.18:
   version "0.1.0"
@@ -1879,23 +1892,6 @@ codechain-sdk@^0.1.0-alpha.18:
     blakejs "^1.1.0"
     buffer "5.1.0"
     codechain-keystore "^0.1.0"
-    elliptic "^6.4.0"
-    jayson "^2.0.6"
-    lodash "^4.17.10"
-    node-fetch "^2.1.2"
-    request "^2.88.0"
-    request-promise "^4.2.2"
-    ripemd160 "^2.0.2"
-    rlp "^2.0.0"
-
-codechain-sdk@^0.1.1-alpha.3:
-  version "0.1.1-alpha.3"
-  resolved "https://registry.yarnpkg.com/codechain-sdk/-/codechain-sdk-0.1.1-alpha.3.tgz#222566e8739e5ee6745ea97e762e749cd0dd86e4"
-  dependencies:
-    bignumber.js "^6.0.0"
-    blakejs "^1.1.0"
-    buffer "5.1.0"
-    codechain-keystore "git://github.com/CodeChain-io/codechain-keystore.git#1483361b94c79e468e055188df0583046d4c9540"
     elliptic "^6.4.0"
     jayson "^2.0.6"
     lodash "^4.17.10"
@@ -1920,6 +1916,19 @@ codechain-sdk@^0.1.1-alpha.4:
     request "^2.88.0"
     request-promise "^4.2.2"
     ripemd160 "^2.0.2"
+    rlp "^2.0.0"
+
+codechain-sdk@^0.2.0-alpha.2:
+  version "0.2.0-alpha.2"
+  resolved "https://registry.yarnpkg.com/codechain-sdk/-/codechain-sdk-0.2.0-alpha.2.tgz#494f8db85693f662a5df453ff9d0d08f94af1210"
+  dependencies:
+    buffer "5.1.0"
+    codechain-keystore "~0.2.1"
+    codechain-primitives "^0.1.0-rc2"
+    jayson "^2.0.6"
+    lodash "^4.17.10"
+    node-fetch "^2.1.2"
+    request-promise "^4.2.2"
     rlp "^2.0.0"
 
 collection-visit@^1.0.0:
@@ -2793,6 +2802,18 @@ electron-to-chromium@^1.2.7, electron-to-chromium@^1.3.30:
 elliptic@^6.0.0, elliptic@^6.4.0:
   version "6.4.0"
   resolved "https://registry.yarnpkg.com/elliptic/-/elliptic-6.4.0.tgz#cac9af8762c85836187003c8dfe193e5e2eae5df"
+  dependencies:
+    bn.js "^4.4.0"
+    brorand "^1.0.1"
+    hash.js "^1.0.0"
+    hmac-drbg "^1.0.0"
+    inherits "^2.0.1"
+    minimalistic-assert "^1.0.0"
+    minimalistic-crypto-utils "^1.0.0"
+
+elliptic@^6.4.1:
+  version "6.4.1"
+  resolved "https://registry.yarnpkg.com/elliptic/-/elliptic-6.4.1.tgz#c2d0b7776911b86722c632c3c06c60f2f819939a"
   dependencies:
     bn.js "^4.4.0"
     brorand "^1.0.1"
@@ -5122,6 +5143,10 @@ lodash@4, "lodash@>=3.5 <5", lodash@^4.0.0, lodash@^4.13.1, lodash@^4.14.0, loda
   version "4.17.10"
   resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.10.tgz#1b7793cf7259ea38fb3661d4d38b3260af8ae4e7"
 
+lodash@^4.17.11:
+  version "4.17.11"
+  resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.11.tgz#b39ea6229ef607ecd89e2c8df12536891cac9b8d"
+
 loglevel@^1.4.1:
   version "1.6.1"
   resolved "https://registry.yarnpkg.com/loglevel/-/loglevel-1.6.1.tgz#e0fc95133b6ef276cdc8887cdaf24aa6f156f8fa"
@@ -7205,7 +7230,7 @@ ripemd160@^2.0.0, ripemd160@^2.0.1, ripemd160@^2.0.2:
     hash-base "^3.0.0"
     inherits "^2.0.1"
 
-rlp@^2.0.0:
+rlp@^2.0.0, rlp@^2.1.0:
   version "2.1.0"
   resolved "https://registry.yarnpkg.com/rlp/-/rlp-2.1.0.tgz#e4f9886d5a982174f314543831e36e1a658460f9"
   dependencies:

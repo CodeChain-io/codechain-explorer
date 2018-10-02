@@ -1,6 +1,5 @@
 import { AssetDoc, TransactionDoc } from "codechain-es/lib/types";
-import { H256 } from "codechain-sdk/lib/core/classes";
-import { AssetTransferAddress, PlatformAddress } from "codechain-sdk/lib/key/classes";
+import { AssetTransferAddress, H256, PlatformAddress } from "codechain-sdk/lib/core/classes";
 import { Router } from "express";
 import * as _ from "lodash";
 import { ServerContext } from "../ServerContext";
@@ -130,7 +129,7 @@ function handle(context: ServerContext, router: Router) {
         const { address } = req.params;
         const { lastTransactionHash, itemsPerPage } = req.query;
         try {
-            AssetTransferAddress.fromString(address).getLockScriptHashAndParameters();
+            AssetTransferAddress.fromString(address);
         } catch (e) {
             res.send([]);
             return;
@@ -197,7 +196,7 @@ function handle(context: ServerContext, router: Router) {
         const { address } = req.params;
         const { page, itemsPerPage } = req.query;
         try {
-            AssetTransferAddress.fromString(address).getLockScriptHashAndParameters();
+            AssetTransferAddress.fromString(address);
         } catch (e) {
             res.send([]);
             return;
@@ -217,7 +216,7 @@ function handle(context: ServerContext, router: Router) {
     router.get("/addr-asset-txs/:address/totalCount", async (req, res, next) => {
         const { address } = req.params;
         try {
-            AssetTransferAddress.fromString(address).getLockScriptHashAndParameters();
+            AssetTransferAddress.fromString(address);
         } catch (e) {
             res.send([]);
             return;
