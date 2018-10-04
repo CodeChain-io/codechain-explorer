@@ -1862,6 +1862,16 @@ codechain-keystore@^0.1.0, "codechain-keystore@git://github.com/CodeChain-io/cod
     lowdb "^1.0.0"
     uuid "^3.3.2"
 
+codechain-keystore@^0.2.3:
+  version "0.2.3"
+  resolved "https://registry.yarnpkg.com/codechain-keystore/-/codechain-keystore-0.2.3.tgz#7534f583771d16503aa8c02acd7a4d53d9ae20ea"
+  dependencies:
+    codechain-primitives "^0.2.0"
+    config "^2.0.1"
+    lodash "^4.17.10"
+    lowdb "^1.0.0"
+    uuid "^3.3.2"
+
 codechain-keystore@~0.2.1:
   version "0.2.2"
   resolved "https://registry.yarnpkg.com/codechain-keystore/-/codechain-keystore-0.2.2.tgz#22cb1f79a4a35441d9ad28de6fd09a826a070f04"
@@ -1875,6 +1885,18 @@ codechain-keystore@~0.2.1:
 codechain-primitives@^0.1.0-rc2:
   version "0.1.0"
   resolved "https://registry.yarnpkg.com/codechain-primitives/-/codechain-primitives-0.1.0.tgz#1324596a0d91c15736cc6ea96379d84bcb80f476"
+  dependencies:
+    bignumber.js "^7.2.1"
+    blakejs "^1.1.0"
+    buffer "^5.2.1"
+    elliptic "^6.4.1"
+    lodash "^4.17.11"
+    ripemd160 "^2.0.2"
+    rlp "^2.1.0"
+
+codechain-primitives@^0.2.0:
+  version "0.2.0"
+  resolved "https://registry.yarnpkg.com/codechain-primitives/-/codechain-primitives-0.2.0.tgz#1e86b8adb1466606d478f95f25aa4eb5d6dc0e75"
   dependencies:
     bignumber.js "^7.2.1"
     blakejs "^1.1.0"

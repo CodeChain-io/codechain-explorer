@@ -27,6 +27,16 @@ import Transaction from "./pages/Transaction/Transaction";
 import Transactions from "./pages/Transactions/Transactions";
 import { store } from "./redux/store";
 import RegisterServiceWorker from "./register_service_worker";
+const CCKey = require("codechain-keystore");
+
+async function example() {
+    const cckey = await CCKey.create();
+    await cckey.platform.createKey({ passphrase: "my password" });
+    const savedKeys2 = await cckey.platform.getKeys();
+    console.dir(savedKeys2);
+    console.log(await cckey.platform.exportKey(savedKeys2[0], { passphrase: "my password" }));
+}
+example();
 
 ReactDOM.render(
     <Provider store={store}>
