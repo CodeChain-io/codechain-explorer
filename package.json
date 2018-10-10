@@ -21,7 +21,6 @@
     "babel-loader": "^7.1.2",
     "babel-preset-react-app": "^3.1.1",
     "bignumber.js": "^7.2.1",
-    "body-parser": "^1.18.2",
     "bootstrap": "^4.1.1",
     "buffer": "^5.1.0",
     "case-sensitive-paths-webpack-plugin": "2.1.1",
@@ -30,11 +29,9 @@
     "codechain-keystore": "^0.2.3",
     "codechain-sdk": "^0.4.0-rc3",
     "concurrently": "^3.6.0",
-    "cors": "^2.8.4",
     "css-loader": "0.28.7",
     "dotenv": "^6.0.0",
     "dotenv-expand": "4.2.0",
-    "express": "^4.16.3",
     "extract-text-webpack-plugin": "3.0.2",
     "file-loader": "0.11.2",
     "fork-ts-checker-webpack-plugin": "^0.2.8",
@@ -81,19 +78,15 @@
     "whatwg-fetch": "2.0.3"
   },
   "scripts": {
-    "start": "concurrently --kill-others \"yarn start-server\" \"yarn start-client\"",
-    "start-client": "node scripts/start.js",
-    "start-server": "ts-node --project tsconfig.server.json src/server/index.ts",
+    "start": "node scripts/start.js",
     "build": "node scripts/build.js",
     "serve": "node scripts/serve.js",
     "test": "yarn lint && node scripts/test.js --env=jsdom",
-    "lint": "tslint -p tsconfig.client.json && tslint -p tsconfig.server.json && prettier 'src/**/*.{ts,tsx,scss,json,html,js,jsx}' -l",
-    "fmt": "tslint -p tsconfig.client.json --fix && tslint -p tsconfig.server.json --fix && prettier 'src/**/*.{ts,tsx,scss,json,html,js,jsx}' --write"
+    "lint": "tslint -p tsconfig.json && prettier 'src/**/*.{ts,tsx,scss,json,html,js,jsx}' -l",
+    "fmt": "tslint -p tsconfig.json --fix && prettier 'src/**/*.{ts,tsx,scss,json,html,js,jsx}' --write"
   },
   "devDependencies": {
     "@types/bignumber.js": "^5.0.0",
-    "@types/body-parser": "^1.17.0",
-    "@types/cors": "^2.8.4",
     "@types/dotenv": "^4.0.3",
     "@types/express": "^4.11.1",
     "@types/jest": "^22.2.3",
@@ -118,14 +111,14 @@
   },
   "jest": {
     "collectCoverageFrom": [
-      "client/**/*.{js,jsx,ts,tsx}"
+      "**/*.{js,jsx,ts,tsx}"
     ],
     "setupFiles": [
       "<rootDir>/config/polyfills.js"
     ],
     "testMatch": [
-      "<rootDir>/client/**/__tests__/**/*.(j|t)s?(x)",
-      "<rootDir>/client/**/?(*.)(spec|test).(j|t)s?(x)"
+      "<rootDir>/**/__tests__/**/*.(j|t)s?(x)",
+      "<rootDir>/**/?(*.)(spec|test).(j|t)s?(x)"
     ],
     "testEnvironment": "node",
     "testURL": "http://localhost",
@@ -156,7 +149,7 @@
     ],
     "globals": {
       "ts-jest": {
-        "tsConfigFile": "/Users/jeongjingyeong/workspace/research/codechain-explorer/tsconfig.client.test.json"
+        "tsConfigFile": "/Users/jeongjingyeong/workspace/research/codechain-explorer/tsconfig.test.json"
       }
     }
   },
