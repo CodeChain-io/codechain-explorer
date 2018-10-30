@@ -4,8 +4,8 @@ import * as React from "react";
 import { Col, Row } from "reactstrap";
 import DataSet from "../../util/DataSet/DataSet";
 
-import { AssetTransactionGroupDoc, BlockDoc } from "codechain-es/lib/types";
-import { Type } from "codechain-es/lib/utils";
+import { AssetTransactionGroupDoc, BlockDoc } from "codechain-indexer-types/lib/types";
+import { Type } from "codechain-indexer-types/lib/utils";
 import { Link } from "react-router-dom";
 import { CommaNumberString } from "../../util/CommaNumberString/CommaNumberString";
 import HexString from "../../util/HexString/HexString";

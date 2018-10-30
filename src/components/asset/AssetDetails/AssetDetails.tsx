@@ -1,7 +1,7 @@
 import * as React from "react";
 
-import { AssetSchemeDoc } from "codechain-es/lib/types";
-import { Type } from "codechain-es/lib/utils";
+import { AssetSchemeDoc } from "codechain-indexer-types/lib/types";
+import { Type } from "codechain-indexer-types/lib/utils";
 import { Link } from "react-router-dom";
 import { Col, Row } from "reactstrap";
 import DataSet from "../../util/DataSet/DataSet";

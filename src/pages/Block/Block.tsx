@@ -11,8 +11,8 @@ import BlockDetails from "../../components/block/BlockDetails/BlockDetails";
 import ParcelList from "../../components/parcel/ParcelList/ParcelList";
 import { RequestBlock } from "../../request";
 
-import { AssetTransactionGroupDoc, BlockDoc } from "codechain-es/lib/types";
-import { Type } from "codechain-es/lib/utils";
+import { AssetTransactionGroupDoc, BlockDoc } from "codechain-indexer-types/lib/types";
+import { Type } from "codechain-indexer-types/lib/utils";
 import { Link } from "react-router-dom";
 import CopyButton from "../../components/util/CopyButton/CopyButton";
 import HexString from "../../components/util/HexString/HexString";

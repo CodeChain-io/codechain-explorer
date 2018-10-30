@@ -4,7 +4,7 @@ import * as React from "react";
 import { match } from "react-router";
 import { Col, Container, Row } from "reactstrap";
 
-import { AssetBundleDoc, TransactionDoc } from "codechain-es/lib/types";
+import { AggsUTXO, TransactionDoc } from "codechain-indexer-types/lib/types";
 import { RequestAssetTransferAddressTransactions, RequestAssetTransferAddressUTXO } from "../../request";
 
 import AssetList from "../../components/asset/AssetList/AssetList";
@@ -20,9 +20,10 @@ interface Props {
 }
 
 interface State {
-    utxo: AssetBundleDoc[];
+    aggsUTXO: AggsUTXO[];
     transactions: TransactionDoc[];
     pageForTransactions: number;
+    pageForAssets: number;
     loadUTXO: boolean;
     loadTransaction: boolean;
     totalTransactionCount: number;
@@ -36,9 +37,10 @@ class AssetTransferAddress extends React.Component<Props, State> {
     constructor(props: Props) {
         super(props);
         this.state = {
-            utxo: [],
+            aggsUTXO: [],
             transactions: [],
             pageForTransactions: 1,
+            pageForAssets: 1,
             totalTransactionCount: 0,
             loadUTXO: true,
             loadTransaction: true,
@@ -60,9 +62,10 @@ class AssetTransferAddress extends React.Component<Props, State> {
         } = props;
         if (nextAddress !== address) {
             this.setState({
-                utxo: [],
+                aggsUTXO: [],
                 transactions: [],
                 pageForTransactions: 1,
+                pageForAssets: 1,
                 totalTransactionCount: 0,
                 loadUTXO: true,
                 loadTransaction: true,
@@ -79,9 +82,10 @@ class AssetTransferAddress extends React.Component<Props, State> {
             }
         } = this.props;
         const {
-            utxo,
+            aggsUTXO,
             transactions,
             pageForTransactions,
+            pageForAssets,
             loadTransaction,
             loadUTXO,
             totalTransactionCount,
@@ -126,18 +130,16 @@ class AssetTransferAddress extends React.Component<Props, State> {
                         {loadUTXO ? (
                             <RequestAssetTransferAddressUTXO
                                 address={address}
-                                lastTransactionHash={
-                                    utxo.length > 0 ? utxo[utxo.length - 1].asset.transactionHash : undefined
-                                }
+                                page={pageForAssets}
                                 itemsPerPage={this.utxoItemsPerPage}
-                                onUTXO={this.onUTXO}
+                                onAggsUTXO={this.onAggsUTXO}
                                 onError={this.onError}
                             />
                         ) : null}
-                        {utxo.length > 0 ? (
+                        {aggsUTXO.length > 0 ? (
                             <div className="mt-large">
                                 <AssetList
-                                    assetBundles={utxo}
+                                    aggsUTXO={aggsUTXO}
                                     loadMoreAction={this.loadMoreUTXO}
                                     hideMoreButton={noMoreUTXO}
                                 />
@@ -185,7 +187,7 @@ class AssetTransferAddress extends React.Component<Props, State> {
     };
 
     private loadMoreUTXO = () => {
-        this.setState({ loadUTXO: true });
+        this.setState({ loadUTXO: true, pageForAssets: this.state.pageForAssets + 1 });
     };
 
     private onTransactions = (transactions: TransactionDoc[]) => {
@@ -202,11 +204,11 @@ class AssetTransferAddress extends React.Component<Props, State> {
         this.setState({ totalTransactionCount: totalCount });
     };
 
-    private onUTXO = (utxo: AssetBundleDoc[]) => {
-        if (utxo.length < this.utxoItemsPerPage) {
+    private onAggsUTXO = (aggsUTXO: AggsUTXO[]) => {
+        if (aggsUTXO.length < this.utxoItemsPerPage) {
             this.setState({ noMoreUTXO: true });
         }
-        this.setState({ utxo: this.state.utxo.concat(utxo), loadUTXO: false });
+        this.setState({ aggsUTXO: this.state.aggsUTXO.concat(aggsUTXO), loadUTXO: false });
     };
 
     private onError = (e: any) => {

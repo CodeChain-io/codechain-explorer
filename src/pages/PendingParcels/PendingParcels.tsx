@@ -17,8 +17,8 @@ import * as emptyImage from "./img/empty.png";
 
 import { RequestPendingParcels, RequestTotalPendingParcelCount } from "../../request";
 
-import { AssetTransactionGroupDoc, PendingParcelDoc } from "codechain-es/lib/types";
-import { Type } from "codechain-es/lib/utils";
+import { AssetTransactionGroupDoc, PendingParcelDoc } from "codechain-indexer-types/lib/types";
+import { Type } from "codechain-indexer-types/lib/utils";
 import { Link } from "react-router-dom";
 import { ActionBadge } from "../../components/util/ActionBadge/ActionBadge";
 import DataTable from "../../components/util/DataTable/DataTable";

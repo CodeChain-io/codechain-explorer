@@ -1,4 +1,4 @@
-import { AssetSchemeDoc, BlockDoc, ParcelDoc, TransactionDoc } from "codechain-es/lib/types";
+import { AssetSchemeDoc, BlockDoc, ParcelDoc, TransactionDoc } from "codechain-indexer-types/lib/types";
 import { loadingBarReducer } from "react-redux-loading-bar";
 import { combineReducers } from "redux";
 

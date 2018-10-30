@@ -1,14 +1,14 @@
 import * as React from "react";
 import { connect, Dispatch } from "react-redux";
 
-import { AssetBundleDoc } from "codechain-es/lib/types";
+import { AggsUTXO } from "codechain-indexer-types/lib/types";
 import { ApiError, apiRequest } from "./ApiRequest";
 
 interface OwnProps {
-    lastTransactionHash?: string;
     itemsPerPage: number;
     address: string;
-    onUTXO: (utxo: AssetBundleDoc[]) => void;
+    page: number;
+    onAggsUTXO: (aggsUTXO: AggsUTXO[]) => void;
     onError: (e: ApiError) => void;
 }
 
@@ -20,14 +20,11 @@ type Props = OwnProps & DispatchProps;
 
 class RequestAssetTransferAddressUTXOInternal extends React.Component<Props> {
     public componentWillMount() {
-        const { address, onUTXO, onError, dispatch, lastTransactionHash, itemsPerPage } = this.props;
-        let path = `addr-asset-utxo/${address}?itemsPerPage=${itemsPerPage}`;
-        if (lastTransactionHash) {
-            path += `&lastTransactionHash=${lastTransactionHash}`;
-        }
+        const { address, onAggsUTXO, onError, dispatch, itemsPerPage, page } = this.props;
+        const path = `aggs-utxo/${address}?itemsPerPage=${itemsPerPage}&page=${page}&isConfirmed=true`;
         apiRequest({ path, dispatch, showProgressBar: true })
-            .then((response: AssetBundleDoc[]) => {
-                onUTXO(response);
+            .then((response: AggsUTXO[]) => {
+                onAggsUTXO(response);
             })
             .catch(onError);
     }

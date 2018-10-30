@@ -6,7 +6,7 @@ import * as React from "react";
 import { Redirect } from "react-router";
 import { Container } from "reactstrap";
 
-import { ParcelDoc } from "codechain-es/lib/types";
+import { ParcelDoc } from "codechain-indexer-types/lib/types";
 import { Link } from "react-router-dom";
 import { ActionBadge } from "../../components/util/ActionBadge/ActionBadge";
 import { CommaNumberString } from "../../components/util/CommaNumberString/CommaNumberString";

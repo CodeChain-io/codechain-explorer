@@ -8,18 +8,17 @@ import { Redirect } from "react-router";
 import { Button, Form, FormGroup, Popover, PopoverBody } from "reactstrap";
 
 import {
-    AssetBundleDoc,
     AssetSchemeDoc,
     BlockDoc,
     ParcelDoc,
     PendingParcelDoc,
     PendingTransactionDoc,
     TransactionDoc
-} from "codechain-es/lib/types";
-import { Type } from "codechain-es/lib/utils";
+} from "codechain-indexer-types/lib/types";
+import { Type } from "codechain-indexer-types/lib/utils";
 import { H256, U256 } from "codechain-sdk/lib/core/classes";
 import {
-    RequestAssetBundlesByName,
+    RequestAssetInfosByName,
     RequestAssetScheme,
     RequestAssetTransferAddressTransactions,
     RequestBlock,
@@ -37,7 +36,7 @@ interface State {
     status: string;
     redirectTo?: string;
     requestCount: number;
-    suggestions: AssetBundleDoc[];
+    suggestions: { assetType: string; assetScheme: AssetSchemeDoc }[];
     searchStatusForSuggest: string;
     popoverOpen: boolean;
 }
@@ -172,9 +171,9 @@ class Search extends React.Component<Props, State> {
                 ) : null}
                 {requestCount === 0 && redirectTo ? <Redirect push={true} to={redirectTo} /> : null}
                 {searchStatusForSuggest === "search" ? (
-                    <RequestAssetBundlesByName
+                    <RequestAssetInfosByName
                         assetName={inputValue}
-                        onAssetBundles={this.onAssetBundles}
+                        onSearchResponse={this.onSearchAssetResponse}
                         onError={this.onSearchError}
                     />
                 ) : null}
@@ -201,9 +200,9 @@ class Search extends React.Component<Props, State> {
         console.log(e);
     };
 
-    private onAssetBundles = (assetBundles: AssetBundleDoc[]) => {
+    private onSearchAssetResponse = (searchAssetResponse: { assetType: string; assetScheme: AssetSchemeDoc }[]) => {
         this.setState({
-            suggestions: assetBundles,
+            suggestions: searchAssetResponse,
             searchStatusForSuggest: "wait"
         });
     };
@@ -319,20 +318,15 @@ class Search extends React.Component<Props, State> {
         });
     }
 
-    private renderSuggestion = (suggestion: AssetBundleDoc) => (
+    private renderSuggestion = (suggestion: { assetType: string; assetScheme: AssetSchemeDoc }) => (
         <div>
-            <ImageLoader
-                className="icon"
-                size={20}
-                data={new H256(suggestion.asset.assetType).value}
-                isAssetImage={true}
-            />
+            <ImageLoader className="icon" size={20} data={new H256(suggestion.assetType).value} isAssetImage={true} />
             <span className="name">{Type.getMetadata(suggestion.assetScheme.metadata).name}</span>
         </div>
     );
 
-    private getSuggestionValue = (suggestion: AssetBundleDoc) => {
-        return `0x${suggestion.asset.assetType}`;
+    private getSuggestionValue = (suggestion: { assetType: string; assetScheme: AssetSchemeDoc }) => {
+        return `0x${suggestion.assetType}`;
     };
 
     private onSuggestionsClearRequested = () => {
@@ -352,7 +346,7 @@ class Search extends React.Component<Props, State> {
         }
         if (this.state.suggestions.length > 0) {
             const firstSuggestion = this.state.suggestions[0];
-            this.setState({ status: "search", requestCount: 8, inputValue: firstSuggestion.asset.assetType });
+            this.setState({ status: "search", requestCount: 8, inputValue: firstSuggestion.assetType });
         } else {
             this.setState({ status: "search", requestCount: 8, inputValue });
         }

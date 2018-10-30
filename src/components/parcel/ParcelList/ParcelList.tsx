@@ -4,8 +4,8 @@ import * as _ from "lodash";
 import * as moment from "moment";
 import * as React from "react";
 
-import { AssetTransactionGroupDoc, ParcelDoc, PaymentDoc, SetRegularKeyDoc } from "codechain-es/lib/types";
-import { Type } from "codechain-es/lib/utils";
+import { AssetTransactionGroupDoc, ParcelDoc, PaymentDoc, SetRegularKeyDoc } from "codechain-indexer-types/lib/types";
+import { Type } from "codechain-indexer-types/lib/utils";
 import { Link } from "react-router-dom";
 import { Col, Row } from "reactstrap";
 import { changeQuarkStringToCCC } from "../../../utils/Formatter";

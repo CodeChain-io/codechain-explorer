@@ -4,17 +4,14 @@ import { match } from "react-router";
 import { Col, Container, Row } from "reactstrap";
 import { Error } from "../../components/error/Error/Error";
 
-import { AssetBundleDoc, BlockDoc, ParcelDoc } from "codechain-es/lib/types";
+import { BlockDoc, ParcelDoc } from "codechain-indexer-types/lib/types";
 import { U256 } from "codechain-sdk/lib/core/classes";
-import AssetList from "../../components/asset/AssetList/AssetList";
 import BlockList from "../../components/block/BlockList/BlockList";
 import ParcelList from "../../components/parcel/ParcelList/ParcelList";
 import AccountDetails from "../../components/platformAddress/AccountDetails/AccountDetails";
 import {
     RequestPlatformAddressAccount,
-    RequestPlatformAddressAssets,
     RequestPlatformAddressParcels,
-    RequestTotalPlatformAssetCount,
     RequestTotalPlatformBlockCount,
     RequestTotalPlatformParcelCount
 } from "../../request";
@@ -35,24 +32,18 @@ interface State {
     };
     blocks: BlockDoc[];
     parcels: ParcelDoc[];
-    assetBundles: AssetBundleDoc[];
     loadBlock: boolean;
     loadParcel: boolean;
-    loadAssetBundle: boolean;
     pageForBlock: number;
     pageForParcel: number;
-    pageForAssetBundle: number;
     noMoreBlock: boolean;
     noMoreParcel: boolean;
-    noMoreAssetBundle: boolean;
     notFound: boolean;
-    totalAssetBundleCount: number;
     totalBlockCount: number;
     totalParcelCount: number;
 }
 
 class Address extends React.Component<Props, State> {
-    private asssetBundleItemsPerPage = 12;
     private blockItemsPerPage = 6;
     private parcelItemsPerPage = 6;
     constructor(props: Props) {
@@ -60,18 +51,13 @@ class Address extends React.Component<Props, State> {
         this.state = {
             blocks: [],
             parcels: [],
-            assetBundles: [],
             notFound: false,
             loadBlock: true,
             loadParcel: true,
-            loadAssetBundle: true,
             pageForBlock: 1,
             pageForParcel: 1,
-            pageForAssetBundle: 1,
             noMoreBlock: false,
             noMoreParcel: false,
-            noMoreAssetBundle: false,
-            totalAssetBundleCount: 0,
             totalBlockCount: 0,
             totalParcelCount: 0
         };
@@ -96,14 +82,10 @@ class Address extends React.Component<Props, State> {
                 notFound: false,
                 loadBlock: true,
                 loadParcel: true,
-                loadAssetBundle: true,
                 pageForBlock: 1,
                 pageForParcel: 1,
-                pageForAssetBundle: 1,
                 noMoreBlock: false,
                 noMoreParcel: false,
-                noMoreAssetBundle: false,
-                totalAssetBundleCount: 0,
                 totalBlockCount: 0,
                 totalParcelCount: 0
             });
@@ -119,19 +101,14 @@ class Address extends React.Component<Props, State> {
         const {
             account,
             blocks,
-            assetBundles,
             parcels,
             notFound,
             loadBlock,
             loadParcel,
-            loadAssetBundle,
             pageForBlock,
             pageForParcel,
-            pageForAssetBundle,
-            noMoreAssetBundle,
             noMoreBlock,
             noMoreParcel,
-            totalAssetBundleCount,
             totalBlockCount,
             totalParcelCount
         } = this.state;
@@ -181,32 +158,6 @@ class Address extends React.Component<Props, State> {
                 <div className="mt-large">
                     <AccountDetails account={account} />
                 </div>
-                {
-                    <RequestTotalPlatformAssetCount
-                        address={address}
-                        onTotalCount={this.onTotalAssetCount}
-                        onError={this.onError}
-                    />
-                }
-                {loadAssetBundle ? (
-                    <RequestPlatformAddressAssets
-                        page={pageForAssetBundle}
-                        itemsPerPage={this.asssetBundleItemsPerPage}
-                        address={address}
-                        onAssetBundles={this.onAssetBundles}
-                        onError={this.onError}
-                    />
-                ) : null}
-                {assetBundles.length > 0 ? (
-                    <div className="mt-large">
-                        <AssetList
-                            assetBundles={assetBundles}
-                            totalCount={totalAssetBundleCount}
-                            loadMoreAction={this.loadMoreAssetBundle}
-                            hideMoreButton={noMoreAssetBundle}
-                        />
-                    </div>
-                ) : null}
                 {
                     <RequestTotalPlatformParcelCount
                         address={address}
@@ -273,15 +224,6 @@ class Address extends React.Component<Props, State> {
             loadParcel: false
         });
     };
-    private onAssetBundles = (assetBundles: AssetBundleDoc[]) => {
-        if (assetBundles.length < this.asssetBundleItemsPerPage) {
-            this.setState({ noMoreAssetBundle: true });
-        }
-        this.setState({
-            assetBundles: this.state.assetBundles.concat(assetBundles),
-            loadAssetBundle: false
-        });
-    };
     private onBlocks = (blocks: BlockDoc[]) => {
         if (blocks.length < this.blockItemsPerPage) {
             this.setState({ noMoreBlock: true });
@@ -289,12 +231,6 @@ class Address extends React.Component<Props, State> {
         this.setState({
             blocks: this.state.blocks.concat(blocks),
             loadBlock: false
-        });
-    };
-    private loadMoreAssetBundle = () => {
-        this.setState({
-            loadAssetBundle: true,
-            pageForAssetBundle: this.state.pageForAssetBundle + 1
         });
     };
     private loadMoreParcel = () => {
@@ -308,9 +244,6 @@ class Address extends React.Component<Props, State> {
             loadBlock: true,
             pageForBlock: this.state.pageForBlock + 1
         });
-    };
-    private onTotalAssetCount = (totalCount: number) => {
-        this.setState({ totalAssetBundleCount: totalCount });
     };
     private onTotalParcelCount = (totalCount: number) => {
         this.setState({ totalParcelCount: totalCount });

@@ -1,7 +1,7 @@
 import * as React from "react";
 import { connect, Dispatch } from "react-redux";
 
-import { ParcelDoc } from "codechain-es/lib/types";
+import { ParcelDoc } from "codechain-indexer-types/lib/types";
 import { ApiError, apiRequest } from "./ApiRequest";
 
 interface OwnProps {

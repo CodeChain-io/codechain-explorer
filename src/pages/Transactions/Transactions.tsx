@@ -6,8 +6,12 @@ import * as React from "react";
 import { Redirect } from "react-router";
 import { Container } from "reactstrap";
 
-import { AssetMintTransactionDoc, AssetTransferTransactionDoc, TransactionDoc } from "codechain-es/lib/types";
-import { Type } from "codechain-es/lib/utils";
+import {
+    AssetMintTransactionDoc,
+    AssetTransferTransactionDoc,
+    TransactionDoc
+} from "codechain-indexer-types/lib/types";
+import { Type } from "codechain-indexer-types/lib/utils";
 import DataTable from "../../components/util/DataTable/DataTable";
 import HexString from "../../components/util/HexString/HexString";
 import { ImageLoader } from "../../components/util/ImageLoader/ImageLoader";

@@ -2,14 +2,14 @@ import * as _ from "lodash";
 import * as React from "react";
 import { Col, Row } from "reactstrap";
 
-import { AssetBundleDoc } from "codechain-es/lib/types";
-import { Type } from "codechain-es/lib/utils";
+import { AggsUTXO } from "codechain-indexer-types/lib/types";
+import { Type } from "codechain-indexer-types/lib/utils";
 import { Link } from "react-router-dom";
 import { ImageLoader } from "../../util/ImageLoader/ImageLoader";
 import "./AssetList.scss";
 
 interface Props {
-    assetBundles: AssetBundleDoc[];
+    aggsUTXO: AggsUTXO[];
     loadMoreAction?: () => void;
     totalCount?: number;
     hideMoreButton?: boolean;
@@ -30,12 +30,12 @@ class AssetList extends React.Component<Props, State> {
 
     public render() {
         const { page } = this.state;
-        const { assetBundles, loadMoreAction, totalCount, hideMoreButton } = this.props;
+        const { aggsUTXO, loadMoreAction, totalCount, hideMoreButton } = this.props;
         let loadedAsset;
         if (loadMoreAction) {
-            loadedAsset = assetBundles;
+            loadedAsset = aggsUTXO;
         } else {
-            loadedAsset = assetBundles.slice(0, this.itemPerPage * page);
+            loadedAsset = aggsUTXO.slice(0, this.itemPerPage * page);
         }
         return (
             <div className="asset-list">
@@ -51,30 +51,28 @@ class AssetList extends React.Component<Props, State> {
                 <Row>
                     <Col>
                         <Row>
-                            {_.map(loadedAsset, (assetBundle, index) => {
-                                const metadata = Type.getMetadata(assetBundle.assetScheme.metadata);
+                            {_.map(loadedAsset, (utxo, index) => {
+                                const metadata = Type.getMetadata(utxo.assetScheme.metadata);
                                 return (
                                     <Col key={`asset-item-${index}`} lg="3" md="4" sm="6" className="mt-small">
                                         <div className="asset-item d-flex">
                                             <div className="d-inline-block">
                                                 <ImageLoader
                                                     size={50}
-                                                    data={assetBundle.asset.assetType}
+                                                    data={utxo.assetType}
                                                     className="icon"
                                                     isAssetImage={true}
                                                 />
                                             </div>
                                             <div className="d-inline-block d-flex align-items-center asset-text-container">
                                                 <div>
-                                                    <Link to={`/asset/0x${assetBundle.asset.assetType}`}>
+                                                    <Link to={`/asset/0x${utxo.assetType}`}>
                                                         <div className="asset-name">
-                                                            {metadata.name
-                                                                ? metadata.name
-                                                                : assetBundle.asset.assetType}
+                                                            {metadata.name ? metadata.name : utxo.assetType}
                                                         </div>
                                                     </Link>
                                                     <div>
-                                                        <span>x {assetBundle.asset.amount.toLocaleString()}</span>
+                                                        <span>x {utxo.totalAssetQuantity.toLocaleString()}</span>
                                                     </div>
                                                 </div>
                                             </div>
@@ -85,7 +83,7 @@ class AssetList extends React.Component<Props, State> {
                         </Row>
                     </Col>
                 </Row>
-                {!hideMoreButton && (loadMoreAction || this.itemPerPage * page < assetBundles.length) ? (
+                {!hideMoreButton && (loadMoreAction || this.itemPerPage * page < aggsUTXO.length) ? (
                     <Row>
                         <Col>
                             <div className="mt-small">

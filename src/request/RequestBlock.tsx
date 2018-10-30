@@ -4,8 +4,8 @@ import { connect, Dispatch } from "react-redux";
 
 import { H256 } from "codechain-sdk/lib/core/classes";
 
-import { AssetMintTransactionDoc, AssetTransactionGroupDoc, BlockDoc } from "codechain-es/lib/types";
-import { Type } from "codechain-es/lib/utils";
+import { AssetMintTransactionDoc, AssetTransactionGroupDoc, BlockDoc } from "codechain-indexer-types/lib/types";
+import { Type } from "codechain-indexer-types/lib/utils";
 import { RootState } from "../redux/actions";
 import { apiRequest } from "./ApiRequest";
 
