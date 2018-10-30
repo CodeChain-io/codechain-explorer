@@ -6,7 +6,7 @@ import { ApiError, apiRequest } from "./ApiRequest";
 
 interface OwnProps {
     actionFilters?: string[];
-    signerFiter?: string;
+    signerFilter?: string;
     sorting: string;
     orderBy: string;
     page: number;
@@ -28,7 +28,7 @@ class RequestPendingParcelsInternal extends React.Component<Props> {
             onError,
             dispatch,
             actionFilters,
-            signerFiter,
+            signerFilter,
             sorting,
             orderBy,
             page,
@@ -38,8 +38,8 @@ class RequestPendingParcelsInternal extends React.Component<Props> {
         if (actionFilters) {
             path += `&actionFilters=${actionFilters.join(",")}`;
         }
-        if (signerFiter) {
-            path += `&signerFiter=${signerFiter}`;
+        if (signerFilter) {
+            path += `&signerFilter=${signerFilter}`;
         }
         apiRequest({ path, dispatch, showProgressBar: true })
             .then((response: any) => {

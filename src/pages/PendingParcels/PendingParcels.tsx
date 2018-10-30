@@ -144,7 +144,7 @@ class PendingParcels extends React.Component<Props, State> {
                 {filteredPendingParcelCount === undefined ? (
                     <RequestTotalPendingParcelCount
                         actionFilters={actionFilters}
-                        signerFiter={currentSenderFilter}
+                        signerFilter={currentSenderFilter}
                         onPendingParcelTotalCount={this.onFilteredPendingParcelTotalCount}
                         onError={this.onError}
                     />
@@ -154,7 +154,7 @@ class PendingParcels extends React.Component<Props, State> {
                         sorting={currentSortType}
                         orderBy={orderBy}
                         actionFilters={actionFilters}
-                        signerFiter={currentSenderFilter}
+                        signerFilter={currentSenderFilter}
                         onPendingParcels={this.onPendingParcels}
                         page={currentPage}
                         itmesPerPage={itemsPerPage}

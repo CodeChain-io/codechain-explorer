@@ -5,7 +5,7 @@ import { ApiError, apiRequest } from "./ApiRequest";
 
 interface OwnProps {
     actionFilters?: string[];
-    signerFiter?: string;
+    signerFilter?: string;
     onPendingParcelTotalCount: (pendingParcelTotalCount: number) => void;
     onError: (e: ApiError) => void;
 }
@@ -18,14 +18,14 @@ type Props = OwnProps & DispatchProps;
 
 class RequestTotalPendingParcelCountInternal extends React.Component<Props> {
     public componentWillMount() {
-        const { onError, onPendingParcelTotalCount, dispatch, actionFilters, signerFiter } = this.props;
+        const { onError, onPendingParcelTotalCount, dispatch, actionFilters, signerFilter } = this.props;
 
         let path = "parcels/pending/totalCount";
         if (actionFilters) {
             path += `?actionFilters=${actionFilters.join(",")}`;
         }
-        if (signerFiter) {
-            path += `&signerFiter=${signerFiter}`;
+        if (signerFilter) {
+            path += `&signerFilter=${signerFilter}`;
         }
         apiRequest({ path, dispatch, showProgressBar: true })
             .then((response: any) => {
