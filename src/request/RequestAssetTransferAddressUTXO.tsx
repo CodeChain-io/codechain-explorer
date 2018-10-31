@@ -19,8 +19,7 @@ type Props = OwnProps & DispatchProps;
 class RequestAssetTransferAddressUTXOInternal extends React.Component<Props> {
     public componentWillMount() {
         const { address, onAggsUTXO, onError, dispatch } = this.props;
-        // FIXME : Change the confirmThreshold according to consensus
-        const path = `aggs-utxo/${address}?onlyConfirmed=true&confirmThreshold=5`;
+        const path = `aggs-utxo/${address}`;
         apiRequest({ path, dispatch, showProgressBar: true })
             .then((response: AggsUTXO[]) => {
                 onAggsUTXO(response);
