@@ -132,7 +132,20 @@ class TransactionDetailsInternal extends React.Component<Props, State> {
                             <Row>
                                 <Col md="3">Status</Col>
                                 <Col md="9">
-                                    <StatusBadge status={status} timestamp={pendingDuration} />
+                                    <StatusBadge
+                                        status={status}
+                                        timestamp={pendingDuration}
+                                        bestBlockNumber={bestBlockNumber}
+                                        currentBlockNumber={transaction.data.blockNumber}
+                                    />
+                                    <RequestBlockNumber
+                                        repeat={5000}
+                                        onBlockNumber={this.handleBestBlockNumber}
+                                        // tslint:disable-next-line:jsx-no-lambda
+                                        onError={(e: any) => {
+                                            console.log(e);
+                                        }}
+                                    />
                                 </Col>
                             </Row>
                             <hr />
