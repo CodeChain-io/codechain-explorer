@@ -6,7 +6,7 @@ import { Error } from "../../components/error/Error/Error";
 import { AssetSchemeDoc, TransactionDoc } from "codechain-indexer-types/lib/types";
 import AssetDetails from "../../components/asset/AssetDetails/AssetDetails";
 import TransactionList from "../../components/transaction/TransactionList/TransactionList";
-import { RequestAssetScheme, RequestTotalAssetTransactionCount } from "../../request";
+import { RequestAssetScheme, RequestBlockNumber, RequestTotalAssetTransactionCount } from "../../request";
 import RequestAssetTransactions from "../../request/RequestAssetTransactions";
 
 import { H256 } from "codechain-sdk/lib/core/H256";
@@ -29,6 +29,7 @@ interface State {
     noMoreTransaction: boolean;
     notExistedInBlock: boolean;
     notExistedInPendingParcel: boolean;
+    bestBlockNumber?: number;
 }
 
 class Asset extends React.Component<Props, State> {
@@ -42,7 +43,8 @@ class Asset extends React.Component<Props, State> {
             loadTransaction: true,
             noMoreTransaction: false,
             notExistedInBlock: false,
-            notExistedInPendingParcel: false
+            notExistedInPendingParcel: false,
+            bestBlockNumber: undefined
         };
     }
 
@@ -67,7 +69,8 @@ class Asset extends React.Component<Props, State> {
                 loadTransaction: true,
                 noMoreTransaction: false,
                 notExistedInBlock: false,
-                notExistedInPendingParcel: false
+                notExistedInPendingParcel: false,
+                bestBlockNumber: undefined
             });
         }
     }
@@ -86,7 +89,8 @@ class Asset extends React.Component<Props, State> {
             totalTransactionCount,
             page,
             loadTransaction,
-            noMoreTransaction
+            noMoreTransaction,
+            bestBlockNumber
         } = this.state;
 
         if (!assetScheme) {
@@ -158,7 +162,7 @@ class Asset extends React.Component<Props, State> {
                         itemsPerPage={this.itemsPerPage}
                     />
                 ) : null}
-                {totalTransactionCount !== 0 ? (
+                {bestBlockNumber && totalTransactionCount !== 0 ? (
                     <div className="mt-large">
                         <TransactionList
                             assetType={new H256(assetType)}
@@ -167,12 +171,18 @@ class Asset extends React.Component<Props, State> {
                             totalCount={totalTransactionCount}
                             loadMoreAction={this.loadMoreAction}
                             hideMoreButton={noMoreTransaction}
+                            bestBlockNumber={bestBlockNumber}
                         />
                     </div>
                 ) : null}
+                <RequestBlockNumber repeat={5000} onBlockNumber={this.handleBestBlockNumber} onError={this.onError} />
             </Container>
         );
     }
+
+    private handleBestBlockNumber = (bestBlockNumber: number) => {
+        this.setState({ bestBlockNumber });
+    };
 
     private loadMoreAction = () => {
         this.setState({ loadTransaction: true, page: this.state.page + 1 });

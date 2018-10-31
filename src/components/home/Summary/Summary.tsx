@@ -79,7 +79,7 @@ class Summary extends React.Component<{}, State> {
         return (
             <div className="summary">
                 {selectedMinerAddress ? <Redirect push={true} to={`/addr-platform/${selectedMinerAddress}`} /> : null}
-                <RequestBlockNumber repeat={10000} onBlockNumber={this.onBlockNumber} onError={this.onError} />
+                <RequestBlockNumber repeat={5000} onBlockNumber={this.onBlockNumber} onError={this.onError} />
                 {!isWeeklyLogRequested ? (
                     <RequestWeeklyLogs type={type} onData={this.onWeeklyLogData} onError={this.onError} />
                 ) : null}

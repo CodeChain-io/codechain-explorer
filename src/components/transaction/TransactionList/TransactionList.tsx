@@ -20,6 +20,7 @@ import { H256 } from "codechain-sdk/lib/core/classes";
 import { Link } from "react-router-dom";
 import DataSet from "../../util/DataSet/DataSet";
 import { ImageLoader } from "../../util/ImageLoader/ImageLoader";
+import { StatusBadge } from "../../util/StatusBadge/StatusBadge";
 import { TypeBadge } from "../../util/TypeBadge/TypeBadge";
 
 interface Props {
@@ -30,6 +31,7 @@ interface Props {
     totalCount: number;
     hideMoreButton?: boolean;
     hideTitle?: boolean;
+    bestBlockNumber?: number;
 }
 
 interface State {
@@ -47,7 +49,16 @@ class TransactionList extends React.Component<Props, State> {
 
     public render() {
         const { page } = this.state;
-        const { transactions, assetType, owner, loadMoreAction, totalCount, hideMoreButton, hideTitle } = this.props;
+        const {
+            transactions,
+            assetType,
+            owner,
+            loadMoreAction,
+            totalCount,
+            hideMoreButton,
+            hideTitle,
+            bestBlockNumber
+        } = this.props;
         let loadedTransactions;
         if (loadMoreAction) {
             loadedTransactions = transactions;
@@ -102,6 +113,19 @@ class TransactionList extends React.Component<Props, State> {
                                             </Col>
                                         </Row>
                                         <hr />
+                                        {bestBlockNumber && [
+                                            <Row key="row-item">
+                                                <Col md="3">Status</Col>
+                                                <Col md="9">
+                                                    <StatusBadge
+                                                        status={"confirmed"}
+                                                        currentBlockNumber={transaction.data.blockNumber}
+                                                        bestBlockNumber={bestBlockNumber}
+                                                    />
+                                                </Col>
+                                            </Row>,
+                                            <hr key="hr-item" />
+                                        ]}
                                         {this.TransactionObjectByType(transaction, assetType, owner)}
                                     </DataSet>
                                 </div>

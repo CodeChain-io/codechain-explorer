@@ -6,13 +6,26 @@ import "./StatusBadge.scss";
 
 interface Props {
     status: string;
+    bestBlockNumber?: number | null;
+    currentBlockNumber?: number | null;
     className?: string;
     timestamp?: number;
 }
-const getBadgeBackgroundColorClassByStatus = (status: string) => {
+const getBadgeBackgroundColorClassByStatus = (
+    status: string,
+    bestBlockNumber?: number | null,
+    currentBlockNumber?: number | null
+) => {
     switch (status) {
         case "confirmed":
-            return "text-success";
+            if (!currentBlockNumber || !bestBlockNumber) {
+                return "text-success";
+            }
+            if (bestBlockNumber - currentBlockNumber >= 5) {
+                return "text-success";
+            } else {
+                return "text-warning";
+            }
         case "pending":
             return "text-warning";
         case "dead":
@@ -20,10 +33,17 @@ const getBadgeBackgroundColorClassByStatus = (status: string) => {
     }
     return "";
 };
-const getStatusString = (status: string) => {
+const getStatusString = (status: string, bestBlockNumber?: number | null, currentBlockNumber?: number | null) => {
     switch (status) {
         case "confirmed":
-            return "Confirmed";
+            if (!currentBlockNumber || !bestBlockNumber) {
+                return "Confirmed";
+            }
+            if (bestBlockNumber - currentBlockNumber >= 5) {
+                return "5+ Confirmed";
+            } else {
+                return `Confirming (${bestBlockNumber - currentBlockNumber + 1})`;
+            }
         case "pending":
             return "Pending";
         case "dead":
@@ -33,11 +53,14 @@ const getStatusString = (status: string) => {
 };
 
 export const StatusBadge = (props: Props) => {
-    const { className, status, timestamp } = props;
+    const { className, status, timestamp, bestBlockNumber, currentBlockNumber } = props;
     return (
         <span className={`status-badge ${className}`}>
-            <FontAwesomeIcon className={getBadgeBackgroundColorClassByStatus(status)} icon={faCircle} />{" "}
-            {getStatusString(status)}{" "}
+            <FontAwesomeIcon
+                className={getBadgeBackgroundColorClassByStatus(status, bestBlockNumber, currentBlockNumber)}
+                icon={faCircle}
+            />{" "}
+            {getStatusString(status, bestBlockNumber, currentBlockNumber)}{" "}
             {timestamp && status === "pending" ? (
                 <span>
                     (<FontAwesomeIcon className="spin" icon={faSpinner} />

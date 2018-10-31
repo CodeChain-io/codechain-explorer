@@ -5,7 +5,11 @@ import { match } from "react-router";
 import { Col, Container, Row } from "reactstrap";
 
 import { AggsUTXO, TransactionDoc } from "codechain-indexer-types/lib/types";
-import { RequestAssetTransferAddressTransactions, RequestAssetTransferAddressUTXO } from "../../request";
+import {
+    RequestAssetTransferAddressTransactions,
+    RequestAssetTransferAddressUTXO,
+    RequestBlockNumber
+} from "../../request";
 
 import AssetList from "../../components/asset/AssetList/AssetList";
 import AddressDetails from "../../components/assetTransferAddress/AddressDetails/AddressDetails";
@@ -23,16 +27,15 @@ interface State {
     aggsUTXO: AggsUTXO[];
     transactions: TransactionDoc[];
     pageForTransactions: number;
-    pageForAssets: number;
     loadUTXO: boolean;
     loadTransaction: boolean;
     totalTransactionCount: number;
-    noMoreUTXO: boolean;
     noMoreTransaction: boolean;
+    requestTotalTransactionCount: boolean;
+    bestBlockNumber?: number;
 }
 
 class AssetTransferAddress extends React.Component<Props, State> {
-    private utxoItemsPerPage = 12;
     private transactionItemsPerPage = 6;
     constructor(props: Props) {
         super(props);
@@ -40,12 +43,12 @@ class AssetTransferAddress extends React.Component<Props, State> {
             aggsUTXO: [],
             transactions: [],
             pageForTransactions: 1,
-            pageForAssets: 1,
             totalTransactionCount: 0,
             loadUTXO: true,
             loadTransaction: true,
-            noMoreUTXO: false,
-            noMoreTransaction: false
+            noMoreTransaction: false,
+            bestBlockNumber: undefined,
+            requestTotalTransactionCount: true
         };
     }
 
@@ -65,12 +68,12 @@ class AssetTransferAddress extends React.Component<Props, State> {
                 aggsUTXO: [],
                 transactions: [],
                 pageForTransactions: 1,
-                pageForAssets: 1,
                 totalTransactionCount: 0,
                 loadUTXO: true,
                 loadTransaction: true,
-                noMoreUTXO: false,
-                noMoreTransaction: false
+                noMoreTransaction: false,
+                bestBlockNumber: undefined,
+                requestTotalTransactionCount: true
             });
         }
     }
@@ -85,12 +88,12 @@ class AssetTransferAddress extends React.Component<Props, State> {
             aggsUTXO,
             transactions,
             pageForTransactions,
-            pageForAssets,
             loadTransaction,
             loadUTXO,
             totalTransactionCount,
             noMoreTransaction,
-            noMoreUTXO
+            bestBlockNumber,
+            requestTotalTransactionCount
         } = this.state;
         return (
             <Container className="asset-transfer-address">
@@ -130,28 +133,22 @@ class AssetTransferAddress extends React.Component<Props, State> {
                         {loadUTXO ? (
                             <RequestAssetTransferAddressUTXO
                                 address={address}
-                                page={pageForAssets}
-                                itemsPerPage={this.utxoItemsPerPage}
                                 onAggsUTXO={this.onAggsUTXO}
                                 onError={this.onError}
                             />
                         ) : null}
                         {aggsUTXO.length > 0 ? (
                             <div className="mt-large">
-                                <AssetList
-                                    aggsUTXO={aggsUTXO}
-                                    loadMoreAction={this.loadMoreUTXO}
-                                    hideMoreButton={noMoreUTXO}
-                                />
+                                <AssetList aggsUTXO={aggsUTXO} />
                             </div>
                         ) : null}
-                        {
+                        {requestTotalTransactionCount && (
                             <ReqeustTotalTransferTransactionCount
                                 address={address}
                                 onTotalCount={this.onTransactionTotalCount}
                                 onError={this.onError}
                             />
-                        }
+                        )}
                         {loadTransaction ? (
                             <RequestAssetTransferAddressTransactions
                                 address={address}
@@ -161,7 +158,7 @@ class AssetTransferAddress extends React.Component<Props, State> {
                                 onError={this.onError}
                             />
                         ) : null}
-                        {totalTransactionCount > 0 ? (
+                        {bestBlockNumber && totalTransactionCount > 0 ? (
                             <div className="mt-large">
                                 <TransactionList
                                     owner={address}
@@ -170,24 +167,30 @@ class AssetTransferAddress extends React.Component<Props, State> {
                                     totalCount={totalTransactionCount}
                                     loadMoreAction={this.loadMoreTransaction}
                                     hideMoreButton={noMoreTransaction}
+                                    bestBlockNumber={bestBlockNumber}
                                 />
                             </div>
                         ) : null}
+                        <RequestBlockNumber
+                            repeat={5000}
+                            onBlockNumber={this.handleBestBlockNumber}
+                            onError={this.onError}
+                        />
                     </Col>
                 </Row>
             </Container>
         );
     }
 
+    private handleBestBlockNumber = (bestBlockNumber: number) => {
+        this.setState({ bestBlockNumber });
+    };
+
     private loadMoreTransaction = () => {
         this.setState({
             loadTransaction: true,
             pageForTransactions: this.state.pageForTransactions + 1
         });
-    };
-
-    private loadMoreUTXO = () => {
-        this.setState({ loadUTXO: true, pageForAssets: this.state.pageForAssets + 1 });
     };
 
     private onTransactions = (transactions: TransactionDoc[]) => {
@@ -201,14 +204,11 @@ class AssetTransferAddress extends React.Component<Props, State> {
     };
 
     private onTransactionTotalCount = (totalCount: number) => {
-        this.setState({ totalTransactionCount: totalCount });
+        this.setState({ totalTransactionCount: totalCount, requestTotalTransactionCount: false });
     };
 
     private onAggsUTXO = (aggsUTXO: AggsUTXO[]) => {
-        if (aggsUTXO.length < this.utxoItemsPerPage) {
-            this.setState({ noMoreUTXO: true });
-        }
-        this.setState({ aggsUTXO: this.state.aggsUTXO.concat(aggsUTXO), loadUTXO: false });
+        this.setState({ aggsUTXO: this.state.aggsUTXO.concat(aggsUTXO) });
     };
 
     private onError = (e: any) => {

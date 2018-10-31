@@ -14,6 +14,7 @@ import {
 import { Type } from "codechain-indexer-types/lib/utils";
 import { Script } from "codechain-sdk/lib/core/classes";
 import { Link } from "react-router-dom";
+import { RequestBlockNumber } from "../../../request";
 import DataSet from "../../util/DataSet/DataSet";
 import HexString from "../../util/HexString/HexString";
 import { ImageLoader } from "../../util/ImageLoader/ImageLoader";
@@ -37,6 +38,7 @@ interface State {
     pageForInput: number;
     pageForOutput: number;
     pageForBurn: number;
+    bestBlockNumber?: number;
 }
 
 class TransactionDetailsInternal extends React.Component<Props, State> {
@@ -47,7 +49,8 @@ class TransactionDetailsInternal extends React.Component<Props, State> {
         this.state = {
             pageForInput: 1,
             pageForOutput: 1,
-            pageForBurn: 1
+            pageForBurn: 1,
+            bestBlockNumber: undefined
         };
     }
 
@@ -87,7 +90,7 @@ class TransactionDetailsInternal extends React.Component<Props, State> {
     };
 
     private getTransactionInfoByType = (transaction: TransactionDoc, status: string, pendingDuration?: number) => {
-        const { pageForBurn, pageForOutput, pageForInput } = this.state;
+        const { pageForBurn, pageForOutput, pageForInput, bestBlockNumber } = this.state;
         if (Type.isAssetTransferTransactionDoc(transaction)) {
             const transactionDoc = transaction as AssetTransferTransactionDoc;
             return [
@@ -492,7 +495,20 @@ class TransactionDetailsInternal extends React.Component<Props, State> {
                             <Row>
                                 <Col md="3">Status</Col>
                                 <Col md="9">
-                                    <StatusBadge status={status} timestamp={pendingDuration} />
+                                    <StatusBadge
+                                        status={status}
+                                        timestamp={pendingDuration}
+                                        bestBlockNumber={bestBlockNumber}
+                                        currentBlockNumber={transaction.data.blockNumber}
+                                    />
+                                    <RequestBlockNumber
+                                        repeat={5000}
+                                        onBlockNumber={this.handleBestBlockNumber}
+                                        // tslint:disable-next-line:jsx-no-lambda
+                                        onError={(e: any) => {
+                                            console.log(e);
+                                        }}
+                                    />
                                 </Col>
                             </Row>
                             <hr />
@@ -644,6 +660,10 @@ class TransactionDetailsInternal extends React.Component<Props, State> {
             type: "MOVE_TO_SECTION",
             data: undefined
         });
+    };
+
+    private handleBestBlockNumber = (bestBlockNumber: number) => {
+        this.setState({ bestBlockNumber });
     };
 
     private loadMoreInput = () => {

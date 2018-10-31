@@ -27,6 +27,7 @@ interface ParcelResult {
 
 interface Props {
     parcelResult: ParcelResult;
+    bestBlockNumber: number;
 }
 
 const getElementByType = (parcel: ParcelDoc) => {
@@ -100,7 +101,7 @@ const getParcelInvoice = (parcel: ParcelDoc) => {
 };
 
 const ParcelDetails = (props: Props) => {
-    const { parcelResult } = props;
+    const { parcelResult, bestBlockNumber } = props;
     const parcel = parcelResult.parcel;
     const status = parcelResult.status;
 
@@ -164,7 +165,12 @@ const ParcelDetails = (props: Props) => {
                         <Row>
                             <Col md="3">Status</Col>
                             <Col md="9">
-                                <StatusBadge status={status} timestamp={parcelResult.timestamp} />
+                                <StatusBadge
+                                    status={status}
+                                    timestamp={parcelResult.timestamp}
+                                    bestBlockNumber={bestBlockNumber}
+                                    currentBlockNumber={parcel.blockNumber}
+                                />
                             </Col>
                         </Row>
                         <hr />

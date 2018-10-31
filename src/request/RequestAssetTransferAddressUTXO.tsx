@@ -5,9 +5,7 @@ import { AggsUTXO } from "codechain-indexer-types/lib/types";
 import { ApiError, apiRequest } from "./ApiRequest";
 
 interface OwnProps {
-    itemsPerPage: number;
     address: string;
-    page: number;
     onAggsUTXO: (aggsUTXO: AggsUTXO[]) => void;
     onError: (e: ApiError) => void;
 }
@@ -20,9 +18,9 @@ type Props = OwnProps & DispatchProps;
 
 class RequestAssetTransferAddressUTXOInternal extends React.Component<Props> {
     public componentWillMount() {
-        const { address, onAggsUTXO, onError, dispatch, itemsPerPage, page } = this.props;
+        const { address, onAggsUTXO, onError, dispatch } = this.props;
         // FIXME : Change the confirmThreshold according to consensus
-        const path = `aggs-utxo/${address}?itemsPerPage=${itemsPerPage}&page=${page}&onlyConfirmed=true&confirmThreshold=5`;
+        const path = `aggs-utxo/${address}?onlyConfirmed=true&confirmThreshold=5`;
         apiRequest({ path, dispatch, showProgressBar: true })
             .then((response: AggsUTXO[]) => {
                 onAggsUTXO(response);
