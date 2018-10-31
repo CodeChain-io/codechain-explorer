@@ -4,13 +4,15 @@ import * as React from "react";
 import { match } from "react-router";
 import { Col, Container, Row } from "reactstrap";
 
-import { AggsUTXO, TransactionDoc } from "codechain-indexer-types/lib/types";
+import { AggsUTXO, PendingTransactionDoc, TransactionDoc } from "codechain-indexer-types/lib/types";
 import {
     RequestAssetTransferAddressTransactions,
     RequestAssetTransferAddressUTXO,
-    RequestBlockNumber
+    RequestBlockNumber,
+    RequestPendingTransactionsByAddress
 } from "../../request";
 
+import * as _ from "lodash";
 import AssetList from "../../components/asset/AssetList/AssetList";
 import AddressDetails from "../../components/assetTransferAddress/AddressDetails/AddressDetails";
 import TransactionList from "../../components/transaction/TransactionList/TransactionList";
@@ -26,9 +28,11 @@ interface Props {
 interface State {
     aggsUTXO: AggsUTXO[];
     transactions: TransactionDoc[];
+    pendingTransactions: PendingTransactionDoc[];
     pageForTransactions: number;
     loadUTXO: boolean;
     loadTransaction: boolean;
+    loadPendingTransaction: boolean;
     totalTransactionCount: number;
     noMoreTransaction: boolean;
     requestTotalTransactionCount: boolean;
@@ -46,6 +50,8 @@ class AssetTransferAddress extends React.Component<Props, State> {
             totalTransactionCount: 0,
             loadUTXO: true,
             loadTransaction: true,
+            pendingTransactions: [],
+            loadPendingTransaction: true,
             noMoreTransaction: false,
             bestBlockNumber: undefined,
             requestTotalTransactionCount: true
@@ -69,9 +75,11 @@ class AssetTransferAddress extends React.Component<Props, State> {
                 transactions: [],
                 pageForTransactions: 1,
                 totalTransactionCount: 0,
+                pendingTransactions: [],
                 loadUTXO: true,
                 loadTransaction: true,
                 noMoreTransaction: false,
+                loadPendingTransaction: true,
                 bestBlockNumber: undefined,
                 requestTotalTransactionCount: true
             });
@@ -91,7 +99,9 @@ class AssetTransferAddress extends React.Component<Props, State> {
             loadTransaction,
             loadUTXO,
             totalTransactionCount,
+            loadPendingTransaction,
             noMoreTransaction,
+            pendingTransactions,
             bestBlockNumber,
             requestTotalTransactionCount
         } = this.state;
@@ -149,6 +159,28 @@ class AssetTransferAddress extends React.Component<Props, State> {
                                 onError={this.onError}
                             />
                         )}
+                        {loadPendingTransaction && (
+                            <div>
+                                <RequestPendingTransactionsByAddress
+                                    address={address}
+                                    onPendingTransactions={this.onPendingTransactions}
+                                    onError={this.onError}
+                                />
+                            </div>
+                        )}
+                        {bestBlockNumber &&
+                            pendingTransactions.length > 0 && (
+                                <div className="mt-large">
+                                    <TransactionList
+                                        owner={address}
+                                        hideTitle={true}
+                                        transactions={_.map(pendingTransactions, pendingTx => pendingTx.transaction)}
+                                        totalCount={pendingTransactions.length}
+                                        isPendingTransactionList={true}
+                                        bestBlockNumber={bestBlockNumber}
+                                    />
+                                </div>
+                            )}
                         {loadTransaction ? (
                             <RequestAssetTransferAddressTransactions
                                 address={address}
@@ -191,6 +223,10 @@ class AssetTransferAddress extends React.Component<Props, State> {
             loadTransaction: true,
             pageForTransactions: this.state.pageForTransactions + 1
         });
+    };
+
+    private onPendingTransactions = (pendingTransactions: PendingTransactionDoc[]) => {
+        this.setState({ pendingTransactions, loadPendingTransaction: false });
     };
 
     private onTransactions = (transactions: TransactionDoc[]) => {

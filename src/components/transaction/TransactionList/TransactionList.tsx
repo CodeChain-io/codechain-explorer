@@ -32,6 +32,7 @@ interface Props {
     hideMoreButton?: boolean;
     hideTitle?: boolean;
     bestBlockNumber?: number;
+    isPendingTransactionList?: boolean;
 }
 
 interface State {
@@ -57,7 +58,8 @@ class TransactionList extends React.Component<Props, State> {
             totalCount,
             hideMoreButton,
             hideTitle,
-            bestBlockNumber
+            bestBlockNumber,
+            isPendingTransactionList
         } = this.props;
         let loadedTransactions;
         if (loadMoreAction) {
@@ -70,7 +72,7 @@ class TransactionList extends React.Component<Props, State> {
                 <Row>
                     <Col>
                         <div className="d-flex justify-content-between align-items-end">
-                            <h2>Transactions</h2>
+                            {isPendingTransactionList ? <h2>Pending Transactions</h2> : <h2>Transactions</h2>}
                             <span>Total {totalCount} transactions</span>
                         </div>
                         <hr className="heading-hr" />
@@ -93,7 +95,7 @@ class TransactionList extends React.Component<Props, State> {
                                                         ? moment
                                                               .unix(transaction.data.timestamp)
                                                               .format("YYYY-MM-DD HH:mm:ssZ")
-                                                        : ""}
+                                                        : "Pending"}
                                                 </span>
                                             </Col>
                                         </Row>
@@ -117,11 +119,15 @@ class TransactionList extends React.Component<Props, State> {
                                             <Row key="row-item">
                                                 <Col md="3">Status</Col>
                                                 <Col md="9">
-                                                    <StatusBadge
-                                                        status={"confirmed"}
-                                                        currentBlockNumber={transaction.data.blockNumber}
-                                                        bestBlockNumber={bestBlockNumber}
-                                                    />
+                                                    {isPendingTransactionList ? (
+                                                        <StatusBadge status={"pending"} />
+                                                    ) : (
+                                                        <StatusBadge
+                                                            status={"confirmed"}
+                                                            currentBlockNumber={transaction.data.blockNumber}
+                                                            bestBlockNumber={bestBlockNumber}
+                                                        />
+                                                    )}
                                                 </Col>
                                             </Row>,
                                             <hr key="hr-item" />
