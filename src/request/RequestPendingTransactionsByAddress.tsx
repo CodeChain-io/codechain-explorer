@@ -21,7 +21,7 @@ class RequestPendingTransactionsByAddressInternal extends React.Component<Props>
     public componentWillMount() {
         const { onPendingTransactions, onError, address, dispatch, progressBarTarget } = this.props;
         apiRequest({
-            path: `txs/pending/${address}`,
+            path: `addr-asset-txs/pending/${address}`,
             dispatch,
             progressBarTarget,
             showProgressBar: true
