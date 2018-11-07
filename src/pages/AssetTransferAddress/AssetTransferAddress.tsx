@@ -227,7 +227,7 @@ class AssetTransferAddress extends React.Component<Props, State> {
     };
 
     private onAggsUTXO = (aggsUTXO: AggsUTXO[]) => {
-        this.setState({ aggsUTXO: this.state.aggsUTXO.concat(aggsUTXO) });
+        this.setState({ aggsUTXO: this.state.aggsUTXO.concat(aggsUTXO), loadUTXO: false });
     };
 
     private onError = (e: any) => {
