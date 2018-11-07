@@ -15,7 +15,7 @@ interface DispatchProps {
 
 type Props = OwnProps & DispatchProps;
 
-class ReqeustTotalTransferTransactionCountInternal extends React.Component<Props> {
+class ReqeustTotalTransferTransactionCount extends React.Component<Props> {
     public componentWillMount() {
         const { onError, onTotalCount, dispatch, address } = this.props;
         apiRequest({
@@ -34,11 +34,4 @@ class ReqeustTotalTransferTransactionCountInternal extends React.Component<Props
     }
 }
 
-const ReqeustTotalTransferTransactionCount = connect(
-    null,
-    (dispatch: Dispatch) => {
-        return { dispatch };
-    }
-)(ReqeustTotalTransferTransactionCountInternal);
-
-export default ReqeustTotalTransferTransactionCount;
+export default connect()(ReqeustTotalTransferTransactionCount);

@@ -13,7 +13,6 @@ import { H256 } from "codechain-sdk/lib/core/H256";
 import CopyButton from "../../components/util/CopyButton/CopyButton";
 import HexString from "../../components/util/HexString/HexString";
 import { ImageLoader } from "../../components/util/ImageLoader/ImageLoader";
-import RequestPendingAssetScheme from "../../request/RequestPendingAssetScheme";
 import "./Asset.scss";
 
 interface Props {
@@ -28,7 +27,6 @@ interface State {
     loadTransaction: boolean;
     noMoreTransaction: boolean;
     notExistedInBlock: boolean;
-    notExistedInPendingParcel: boolean;
     bestBlockNumber?: number;
 }
 
@@ -43,7 +41,6 @@ class Asset extends React.Component<Props, State> {
             loadTransaction: true,
             noMoreTransaction: false,
             notExistedInBlock: false,
-            notExistedInPendingParcel: false,
             bestBlockNumber: undefined
         };
     }
@@ -69,7 +66,6 @@ class Asset extends React.Component<Props, State> {
                 loadTransaction: true,
                 noMoreTransaction: false,
                 notExistedInBlock: false,
-                notExistedInPendingParcel: false,
                 bestBlockNumber: undefined
             });
         }
@@ -83,7 +79,6 @@ class Asset extends React.Component<Props, State> {
         } = this.props;
         const {
             notExistedInBlock,
-            notExistedInPendingParcel,
             assetScheme,
             transactions,
             totalTransactionCount,
@@ -100,15 +95,6 @@ class Asset extends React.Component<Props, State> {
                         assetType={assetType}
                         onAssetScheme={this.onAssetScheme}
                         onAssetSchemeNotExist={this.onAssetSchemeNotFound}
-                        onError={this.onError}
-                    />
-                );
-            } else if (!notExistedInPendingParcel) {
-                return (
-                    <RequestPendingAssetScheme
-                        assetType={assetType}
-                        onAssetScheme={this.onAssetScheme}
-                        onAssetSchemeNotExist={this.onPendingAssetSchemeNotFound}
                         onError={this.onError}
                     />
                 );
@@ -204,10 +190,6 @@ class Asset extends React.Component<Props, State> {
         if (this.state.transactions.length >= this.state.totalTransactionCount) {
             this.setState({ noMoreTransaction: true });
         }
-    };
-
-    private onPendingAssetSchemeNotFound = () => {
-        this.setState({ notExistedInPendingParcel: true });
     };
 
     private onAssetSchemeNotFound = () => {

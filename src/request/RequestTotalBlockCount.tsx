@@ -14,7 +14,7 @@ interface DispatchProps {
 
 type Props = OwnProps & DispatchProps;
 
-class RequestTotalBlockCountInternal extends React.Component<Props> {
+class RequestTotalBlockCount extends React.Component<Props> {
     public componentWillMount() {
         const { onError, onBlockTotalCount, dispatch } = this.props;
         apiRequest({
@@ -33,11 +33,4 @@ class RequestTotalBlockCountInternal extends React.Component<Props> {
     }
 }
 
-const RequestTotalBlockCount = connect(
-    null,
-    (dispatch: Dispatch) => {
-        return { dispatch };
-    }
-)(RequestTotalBlockCountInternal);
-
-export default RequestTotalBlockCount;
+export default connect()(RequestTotalBlockCount);

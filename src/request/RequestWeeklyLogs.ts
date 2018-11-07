@@ -30,7 +30,7 @@ interface DispatchProps {
 
 type Props = OwnProps & DispatchProps;
 
-class RequestWeeklyLogsInternal extends React.Component<Props> {
+class RequestWeeklyLogs extends React.Component<Props> {
     public componentWillMount() {
         this.queryWeekLog();
     }
@@ -80,11 +80,4 @@ class RequestWeeklyLogsInternal extends React.Component<Props> {
     };
 }
 
-const RequestWeeklyLogs = connect(
-    null,
-    (dispatch: Dispatch) => {
-        return { dispatch };
-    }
-)(RequestWeeklyLogsInternal);
-
-export default RequestWeeklyLogs;
+export default connect()(RequestWeeklyLogs);

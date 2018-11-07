@@ -30,7 +30,7 @@ interface DispatchProps {
 
 type Props = OwnProps & DispatchProps;
 
-class RequestCodeChainStatusInternal extends React.Component<Props> {
+class RequestCodeChainStatus extends React.Component<Props> {
     public componentWillMount() {
         const { onError, dispatch, onCodeChain } = this.props;
         apiRequest({
@@ -49,11 +49,4 @@ class RequestCodeChainStatusInternal extends React.Component<Props> {
     }
 }
 
-const RequestCodeChainStatus = connect(
-    null,
-    (dispatch: Dispatch) => {
-        return { dispatch };
-    }
-)(RequestCodeChainStatusInternal);
-
-export default RequestCodeChainStatus;
+export default connect()(RequestCodeChainStatus);

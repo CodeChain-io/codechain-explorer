@@ -16,7 +16,7 @@ interface DispatchProps {
 
 type Props = OwnProps & DispatchProps;
 
-class RequestAssetTransferAddressUTXOInternal extends React.Component<Props> {
+class RequestAssetTransferAddressUTXO extends React.Component<Props> {
     public componentWillMount() {
         const { address, onAggsUTXO, onError, dispatch } = this.props;
         const path = `aggs-utxo/${address}`;
@@ -32,11 +32,4 @@ class RequestAssetTransferAddressUTXOInternal extends React.Component<Props> {
     }
 }
 
-const RequestAssetTransferAddressUTXO = connect(
-    null,
-    (dispatch: Dispatch) => {
-        return { dispatch };
-    }
-)(RequestAssetTransferAddressUTXOInternal);
-
-export default RequestAssetTransferAddressUTXO;
+export default connect()(RequestAssetTransferAddressUTXO);

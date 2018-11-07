@@ -19,7 +19,7 @@ interface DispatchProps {
 
 type Props = OwnProps & DispatchProps;
 
-class RequestNodeStatusInternal extends React.Component<Props> {
+class RequestNodeStatus extends React.Component<Props> {
     public componentWillMount() {
         const { onError } = this.props;
         try {
@@ -53,11 +53,4 @@ class RequestNodeStatusInternal extends React.Component<Props> {
     };
 }
 
-const RequestNodeStatus = connect(
-    null,
-    (dispatch: Dispatch) => {
-        return { dispatch };
-    }
-)(RequestNodeStatusInternal);
-
-export default RequestNodeStatus;
+export default connect()(RequestNodeStatus);

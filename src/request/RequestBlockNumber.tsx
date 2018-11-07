@@ -20,7 +20,7 @@ interface State {
     timer?: NodeJS.Timer;
 }
 
-class RequestBlockNumberInternal extends React.Component<Props, State> {
+class RequestBlockNumber extends React.Component<Props, State> {
     public componentWillMount() {
         this.setState({});
         const { repeat } = this.props;
@@ -75,11 +75,4 @@ class RequestBlockNumberInternal extends React.Component<Props, State> {
     }
 }
 
-const RequestBlockNumber = connect(
-    null,
-    (dispatch: Dispatch) => {
-        return { dispatch };
-    }
-)(RequestBlockNumberInternal);
-
-export default RequestBlockNumber;
+export default connect()(RequestBlockNumber);

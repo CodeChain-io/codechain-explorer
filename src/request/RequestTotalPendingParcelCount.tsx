@@ -16,7 +16,7 @@ interface DispatchProps {
 
 type Props = OwnProps & DispatchProps;
 
-class RequestTotalPendingParcelCountInternal extends React.Component<Props> {
+class RequestTotalPendingParcelCount extends React.Component<Props> {
     public componentWillMount() {
         const { onError, onPendingParcelTotalCount, dispatch, actionFilters, signerFilter } = this.props;
 
@@ -39,11 +39,4 @@ class RequestTotalPendingParcelCountInternal extends React.Component<Props> {
     }
 }
 
-const RequestTotalPendingParcelCount = connect(
-    null,
-    (dispatch: Dispatch) => {
-        return { dispatch };
-    }
-)(RequestTotalPendingParcelCountInternal);
-
-export default RequestTotalPendingParcelCount;
+export default connect()(RequestTotalPendingParcelCount);

@@ -18,7 +18,7 @@ interface DispatchProps {
 
 type Props = OwnProps & DispatchProps;
 
-class RequestAssetTransactionsInternal extends React.Component<Props> {
+class RequestAssetTransactions extends React.Component<Props> {
     public componentWillMount() {
         const { dispatch, assetType, onTransactions, onError, page, itemsPerPage } = this.props;
         apiRequest({
@@ -36,12 +36,4 @@ class RequestAssetTransactionsInternal extends React.Component<Props> {
         return null;
     }
 }
-
-const RequestAssetTransactions = connect(
-    null,
-    (dispatch: Dispatch) => {
-        return { dispatch };
-    }
-)(RequestAssetTransactionsInternal);
-
-export default RequestAssetTransactions;
+export default connect()(RequestAssetTransactions);

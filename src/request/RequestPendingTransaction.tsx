@@ -18,7 +18,7 @@ interface DispatchProps {
 
 type Props = OwnProps & DispatchProps;
 
-class RequestPendingTransactionInternal extends React.Component<Props> {
+class RequestPendingTransaction extends React.Component<Props> {
     public componentWillMount() {
         const {
             onPendingTransaction,
@@ -48,11 +48,4 @@ class RequestPendingTransactionInternal extends React.Component<Props> {
     }
 }
 
-const RequestPendingTransaction = connect(
-    null,
-    (dispatch: Dispatch) => {
-        return { dispatch };
-    }
-)(RequestPendingTransactionInternal);
-
-export default RequestPendingTransaction;
+export default connect()(RequestPendingTransaction);

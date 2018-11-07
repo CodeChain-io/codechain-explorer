@@ -18,7 +18,7 @@ interface DispatchProps {
 
 type Props = OwnProps & DispatchProps;
 
-class RequestBlocksInternal extends React.Component<Props> {
+class RequestBlocks extends React.Component<Props> {
     public componentWillMount() {
         const { onError, onBlocks, dispatch, page, itemsPerPage, lastBlockNumber } = this.props;
         let path = `blocks?page=${page}&itemsPerPage=${itemsPerPage}`;
@@ -41,11 +41,4 @@ class RequestBlocksInternal extends React.Component<Props> {
     }
 }
 
-const RequestBlocks = connect(
-    null,
-    (dispatch: Dispatch) => {
-        return { dispatch };
-    }
-)(RequestBlocksInternal);
-
-export default RequestBlocks;
+export default connect()(RequestBlocks);

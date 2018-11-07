@@ -17,7 +17,7 @@ interface DispatchProps {
 
 type Props = OwnProps & DispatchProps;
 
-class RequestPendingTransactionsByAddressInternal extends React.Component<Props> {
+class RequestPendingTransactionsByAddress extends React.Component<Props> {
     public componentWillMount() {
         const { onPendingTransactions, onError, address, dispatch, progressBarTarget } = this.props;
         apiRequest({
@@ -37,11 +37,4 @@ class RequestPendingTransactionsByAddressInternal extends React.Component<Props>
     }
 }
 
-const RequestPendingTransactionsByAddress = connect(
-    null,
-    (dispatch: Dispatch) => {
-        return { dispatch };
-    }
-)(RequestPendingTransactionsByAddressInternal);
-
-export default RequestPendingTransactionsByAddress;
+export default connect()(RequestPendingTransactionsByAddress);

@@ -21,7 +21,7 @@ interface DispatchProps {
 
 type Props = OwnProps & DispatchProps;
 
-class RequestPendingParcelsInternal extends React.Component<Props> {
+class RequestPendingParcels extends React.Component<Props> {
     public componentWillMount() {
         const {
             onPendingParcels,
@@ -53,11 +53,4 @@ class RequestPendingParcelsInternal extends React.Component<Props> {
     }
 }
 
-const RequestPendingParcels = connect(
-    null,
-    (dispatch: Dispatch) => {
-        return { dispatch };
-    }
-)(RequestPendingParcelsInternal);
-
-export default RequestPendingParcels;
+export default connect()(RequestPendingParcels);

@@ -18,7 +18,7 @@ interface DispatchProps {
 
 type Props = OwnProps & DispatchProps;
 
-class RequestPlatformAddressParcelsInternal extends React.Component<Props> {
+class RequestPlatformAddressParcels extends React.Component<Props> {
     public componentWillMount() {
         const { address, onParcels, onError, dispatch, page, itemsPerPage } = this.props;
         apiRequest({
@@ -37,11 +37,4 @@ class RequestPlatformAddressParcelsInternal extends React.Component<Props> {
     }
 }
 
-const RequestPlatformAddressParcels = connect(
-    null,
-    (dispatch: Dispatch) => {
-        return { dispatch };
-    }
-)(RequestPlatformAddressParcelsInternal);
-
-export default RequestPlatformAddressParcels;
+export default connect()(RequestPlatformAddressParcels);

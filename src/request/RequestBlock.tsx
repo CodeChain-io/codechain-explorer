@@ -24,8 +24,8 @@ interface StateProps {
 interface DispatchProps {
     dispatch: Dispatch;
 }
-
-class RequestBlockInternal extends React.Component<OwnProps & StateProps & DispatchProps> {
+type Props = OwnProps & StateProps & DispatchProps;
+class RequestBlock extends React.Component<Props> {
     public componentWillMount() {
         const { cached, dispatch, onError, onBlock, id, progressBarTarget, onBlockNotExist } = this.props;
         if (cached) {
@@ -86,7 +86,7 @@ function isString(x: number | string): x is string {
     return typeof x === "string";
 }
 
-const RequestBlock = connect((state: RootState, props: OwnProps) => {
+export default connect((state: RootState, props: OwnProps) => {
     const { blocksByHash, blocksByNumber } = state.appReducer;
     const { id } = props;
     if (isString(id)) {
@@ -104,6 +104,4 @@ const RequestBlock = connect((state: RootState, props: OwnProps) => {
             cached: blocksByNumber[id] || blocksByHash[id]
         };
     }
-})(RequestBlockInternal);
-
-export default RequestBlock;
+})(RequestBlock);

@@ -25,7 +25,7 @@ interface DispatchProps {
 
 type Props = OwnProps & StateProps & DispatchProps;
 
-class RequestTransactionInternal extends React.Component<Props> {
+class RequestTransaction extends React.Component<Props> {
     public componentWillMount() {
         const { cached, dispatch, hash, onTransaction, onTransactionNotExist, onError, progressBarTarget } = this.props;
         if (cached) {
@@ -42,7 +42,6 @@ class RequestTransactionInternal extends React.Component<Props> {
                 if (response === null) {
                     return onTransactionNotExist();
                 }
-                // FIXME: Modify to using static sdk function without sdk object.
                 const transaction = response;
                 dispatch({
                     type: "CACHE_TRANSACTION",
@@ -67,17 +66,11 @@ class RequestTransactionInternal extends React.Component<Props> {
         return null;
     }
 }
-
-const RequestTransaction = connect(
-    (state: RootState, props: OwnProps) => {
-        if (Type.isH256String(props.hash)) {
-            return {
-                cached: state.appReducer.transactionByHash[new H256(props.hash).value]
-            };
-        }
-        return { cached: state.appReducer.transactionByHash[props.hash] };
-    },
-    (dispatch: Dispatch) => ({ dispatch })
-)(RequestTransactionInternal);
-
-export default RequestTransaction;
+export default connect((state: RootState, props: OwnProps) => {
+    if (Type.isH256String(props.hash)) {
+        return {
+            cached: state.appReducer.transactionByHash[new H256(props.hash).value]
+        };
+    }
+    return { cached: state.appReducer.transactionByHash[props.hash] };
+})(RequestTransaction);

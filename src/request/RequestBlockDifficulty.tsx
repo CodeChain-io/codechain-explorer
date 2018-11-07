@@ -16,7 +16,7 @@ interface DispatchProps {
 
 type Props = OwnProps & DispatchProps;
 
-class RequestBlockDifficultyInternal extends React.Component<Props> {
+class RequestBlockDifficulty extends React.Component<Props> {
     public componentWillMount() {
         const { onError } = this.props;
         try {
@@ -49,11 +49,4 @@ class RequestBlockDifficultyInternal extends React.Component<Props> {
     };
 }
 
-const RequestBlockDifficulty = connect(
-    null,
-    (dispatch: Dispatch) => {
-        return { dispatch };
-    }
-)(RequestBlockDifficultyInternal);
-
-export default RequestBlockDifficulty;
+export default connect()(RequestBlockDifficulty);

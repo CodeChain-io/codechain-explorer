@@ -38,7 +38,7 @@ interface MinerLog {
 
 type Props = OwnProps & DispatchProps;
 
-class RequestDailyLogsInternal extends React.Component<Props> {
+class RequestDailyLogs extends React.Component<Props> {
     public componentWillMount() {
         try {
             this.queryDailyLog();
@@ -161,11 +161,4 @@ class RequestDailyLogsInternal extends React.Component<Props> {
     };
 }
 
-const RequestDailyLogs = connect(
-    null,
-    (dispatch: Dispatch) => {
-        return { dispatch };
-    }
-)(RequestDailyLogsInternal);
-
-export default RequestDailyLogs;
+export default connect()(RequestDailyLogs);

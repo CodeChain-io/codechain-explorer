@@ -20,7 +20,7 @@ interface DispatchProps {
 
 type Props = OwnProps & DispatchProps;
 
-class RequestTransactionsInternal extends React.Component<Props> {
+class RequestTransactions extends React.Component<Props> {
     public componentWillMount() {
         const {
             onError,
@@ -58,11 +58,4 @@ class RequestTransactionsInternal extends React.Component<Props> {
     }
 }
 
-const RequestTransactions = connect(
-    null,
-    (dispatch: Dispatch) => {
-        return { dispatch };
-    }
-)(RequestTransactionsInternal);
-
-export default RequestTransactions;
+export default connect()(RequestTransactions);

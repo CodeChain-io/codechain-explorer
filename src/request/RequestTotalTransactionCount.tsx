@@ -14,7 +14,7 @@ interface DispatchProps {
 
 type Props = OwnProps & DispatchProps;
 
-class RequestTotalTransactionCountInternal extends React.Component<Props> {
+class RequestTotalTransactionCount extends React.Component<Props> {
     public componentWillMount() {
         const { onError, onTransactionTotalCount, dispatch } = this.props;
         apiRequest({ path: `txs/totalCount`, dispatch, showProgressBar: true })
@@ -29,11 +29,4 @@ class RequestTotalTransactionCountInternal extends React.Component<Props> {
     }
 }
 
-const RequestTotalTransactionCount = connect(
-    null,
-    (dispatch: Dispatch) => {
-        return { dispatch };
-    }
-)(RequestTotalTransactionCountInternal);
-
-export default RequestTotalTransactionCount;
+export default connect()(RequestTotalTransactionCount);

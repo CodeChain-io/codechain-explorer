@@ -19,7 +19,7 @@ interface DispatchProps {
 
 type Props = OwnProps & DispatchProps;
 
-class RequestPlatformAddressAccountInternal extends React.Component<Props> {
+class RequestPlatformAddressAccount extends React.Component<Props> {
     public componentWillMount() {
         const { address, onAccount, onError, dispatch, progressBarTarget, onAccountNotExist } = this.props;
         apiRequest({
@@ -48,12 +48,4 @@ class RequestPlatformAddressAccountInternal extends React.Component<Props> {
         return null;
     }
 }
-
-const RequestPlatformAddressAccount = connect(
-    null,
-    (dispatch: Dispatch) => {
-        return { dispatch };
-    }
-)(RequestPlatformAddressAccountInternal);
-
-export default RequestPlatformAddressAccount;
+export default connect()(RequestPlatformAddressAccount);

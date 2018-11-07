@@ -26,7 +26,7 @@ interface DispatchProps {
 
 type Props = OwnProps & StateProps & DispatchProps;
 
-class RequestParcelInternal extends React.Component<Props> {
+class RequestParcel extends React.Component<Props> {
     public componentWillMount() {
         const { cached, dispatch, hash, onParcel, onParcelNotExist, onError, progressBarTarget } = this.props;
         if (cached) {
@@ -76,16 +76,11 @@ class RequestParcelInternal extends React.Component<Props> {
     }
 }
 
-const RequestParcel = connect(
-    (state: RootState, props: OwnProps) => {
-        if (Type.isH256String(props.hash)) {
-            return {
-                cached: state.appReducer.parcelByHash[new H256(props.hash).value]
-            };
-        }
-        return { cached: state.appReducer.parcelByHash[props.hash] };
-    },
-    (dispatch: Dispatch) => ({ dispatch })
-)(RequestParcelInternal);
-
-export default RequestParcel;
+export default connect((state: RootState, props: OwnProps) => {
+    if (Type.isH256String(props.hash)) {
+        return {
+            cached: state.appReducer.parcelByHash[new H256(props.hash).value]
+        };
+    }
+    return { cached: state.appReducer.parcelByHash[props.hash] };
+})(RequestParcel);

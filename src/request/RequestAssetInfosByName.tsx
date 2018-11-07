@@ -16,7 +16,7 @@ interface DispatchProps {
 
 type Props = OwnProps & DispatchProps;
 
-class RequestAssetInfosByNameInternal extends React.Component<Props> {
+class RequestAssetInfosByName extends React.Component<Props> {
     public componentWillMount() {
         const { assetName, onSearchResponse, onError, dispatch } = this.props;
         apiRequest({
@@ -35,11 +35,4 @@ class RequestAssetInfosByNameInternal extends React.Component<Props> {
     }
 }
 
-const RequestAssetInfosByName = connect(
-    null,
-    (dispatch: Dispatch) => {
-        return { dispatch };
-    }
-)(RequestAssetInfosByNameInternal);
-
-export default RequestAssetInfosByName;
+export default connect()(RequestAssetInfosByName);

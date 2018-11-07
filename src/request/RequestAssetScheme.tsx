@@ -26,7 +26,7 @@ interface DispatchProps {
 
 type Props = OwnProps & StateProps & DispatchProps;
 
-class RequestAssetSchemeInternal extends React.Component<Props> {
+class RequestAssetScheme extends React.Component<Props> {
     public componentWillMount() {
         const {
             cached,
@@ -70,7 +70,7 @@ class RequestAssetSchemeInternal extends React.Component<Props> {
     }
 }
 
-const RequestAssetScheme = connect((state: RootState, props: OwnProps) => {
+export default connect((state: RootState, props: OwnProps) => {
     if (Type.isH256String(props.assetType)) {
         return {
             cached: state.appReducer.assetSchemeByAssetType[new H256(props.assetType).value]
@@ -79,6 +79,4 @@ const RequestAssetScheme = connect((state: RootState, props: OwnProps) => {
     return {
         cached: state.appReducer.assetSchemeByAssetType[props.assetType]
     };
-})(RequestAssetSchemeInternal);
-
-export default RequestAssetScheme;
+})(RequestAssetScheme);

@@ -21,7 +21,7 @@ interface State {
 
 type Props = OwnProps & DispatchProps;
 
-class RequestPingInternal extends React.Component<Props, State> {
+class RequestPing extends React.Component<Props, State> {
     public componentWillMount() {
         this.setState({});
         const { repeat } = this.props;
@@ -73,11 +73,4 @@ class RequestPingInternal extends React.Component<Props, State> {
     };
 }
 
-const RequestPing = connect(
-    null,
-    (dispatch: Dispatch) => {
-        return { dispatch };
-    }
-)(RequestPingInternal);
-
-export default RequestPing;
+export default connect()(RequestPing);

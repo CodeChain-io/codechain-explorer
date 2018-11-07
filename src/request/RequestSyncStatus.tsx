@@ -21,7 +21,7 @@ interface DispatchProps {
 
 type Props = OwnProps & DispatchProps;
 
-class RequestSyncStatusInternal extends React.Component<Props> {
+class RequestSyncStatus extends React.Component<Props> {
     public componentWillMount() {
         const { onError, dispatch, onSync } = this.props;
         apiRequest({ path: `status/sync`, dispatch, showProgressBar: true })
@@ -36,11 +36,4 @@ class RequestSyncStatusInternal extends React.Component<Props> {
     }
 }
 
-const RequestSyncStatus = connect(
-    null,
-    (dispatch: Dispatch) => {
-        return { dispatch };
-    }
-)(RequestSyncStatusInternal);
-
-export default RequestSyncStatus;
+export default connect()(RequestSyncStatus);

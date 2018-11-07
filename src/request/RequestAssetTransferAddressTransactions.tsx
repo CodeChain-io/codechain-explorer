@@ -19,7 +19,7 @@ interface DispatchProps {
 
 type Props = OwnProps & DispatchProps;
 
-class RequestAssetTransferAddressTransactionsInternal extends React.Component<Props> {
+class RequestAssetTransferAddressTransactions extends React.Component<Props> {
     public componentWillMount() {
         const { address, onTransactions, onError, dispatch, progressBarTarget, page, itemsPerPage } = this.props;
         apiRequest({
@@ -38,11 +38,4 @@ class RequestAssetTransferAddressTransactionsInternal extends React.Component<Pr
     }
 }
 
-const RequestAssetTransferAddressTransactions = connect(
-    null,
-    (dispatch: Dispatch) => {
-        return { dispatch };
-    }
-)(RequestAssetTransferAddressTransactionsInternal);
-
-export default RequestAssetTransferAddressTransactions;
+export default connect()(RequestAssetTransferAddressTransactions);
