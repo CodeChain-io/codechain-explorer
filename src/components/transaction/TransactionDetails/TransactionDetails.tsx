@@ -14,7 +14,6 @@ import {
 import { Type } from "codechain-indexer-types/lib/utils";
 import { Script } from "codechain-sdk/lib/core/classes";
 import { Link } from "react-router-dom";
-import { RequestBlockNumber } from "../../../request";
 import DataSet from "../../util/DataSet/DataSet";
 import HexString from "../../util/HexString/HexString";
 import { ImageLoader } from "../../util/ImageLoader/ImageLoader";
@@ -28,9 +27,17 @@ interface TransactionResult {
     timestamp?: number;
 }
 
-interface Props {
+interface OwnProps {
     transactionResult: TransactionResult;
     moveToSectionRef?: string;
+}
+
+interface StateProps {
+    bestBlockNumber?: number;
+    moveToSectionRef?: string;
+}
+
+interface DispatchProps {
     dispatch: Dispatch;
 }
 
@@ -38,8 +45,9 @@ interface State {
     pageForInput: number;
     pageForOutput: number;
     pageForBurn: number;
-    bestBlockNumber?: number;
 }
+
+type Props = OwnProps & StateProps & DispatchProps;
 
 class TransactionDetailsInternal extends React.Component<Props, State> {
     private itemsPerPage = 6;
@@ -49,8 +57,7 @@ class TransactionDetailsInternal extends React.Component<Props, State> {
         this.state = {
             pageForInput: 1,
             pageForOutput: 1,
-            pageForBurn: 1,
-            bestBlockNumber: undefined
+            pageForBurn: 1
         };
     }
 
@@ -90,7 +97,8 @@ class TransactionDetailsInternal extends React.Component<Props, State> {
     };
 
     private getTransactionInfoByType = (transaction: TransactionDoc, status: string, pendingDuration?: number) => {
-        const { pageForBurn, pageForOutput, pageForInput, bestBlockNumber } = this.state;
+        const { pageForBurn, pageForOutput, pageForInput } = this.state;
+        const { bestBlockNumber } = this.props;
         if (Type.isAssetTransferTransactionDoc(transaction)) {
             const transactionDoc = transaction as AssetTransferTransactionDoc;
             return [
@@ -132,20 +140,14 @@ class TransactionDetailsInternal extends React.Component<Props, State> {
                             <Row>
                                 <Col md="3">Status</Col>
                                 <Col md="9">
-                                    <StatusBadge
-                                        status={status}
-                                        timestamp={pendingDuration}
-                                        bestBlockNumber={bestBlockNumber}
-                                        currentBlockNumber={transaction.data.blockNumber}
-                                    />
-                                    <RequestBlockNumber
-                                        repeat={5000}
-                                        onBlockNumber={this.handleBestBlockNumber}
-                                        // tslint:disable-next-line:jsx-no-lambda
-                                        onError={(e: any) => {
-                                            console.log(e);
-                                        }}
-                                    />
+                                    {bestBlockNumber && (
+                                        <StatusBadge
+                                            status={status}
+                                            timestamp={pendingDuration}
+                                            bestBlockNumber={bestBlockNumber}
+                                            currentBlockNumber={transaction.data.blockNumber}
+                                        />
+                                    )}
                                 </Col>
                             </Row>
                             <hr />
@@ -508,20 +510,14 @@ class TransactionDetailsInternal extends React.Component<Props, State> {
                             <Row>
                                 <Col md="3">Status</Col>
                                 <Col md="9">
-                                    <StatusBadge
-                                        status={status}
-                                        timestamp={pendingDuration}
-                                        bestBlockNumber={bestBlockNumber}
-                                        currentBlockNumber={transaction.data.blockNumber}
-                                    />
-                                    <RequestBlockNumber
-                                        repeat={5000}
-                                        onBlockNumber={this.handleBestBlockNumber}
-                                        // tslint:disable-next-line:jsx-no-lambda
-                                        onError={(e: any) => {
-                                            console.log(e);
-                                        }}
-                                    />
+                                    {bestBlockNumber && (
+                                        <StatusBadge
+                                            status={status}
+                                            timestamp={pendingDuration}
+                                            bestBlockNumber={bestBlockNumber}
+                                            currentBlockNumber={transaction.data.blockNumber}
+                                        />
+                                    )}
                                 </Col>
                             </Row>
                             <hr />
@@ -675,10 +671,6 @@ class TransactionDetailsInternal extends React.Component<Props, State> {
         });
     };
 
-    private handleBestBlockNumber = (bestBlockNumber: number) => {
-        this.setState({ bestBlockNumber });
-    };
-
     private loadMoreInput = () => {
         this.setState({ pageForInput: this.state.pageForInput + 1 });
     };
@@ -695,7 +687,8 @@ class TransactionDetailsInternal extends React.Component<Props, State> {
 const TransactionDetails = connect((state: RootState) => {
     const { moveToSectionRef } = state.appReducer;
     return {
-        moveToSectionRef
+        moveToSectionRef,
+        bestBlockNumber: state.appReducer.bestBlockNumber
     };
 })(TransactionDetailsInternal);
 

@@ -8,7 +8,7 @@ import { Col, Container, Row } from "reactstrap";
 import { Error } from "../../components/error/Error/Error";
 
 import ParcelDetails from "../../components/parcel/ParcelDetails/ParcelDetails";
-import { RequestBlockNumber, RequestParcel, RequestPendingParcel } from "../../request";
+import { RequestParcel, RequestPendingParcel } from "../../request";
 
 import { AssetTransactionGroupDoc, ParcelDoc, PendingParcelDoc } from "codechain-indexer-types/lib/types";
 import { Type } from "codechain-indexer-types/lib/utils";
@@ -32,7 +32,6 @@ interface State {
     notExistedInBlock: boolean;
     notExistedInPendingParcel: boolean;
     refresh: boolean;
-    bestBlockNumber?: number;
 }
 
 class Parcel extends React.Component<Props, State> {
@@ -42,8 +41,7 @@ class Parcel extends React.Component<Props, State> {
         this.state = {
             notExistedInBlock: false,
             notExistedInPendingParcel: false,
-            refresh: false,
-            bestBlockNumber: undefined
+            refresh: false
         };
     }
 
@@ -62,8 +60,7 @@ class Parcel extends React.Component<Props, State> {
             this.setState({
                 parcelResult: undefined,
                 notExistedInBlock: false,
-                notExistedInPendingParcel: false,
-                bestBlockNumber: undefined
+                notExistedInPendingParcel: false
             });
         }
     }
@@ -88,7 +85,7 @@ class Parcel extends React.Component<Props, State> {
                 params: { hash }
             }
         } = this.props;
-        const { parcelResult, notExistedInBlock, notExistedInPendingParcel, refresh, bestBlockNumber } = this.state;
+        const { parcelResult, notExistedInBlock, notExistedInPendingParcel, refresh } = this.state;
         if (!parcelResult) {
             if (!notExistedInBlock) {
                 return (
@@ -148,17 +145,7 @@ class Parcel extends React.Component<Props, State> {
                 </Row>
                 <Row className="mt-large">
                     <Col lg={Type.isAssetTransactionGroupDoc(parcelResult.parcel.action) ? "9" : "12"}>
-                        {bestBlockNumber && (
-                            <ParcelDetails parcelResult={parcelResult} bestBlockNumber={bestBlockNumber} />
-                        )}
-                        <RequestBlockNumber
-                            repeat={5000}
-                            onBlockNumber={this.handleBestBlockNumber}
-                            // tslint:disable-next-line:jsx-no-lambda
-                            onError={e => {
-                                console.log(e);
-                            }}
-                        />
+                        <ParcelDetails parcelResult={parcelResult} />
                     </Col>
                     {Type.isAssetTransactionGroupDoc(parcelResult.parcel.action) ? (
                         <Col lg="3">
@@ -206,10 +193,6 @@ class Parcel extends React.Component<Props, State> {
             </Container>
         );
     }
-
-    private handleBestBlockNumber = (bestBlockNumber: number) => {
-        this.setState({ bestBlockNumber });
-    };
 
     private showTransactionList = (parcel: ParcelDoc) => {
         if (Type.isAssetTransactionGroupDoc(parcel.action)) {

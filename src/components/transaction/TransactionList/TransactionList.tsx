@@ -17,13 +17,15 @@ import {
 } from "codechain-indexer-types/lib/types";
 import { Type } from "codechain-indexer-types/lib/utils";
 import { H256 } from "codechain-sdk/lib/core/classes";
+import { connect } from "react-redux";
 import { Link } from "react-router-dom";
+import { RootState } from "../../../redux/actions";
 import DataSet from "../../util/DataSet/DataSet";
 import { ImageLoader } from "../../util/ImageLoader/ImageLoader";
 import { StatusBadge } from "../../util/StatusBadge/StatusBadge";
 import { TypeBadge } from "../../util/TypeBadge/TypeBadge";
 
-interface Props {
+interface OwnProps {
     owner?: string;
     assetType?: H256;
     transactions: TransactionDoc[];
@@ -31,13 +33,18 @@ interface Props {
     totalCount: number;
     hideMoreButton?: boolean;
     hideTitle?: boolean;
-    bestBlockNumber?: number;
     isPendingTransactionList?: boolean;
+}
+
+interface StateProps {
+    bestBlockNumber?: number;
 }
 
 interface State {
     page: number;
 }
+
+type Props = OwnProps & StateProps;
 
 class TransactionList extends React.Component<Props, State> {
     private itemPerPage = 6;
@@ -58,8 +65,8 @@ class TransactionList extends React.Component<Props, State> {
             totalCount,
             hideMoreButton,
             hideTitle,
-            bestBlockNumber,
-            isPendingTransactionList
+            isPendingTransactionList,
+            bestBlockNumber
         } = this.props;
         let loadedTransactions;
         if (loadMoreAction) {
@@ -115,23 +122,23 @@ class TransactionList extends React.Component<Props, State> {
                                             </Col>
                                         </Row>
                                         <hr />
-                                        {bestBlockNumber && [
-                                            <Row key="row-item">
-                                                <Col md="3">Status</Col>
-                                                <Col md="9">
-                                                    {isPendingTransactionList ? (
-                                                        <StatusBadge status={"pending"} />
-                                                    ) : (
+                                        <Row key="row-item">
+                                            <Col md="3">Status</Col>
+                                            <Col md="9">
+                                                {isPendingTransactionList ? (
+                                                    <StatusBadge status={"pending"} />
+                                                ) : (
+                                                    bestBlockNumber && (
                                                         <StatusBadge
                                                             status={"confirmed"}
                                                             currentBlockNumber={transaction.data.blockNumber}
                                                             bestBlockNumber={bestBlockNumber}
                                                         />
-                                                    )}
-                                                </Col>
-                                            </Row>,
-                                            <hr key="hr-item" />
-                                        ]}
+                                                    )
+                                                )}
+                                            </Col>
+                                        </Row>
+                                        <hr key="hr-item" />
                                         {this.TransactionObjectByType(transaction, assetType, owner)}
                                     </DataSet>
                                 </div>
@@ -466,4 +473,6 @@ class TransactionList extends React.Component<Props, State> {
     };
 }
 
-export default TransactionList;
+export default connect((state: RootState) => ({
+    bestBlockNumber: state.appReducer.bestBlockNumber
+}))(TransactionList);

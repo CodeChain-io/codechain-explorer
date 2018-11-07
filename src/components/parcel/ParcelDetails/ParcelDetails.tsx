@@ -10,7 +10,9 @@ import {
     SetRegularKeyDoc
 } from "codechain-indexer-types/lib/types";
 import { Type } from "codechain-indexer-types/lib/utils";
+import { connect } from "react-redux";
 import { Link } from "react-router-dom";
+import { RootState } from "../../../redux/actions";
 import { changeQuarkStringToCCC } from "../../../utils/Formatter";
 import { ActionBadge } from "../../util/ActionBadge/ActionBadge";
 import { CommaNumberString } from "../../util/CommaNumberString/CommaNumberString";
@@ -25,10 +27,15 @@ interface ParcelResult {
     timestamp?: number;
 }
 
-interface Props {
+interface OwnProps {
     parcelResult: ParcelResult;
-    bestBlockNumber: number;
 }
+
+interface StateProps {
+    bestBlockNumber?: number;
+}
+
+type Props = OwnProps & StateProps;
 
 const getElementByType = (parcel: ParcelDoc) => {
     if (Type.isPaymentDoc(parcel.action)) {
@@ -100,87 +107,91 @@ const getParcelInvoice = (parcel: ParcelDoc) => {
     return null;
 };
 
-const ParcelDetails = (props: Props) => {
-    const { parcelResult, bestBlockNumber } = props;
-    const parcel = parcelResult.parcel;
-    const status = parcelResult.status;
+class ParcelDetails extends React.Component<Props> {
+    public render() {
+        const { parcelResult, bestBlockNumber } = this.props;
+        const parcel = parcelResult.parcel;
+        const status = parcelResult.status;
 
-    return (
-        <div className="parcel-details">
-            <Row>
-                <Col>
-                    <h2>Details</h2>
-                    <hr className="heading-hr" />
-                </Col>
-            </Row>
-            <Row>
-                <Col>
-                    <DataSet>
-                        <Row>
-                            <Col md="3">Action</Col>
-                            <Col md="9">
-                                <ActionBadge parcel={parcel} />
-                            </Col>
-                        </Row>
-                        <hr />
-                        <Row>
-                            <Col md="3">Block No.</Col>
-                            <Col md="9">
-                                <Link to={`/block/${parcel.blockNumber}`}>{parcel.blockNumber}</Link>
-                            </Col>
-                        </Row>
-                        <hr />
-                        <Row>
-                            <Col md="3">Parcel Index</Col>
-                            <Col md="9">{parcel.parcelIndex ? parcel.parcelIndex.toLocaleString() : "0"}</Col>
-                        </Row>
-                        <hr />
-                        <Row>
-                            <Col md="3">Network ID</Col>
-                            <Col md="9">{parcel.networkId}</Col>
-                        </Row>
-                        <hr />
-                        <Row>
-                            <Col md="3">Nonce</Col>
-                            <Col md="9">
-                                <CommaNumberString text={parcel.nonce} />
-                            </Col>
-                        </Row>
-                        <hr />
-                        <Row>
-                            <Col md="3">Signer</Col>
-                            <Col md="9">
-                                <Link to={`/addr-platform/${parcel.signer}`}>{parcel.signer}</Link>
-                            </Col>
-                        </Row>
-                        <hr />
-                        <Row>
-                            <Col md="3">Fee</Col>
-                            <Col md="9">
-                                <CommaNumberString text={changeQuarkStringToCCC(parcel.fee)} />
-                                CCC
-                            </Col>
-                        </Row>
-                        <hr />
-                        <Row>
-                            <Col md="3">Status</Col>
-                            <Col md="9">
-                                <StatusBadge
-                                    status={status}
-                                    timestamp={parcelResult.timestamp}
-                                    bestBlockNumber={bestBlockNumber}
-                                    currentBlockNumber={parcel.blockNumber}
-                                />
-                            </Col>
-                        </Row>
-                        <hr />
-                        {status === "confirmed" ? getParcelInvoice(parcel) : null}
-                        {getElementByType(parcel)}
-                    </DataSet>
-                </Col>
-            </Row>
-        </div>
-    );
-};
+        return (
+            <div className="parcel-details">
+                <Row>
+                    <Col>
+                        <h2>Details</h2>
+                        <hr className="heading-hr" />
+                    </Col>
+                </Row>
+                <Row>
+                    <Col>
+                        <DataSet>
+                            <Row>
+                                <Col md="3">Action</Col>
+                                <Col md="9">
+                                    <ActionBadge parcel={parcel} />
+                                </Col>
+                            </Row>
+                            <hr />
+                            <Row>
+                                <Col md="3">Block No.</Col>
+                                <Col md="9">
+                                    <Link to={`/block/${parcel.blockNumber}`}>{parcel.blockNumber}</Link>
+                                </Col>
+                            </Row>
+                            <hr />
+                            <Row>
+                                <Col md="3">Parcel Index</Col>
+                                <Col md="9">{parcel.parcelIndex ? parcel.parcelIndex.toLocaleString() : "0"}</Col>
+                            </Row>
+                            <hr />
+                            <Row>
+                                <Col md="3">Network ID</Col>
+                                <Col md="9">{parcel.networkId}</Col>
+                            </Row>
+                            <hr />
+                            <Row>
+                                <Col md="3">Nonce</Col>
+                                <Col md="9">
+                                    <CommaNumberString text={parcel.nonce} />
+                                </Col>
+                            </Row>
+                            <hr />
+                            <Row>
+                                <Col md="3">Signer</Col>
+                                <Col md="9">
+                                    <Link to={`/addr-platform/${parcel.signer}`}>{parcel.signer}</Link>
+                                </Col>
+                            </Row>
+                            <hr />
+                            <Row>
+                                <Col md="3">Fee</Col>
+                                <Col md="9">
+                                    <CommaNumberString text={changeQuarkStringToCCC(parcel.fee)} />
+                                    CCC
+                                </Col>
+                            </Row>
+                            <hr />
+                            <Row>
+                                <Col md="3">Status</Col>
+                                <Col md="9">
+                                    {bestBlockNumber && (
+                                        <StatusBadge
+                                            status={status}
+                                            timestamp={parcelResult.timestamp}
+                                            bestBlockNumber={bestBlockNumber}
+                                            currentBlockNumber={parcel.blockNumber}
+                                        />
+                                    )}
+                                </Col>
+                            </Row>
+                            <hr />
+                            {status === "confirmed" ? getParcelInvoice(parcel) : null}
+                            {getElementByType(parcel)}
+                        </DataSet>
+                    </Col>
+                </Row>
+            </div>
+        );
+    }
+}
 
-export default ParcelDetails;
+export default connect((state: RootState) => ({ bestBlockNumber: state.appReducer.bestBlockNumber }))(ParcelDetails);

@@ -4,15 +4,17 @@ import { Container } from "reactstrap";
 import LatestBlocks from "../../components/home/LatestBlocks/LatestBlocks";
 import LatestParcels from "../../components/home/LatestParcels/LatestParcels";
 import LatestTransactions from "../../components/home/LatestTransactions/LatestTransactions";
-import { RequestBlock, RequestBlockNumber, RequestBlocks, RequestParcels, RequestTransactions } from "../../request";
+import { RequestBlock, RequestBlocks, RequestParcels, RequestTransactions } from "../../request";
 
 import { AssetTransactionGroupDoc, BlockDoc, ParcelDoc, TransactionDoc } from "codechain-indexer-types/lib/types";
 import { Type } from "codechain-indexer-types/lib/utils";
+import { connect } from "react-redux";
 import Summary from "../../components/home/Summary/Summary";
+import { RootState } from "../../redux/actions";
 import "./Home.scss";
 
 interface State {
-    bestBlockNumber?: number;
+    lastBestBlockNumber?: number;
     blocks: BlockDoc[];
     parcels: ParcelDoc[];
     transactions: TransactionDoc[];
@@ -22,11 +24,18 @@ interface State {
     transactionInitialized: boolean;
 }
 
-class Home extends React.Component<{}, State> {
+interface StateProps {
+    bestBlockNumber?: number;
+}
+
+type Props = StateProps;
+
+class Home extends React.Component<Props, State> {
+    private refresher: any;
     constructor(props: {}) {
         super(props);
         this.state = {
-            bestBlockNumber: undefined,
+            lastBestBlockNumber: undefined,
             blocks: [],
             parcels: [],
             transactions: [],
@@ -36,18 +45,17 @@ class Home extends React.Component<{}, State> {
             transactionInitialized: false
         };
     }
-
+    public componentWillUnmount() {
+        if (this.refresher) {
+            clearInterval(this.refresher);
+        }
+    }
+    public componentDidMount() {
+        this.refresher = setInterval(this.checkNewBlock, 5000);
+    }
     public render() {
-        const {
-            bestBlockNumber,
-            requestNewBlock,
-            blocks,
-            parcels,
-            transactions,
-            blockInitialized,
-            parcelInitialized,
-            transactionInitialized
-        } = this.state;
+        const { bestBlockNumber } = this.props;
+        const { requestNewBlock, blocks, parcels, transactions } = this.state;
         return (
             <div className="home">
                 <Container>
@@ -80,9 +88,6 @@ class Home extends React.Component<{}, State> {
                         />
                     ) : null}
                 </Container>
-                {blockInitialized && parcelInitialized && transactionInitialized ? (
-                    <RequestBlockNumber repeat={5000} onBlockNumber={this.onBlockNumber} onError={this.onError} />
-                ) : null}
             </div>
         );
     }
@@ -123,13 +128,16 @@ class Home extends React.Component<{}, State> {
         // TODO
     };
 
-    private onBlockNumber = (n: number) => {
-        if (this.state.blocks[0].number < n) {
-            this.setState({ bestBlockNumber: n, requestNewBlock: true });
+    private checkNewBlock = (n: number) => {
+        const { bestBlockNumber } = this.props;
+        const { lastBestBlockNumber } = this.state;
+        if (bestBlockNumber && lastBestBlockNumber && bestBlockNumber > lastBestBlockNumber) {
+            this.setState({ requestNewBlock: true });
         }
+        this.setState({ lastBestBlockNumber: bestBlockNumber });
     };
 
     private onError = (e: any) => console.log(e);
 }
 
-export default Home;
+export default connect((state: RootState) => ({ bestBlockNumber: state.appReducer.bestBlockNumber }))(Home);

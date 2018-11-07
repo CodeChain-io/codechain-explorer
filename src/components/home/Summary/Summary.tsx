@@ -6,7 +6,9 @@ const { ResponsiveBar } = require("@nivo/bar");
 const { ResponsivePie } = require("@nivo/pie");
 import { Redirect } from "react-router";
 
-import { RequestBlockNumber, RequestDailyLogs, RequestWeeklyLogs } from "../../../request";
+import { connect } from "react-redux";
+import { RootState } from "../../../redux/actions";
+import { RequestDailyLogs, RequestWeeklyLogs } from "../../../request";
 import { DailyLogType } from "../../../request/RequestDailyLogs";
 import { WeeklyLogType } from "../../../request/RequestWeeklyLogs";
 import * as emptyImage from "./img/empty.png";
@@ -32,11 +34,18 @@ interface State {
     selectedDate: string;
     selectedIndex: number;
     isEmptyForDailyLog: boolean;
-    bestBlockNumber?: number;
     selectedMinerAddress?: string;
+    latestBestBlockNumbrer?: number;
 }
 
-class Summary extends React.Component<{}, State> {
+interface StateProps {
+    bestBlockNumber?: number;
+}
+
+type Props = StateProps;
+
+class Summary extends React.Component<Props, State> {
+    private refresher: any;
     constructor(props: {}) {
         super(props);
         this.state = {
@@ -51,9 +60,17 @@ class Summary extends React.Component<{}, State> {
                 .utc()
                 .format("YYYY-MM-DD"),
             isEmptyForDailyLog: false,
-            bestBlockNumber: undefined,
-            selectedMinerAddress: undefined
+            selectedMinerAddress: undefined,
+            latestBestBlockNumbrer: undefined
         };
+    }
+    public componentWillUnmount() {
+        if (this.refresher) {
+            clearInterval(this.refresher);
+        }
+    }
+    public componentDidMount() {
+        this.refresher = setInterval(this.refreshSummary, 5000);
     }
     public render() {
         const {
@@ -65,10 +82,10 @@ class Summary extends React.Component<{}, State> {
             dailyLogs,
             selectedDate,
             isEmptyForDailyLog,
-            bestBlockNumber,
             selectedIndex,
             selectedMinerAddress
         } = this.state;
+        const { bestBlockNumber } = this.props;
         const before7days = moment()
             .utc()
             .subtract(6, "days")
@@ -79,7 +96,6 @@ class Summary extends React.Component<{}, State> {
         return (
             <div className="summary">
                 {selectedMinerAddress ? <Redirect push={true} to={`/addr-platform/${selectedMinerAddress}`} /> : null}
-                <RequestBlockNumber repeat={5000} onBlockNumber={this.onBlockNumber} onError={this.onError} />
                 {!isWeeklyLogRequested ? (
                     <RequestWeeklyLogs type={type} onData={this.onWeeklyLogData} onError={this.onError} />
                 ) : null}
@@ -339,19 +355,22 @@ class Summary extends React.Component<{}, State> {
         return "";
     };
 
-    private onBlockNumber = (n: number) => {
+    private refreshSummary = () => {
+        const { bestBlockNumber } = this.props;
+        const { latestBestBlockNumbrer, isDailyLogRequested, isWeeklyLogRequested } = this.state;
         if (
-            this.state.bestBlockNumber &&
-            this.state.bestBlockNumber < n &&
-            this.state.isDailyLogRequested &&
-            this.state.isWeeklyLogRequested
+            bestBlockNumber &&
+            latestBestBlockNumbrer &&
+            bestBlockNumber > latestBestBlockNumbrer &&
+            isDailyLogRequested &&
+            isWeeklyLogRequested
         ) {
             this.setState({
                 isDailyLogRequested: false,
                 isWeeklyLogRequested: false
             });
         }
-        this.setState({ bestBlockNumber: n });
+        this.setState({ latestBestBlockNumbrer: bestBlockNumber });
     };
 
     private onWeeklyLogData = (
@@ -381,4 +400,8 @@ class Summary extends React.Component<{}, State> {
     };
 }
 
-export default Summary;
+export default connect((state: RootState) => {
+    return {
+        bestBlockNumber: state.appReducer.bestBlockNumber
+    };
+})(Summary);

@@ -8,7 +8,6 @@ import { AggsUTXO, PendingTransactionDoc, TransactionDoc } from "codechain-index
 import {
     RequestAssetTransferAddressTransactions,
     RequestAssetTransferAddressUTXO,
-    RequestBlockNumber,
     RequestPendingTransactionsByAddress
 } from "../../request";
 
@@ -36,7 +35,6 @@ interface State {
     totalTransactionCount: number;
     noMoreTransaction: boolean;
     requestTotalTransactionCount: boolean;
-    bestBlockNumber?: number;
 }
 
 class AssetTransferAddress extends React.Component<Props, State> {
@@ -53,7 +51,6 @@ class AssetTransferAddress extends React.Component<Props, State> {
             pendingTransactions: [],
             loadPendingTransaction: true,
             noMoreTransaction: false,
-            bestBlockNumber: undefined,
             requestTotalTransactionCount: true
         };
     }
@@ -80,7 +77,6 @@ class AssetTransferAddress extends React.Component<Props, State> {
                 loadTransaction: true,
                 noMoreTransaction: false,
                 loadPendingTransaction: true,
-                bestBlockNumber: undefined,
                 requestTotalTransactionCount: true
             });
         }
@@ -102,7 +98,6 @@ class AssetTransferAddress extends React.Component<Props, State> {
             loadPendingTransaction,
             noMoreTransaction,
             pendingTransactions,
-            bestBlockNumber,
             requestTotalTransactionCount
         } = this.state;
         return (
@@ -168,19 +163,17 @@ class AssetTransferAddress extends React.Component<Props, State> {
                                 />
                             </div>
                         )}
-                        {bestBlockNumber &&
-                            pendingTransactions.length > 0 && (
-                                <div className="mt-large">
-                                    <TransactionList
-                                        owner={address}
-                                        hideTitle={true}
-                                        transactions={_.map(pendingTransactions, pendingTx => pendingTx.transaction)}
-                                        totalCount={pendingTransactions.length}
-                                        isPendingTransactionList={true}
-                                        bestBlockNumber={bestBlockNumber}
-                                    />
-                                </div>
-                            )}
+                        {pendingTransactions.length > 0 && (
+                            <div className="mt-large">
+                                <TransactionList
+                                    owner={address}
+                                    hideTitle={true}
+                                    transactions={_.map(pendingTransactions, pendingTx => pendingTx.transaction)}
+                                    totalCount={pendingTransactions.length}
+                                    isPendingTransactionList={true}
+                                />
+                            </div>
+                        )}
                         {loadTransaction ? (
                             <RequestAssetTransferAddressTransactions
                                 address={address}
@@ -190,7 +183,7 @@ class AssetTransferAddress extends React.Component<Props, State> {
                                 onError={this.onError}
                             />
                         ) : null}
-                        {bestBlockNumber && totalTransactionCount > 0 ? (
+                        {totalTransactionCount > 0 ? (
                             <div className="mt-large">
                                 <TransactionList
                                     owner={address}
@@ -199,24 +192,14 @@ class AssetTransferAddress extends React.Component<Props, State> {
                                     totalCount={totalTransactionCount}
                                     loadMoreAction={this.loadMoreTransaction}
                                     hideMoreButton={noMoreTransaction}
-                                    bestBlockNumber={bestBlockNumber}
                                 />
                             </div>
                         ) : null}
-                        <RequestBlockNumber
-                            repeat={5000}
-                            onBlockNumber={this.handleBestBlockNumber}
-                            onError={this.onError}
-                        />
                     </Col>
                 </Row>
             </Container>
         );
     }
-
-    private handleBestBlockNumber = (bestBlockNumber: number) => {
-        this.setState({ bestBlockNumber });
-    };
 
     private loadMoreTransaction = () => {
         this.setState({
