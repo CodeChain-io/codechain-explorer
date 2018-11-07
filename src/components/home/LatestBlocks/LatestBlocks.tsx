@@ -30,9 +30,9 @@ const LatestBlocks = (props: Props) => {
                         </tr>
                     </thead>
                     <tbody>
-                        {_.map(blocks.slice(0, 10), block => {
+                        {_.map(blocks.slice(0, 10), (block: BlockDoc, index: number) => {
                             return (
-                                <tr key={`home-block-num-${block.hash}`}>
+                                <tr key={`home-block-num-${block.hash}-${index}`}>
                                     <td scope="row">
                                         <Link to={`/block/${block.number}`}>{block.number.toLocaleString()}</Link>
                                     </td>

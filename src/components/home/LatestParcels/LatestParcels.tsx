@@ -32,9 +32,9 @@ const LatestParcels = (props: Props) => {
                         </tr>
                     </thead>
                     <tbody>
-                        {_.map(parcels.slice(0, 10), parcel => {
+                        {_.map(parcels.slice(0, 10), (parcel: ParcelDoc, index: number) => {
                             return (
-                                <tr key={`home-parcel-${parcel.hash}`}>
+                                <tr key={`home-parcel-${parcel.hash}-${index}`}>
                                     <td>
                                         <ActionBadge parcel={parcel} />
                                     </td>
