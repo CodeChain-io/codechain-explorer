@@ -6,6 +6,7 @@ import { H256 } from "codechain-sdk/lib/core/classes";
 import { AssetSchemeDoc } from "codechain-indexer-types/lib/types";
 import { Type } from "codechain-indexer-types/lib/utils";
 import { RootState } from "../redux/actions";
+import { getCurrentTimestamp } from "../utils/Time";
 import { ApiError, apiRequest } from "./ApiRequest";
 
 interface OwnProps {
@@ -17,7 +18,10 @@ interface OwnProps {
 }
 
 interface StateProps {
-    cached: AssetSchemeDoc;
+    cached: {
+        data: AssetSchemeDoc;
+        updatedAt: number;
+    };
 }
 
 interface DispatchProps {
@@ -37,8 +41,8 @@ class RequestAssetScheme extends React.Component<Props> {
             onError,
             progressBarTarget
         } = this.props;
-        if (cached) {
-            setTimeout(() => onAssetScheme(cached, assetType));
+        if (cached && getCurrentTimestamp() - cached.updatedAt < 10) {
+            setTimeout(() => onAssetScheme(cached.data, assetType));
             return;
         }
         apiRequest({
@@ -71,12 +75,15 @@ class RequestAssetScheme extends React.Component<Props> {
 }
 
 export default connect((state: RootState, props: OwnProps) => {
-    if (Type.isH256String(props.assetType)) {
-        return {
-            cached: state.appReducer.assetSchemeByAssetType[new H256(props.assetType).value]
-        };
+    let cacheKey = props.assetType;
+    if (Type.isH256String(cacheKey)) {
+        cacheKey = new H256(cacheKey).value;
     }
+    const cachedAssetScheme = state.appReducer.assetSchemeByAssetType[cacheKey];
     return {
-        cached: state.appReducer.assetSchemeByAssetType[props.assetType]
+        cached: cachedAssetScheme && {
+            data: cachedAssetScheme.data,
+            updatedAt: cachedAssetScheme.updatedAt
+        }
     };
 })(RequestAssetScheme);

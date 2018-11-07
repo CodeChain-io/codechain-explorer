@@ -6,6 +6,7 @@ import { connect, Dispatch } from "react-redux";
 import { AssetMintTransactionDoc, AssetTransactionGroupDoc, ParcelDoc } from "codechain-indexer-types/lib/types";
 import { Type } from "codechain-indexer-types/lib/utils";
 import { RootState } from "../redux/actions";
+import { getCurrentTimestamp } from "../utils/Time";
 import { ApiError, apiRequest } from "./ApiRequest";
 
 interface OwnProps {
@@ -17,7 +18,7 @@ interface OwnProps {
 }
 
 interface StateProps {
-    cached?: ParcelDoc;
+    cached?: { data: ParcelDoc; updatedAt: number };
 }
 
 interface DispatchProps {
@@ -29,8 +30,8 @@ type Props = OwnProps & StateProps & DispatchProps;
 class RequestParcel extends React.Component<Props> {
     public componentWillMount() {
         const { cached, dispatch, hash, onParcel, onParcelNotExist, onError, progressBarTarget } = this.props;
-        if (cached) {
-            setTimeout(() => onParcel(cached));
+        if (cached && getCurrentTimestamp() - cached.updatedAt < 10) {
+            setTimeout(() => onParcel(cached.data));
             return;
         }
         apiRequest({
@@ -77,10 +78,15 @@ class RequestParcel extends React.Component<Props> {
 }
 
 export default connect((state: RootState, props: OwnProps) => {
-    if (Type.isH256String(props.hash)) {
-        return {
-            cached: state.appReducer.parcelByHash[new H256(props.hash).value]
-        };
+    let cacheKey = props.hash;
+    if (Type.isH256String(cacheKey)) {
+        cacheKey = new H256(cacheKey).value;
     }
-    return { cached: state.appReducer.parcelByHash[props.hash] };
+    const cachedParcel = state.appReducer.parcelByHash[cacheKey];
+    return {
+        cached: cachedParcel && {
+            data: cachedParcel.data,
+            updatedAt: cachedParcel.updatedAt
+        }
+    };
 })(RequestParcel);

@@ -1,6 +1,14 @@
-import { AssetSchemeDoc, BlockDoc, ParcelDoc, TransactionDoc } from "codechain-indexer-types/lib/types";
+import {
+    AssetSchemeDoc,
+    BlockDoc,
+    ParcelDoc,
+    PendingParcelDoc,
+    PendingTransactionDoc,
+    TransactionDoc
+} from "codechain-indexer-types/lib/types";
 import { loadingBarReducer } from "react-redux-loading-bar";
 import { combineReducers } from "redux";
+import { getCurrentTimestamp } from "../utils/Time";
 
 export interface RootState {
     appReducer: AppReducer;
@@ -9,22 +17,46 @@ export interface RootState {
 interface AppReducer {
     bestBlockNumber?: number;
     blocksByNumber: {
-        [n: number]: BlockDoc;
+        [n: number]: {
+            data: BlockDoc;
+            updatedAt: number;
+        };
     };
     blocksByHash: {
-        [hash: string]: BlockDoc;
+        [hash: string]: {
+            data: BlockDoc;
+            updatedAt: number;
+        };
     };
     parcelByHash: {
-        [hash: string]: ParcelDoc;
+        [hash: string]: {
+            data: ParcelDoc;
+            updatedAt: number;
+        };
     };
     transactionByHash: {
-        [hash: string]: TransactionDoc;
+        [hash: string]: {
+            data: TransactionDoc;
+            updatedAt: number;
+        };
     };
     assetSchemeByAssetType: {
-        [assetType: string]: AssetSchemeDoc;
+        [assetType: string]: {
+            data: AssetSchemeDoc;
+            updatedAt: number;
+        };
     };
-    transactionsByAssetType: {
-        [assetType: string]: TransactionDoc[];
+    pendingParcelByHash: {
+        [hash: string]: {
+            data: PendingParcelDoc;
+            updatedAt: number;
+        };
+    };
+    pendingTransactionByHash: {
+        [hash: string]: {
+            data: PendingTransactionDoc;
+            updatedAt: number;
+        };
     };
     moveToSectionRef?: string;
 }
@@ -36,7 +68,8 @@ const initialState: AppReducer = {
     parcelByHash: {},
     assetSchemeByAssetType: {},
     transactionByHash: {},
-    transactionsByAssetType: {},
+    pendingParcelByHash: {},
+    pendingTransactionByHash: {},
     moveToSectionRef: undefined
 };
 
@@ -68,12 +101,14 @@ interface CacheAssetSchemeAction {
     };
 }
 
-interface CacheAssetTransactionsAction {
-    type: "CACHE_ASSET_TRANSACTIONS";
-    data: {
-        assetType: string;
-        transactions: TransactionDoc[];
-    };
+interface CachePendingParcelAction {
+    type: "CACHE_PENDING_PARCEL";
+    data: PendingParcelDoc;
+}
+
+interface CachePendingTransactionAction {
+    type: "CACHE_PENDING_TRANSACTION";
+    data: PendingTransactionDoc;
 }
 
 interface MoveToSectionAction {
@@ -87,42 +122,56 @@ type Action =
     | CacheBlockAction
     | CacheParcelAction
     | CacheTransactionAction
-    | CacheAssetTransactionsAction
-    | MoveToSectionAction;
+    | MoveToSectionAction
+    | CachePendingTransactionAction
+    | CachePendingParcelAction;
 
 const appReducer = (state = initialState, action: Action) => {
     if (action.type === "BEST_BLOCK_NUMBER_ACTION") {
         return { ...state, bestBlockNumber: action.data };
     } else if (action.type === "CACHE_BLOCK") {
         const { number: n, hash } = action.data as BlockDoc;
-        const blocksByNumber = { ...state.blocksByNumber, [n]: action.data };
-        const blocksByHash = { ...state.blocksByHash, [hash]: action.data };
+        const blocksByNumber = {
+            ...state.blocksByNumber,
+            [n]: { data: action.data, updatedAt: getCurrentTimestamp() }
+        };
+        const blocksByHash = { ...state.blocksByHash, [hash]: { data: action.data, updatedAt: getCurrentTimestamp() } };
         return { ...state, blocksByNumber, blocksByHash };
     } else if (action.type === "CACHE_PARCEL") {
         const parcel = action.data as ParcelDoc;
-        const parcelByHash = { ...state.parcelByHash, [parcel.hash]: parcel };
+        const parcelByHash = {
+            ...state.parcelByHash,
+            [parcel.hash]: { data: parcel, updatedAt: getCurrentTimestamp() }
+        };
         return { ...state, parcelByHash };
     } else if (action.type === "CACHE_TRANSACTION") {
         const transaction = action.data as TransactionDoc;
         const transactionByHash = {
             ...state.transactionByHash,
-            [transaction.data.hash]: transaction
+            [transaction.data.hash]: { data: transaction, updatedAt: getCurrentTimestamp() }
         };
         return { ...state, transactionByHash };
+    } else if (action.type === "CACHE_PENDING_PARCEL") {
+        const pendingParcel = action.data as PendingParcelDoc;
+        const pendingParcelByHash = {
+            ...state.transactionByHash,
+            [pendingParcel.parcel.hash]: { data: pendingParcel, updatedAt: getCurrentTimestamp() }
+        };
+        return { ...state, pendingParcelByHash };
+    } else if (action.type === "CACHE_PENDING_TRANSACTION") {
+        const pendingTransaction = action.data as PendingTransactionDoc;
+        const pendingTransactionByHash = {
+            ...state.transactionByHash,
+            [pendingTransaction.transaction.data.hash]: { data: pendingTransaction, updatedAt: getCurrentTimestamp() }
+        };
+        return { ...state, pendingTransactionByHash };
     } else if (action.type === "CACHE_ASSET_SCHEME") {
         const { assetType, assetScheme } = (action as CacheAssetSchemeAction).data;
         const assetSchemeByAssetType = {
             ...state.assetSchemeByAssetType,
-            [assetType]: assetScheme
+            [assetType]: { data: assetScheme, updatedAt: getCurrentTimestamp() }
         };
         return { ...state, assetSchemeByAssetType };
-    } else if (action.type === "CACHE_ASSET_TRANSACTIONS") {
-        const { assetType, transactions } = (action as CacheAssetTransactionsAction).data;
-        const transactionsByAssetType = {
-            ...state.transactionsByAssetType,
-            [assetType]: transactions
-        };
-        return { ...state, transactionsByAssetType };
     } else if (action.type === "MOVE_TO_SECTION") {
         return { ...state, moveToSectionRef: action.data };
     } else {

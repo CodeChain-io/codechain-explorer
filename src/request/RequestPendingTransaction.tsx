@@ -2,6 +2,10 @@ import * as React from "react";
 import { connect, Dispatch } from "react-redux";
 
 import { PendingTransactionDoc } from "codechain-indexer-types/lib/types";
+import { Type } from "codechain-indexer-types/lib/utils";
+import { H256 } from "codechain-sdk/lib/core/classes";
+import { RootState } from "../redux/actions";
+import { getCurrentTimestamp } from "../utils/Time";
 import { ApiError, apiRequest } from "./ApiRequest";
 
 interface OwnProps {
@@ -12,11 +16,15 @@ interface OwnProps {
     hash: string;
 }
 
+interface StateProps {
+    cached?: { data: PendingTransactionDoc; updatedAt: number };
+}
+
 interface DispatchProps {
     dispatch: Dispatch;
 }
 
-type Props = OwnProps & DispatchProps;
+type Props = OwnProps & DispatchProps & StateProps;
 
 class RequestPendingTransaction extends React.Component<Props> {
     public componentWillMount() {
@@ -26,8 +34,13 @@ class RequestPendingTransaction extends React.Component<Props> {
             hash,
             onPendingTransactionNotExist,
             dispatch,
-            progressBarTarget
+            progressBarTarget,
+            cached
         } = this.props;
+        if (cached && getCurrentTimestamp() - cached.updatedAt < 10) {
+            setTimeout(() => onPendingTransaction(cached.data));
+            return;
+        }
         apiRequest({
             path: `tx/pending/${hash}`,
             dispatch,
@@ -48,4 +61,16 @@ class RequestPendingTransaction extends React.Component<Props> {
     }
 }
 
-export default connect()(RequestPendingTransaction);
+export default connect((state: RootState, props: OwnProps) => {
+    let cacheKey = props.hash;
+    if (Type.isH256String(cacheKey)) {
+        cacheKey = new H256(cacheKey).value;
+    }
+    const cachedPendingTransaction = state.appReducer.pendingTransactionByHash[cacheKey];
+    return {
+        cached: {
+            data: cachedPendingTransaction.data,
+            updatedAt: cachedPendingTransaction.updatedAt
+        }
+    };
+})(RequestPendingTransaction);

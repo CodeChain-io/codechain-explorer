@@ -7,6 +7,7 @@ import { H256 } from "codechain-sdk/lib/core/classes";
 import { AssetMintTransactionDoc, AssetTransactionGroupDoc, BlockDoc } from "codechain-indexer-types/lib/types";
 import { Type } from "codechain-indexer-types/lib/utils";
 import { RootState } from "../redux/actions";
+import { getCurrentTimestamp } from "../utils/Time";
 import { apiRequest } from "./ApiRequest";
 
 interface OwnProps {
@@ -18,7 +19,7 @@ interface OwnProps {
 }
 
 interface StateProps {
-    cached?: BlockDoc;
+    cached?: { data: BlockDoc; updatedAt: number };
 }
 
 interface DispatchProps {
@@ -28,8 +29,9 @@ type Props = OwnProps & StateProps & DispatchProps;
 class RequestBlock extends React.Component<Props> {
     public componentWillMount() {
         const { cached, dispatch, onError, onBlock, id, progressBarTarget, onBlockNotExist } = this.props;
-        if (cached) {
-            setTimeout(() => onBlock(cached));
+
+        if (cached && getCurrentTimestamp() - cached.updatedAt < 10) {
+            setTimeout(() => onBlock(cached.data));
             return;
         }
         apiRequest({
@@ -82,26 +84,25 @@ class RequestBlock extends React.Component<Props> {
     }
 }
 
-function isString(x: number | string): x is string {
-    return typeof x === "string";
-}
-
 export default connect((state: RootState, props: OwnProps) => {
     const { blocksByHash, blocksByNumber } = state.appReducer;
     const { id } = props;
-    if (isString(id)) {
-        if (Type.isH256String(id)) {
-            return {
-                cached: blocksByHash[new H256(id).value]
-            };
-        } else {
-            return {
-                cached: blocksByNumber[id] || blocksByHash[id]
-            };
-        }
-    } else {
+    const strId = id.toString();
+    if (Type.isH256String(strId)) {
         return {
-            cached: blocksByNumber[id] || blocksByHash[id]
+            cached: blocksByHash[new H256(strId).value] && {
+                data: blocksByHash[new H256(strId).value].data,
+                updatedAt: blocksByHash[new H256(strId).value].updatedAt
+            }
         };
     }
+    if (blocksByNumber[id]) {
+        return {
+            cached: {
+                data: blocksByNumber[id].data,
+                updatedAt: blocksByNumber[id].updatedAt
+            }
+        };
+    }
+    return {};
 })(RequestBlock);
