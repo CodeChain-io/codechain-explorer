@@ -10,9 +10,6 @@ import "./AssetList.scss";
 
 interface Props {
     aggsUTXO: AggsUTXO[];
-    loadMoreAction?: () => void;
-    totalCount?: number;
-    hideMoreButton?: boolean;
 }
 
 interface State {
@@ -30,20 +27,15 @@ class AssetList extends React.Component<Props, State> {
 
     public render() {
         const { page } = this.state;
-        const { aggsUTXO, loadMoreAction, totalCount, hideMoreButton } = this.props;
-        let loadedAsset;
-        if (loadMoreAction) {
-            loadedAsset = aggsUTXO;
-        } else {
-            loadedAsset = aggsUTXO.slice(0, this.itemPerPage * page);
-        }
+        const { aggsUTXO } = this.props;
+        const loadedAsset = aggsUTXO.slice(0, this.itemPerPage * page);
         return (
             <div className="asset-list">
                 <Row>
                     <Col>
                         <div className="d-flex justify-content-between align-items-end">
                             <h2>Assets</h2>
-                            {totalCount !== undefined ? <span>Total {totalCount} assets</span> : null}
+                            {<span>Total {aggsUTXO.length} assets</span>}
                         </div>
                         <hr className="heading-hr" />
                     </Col>
@@ -83,7 +75,7 @@ class AssetList extends React.Component<Props, State> {
                         </Row>
                     </Col>
                 </Row>
-                {!hideMoreButton && (loadMoreAction || this.itemPerPage * page < aggsUTXO.length) ? (
+                {this.itemPerPage * page < aggsUTXO.length && (
                     <Row>
                         <Col>
                             <div className="mt-small">
@@ -93,18 +85,14 @@ class AssetList extends React.Component<Props, State> {
                             </div>
                         </Col>
                     </Row>
-                ) : null}
+                )}
             </div>
         );
     }
 
     private loadMore = (e: any) => {
         e.preventDefault();
-        if (this.props.loadMoreAction) {
-            this.props.loadMoreAction();
-        } else {
-            this.setState({ page: this.state.page + 1 });
-        }
+        this.setState({ page: this.state.page + 1 });
     };
 }
 
