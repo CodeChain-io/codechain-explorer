@@ -134,21 +134,84 @@ class Transactions extends React.Component<Props, State> {
                         lastTransactionIndex={lastTransactionIndex}
                     />
                 ) : null}
-                <h1>Latest transactions</h1>
-                <div className="transaction-table">
+                <div className="d-flex align-items-end">
                     <div>
+                        <h1>Latest transactions</h1>
                         <div>
-                            <div className="float-right">
-                                <span>Show </span>
-                                <select onChange={this.handleOptionChange} defaultValue={itemsPerPage.toString()}>
-                                    <option value="25">25</option>
-                                    <option value="50">50</option>
-                                    <option value="75">75</option>
-                                    <option value="100">100</option>
-                                </select>
-                                <span> entries</span>
+                            <div className="d-flex mt-small">
+                                <div className="d-inline ml-auto pager">
+                                    <ul className="list-inline">
+                                        <li className="list-inline-item">
+                                            <button
+                                                disabled={currentPage === 1 || !isTransactionRequested}
+                                                className={`btn btn-primary page-btn ${
+                                                    currentPage === 1 ? "disabled" : ""
+                                                }`}
+                                                type="button"
+                                                onClick={_.partial(this.moveFirst, currentPage)}
+                                            >
+                                                <FontAwesomeIcon icon={faAngleDoubleLeft} />
+                                            </button>
+                                        </li>
+                                        <li className="list-inline-item">
+                                            <button
+                                                disabled={currentPage === 1 || !isTransactionRequested}
+                                                className={`btn btn-primary page-btn ${
+                                                    currentPage === 1 ? "disabled" : ""
+                                                }`}
+                                                type="button"
+                                                onClick={_.partial(this.moveBefore, currentPage)}
+                                            >
+                                                <FontAwesomeIcon icon={faAngleLeft} /> Prev
+                                            </button>
+                                        </li>
+                                        <li className="list-inline-item">
+                                            <div className="number-view">
+                                                {currentPage} of {maxPage}
+                                            </div>
+                                        </li>
+                                        <li className="list-inline-item">
+                                            <button
+                                                disabled={currentPage === maxPage || !isTransactionRequested}
+                                                className={`btn btn-primary page-btn ${
+                                                    currentPage === maxPage ? "disabled" : ""
+                                                }`}
+                                                type="button"
+                                                onClick={_.partial(this.moveNext, currentPage, maxPage)}
+                                            >
+                                                Next <FontAwesomeIcon icon={faAngleRight} />
+                                            </button>
+                                        </li>
+                                        <li className="list-inline-item">
+                                            <button
+                                                disabled={currentPage === maxPage || !isTransactionRequested}
+                                                className={`btn btn-primary page-btn ${
+                                                    currentPage === maxPage ? "disabled" : ""
+                                                }`}
+                                                type="button"
+                                                onClick={_.partial(this.moveLast, currentPage, maxPage)}
+                                            >
+                                                <FontAwesomeIcon icon={faAngleDoubleRight} />
+                                            </button>
+                                        </li>
+                                    </ul>
+                                </div>
                             </div>
                         </div>
+                    </div>
+                    <div className="ml-auto mb-3">
+                        <span>Show </span>
+                        <select onChange={this.handleOptionChange} defaultValue={itemsPerPage.toString()}>
+                            <option value="25">25</option>
+                            <option value="50">50</option>
+                            <option value="75">75</option>
+                            <option value="100">100</option>
+                        </select>
+                        <span> entries</span>
+                    </div>
+                </div>
+                <div className="transaction-table">
+                    <div>
                         <div>
                             <DataTable>
                                 <thead>
@@ -181,65 +244,6 @@ class Transactions extends React.Component<Props, State> {
                                     })}
                                 </tbody>
                             </DataTable>
-                        </div>
-                        <div className="d-flex mt-small">
-                            <div className="d-inline ml-auto pager">
-                                <ul className="list-inline">
-                                    <li className="list-inline-item">
-                                        <button
-                                            disabled={currentPage === 1}
-                                            className={`btn btn-primary page-btn ${
-                                                currentPage === 1 ? "disabled" : ""
-                                            }`}
-                                            type="button"
-                                            onClick={_.partial(this.moveFirst, currentPage)}
-                                        >
-                                            <FontAwesomeIcon icon={faAngleDoubleLeft} />
-                                        </button>
-                                    </li>
-                                    <li className="list-inline-item">
-                                        <button
-                                            disabled={currentPage === 1}
-                                            className={`btn btn-primary page-btn ${
-                                                currentPage === 1 ? "disabled" : ""
-                                            }`}
-                                            type="button"
-                                            onClick={_.partial(this.moveBefore, currentPage)}
-                                        >
-                                            <FontAwesomeIcon icon={faAngleLeft} /> Prev
-                                        </button>
-                                    </li>
-                                    <li className="list-inline-item">
-                                        <div className="number-view">
-                                            {currentPage} of {maxPage}
-                                        </div>
-                                    </li>
-                                    <li className="list-inline-item">
-                                        <button
-                                            disabled={currentPage === maxPage}
-                                            className={`btn btn-primary page-btn ${
-                                                currentPage === maxPage ? "disabled" : ""
-                                            }`}
-                                            type="button"
-                                            onClick={_.partial(this.moveNext, currentPage, maxPage)}
-                                        >
-                                            Next <FontAwesomeIcon icon={faAngleRight} />
-                                        </button>
-                                    </li>
-                                    <li className="list-inline-item">
-                                        <button
-                                            disabled={currentPage === maxPage}
-                                            className={`btn btn-primary page-btn ${
-                                                currentPage === maxPage ? "disabled" : ""
-                                            }`}
-                                            type="button"
-                                            onClick={_.partial(this.moveLast, currentPage, maxPage)}
-                                        >
-                                            <FontAwesomeIcon icon={faAngleDoubleRight} />
-                                        </button>
-                                    </li>
-                                </ul>
-                            </div>
                         </div>
                     </div>
                 </div>
@@ -332,7 +336,6 @@ class Transactions extends React.Component<Props, State> {
 
     private onError = (error: any) => {
         console.log(error);
-        this.setState({ transactions: [], isTransactionRequested: true });
     };
 }
 
