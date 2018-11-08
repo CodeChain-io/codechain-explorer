@@ -68,7 +68,7 @@ export default connect((state: RootState, props: OwnProps) => {
     }
     const cachedPendingTransaction = state.appReducer.pendingTransactionByHash[cacheKey];
     return {
-        cached: {
+        cached: cachedPendingTransaction && {
             data: cachedPendingTransaction.data,
             updatedAt: cachedPendingTransaction.updatedAt
         }
