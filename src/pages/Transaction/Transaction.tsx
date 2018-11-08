@@ -112,7 +112,7 @@ class Transaction extends React.Component<Props, State> {
             }
         }
         return (
-            <Container className="transaction">
+            <Container className="transaction animated fadeIn">
                 {this.state.transactionResult && this.state.transactionResult.status === "pending" && refresh ? (
                     <RequestPendingTransaction
                         hash={hash}

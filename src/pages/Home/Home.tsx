@@ -4,10 +4,9 @@ import { Container } from "reactstrap";
 import LatestBlocks from "../../components/home/LatestBlocks/LatestBlocks";
 import LatestParcels from "../../components/home/LatestParcels/LatestParcels";
 import LatestTransactions from "../../components/home/LatestTransactions/LatestTransactions";
-import { RequestBlock, RequestBlocks, RequestParcels, RequestTransactions } from "../../request";
+import { RequestBlocks, RequestParcels, RequestTransactions } from "../../request";
 
-import { AssetTransactionGroupDoc, BlockDoc, ParcelDoc, TransactionDoc } from "codechain-indexer-types/lib/types";
-import { Type } from "codechain-indexer-types/lib/utils";
+import { BlockDoc, ParcelDoc, TransactionDoc } from "codechain-indexer-types/lib/types";
 import { connect } from "react-redux";
 import Summary from "../../components/home/Summary/Summary";
 import { RootState } from "../../redux/actions";
@@ -18,10 +17,9 @@ interface State {
     blocks: BlockDoc[];
     parcels: ParcelDoc[];
     transactions: TransactionDoc[];
-    requestNewBlock: boolean;
-    blockInitialized: boolean;
-    parcelInitialized: boolean;
-    transactionInitialized: boolean;
+    requestBlocks: boolean;
+    requestParcels: boolean;
+    requestTransactions: boolean;
 }
 
 interface StateProps {
@@ -39,10 +37,9 @@ class Home extends React.Component<Props, State> {
             blocks: [],
             parcels: [],
             transactions: [],
-            requestNewBlock: false,
-            blockInitialized: false,
-            parcelInitialized: false,
-            transactionInitialized: false
+            requestBlocks: true,
+            requestParcels: true,
+            requestTransactions: true
         };
     }
     public componentWillUnmount() {
@@ -54,85 +51,63 @@ class Home extends React.Component<Props, State> {
         this.refresher = setInterval(this.checkNewBlock, 5000);
     }
     public render() {
-        const { bestBlockNumber } = this.props;
-        const { requestNewBlock, blocks, parcels, transactions } = this.state;
+        const { blocks, parcels, transactions, requestBlocks, requestParcels, requestTransactions } = this.state;
         return (
-            <div className="home">
+            <div className="home animated fadeIn">
                 <Container>
                     <div className="home-element-container">
                         <Summary />
                     </div>
                     <div className="home-element-container">
                         <LatestBlocks blocks={blocks} />
-                        <RequestBlocks page={1} itemsPerPage={10} onBlocks={this.onBlocks} onError={this.onError} />
+                        {requestBlocks && (
+                            <RequestBlocks page={1} itemsPerPage={10} onBlocks={this.onBlocks} onError={this.onError} />
+                        )}
                     </div>
                     <div className="home-element-container">
                         <LatestParcels parcels={parcels} />
-                        <RequestParcels page={1} itemsPerPage={10} onParcels={this.onParcels} onError={this.onError} />
+                        {requestParcels && (
+                            <RequestParcels
+                                page={1}
+                                itemsPerPage={10}
+                                onParcels={this.onParcels}
+                                onError={this.onError}
+                            />
+                        )}
                     </div>
                     <div className="home-element-container">
                         <LatestTransactions transactions={transactions} />
-                        <RequestTransactions
-                            page={1}
-                            itemsPerPage={10}
-                            onTransactions={this.onTransactions}
-                            onError={this.onError}
-                        />
+                        {requestTransactions && (
+                            <RequestTransactions
+                                page={1}
+                                itemsPerPage={10}
+                                onTransactions={this.onTransactions}
+                                onError={this.onError}
+                            />
+                        )}
                     </div>
-                    {requestNewBlock && bestBlockNumber ? (
-                        <RequestBlock
-                            id={bestBlockNumber}
-                            onBlock={this.onBlock}
-                            onError={this.onError}
-                            onBlockNotExist={this.onBlockNotExist}
-                        />
-                    ) : null}
                 </Container>
             </div>
         );
     }
 
     private onBlocks = (blocks: BlockDoc[]) => {
-        this.setState({ blocks, blockInitialized: true });
+        this.setState({ blocks, requestBlocks: false });
     };
 
     private onParcels = (parcels: ParcelDoc[]) => {
-        this.setState({ parcels, parcelInitialized: true });
+        this.setState({ parcels, requestParcels: false });
     };
 
     private onTransactions = (transactions: TransactionDoc[]) => {
-        this.setState({ transactions, transactionInitialized: true });
-    };
-    private onBlock = (block: BlockDoc) => {
-        this.setState({
-            blocks: [block, ...this.state.blocks],
-            requestNewBlock: false
-        });
-        if (block.parcels.length > 0) {
-            this.setState({
-                parcels: _.concat(_.reverse(block.parcels), this.state.parcels)
-            });
-        }
-        const transactions = _.chain(block.parcels)
-            .filter(parcel => Type.isAssetTransactionGroupDoc(parcel.action))
-            .flatMap(parcel => (parcel.action as AssetTransactionGroupDoc).transactions)
-            .value();
-        if (transactions.length > 0) {
-            this.setState({
-                transactions: _.concat(_.reverse(transactions), this.state.transactions)
-            });
-        }
-    };
-
-    private onBlockNotExist = () => {
-        // TODO
+        this.setState({ transactions, requestTransactions: false });
     };
 
     private checkNewBlock = (n: number) => {
         const { bestBlockNumber } = this.props;
         const { lastBestBlockNumber } = this.state;
         if (bestBlockNumber && lastBestBlockNumber && bestBlockNumber > lastBestBlockNumber) {
-            this.setState({ requestNewBlock: true });
+            this.setState({ requestBlocks: true, requestParcels: true, requestTransactions: true });
         }
         this.setState({ lastBestBlockNumber: bestBlockNumber });
     };

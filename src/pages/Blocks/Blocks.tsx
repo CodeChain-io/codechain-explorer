@@ -50,6 +50,7 @@ class Blocks extends React.Component<Props, State> {
         } = props;
         if (nextSearch !== search) {
             this.setState({
+                blocks: [],
                 isBlockRequested: false,
                 redirect: false,
                 redirectPage: undefined,
@@ -92,7 +93,7 @@ class Blocks extends React.Component<Props, State> {
         }
         const maxPage = Math.floor(Math.max(0, totalBlockCount - 1) / itemsPerPage) + 1;
         return (
-            <Container className="blocks">
+            <Container className="blocks animated fadeIn">
                 {!isBlockRequested ? (
                     <RequestBlocks
                         onBlocks={this.onBlocks}

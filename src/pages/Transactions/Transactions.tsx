@@ -56,6 +56,7 @@ class Transactions extends React.Component<Props, State> {
         } = props;
         if (nextSearch !== search) {
             this.setState({
+                transactions: [],
                 isTransactionRequested: false,
                 redirect: false,
                 redirectPage: undefined,
@@ -121,7 +122,7 @@ class Transactions extends React.Component<Props, State> {
         }
         const maxPage = Math.floor(Math.max(0, totalTransactionCount - 1) / itemsPerPage) + 1;
         return (
-            <Container className="transactions">
+            <Container className="transactions animated fadeIn">
                 {!isTransactionRequested ? (
                     <RequestTransactions
                         onTransactions={this.onTransactions}

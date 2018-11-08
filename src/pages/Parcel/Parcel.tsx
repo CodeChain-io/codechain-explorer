@@ -114,7 +114,7 @@ class Parcel extends React.Component<Props, State> {
             }
         }
         return (
-            <Container className="parcel">
+            <Container className="parcel animated fadeIn">
                 {this.state.parcelResult && this.state.parcelResult.status === "pending" && refresh ? (
                     <RequestPendingParcel
                         hash={hash}

@@ -103,7 +103,7 @@ class Asset extends React.Component<Props, State> {
             }
         }
         return (
-            <Container className="asset">
+            <Container className="asset animated fadeIn">
                 <Row>
                     <Col>
                         <div className="title-container d-flex">

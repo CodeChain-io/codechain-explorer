@@ -53,6 +53,7 @@ class Parcels extends React.Component<Props, State> {
         } = props;
         if (nextSearch !== search) {
             this.setState({
+                parcels: [],
                 isParcelRequested: false,
                 redirect: false,
                 redirectPage: undefined,
@@ -105,7 +106,7 @@ class Parcels extends React.Component<Props, State> {
         }
         const maxPage = Math.floor(Math.max(0, totalParcelCount - 1) / itemsPerPage) + 1;
         return (
-            <Container className="parcels">
+            <Container className="parcels animated fadeIn">
                 {!isParcelRequested ? (
                     <RequestParcels
                         onParcels={this.onParcels}

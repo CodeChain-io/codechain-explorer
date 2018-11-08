@@ -30,9 +30,9 @@ const LatestBlocks = (props: Props) => {
                         </tr>
                     </thead>
                     <tbody>
-                        {_.map(blocks.slice(0, 10), (block: BlockDoc, index: number) => {
+                        {_.map(blocks.slice(0, 10), (block: BlockDoc) => {
                             return (
-                                <tr key={`home-block-num-${block.hash}-${index}`}>
+                                <tr key={`home-block-num-${block.hash}`} className="animated fadeIn">
                                     <td scope="row">
                                         <Link to={`/block/${block.number}`}>{block.number.toLocaleString()}</Link>
                                     </td>

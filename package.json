@@ -16,6 +16,7 @@
     "@nivo/bar": "^0.47.1",
     "@nivo/line": "^0.42.1",
     "@nivo/pie": "^0.42.1",
+    "animate.css": "^3.7.0",
     "autoprefixer": "7.1.6",
     "babel-jest": "^22.1.0",
     "babel-loader": "^7.1.2",

@@ -71,9 +71,9 @@ const LatestTransactions = (props: Props) => {
                         </tr>
                     </thead>
                     <tbody>
-                        {_.map(transactions.slice(0, 10), (transaction: TransactionDoc, index: number) => {
+                        {_.map(transactions.slice(0, 10), (transaction: TransactionDoc) => {
                             return (
-                                <tr key={`home-transaction-hash-${transaction.data.hash}-${index}`}>
+                                <tr key={`home-transaction-hash-${transaction.data.hash}`} className="animated fadeIn">
                                     <td>
                                         <TypeBadge transaction={transaction} />{" "}
                                     </td>

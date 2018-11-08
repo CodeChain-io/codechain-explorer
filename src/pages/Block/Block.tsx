@@ -77,7 +77,7 @@ class Block extends React.Component<Props, State> {
             );
         }
         return (
-            <Container className="block">
+            <Container className="block animated fadeIn">
                 <Row>
                     <Col md="8" xl="7">
                         <div className="d-flex align-items-end title-container">

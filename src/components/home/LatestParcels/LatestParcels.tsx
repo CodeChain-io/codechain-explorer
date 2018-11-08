@@ -32,9 +32,9 @@ const LatestParcels = (props: Props) => {
                         </tr>
                     </thead>
                     <tbody>
-                        {_.map(parcels.slice(0, 10), (parcel: ParcelDoc, index: number) => {
+                        {_.map(parcels.slice(0, 10), (parcel: ParcelDoc) => {
                             return (
-                                <tr key={`home-parcel-${parcel.hash}-${index}`}>
+                                <tr key={`home-parcel-${parcel.hash}`} className="animated fadeIn">
                                     <td>
                                         <ActionBadge parcel={parcel} />
                                     </td>

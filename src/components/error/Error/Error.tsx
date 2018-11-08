@@ -12,7 +12,7 @@ interface Props {
 export const Error = (props: Props) => {
     const { className, title, content } = props;
     return (
-        <Container className={`error ${className}`}>
+        <Container className={`error animated fadeIn ${className}`}>
             <Row>
                 <Col md="4" className="text-center">
                     <img src={errorMonster} className="error-monster" />

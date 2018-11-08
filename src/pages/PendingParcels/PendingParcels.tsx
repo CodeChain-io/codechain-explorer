@@ -134,7 +134,7 @@ class PendingParcels extends React.Component<Props, State> {
         }
         const maxPage = Math.floor(Math.max(0, (filteredPendingParcelCount || 0) - 1) / itemsPerPage) + 1;
         return (
-            <Container className="pending-parcels">
+            <Container className="pending-parcels animated fadeIn">
                 {refreshTotalPendingParcel ? (
                     <RequestTotalPendingParcelCount
                         onPendingParcelTotalCount={this.onPendingParcelTotalCount}

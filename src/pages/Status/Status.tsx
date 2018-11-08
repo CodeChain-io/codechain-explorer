@@ -74,7 +74,7 @@ class Status extends React.Component<{}, State> {
             requestDifficulty
         } = this.state;
         return (
-            <div className="status">
+            <div className="status animated fadeIn">
                 <Container>
                     <h1>Status</h1>
                     <Row>

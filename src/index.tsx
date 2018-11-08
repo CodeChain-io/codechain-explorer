@@ -21,7 +21,6 @@ import Parcel from "./pages/Parcel/Parcel";
 import Parcels from "./pages/Parcels/Parcels";
 import PendingParcels from "./pages/PendingParcels/PendingParcels";
 import PlatformAddress from "./pages/PlatformAddress/PlatformAddress";
-import SendSignedParcel from "./pages/SendSignedParcel";
 import Status from "./pages/Status/Status";
 import Transaction from "./pages/Transaction/Transaction";
 import Transactions from "./pages/Transactions/Transactions";
@@ -47,7 +46,6 @@ ReactDOM.render(
                     <div id="content">
                         <Switch>
                             <Route exact={true} path="/" component={Home} />
-                            <Route path="/send_signed_parcel" component={SendSignedParcel} />
                             <Route path="/status" component={Status} />
                             <Route path="/block/:id" component={Block} />
                             <Route path="/parcel/:hash" component={Parcel} />

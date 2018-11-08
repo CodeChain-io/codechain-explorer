@@ -101,7 +101,7 @@ class AssetTransferAddress extends React.Component<Props, State> {
             requestTotalTransactionCount
         } = this.state;
         return (
-            <Container className="asset-transfer-address">
+            <Container className="asset-transfer-address animated fadeIn">
                 <Row>
                     <Col>
                         <div className="title-container d-flex">
