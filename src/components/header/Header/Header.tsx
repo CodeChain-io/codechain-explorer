@@ -58,11 +58,11 @@ class Header extends React.Component<{}, State> {
                                         className="d-inline-block header-big"
                                     >
                                         <span id="explorer-title" className="header-title">
-                                            CodeChain Explorer - Husky
+                                            CodeChain Explorer - Corgi
                                         </span>
                                     </div>
                                     <div className="d-inline-block header-small">
-                                        <span className="header-title">Explorer - Husky</span>
+                                        <span className="header-title">Explorer - Corgi</span>
                                     </div>
                                 </NavbarBrand>
                             </IndexLinkContainer>
@@ -119,8 +119,8 @@ class Header extends React.Component<{}, State> {
                     target="explorer-title"
                     toggle={this.togglePopover}
                 >
-                    <PopoverHeader>Husky Testnet</PopoverHeader>
-                    <PopoverBody>This testnet uses a PoW consensus algorithm called Cuckoo Cycle.</PopoverBody>
+                    <PopoverHeader>Corgi Testnet</PopoverHeader>
+                    <PopoverBody>This testnet uses a Tendermint consensus algorithm.</PopoverBody>
                 </Popover>
             </div>
         );
