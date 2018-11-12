@@ -19,7 +19,7 @@ import { Popover, PopoverBody, PopoverHeader } from "reactstrap";
 import HealthChecker from "../../util/HealthChecker/HealthChecker";
 import Search from "../Search/Search";
 
-import * as logo from "./img/logo_testnet.png";
+import * as logo from "./img/logo-explorer.png";
 
 import { RequestBlockNumber } from "../../../request";
 import "./Header.scss";

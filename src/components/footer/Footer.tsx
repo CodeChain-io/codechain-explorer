@@ -3,7 +3,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import * as React from "react";
 import { Col, Container, Row } from "reactstrap";
 import "./Footer.scss";
-import * as codechainIcon from "./img/codechain-icon.svg";
+import * as codechainIcon from "./img/codechain-icon.png";
 
 const Footer = () => {
     return (
@@ -34,7 +34,7 @@ const Footer = () => {
                         <ul className="list-inline link-list">
                             <li className="list-inline-item">
                                 <a href="https://codechain.io" target="_blank">
-                                    <img className="link-icon" src={codechainIcon} />
+                                    <img className="link-icon codechain-icon" src={codechainIcon} />
                                 </a>
                             </li>
                             <li className="list-inline-item">
