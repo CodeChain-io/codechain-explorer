@@ -32,7 +32,6 @@ interface OwnProps {
     loadMoreAction?: () => void;
     totalCount: number;
     hideMoreButton?: boolean;
-    hideTitle?: boolean;
     isPendingTransactionList?: boolean;
 }
 
@@ -64,7 +63,6 @@ class TransactionList extends React.Component<Props, State> {
             loadMoreAction,
             totalCount,
             hideMoreButton,
-            hideTitle,
             isPendingTransactionList,
             bestBlockNumber
         } = this.props;
@@ -79,8 +77,14 @@ class TransactionList extends React.Component<Props, State> {
                 <Row>
                     <Col>
                         <div className="d-flex justify-content-between align-items-end">
-                            {isPendingTransactionList ? <h2>Pending Transactions</h2> : <h2>Transactions</h2>}
-                            <span>Total {totalCount} transactions</span>
+                            {isPendingTransactionList ? (
+                                <h2>Pending Transactions</h2>
+                            ) : totalCount === 1 ? (
+                                <h2>Transaction</h2>
+                            ) : (
+                                <h2>Transactions</h2>
+                            )}
+                            {totalCount !== 1 && <span>Total {totalCount} transactions</span>}
                         </div>
                         <hr className="heading-hr" />
                     </Col>
@@ -93,9 +97,7 @@ class TransactionList extends React.Component<Props, State> {
                                 <div key={`parcel-transaction-${hash}`} className="card-list-item mt-small">
                                     <div className="card-list-item-header">
                                         <Row>
-                                            <Col md="3">
-                                                {!hideTitle ? <span className="title">Transaction #{i}</span> : null}
-                                            </Col>
+                                            <Col md="3" />
                                             <Col md="9">
                                                 <span className="timestamp float-right">
                                                     {transaction.data.timestamp !== 0
@@ -207,12 +209,12 @@ class TransactionList extends React.Component<Props, State> {
                 <Row key="owner">
                     <Col md="3">Owner</Col>
                     <Col md="9">
-                        {transactionDoc.data.output.owner ? (
-                            owner && owner === transactionDoc.data.output.owner ? (
-                                transactionDoc.data.output.owner
+                        {transactionDoc.data.output.recipient ? (
+                            owner && owner === transactionDoc.data.output.recipient ? (
+                                transactionDoc.data.output.recipient
                             ) : (
-                                <Link to={`/addr-asset/${transactionDoc.data.output.owner}`}>
-                                    {transactionDoc.data.output.owner}
+                                <Link to={`/addr-asset/${transactionDoc.data.output.recipient}`}>
+                                    {transactionDoc.data.output.recipient}
                                 </Link>
                             )
                         ) : (

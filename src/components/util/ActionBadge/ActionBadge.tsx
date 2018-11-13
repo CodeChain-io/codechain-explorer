@@ -10,24 +10,36 @@ interface Props {
 }
 const getBadgeClassNameByAction = (action: string) => {
     switch (action) {
-        case "assetTransactionGroup":
+        case "assetTransaction":
             return "asset-transaction-group-action-text-color";
         case "payment":
             return "payment-action-text-color";
         case "setRegularKey":
             return "set-regular-key-action-text-color";
+        case "setShardOwner":
+            return "set-shard-owner-action-text-color";
+        case "setShardUser":
+            return "set-shard-user-action-text-color";
+        case "createShard":
+            return "create-shard-action-text-color";
     }
     return "";
 };
 
 const getActionString = (action: string) => {
     switch (action) {
-        case "assetTransactionGroup":
-            return "AssetTransactionGroup";
+        case "assetTransaction":
+            return "AssetTransaction";
         case "payment":
             return "Payment";
         case "setRegularKey":
             return "SetRegularKey";
+        case "setShardUser":
+            return "SetShardUser";
+        case "setShardOwner":
+            return "SetShardOwner";
+        case "createShard":
+            return "CreateShard";
     }
     return "";
 };

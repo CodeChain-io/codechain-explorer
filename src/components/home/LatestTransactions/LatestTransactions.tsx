@@ -9,6 +9,7 @@ import {
 } from "codechain-indexer-types/lib/types";
 import { Type } from "codechain-indexer-types/lib/utils";
 import { Link } from "react-router-dom";
+import { getTotalAssetCount } from "../../../utils/Asset";
 import DataTable from "../../util/DataTable/DataTable";
 import HexString from "../../util/HexString/HexString";
 import { ImageLoader } from "../../util/ImageLoader/ImageLoader";
@@ -17,22 +18,6 @@ import "./LatestTransactions.scss";
 
 interface Props {
     transactions: TransactionDoc[];
-}
-
-function getTotalAssetCount(transaction: TransactionDoc) {
-    let totalInputCount = 0;
-    if (Type.isAssetMintTransactionDoc(transaction)) {
-        totalInputCount = (transaction as AssetMintTransactionDoc).data.output.amount || 0;
-    } else if (Type.isAssetTransferTransactionDoc(transaction)) {
-        totalInputCount = _.sumBy(
-            (transaction as AssetTransferTransactionDoc).data.inputs,
-            input => input.prevOut.amount
-        );
-    }
-    const totalBurnCount = Type.isAssetTransferTransactionDoc(transaction)
-        ? _.sumBy((transaction as AssetTransferTransactionDoc).data.burns, burn => burn.prevOut.amount)
-        : 0;
-    return totalInputCount + totalBurnCount;
 }
 
 function getAssetInfo(transaction: TransactionDoc) {

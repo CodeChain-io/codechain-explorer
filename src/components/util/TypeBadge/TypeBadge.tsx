@@ -13,6 +13,10 @@ const getBadgeBackgroundColorClassByType = (type: string) => {
             return "asset-transfer-transaction-text-color";
         case "assetMint":
             return "asset-mint-transaction-text-color";
+        case "assetCompose":
+            return "asset-compose-transaction-text-color";
+        case "assetDecompose":
+            return "asset-decompose-transaction-text-color";
     }
     return "";
 };
@@ -22,6 +26,10 @@ const getTypeString = (type: string) => {
             return "Transfer";
         case "assetMint":
             return "Mint";
+        case "assetCompose":
+            return "Compose";
+        case "assetDecompose":
+            return "Decompose";
     }
     return "";
 };

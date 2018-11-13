@@ -1,10 +1,10 @@
-import { faChevronCircleDown, faChevronCircleRight, faSquare } from "@fortawesome/free-solid-svg-icons";
+import { faChevronCircleDown, faChevronCircleRight } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import * as _ from "lodash";
 import * as moment from "moment";
 import * as React from "react";
 
-import { AssetTransactionGroupDoc, ParcelDoc, PaymentDoc, SetRegularKeyDoc } from "codechain-indexer-types/lib/types";
+import { ParcelDoc, PaymentDoc, SetRegularKeyDoc } from "codechain-indexer-types/lib/types";
 import { Type } from "codechain-indexer-types/lib/utils";
 import { Link } from "react-router-dom";
 import { Col, Row } from "reactstrap";
@@ -177,25 +177,28 @@ class ParcelList extends React.Component<Props, State> {
                     </Col>
                 </Row>
             ];
-        } else if (Type.isAssetTransactionGroupDoc(parcel.action)) {
+        } else if (Type.isAssetTransactionDoc(parcel.action)) {
             return (
                 <Row>
                     <Col md="3"># of Txs</Col>
                     <Col md="9">
-                        {(parcel.action as AssetTransactionGroupDoc).transactions.length.toLocaleString()}
+                        1
+                        {/*
+                        {(parcel.action as AssetTransactionDoc).transactions.length.toLocaleString()}
                         <div className="small-text">
                             <FontAwesomeIcon icon={faSquare} className="asset-transfer-transaction-text-color" />{" "}
                             Transfer:{" "}
-                            {_.filter((parcel.action as AssetTransactionGroupDoc).transactions, tx =>
+                            {_.filter((parcel.action as AssetTransactionDoc).transactions, tx =>
                                 Type.isAssetTransferTransactionDoc(tx)
                             ).length.toLocaleString()}
                         </div>
                         <div className="small-text">
                             <FontAwesomeIcon icon={faSquare} className="asset-mint-transaction-text-color" /> Mint:{" "}
-                            {_.filter((parcel.action as AssetTransactionGroupDoc).transactions, tx =>
+                            {_.filter((parcel.action as AssetTransactionDoc).transactions, tx =>
                                 Type.isAssetMintTransactionDoc(tx)
                             ).length.toLocaleString()}
                         </div>
+                            */}
                     </Col>
                 </Row>
             );

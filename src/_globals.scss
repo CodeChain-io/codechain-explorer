@@ -24,6 +24,30 @@
   color: $set-regular-key-action-primary-color;
 }
 
+.set-shard-owner-action-text-color {
+  color: $set-shard-owner-action-primary-color;
+}
+
+.set-shard-owner-action-back-color {
+  background-color: $set-shard-owner-action-primary-color;
+}
+
+.set-shard-user-action-text-color {
+  color: $set-shard-user-action-primary-color;
+}
+
+.set-shard-user-action-back-color {
+  background-color: $set-shard-user-action-primary-color;
+}
+
+.create-shard-action-text-color {
+  color: $create-shard-action-primary-color;
+}
+
+.create-shard-action-back-color {
+  background-color: $create-shard-action-primary-color;
+}
+
 .asset-transfer-transaction-back-color {
   background-color: $asset-transfer-transaction-primary-color;
 }
@@ -38,6 +62,22 @@
 
 .asset-mint-transaction-text-color {
   color: $asset-mint-transaction-primary-color;
+}
+
+.asset-compose-transaction-text-color {
+  color: $asset-compose-transaction-primary-color;
+}
+
+.asset-compose-transaction-back-color {
+  background-color: $asset-compose-transaction-primary-color;
+}
+
+.asset-decompose-transaction-text-color {
+  color: $asset-decompose-transaction-primary-color;
+}
+
+.asset-decompose-transaction-back-color {
+  background-color: $asset-decompose-transaction-primary-color;
 }
 
 .small-text {

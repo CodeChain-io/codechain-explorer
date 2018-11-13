@@ -17,6 +17,7 @@ import HexString from "../../components/util/HexString/HexString";
 import { ImageLoader } from "../../components/util/ImageLoader/ImageLoader";
 import { TypeBadge } from "../../components/util/TypeBadge/TypeBadge";
 import { RequestTotalTransactionCount, RequestTransactions } from "../../request";
+import { getTotalAssetCount } from "../../utils/Asset";
 import "./Transactions.scss";
 
 interface State {
@@ -99,10 +100,6 @@ class Transactions extends React.Component<Props, State> {
                         transactions.length > 0 ? transactions[transactions.length - 1].data.blockNumber : undefined
                     }&lastParcelIndex=${
                         transactions.length > 0 ? transactions[transactions.length - 1].data.parcelIndex : undefined
-                    }&lastTransactionIndex=${
-                        transactions.length > 0
-                            ? transactions[transactions.length - 1].data.transactionIndex
-                            : undefined
                     }`}
                 />
             ) : (
@@ -237,7 +234,7 @@ class Transactions extends React.Component<Props, State> {
                                                     />
                                                 </td>
                                                 <td>{this.getAssetInfo(transaction)}</td>
-                                                <td>{this.getTotalAssetCount(transaction).toLocaleString()}</td>
+                                                <td>{getTotalAssetCount(transaction).toLocaleString()}</td>
                                                 <td>{moment.unix(transaction.data.timestamp).fromNow()}</td>
                                             </tr>
                                         );
@@ -249,22 +246,6 @@ class Transactions extends React.Component<Props, State> {
                 </div>
             </Container>
         );
-    }
-
-    private getTotalAssetCount(transaction: TransactionDoc) {
-        let totalInputCount = 0;
-        if (Type.isAssetMintTransactionDoc(transaction)) {
-            totalInputCount = (transaction as AssetMintTransactionDoc).data.output.amount || 0;
-        } else if (Type.isAssetTransferTransactionDoc(transaction)) {
-            totalInputCount = _.sumBy(
-                (transaction as AssetTransferTransactionDoc).data.inputs,
-                input => input.prevOut.amount
-            );
-        }
-        const totalBurnCount = Type.isAssetTransferTransactionDoc(transaction)
-            ? _.sumBy((transaction as AssetTransferTransactionDoc).data.burns, burn => burn.prevOut.amount)
-            : 0;
-        return totalInputCount + totalBurnCount;
     }
 
     private getAssetInfo(transaction: TransactionDoc) {

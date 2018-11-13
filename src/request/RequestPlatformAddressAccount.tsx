@@ -7,7 +7,7 @@ import { ApiError, apiRequest } from "./ApiRequest";
 
 interface OwnProps {
     address: string;
-    onAccount: (account: { nonce: U256; balance: U256 }, address: string) => void;
+    onAccount: (account: { seq: U256; balance: U256 }, address: string) => void;
     onError: (e: ApiError) => void;
     onAccountNotExist: () => void;
     progressBarTarget?: string;
@@ -32,10 +32,10 @@ class RequestPlatformAddressAccount extends React.Component<Props> {
                 if (response === null) {
                     return onAccountNotExist();
                 }
-                const { nonce, balance } = response;
+                const { seq, balance } = response;
                 onAccount(
                     {
-                        nonce: new U256(nonce),
+                        seq: new U256(seq),
                         balance: new U256(balance)
                     },
                     address

@@ -167,7 +167,6 @@ class AssetTransferAddress extends React.Component<Props, State> {
                             <div className="mt-large">
                                 <TransactionList
                                     owner={address}
-                                    hideTitle={true}
                                     transactions={_.map(pendingTransactions, pendingTx => pendingTx.transaction)}
                                     totalCount={pendingTransactions.length}
                                     isPendingTransactionList={true}
@@ -187,7 +186,6 @@ class AssetTransferAddress extends React.Component<Props, State> {
                             <div className="mt-large">
                                 <TransactionList
                                     owner={address}
-                                    hideTitle={true}
                                     transactions={transactions}
                                     totalCount={totalTransactionCount}
                                     loadMoreAction={this.loadMoreTransaction}

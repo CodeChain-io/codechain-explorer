@@ -4,8 +4,7 @@ import * as React from "react";
 import { Col, Row } from "reactstrap";
 import DataSet from "../../util/DataSet/DataSet";
 
-import { AssetTransactionGroupDoc, BlockDoc } from "codechain-indexer-types/lib/types";
-import { Type } from "codechain-indexer-types/lib/utils";
+import { BlockDoc } from "codechain-indexer-types/lib/types";
 import { Link } from "react-router-dom";
 import { CommaNumberString } from "../../util/CommaNumberString/CommaNumberString";
 import HexString from "../../util/HexString/HexString";
@@ -95,12 +94,13 @@ class BlockDetails extends React.Component<OwnProps> {
                             <Row>
                                 <Col md="3"># of Transactions</Col>
                                 <Col md="9">
-                                    {_.reduce(
+                                    1
+                                    {/*_.reduce(
                                         block.parcels,
                                         (memo, parcel) => {
-                                            if (Type.isAssetTransactionGroupDoc(parcel.action)) {
+                                            if (Type.isAssetTransactionDoc(parcel.action)) {
                                                 return (
-                                                    (parcel.action as AssetTransactionGroupDoc).transactions.length +
+                                                    (parcel.action as AssetTransactionDoc).transactions.length +
                                                     memo
                                                 );
                                             } else {
@@ -108,7 +108,7 @@ class BlockDetails extends React.Component<OwnProps> {
                                             }
                                         },
                                         0
-                                    ).toLocaleString()}
+                                    ).toLocaleString()*/}
                                 </Col>
                             </Row>
                             <hr />

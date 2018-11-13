@@ -3,7 +3,7 @@ import * as _ from "lodash";
 import * as React from "react";
 import { connect, Dispatch } from "react-redux";
 
-import { AssetMintTransactionDoc, AssetTransactionGroupDoc, ParcelDoc } from "codechain-indexer-types/lib/types";
+import { AssetMintTransactionDoc, ParcelDoc } from "codechain-indexer-types/lib/types";
 import { Type } from "codechain-indexer-types/lib/utils";
 import { RootState } from "../redux/actions";
 import { getCurrentTimestamp } from "../utils/Time";
@@ -49,23 +49,22 @@ class RequestParcel extends React.Component<Props> {
                     type: "CACHE_PARCEL",
                     data: parcel
                 });
-                if (Type.isAssetTransactionGroupDoc(parcel.action)) {
-                    _.each((parcel.action as AssetTransactionGroupDoc).transactions, transaction => {
-                        dispatch({
-                            type: "CACHE_TRANSACTION",
-                            data: transaction
-                        });
-
-                        if (Type.isAssetMintTransactionDoc(transaction)) {
-                            dispatch({
-                                type: "CACHE_ASSET_SCHEME",
-                                data: {
-                                    assetType: (transaction as AssetMintTransactionDoc).data.output.assetType,
-                                    assetScheme: Type.getAssetSchemeDoc(transaction as AssetMintTransactionDoc)
-                                }
-                            });
-                        }
+                if (Type.isAssetTransactionDoc(parcel.action)) {
+                    const transaction = parcel.action.transaction;
+                    dispatch({
+                        type: "CACHE_TRANSACTION",
+                        data: transaction
                     });
+
+                    if (Type.isAssetMintTransactionDoc(transaction)) {
+                        dispatch({
+                            type: "CACHE_ASSET_SCHEME",
+                            data: {
+                                assetType: (transaction as AssetMintTransactionDoc).data.output.assetType,
+                                assetScheme: Type.getAssetSchemeDoc(transaction as AssetMintTransactionDoc)
+                            }
+                        });
+                    }
                 }
                 onParcel(parcel);
             })

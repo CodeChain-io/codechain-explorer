@@ -17,8 +17,7 @@ import * as emptyImage from "./img/empty.png";
 
 import { RequestPendingParcels, RequestTotalPendingParcelCount } from "../../request";
 
-import { AssetTransactionGroupDoc, PendingParcelDoc } from "codechain-indexer-types/lib/types";
-import { Type } from "codechain-indexer-types/lib/utils";
+import { PendingParcelDoc } from "codechain-indexer-types/lib/types";
 import { Link } from "react-router-dom";
 import { ActionBadge } from "../../components/util/ActionBadge/ActionBadge";
 import DataTable from "../../components/util/DataTable/DataTable";
@@ -28,7 +27,7 @@ import "./PendingParcels.scss";
 interface State {
     pendingParcels: PendingParcelDoc[];
     isPendingParcelRequested: boolean;
-    isAssetTransactionGroupFilterOn: boolean;
+    isAssetTransactionFilterOn: boolean;
     isPaymentFilterOn: boolean;
     isSetRegularKeyFilterOn: boolean;
     redirect: boolean;
@@ -54,7 +53,7 @@ class PendingParcels extends React.Component<Props, State> {
         super(props);
         this.state = {
             pendingParcels: [],
-            isAssetTransactionGroupFilterOn: true,
+            isAssetTransactionFilterOn: true,
             isPaymentFilterOn: true,
             isSetRegularKeyFilterOn: true,
             isPendingParcelRequested: false,
@@ -106,7 +105,7 @@ class PendingParcels extends React.Component<Props, State> {
             redirect,
             redirectItemsPerPage,
             redirectPage,
-            isAssetTransactionGroupFilterOn,
+            isAssetTransactionFilterOn,
             isPaymentFilterOn,
             isSetRegularKeyFilterOn,
             isSenderFilterOn,
@@ -175,14 +174,14 @@ class PendingParcels extends React.Component<Props, State> {
                 <div className="filter-container mt-large">
                     <div className="type-filter">
                         <div className="d-md-inline mr-4">
-                            <span className="filter-item" onClick={this.toggleAssetTransactionGroupFilter}>
+                            <span className="filter-item" onClick={this.toggleAssetTransactionFilter}>
                                 <input
                                     readOnly={true}
-                                    checked={isAssetTransactionGroupFilterOn}
+                                    checked={isAssetTransactionFilterOn}
                                     type="checkbox"
                                     className="filter-input filter-input-asset-transaction-group"
                                 />
-                                <span className="filter-text">AssetTransactionGroup</span>
+                                <span className="filter-text">AssetTransaction</span>
                             </span>
                         </div>
                         <div className="d-md-inline mr-4">
@@ -287,10 +286,11 @@ class PendingParcels extends React.Component<Props, State> {
                                                     </td>
                                                     <td>{pendingParcel.parcel.fee.toLocaleString()}</td>
                                                     <td>
-                                                        {Type.isAssetTransactionGroupDoc(pendingParcel.parcel.action)
+                                                        1
+                                                        {/*Type.isAssetTransactionDoc(pendingParcel.parcel.action)
                                                             ? (pendingParcel.parcel
-                                                                  .action as AssetTransactionGroupDoc).transactions.length.toLocaleString()
-                                                            : 0}
+                                                                  .action as AssetTransactionDoc).transactions.length.toLocaleString()
+                                                            : 0*/}
                                                     </td>
                                                     <td>{moment.unix(pendingParcel.timestamp).fromNow()}</td>
                                                 </tr>
@@ -379,8 +379,8 @@ class PendingParcels extends React.Component<Props, State> {
         if (this.state.isPaymentFilterOn) {
             actionFilters.push("payment");
         }
-        if (this.state.isAssetTransactionGroupFilterOn) {
-            actionFilters.push("assetTransactionGroup");
+        if (this.state.isAssetTransactionFilterOn) {
+            actionFilters.push("assetTransaction");
         }
         if (this.state.isSetRegularKeyFilterOn) {
             actionFilters.push("setRegularKey");
@@ -419,9 +419,9 @@ class PendingParcels extends React.Component<Props, State> {
         this.setState({ redirectPage: 1, redirect: true });
     };
 
-    private toggleAssetTransactionGroupFilter = () => {
+    private toggleAssetTransactionFilter = () => {
         this.setState({
-            isAssetTransactionGroupFilterOn: !this.state.isAssetTransactionGroupFilterOn,
+            isAssetTransactionFilterOn: !this.state.isAssetTransactionFilterOn,
             filteredPendingParcelCount: undefined,
             isPendingParcelRequested: false,
             refreshTotalPendingParcel: true

@@ -5,6 +5,7 @@ import { connect, Dispatch } from "react-redux";
 import { AssetMintTransactionDoc, TransactionDoc } from "codechain-indexer-types/lib/types";
 import { Type } from "codechain-indexer-types/lib/utils";
 import { RootState } from "../redux/actions";
+import { getCurrentTimestamp } from "../utils/Time";
 import { ApiError, apiRequest } from "./ApiRequest";
 
 interface OwnProps {
@@ -16,7 +17,7 @@ interface OwnProps {
 }
 
 interface StateProps {
-    cached?: TransactionDoc;
+    cached?: { data: TransactionDoc; updatedAt: number };
 }
 
 interface DispatchProps {
@@ -28,8 +29,8 @@ type Props = OwnProps & StateProps & DispatchProps;
 class RequestTransaction extends React.Component<Props> {
     public componentWillMount() {
         const { cached, dispatch, hash, onTransaction, onTransactionNotExist, onError, progressBarTarget } = this.props;
-        if (cached) {
-            setTimeout(() => onTransaction(cached));
+        if (cached && getCurrentTimestamp() - cached.updatedAt < 10) {
+            setTimeout(() => onTransaction(cached.data));
             return;
         }
         apiRequest({
@@ -67,10 +68,15 @@ class RequestTransaction extends React.Component<Props> {
     }
 }
 export default connect((state: RootState, props: OwnProps) => {
-    if (Type.isH256String(props.hash)) {
-        return {
-            cached: state.appReducer.transactionByHash[new H256(props.hash).value]
-        };
+    let cacheKey = props.hash;
+    if (Type.isH256String(cacheKey)) {
+        cacheKey = new H256(cacheKey).value;
     }
-    return { cached: state.appReducer.transactionByHash[props.hash] };
+    const cachedTx = state.appReducer.transactionByHash[cacheKey];
+    return {
+        cached: cachedTx && {
+            data: cachedTx.data,
+            updatedAt: cachedTx.updatedAt
+        }
+    };
 })(RequestTransaction);

@@ -27,7 +27,7 @@ interface Props {
 
 interface State {
     account?: {
-        nonce: U256;
+        seq: U256;
         balance: U256;
     };
     blocks: BlockDoc[];
@@ -254,7 +254,7 @@ class Address extends React.Component<Props, State> {
     private onAccountNotExist = () => {
         this.setState({ notFound: true });
     };
-    private onAccount = (account: { nonce: U256; balance: U256 }) => {
+    private onAccount = (account: { seq: U256; balance: U256 }) => {
         this.setState({ account });
     };
     private onError = (e: any) => {

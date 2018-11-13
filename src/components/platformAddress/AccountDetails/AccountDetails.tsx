@@ -8,7 +8,7 @@ import "./AccountDetails.scss";
 
 interface OwnProps {
     account: {
-        nonce: U256;
+        seq: U256;
         balance: U256;
     };
 }
@@ -35,9 +35,9 @@ const AccountDetails = (prop: OwnProps) => {
                         </Row>
                         <hr />
                         <Row>
-                            <Col md="3">Nonce</Col>
+                            <Col md="3">Sequence</Col>
                             <Col md="9">
-                                <CommaNumberString text={account.nonce.value.toString()} />
+                                <CommaNumberString text={account.seq.value.toString()} />
                             </Col>
                         </Row>
                         <hr />

@@ -29,7 +29,7 @@ interface State {
     popoverOpen: boolean;
     popoverTarget?: string;
     popoverName?: string;
-    popoverAmount?: number;
+    popoverAmount?: string;
 }
 
 type Props = OwnProps & DispatchProps;
@@ -206,7 +206,7 @@ class TransactionSummaryInternal extends React.Component<Props, State> {
         metadata: MetadataFormat,
         assetType: string,
         index: number,
-        amount: number,
+        amount: string,
         type: string,
         onClick: () => void
     ) => {
@@ -232,7 +232,7 @@ class TransactionSummaryInternal extends React.Component<Props, State> {
         });
     };
 
-    private onMouseEnter = (target: string, name: string, amount: number) => {
+    private onMouseEnter = (target: string, name: string, amount: string) => {
         setTimeout(() => {
             this.setState({
                 popoverTarget: target,

@@ -4,7 +4,7 @@ import { connect, Dispatch } from "react-redux";
 
 import { H256 } from "codechain-sdk/lib/core/classes";
 
-import { AssetMintTransactionDoc, AssetTransactionGroupDoc, BlockDoc } from "codechain-indexer-types/lib/types";
+import { AssetMintTransactionDoc, BlockDoc } from "codechain-indexer-types/lib/types";
 import { Type } from "codechain-indexer-types/lib/utils";
 import { RootState } from "../redux/actions";
 import { getCurrentTimestamp } from "../utils/Time";
@@ -54,23 +54,22 @@ class RequestBlock extends React.Component<Props> {
                         type: "CACHE_PARCEL",
                         data: parcel
                     });
-                    if (Type.isAssetTransactionGroupDoc(parcel.action)) {
-                        _.each((parcel.action as AssetTransactionGroupDoc).transactions, transaction => {
-                            dispatch({
-                                type: "CACHE_TRANSACTION",
-                                data: transaction
-                            });
-
-                            if (Type.isAssetMintTransactionDoc(transaction)) {
-                                dispatch({
-                                    type: "CACHE_ASSET_SCHEME",
-                                    data: {
-                                        assetType: (transaction as AssetMintTransactionDoc).data.output.assetType,
-                                        assetScheme: Type.getAssetSchemeDoc(transaction as AssetMintTransactionDoc)
-                                    }
-                                });
-                            }
+                    if (Type.isAssetTransactionDoc(parcel.action)) {
+                        const transaction = parcel.action.transaction;
+                        dispatch({
+                            type: "CACHE_TRANSACTION",
+                            data: transaction
                         });
+
+                        if (Type.isAssetMintTransactionDoc(transaction)) {
+                            dispatch({
+                                type: "CACHE_ASSET_SCHEME",
+                                data: {
+                                    assetType: (transaction as AssetMintTransactionDoc).data.output.assetType,
+                                    assetScheme: Type.getAssetSchemeDoc(transaction as AssetMintTransactionDoc)
+                                }
+                            });
+                        }
                     }
                 });
 

@@ -259,7 +259,7 @@ class Search extends React.Component<Props, State> {
         }
     };
 
-    private onAccount = (account: { nonce: U256; balance: U256 }, address: string) => {
+    private onAccount = (account: { seq: U256; balance: U256 }, address: string) => {
         this.cancelOtherRequest();
         this.setState({
             redirectTo: `/addr-platform/${address}`,

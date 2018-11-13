@@ -2,13 +2,7 @@ import * as React from "react";
 
 import { Col, Row } from "reactstrap";
 
-import {
-    AssetTransactionGroupDoc,
-    CreateShardDoc,
-    ParcelDoc,
-    PaymentDoc,
-    SetRegularKeyDoc
-} from "codechain-indexer-types/lib/types";
+import { CreateShardDoc, ParcelDoc, PaymentDoc, SetRegularKeyDoc } from "codechain-indexer-types/lib/types";
 import { Type } from "codechain-indexer-types/lib/utils";
 import { connect } from "react-redux";
 import { Link } from "react-router-dom";
@@ -77,11 +71,12 @@ const getElementByType = (parcel: ParcelDoc) => {
             </Row>,
             <hr key="line" />
         ];
-    } else if (Type.isAssetTransactionGroupDoc(parcel.action)) {
+    } else if (Type.isAssetTransactionDoc(parcel.action)) {
         return [
             <Row key="parcel-header-table-asset-transaction-group-key">
                 <Col md="3"># of Transactions</Col>
-                <Col md="9">{(parcel.action as AssetTransactionGroupDoc).transactions.length.toLocaleString()}</Col>
+                <Col md="9">1</Col>
+                {/*<Col md="9">{(parcel.action as AssetTransactionDoc).transactions.length.toLocaleString()}</Col>*/}
             </Row>,
             <hr key="line" />
         ];
@@ -149,9 +144,9 @@ class ParcelDetails extends React.Component<Props> {
                             </Row>
                             <hr />
                             <Row>
-                                <Col md="3">Nonce</Col>
+                                <Col md="3">Sequence</Col>
                                 <Col md="9">
-                                    <CommaNumberString text={parcel.nonce} />
+                                    <CommaNumberString text={parcel.seq} />
                                 </Col>
                             </Row>
                             <hr />

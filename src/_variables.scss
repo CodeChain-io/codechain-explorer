@@ -11,9 +11,14 @@ $primary-color: #3a3fab;
 $payment-action-primary-color: #f2b04c;
 $asset-transaction-group-action-primary-color: #6ad400;
 $set-regular-key-action-primary-color: #ff866c;
+$set-shard-owner-action-primary-color: #ff6ce7;
+$set-shard-user-action-primary-color: #5ead99;
+$create-shard-action-primary-color: #358796;
 // transaction
 $asset-transfer-transaction-primary-color: #9e6cf1;
 $asset-mint-transaction-primary-color: #00dbb4;
+$asset-compose-transaction-primary-color: #00badb;
+$asset-decompose-transaction-primary-color: #be5faf;
 // Status
 $pending-color: #f2c94c;
 $confirmed-color: #1ccf68;

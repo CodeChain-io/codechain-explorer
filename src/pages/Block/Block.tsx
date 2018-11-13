@@ -11,7 +11,7 @@ import BlockDetails from "../../components/block/BlockDetails/BlockDetails";
 import ParcelList from "../../components/parcel/ParcelList/ParcelList";
 import { RequestBlock } from "../../request";
 
-import { AssetTransactionGroupDoc, BlockDoc } from "codechain-indexer-types/lib/types";
+import { BlockDoc } from "codechain-indexer-types/lib/types";
 import { Type } from "codechain-indexer-types/lib/utils";
 import { Link } from "react-router-dom";
 import CopyButton from "../../components/util/CopyButton/CopyButton";
@@ -143,10 +143,10 @@ class Block extends React.Component<Props, State> {
                                     className="square asset-transaction-group-action-text-color"
                                     icon={faSquare}
                                 />
-                                <span className="mr-auto item-name">AssetTransactionGroup</span>
+                                <span className="mr-auto item-name">AssetTransaction</span>
                                 <span>
                                     {_.filter(block.parcels, parcel =>
-                                        Type.isAssetTransactionGroupDoc(parcel.action)
+                                        Type.isAssetTransactionDoc(parcel.action)
                                     ).length.toLocaleString()}
                                 </span>
                             </div>
@@ -171,22 +171,12 @@ class Block extends React.Component<Props, State> {
                                 />
                                 <span className="mr-auto item-name">Transfer</span>
                                 <span>
-                                    {_.reduce(
+                                    {_.filter(
                                         block.parcels,
-                                        (memo, parcel) => {
-                                            if (Type.isAssetTransactionGroupDoc(parcel.action)) {
-                                                const transactions = (parcel.action as AssetTransactionGroupDoc)
-                                                    .transactions;
-                                                const assetTransferTransaction = _.filter(transactions, tx =>
-                                                    Type.isAssetTransferTransactionDoc(tx)
-                                                ).length;
-                                                return assetTransferTransaction + memo;
-                                            } else {
-                                                return memo;
-                                            }
-                                        },
-                                        0
-                                    ).toLocaleString()}
+                                        parcel =>
+                                            Type.isAssetTransactionDoc(parcel.action) &&
+                                            Type.isAssetTransferTransactionDoc(parcel.action.transaction)
+                                    ).length.toLocaleString()}
                                 </span>
                             </div>
                             <hr />
@@ -194,22 +184,44 @@ class Block extends React.Component<Props, State> {
                                 <FontAwesomeIcon className="square asset-mint-transaction-text-color" icon={faSquare} />
                                 <span className="mr-auto item-name">Mint</span>
                                 <span>
-                                    {_.reduce(
+                                    {_.filter(
                                         block.parcels,
-                                        (memo, parcel) => {
-                                            if (Type.isAssetTransactionGroupDoc(parcel.action)) {
-                                                const transactions = (parcel.action as AssetTransactionGroupDoc)
-                                                    .transactions;
-                                                const assetTransferTransaction = _.filter(transactions, tx =>
-                                                    Type.isAssetMintTransactionDoc(tx)
-                                                ).length;
-                                                return assetTransferTransaction + memo;
-                                            } else {
-                                                return memo;
-                                            }
-                                        },
-                                        0
-                                    ).toLocaleString()}
+                                        parcel =>
+                                            Type.isAssetTransactionDoc(parcel.action) &&
+                                            Type.isAssetMintTransactionDoc(parcel.action.transaction)
+                                    ).length.toLocaleString()}
+                                </span>
+                            </div>
+                            <hr />
+                            <div className="d-flex align-items-center">
+                                <FontAwesomeIcon
+                                    className="square asset-compose-transaction-text-color"
+                                    icon={faSquare}
+                                />
+                                <span className="mr-auto item-name">Compose</span>
+                                <span>
+                                    {_.filter(
+                                        block.parcels,
+                                        parcel =>
+                                            Type.isAssetTransactionDoc(parcel.action) &&
+                                            Type.isAssetComposeTransactionDoc(parcel.action.transaction)
+                                    ).length.toLocaleString()}
+                                </span>
+                            </div>
+                            <hr />
+                            <div className="d-flex align-items-center">
+                                <FontAwesomeIcon
+                                    className="square asset-decompose-transaction-text-color"
+                                    icon={faSquare}
+                                />
+                                <span className="mr-auto item-name">Decompose</span>
+                                <span>
+                                    {_.filter(
+                                        block.parcels,
+                                        parcel =>
+                                            Type.isAssetTransactionDoc(parcel.action) &&
+                                            Type.isAssetDecomposeTransactionDoc(parcel.action.transaction)
+                                    ).length.toLocaleString()}
                                 </span>
                             </div>
                         </div>

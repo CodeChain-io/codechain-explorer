@@ -1,5 +1,3 @@
-import { faSquare } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import * as _ from "lodash";
 import * as moment from "moment";
 import * as React from "react";
@@ -10,7 +8,7 @@ import { Error } from "../../components/error/Error/Error";
 import ParcelDetails from "../../components/parcel/ParcelDetails/ParcelDetails";
 import { RequestParcel, RequestPendingParcel } from "../../request";
 
-import { AssetTransactionGroupDoc, ParcelDoc, PendingParcelDoc } from "codechain-indexer-types/lib/types";
+import { AssetTransactionDoc, ParcelDoc, PendingParcelDoc } from "codechain-indexer-types/lib/types";
 import { Type } from "codechain-indexer-types/lib/utils";
 import TransactionList from "../../components/transaction/TransactionList/TransactionList";
 import CopyButton from "../../components/util/CopyButton/CopyButton";
@@ -144,63 +142,24 @@ class Parcel extends React.Component<Props, State> {
                     </Col>
                 </Row>
                 <Row className="mt-large">
-                    <Col lg={Type.isAssetTransactionGroupDoc(parcelResult.parcel.action) ? "9" : "12"}>
+                    <Col>
                         <ParcelDetails parcelResult={parcelResult} />
                     </Col>
-                    {Type.isAssetTransactionGroupDoc(parcelResult.parcel.action) ? (
-                        <Col lg="3">
-                            <div className="right-panel-item mt-3 mt-lg-0">
-                                <h2># of Transaction types</h2>
-                                <hr />
-                                <div className="d-flex align-items-center">
-                                    <FontAwesomeIcon
-                                        className="square asset-transfer-transaction-text-color"
-                                        icon={faSquare}
-                                    />
-                                    <span className="mr-auto item-name">Transfer</span>
-                                    <span>
-                                        {
-                                            _.filter(
-                                                (parcelResult.parcel.action as AssetTransactionGroupDoc).transactions,
-                                                tx => Type.isAssetTransferTransactionDoc(tx)
-                                            ).length
-                                        }
-                                    </span>
-                                </div>
-                                <hr />
-                                <div className="d-flex align-items-center">
-                                    <FontAwesomeIcon
-                                        className="square asset-mint-transaction-text-color"
-                                        icon={faSquare}
-                                    />
-                                    <span className="mr-auto item-name">Mint</span>
-                                    <span>
-                                        {
-                                            _.filter(
-                                                (parcelResult.parcel.action as AssetTransactionGroupDoc).transactions,
-                                                tx => Type.isAssetMintTransactionDoc(tx)
-                                            ).length
-                                        }
-                                    </span>
-                                </div>
-                            </div>
-                        </Col>
-                    ) : null}
                 </Row>
                 <Row>
-                    <Col lg="9">{this.showTransactionList(parcelResult.parcel)}</Col>
+                    <Col>{this.showTransactionList(parcelResult.parcel)}</Col>
                 </Row>
             </Container>
         );
     }
 
     private showTransactionList = (parcel: ParcelDoc) => {
-        if (Type.isAssetTransactionGroupDoc(parcel.action)) {
+        if (Type.isAssetTransactionDoc(parcel.action)) {
             return [
                 <div key="parcel-transaction" className="mt-large">
                     <TransactionList
-                        transactions={(parcel.action as AssetTransactionGroupDoc).transactions}
-                        totalCount={(parcel.action as AssetTransactionGroupDoc).transactions.length}
+                        transactions={[(parcel.action as AssetTransactionDoc).transaction]}
+                        totalCount={1}
                     />
                 </div>
             ];

@@ -148,7 +148,6 @@ class Asset extends React.Component<Props, State> {
                     <div className="mt-large">
                         <TransactionList
                             assetType={new H256(assetType)}
-                            hideTitle={true}
                             transactions={transactions}
                             totalCount={totalTransactionCount}
                             loadMoreAction={this.loadMoreAction}

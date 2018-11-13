@@ -123,18 +123,8 @@ class TransactionDetailsInternal extends React.Component<Props, State> {
                             </Row>
                             <hr />
                             <Row>
-                                <Col md="3">Transaction Index</Col>
-                                <Col md="9">{transactionDoc.data.transactionIndex.toLocaleString()}</Col>
-                            </Row>
-                            <hr />
-                            <Row>
                                 <Col md="3">NetworkID</Col>
                                 <Col md="9">{transactionDoc.data.networkId}</Col>
-                            </Row>
-                            <hr />
-                            <Row>
-                                <Col md="3">Nonce</Col>
-                                <Col md="9">{transactionDoc.data.nonce.toLocaleString()}</Col>
                             </Row>
                             <hr />
                             <Row>
@@ -493,18 +483,8 @@ class TransactionDetailsInternal extends React.Component<Props, State> {
                             </Row>
                             <hr />
                             <Row>
-                                <Col md="3">Transaction Index</Col>
-                                <Col md="9">{transactionDoc.data.transactionIndex.toLocaleString()}</Col>
-                            </Row>
-                            <hr />
-                            <Row>
                                 <Col md="3">NetworkID</Col>
                                 <Col md="9">{transactionDoc.data.networkId}</Col>
-                            </Row>
-                            <hr />
-                            <Row>
-                                <Col md="3">Nonce</Col>
-                                <Col md="9">{transactionDoc.data.nonce}</Col>
                             </Row>
                             <hr />
                             <Row>
@@ -595,9 +575,9 @@ class TransactionDetailsInternal extends React.Component<Props, State> {
                             <Row>
                                 <Col md="3">Owner</Col>
                                 <Col md="9">
-                                    {transactionDoc.data.output.owner ? (
-                                        <Link to={`/addr-asset/${transactionDoc.data.output.owner}`}>
-                                            {transactionDoc.data.output.owner}
+                                    {transactionDoc.data.output.recipient ? (
+                                        <Link to={`/addr-asset/${transactionDoc.data.output.recipient}`}>
+                                            {transactionDoc.data.output.recipient}
                                         </Link>
                                     ) : (
                                         "Unknown"

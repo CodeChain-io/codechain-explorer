@@ -92,8 +92,8 @@ class RequestDailyLogs extends React.Component<Props> {
                 dispatch,
                 showProgressBar: true
             })) as number;
-            const assetTransactionGroupScount = (await apiRequest({
-                path: `log/assetTransactionGroupCount?date=${date}`,
+            const assetTransactionScount = (await apiRequest({
+                path: `log/assetTransactionCount?date=${date}`,
                 dispatch,
                 showProgressBar: true
             })) as number;
@@ -102,7 +102,28 @@ class RequestDailyLogs extends React.Component<Props> {
                 dispatch,
                 showProgressBar: true
             })) as number;
-            const total = paymentParcelCount + assetTransactionGroupScount + setRegularKeyCount;
+            const createShardCount = (await apiRequest({
+                path: `log/createShardCount?date=${date}`,
+                dispatch,
+                showProgressBar: true
+            })) as number;
+            const setShardOwnerCount = (await apiRequest({
+                path: `log/setShardOwnerCount?date=${date}`,
+                dispatch,
+                showProgressBar: true
+            })) as number;
+            const setShardUserCount = (await apiRequest({
+                path: `log/setShardUserCount?date=${date}`,
+                dispatch,
+                showProgressBar: true
+            })) as number;
+            const total =
+                paymentParcelCount +
+                assetTransactionScount +
+                setRegularKeyCount +
+                setShardOwnerCount +
+                setShardUserCount +
+                createShardCount;
             if (total === 0) {
                 onEmptyResult();
                 return;
@@ -115,9 +136,9 @@ class RequestDailyLogs extends React.Component<Props> {
                     color: "hsl(36, 86%, 62%)"
                 },
                 {
-                    id: `AssetTransactionGroup (${((assetTransactionGroupScount / total) * 100).toFixed(1)}%)`,
-                    label: "AssetTransactionGroup",
-                    value: assetTransactionGroupScount,
+                    id: `AssetTransaction (${((assetTransactionScount / total) * 100).toFixed(1)}%)`,
+                    label: "AssetTransaction",
+                    value: assetTransactionScount,
                     color: "hsl(90, 100%, 42%)"
                 },
                 {
@@ -125,6 +146,24 @@ class RequestDailyLogs extends React.Component<Props> {
                     label: "SetRegularKey",
                     value: setRegularKeyCount,
                     color: "hsl(11, 100%, 71%)"
+                },
+                {
+                    id: `CreateShard (${((createShardCount / total) * 100).toFixed(1)}%)`,
+                    label: "CreateShard",
+                    value: createShardCount,
+                    color: "hsl(53, 48%, 40%)"
+                },
+                {
+                    id: `SetShardOwner (${((setShardOwnerCount / total) * 100).toFixed(1)}%)`,
+                    label: "SetShardOwner",
+                    value: setShardOwnerCount,
+                    color: "hsl(86, 100%, 71%)"
+                },
+                {
+                    id: `SetShardUser (${((setShardUserCount / total) * 100).toFixed(1)}%)`,
+                    label: "SetShardUser",
+                    value: setShardUserCount,
+                    color: "hsl(46, 33%, 52%)"
                 }
             ]);
         } else if (type === DailyLogType.TX_TYPE) {
@@ -138,7 +177,17 @@ class RequestDailyLogs extends React.Component<Props> {
                 dispatch,
                 showProgressBar: true
             })) as number;
-            const total = mintCount + transferCount;
+            const composeCount = (await apiRequest({
+                path: `log/composeTxCount?date=${date}`,
+                dispatch,
+                showProgressBar: true
+            })) as number;
+            const decomposeCount = (await apiRequest({
+                path: `log/decomposeTxCount?date=${date}`,
+                dispatch,
+                showProgressBar: true
+            })) as number;
+            const total = mintCount + transferCount + composeCount + decomposeCount;
             if (total === 0) {
                 onEmptyResult();
                 return;
@@ -155,6 +204,18 @@ class RequestDailyLogs extends React.Component<Props> {
                     label: "Mint",
                     value: mintCount,
                     color: "hsl(169, 100%, 43%)"
+                },
+                {
+                    id: `Compose (${((composeCount / total) * 100).toFixed(1)}%)`,
+                    label: "Compose",
+                    value: composeCount,
+                    color: "hsl(53, 100%, 43%)"
+                },
+                {
+                    id: `Decompose (${((decomposeCount / total) * 100).toFixed(1)}%)`,
+                    label: "Decompose",
+                    value: decomposeCount,
+                    color: "hsl(86, 42%, 56%)"
                 }
             ]);
         }
