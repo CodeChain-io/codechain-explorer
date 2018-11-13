@@ -13,6 +13,14 @@ export function getTotalAssetCount(transaction: TransactionDoc) {
             (memo, input) => U256.plus(memo, new U256(input.prevOut.amount)),
             new U256("0")
         ).toString(10);
+    } else if (Type.isAssetComposeTransactionDoc(transaction)) {
+        totalInputCount = transaction.data.output.amount || "0";
+    } else if (Type.isAssetDecomposeTransactionDoc(transaction)) {
+        totalInputCount = _.reduce(
+            transaction.data.outputs,
+            (memo, output) => U256.plus(memo, new U256(output.amount)),
+            new U256("0")
+        ).toString(10);
     }
     const totalBurnCount = Type.isAssetTransferTransactionDoc(transaction)
         ? _.reduce(

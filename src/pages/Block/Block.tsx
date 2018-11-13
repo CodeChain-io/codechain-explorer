@@ -160,6 +160,36 @@ class Block extends React.Component<Props, State> {
                                     ).length.toLocaleString()}
                                 </span>
                             </div>
+                            <hr />
+                            <div className="d-flex align-items-center">
+                                <FontAwesomeIcon className="square create-shard-action-text-color" icon={faSquare} />
+                                <span className="mr-auto item-name">CreateShard</span>
+                                <span>
+                                    {_.filter(block.parcels, parcel =>
+                                        Type.isCreateShardDoc(parcel.action)
+                                    ).length.toLocaleString()}
+                                </span>
+                            </div>
+                            <hr />
+                            <div className="d-flex align-items-center">
+                                <FontAwesomeIcon className="square set-shard-owner-action-text-color" icon={faSquare} />
+                                <span className="mr-auto item-name">SetShardOwner</span>
+                                <span>
+                                    {_.filter(block.parcels, parcel =>
+                                        Type.isSetShardOwnersDoc(parcel.action)
+                                    ).length.toLocaleString()}
+                                </span>
+                            </div>
+                            <hr />
+                            <div className="d-flex align-items-center">
+                                <FontAwesomeIcon className="square set-shard-user-action-text-color" icon={faSquare} />
+                                <span className="mr-auto item-name">SetShardUser</span>
+                                <span>
+                                    {_.filter(block.parcels, parcel =>
+                                        Type.isSetShardUsersDoc(parcel.action)
+                                    ).length.toLocaleString()}
+                                </span>
+                            </div>
                         </div>
                         <div className="right-panel-item mt-small">
                             <h2># of Transaction types</h2>

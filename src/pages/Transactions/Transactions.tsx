@@ -252,12 +252,16 @@ class Transactions extends React.Component<Props, State> {
         let assetType = "";
         if (Type.isAssetMintTransactionDoc(transaction)) {
             assetType = (transaction as AssetMintTransactionDoc).data.output.assetType;
-        } else {
+        } else if (Type.isAssetTransferTransactionDoc(transaction)) {
             if ((transaction as AssetTransferTransactionDoc).data.inputs.length > 0) {
                 assetType = (transaction as AssetTransferTransactionDoc).data.inputs[0].prevOut.assetType;
             } else if ((transaction as AssetTransferTransactionDoc).data.burns.length > 0) {
                 assetType = (transaction as AssetTransferTransactionDoc).data.burns[0].prevOut.assetType;
             }
+        } else if (Type.isAssetComposeTransactionDoc(transaction)) {
+            assetType = transaction.data.output.assetType;
+        } else if (Type.isAssetDecomposeTransactionDoc(transaction)) {
+            assetType = transaction.data.input.prevOut.assetType;
         }
         return (
             <span>

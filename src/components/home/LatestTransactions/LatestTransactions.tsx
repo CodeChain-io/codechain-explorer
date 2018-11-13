@@ -2,11 +2,7 @@ import * as _ from "lodash";
 import * as moment from "moment";
 import * as React from "react";
 
-import {
-    AssetMintTransactionDoc,
-    AssetTransferTransactionDoc,
-    TransactionDoc
-} from "codechain-indexer-types/lib/types";
+import { AssetMintTransactionDoc, TransactionDoc } from "codechain-indexer-types/lib/types";
 import { Type } from "codechain-indexer-types/lib/utils";
 import { Link } from "react-router-dom";
 import { getTotalAssetCount } from "../../../utils/Asset";
@@ -24,12 +20,16 @@ function getAssetInfo(transaction: TransactionDoc) {
     let assetType = "";
     if (Type.isAssetMintTransactionDoc(transaction)) {
         assetType = (transaction as AssetMintTransactionDoc).data.output.assetType;
-    } else {
-        if ((transaction as AssetTransferTransactionDoc).data.inputs.length > 0) {
-            assetType = (transaction as AssetTransferTransactionDoc).data.inputs[0].prevOut.assetType;
-        } else if ((transaction as AssetTransferTransactionDoc).data.burns.length > 0) {
-            assetType = (transaction as AssetTransferTransactionDoc).data.burns[0].prevOut.assetType;
+    } else if (Type.isAssetTransferTransactionDoc(transaction)) {
+        if (transaction.data.inputs.length > 0) {
+            assetType = transaction.data.inputs[0].prevOut.assetType;
+        } else if (transaction.data.burns.length > 0) {
+            assetType = transaction.data.burns[0].prevOut.assetType;
         }
+    } else if (Type.isAssetComposeTransactionDoc(transaction)) {
+        assetType = transaction.data.output.assetType;
+    } else if (Type.isAssetDecomposeTransactionDoc(transaction)) {
+        assetType = transaction.data.input.prevOut.assetType;
     }
     return (
         <span>
