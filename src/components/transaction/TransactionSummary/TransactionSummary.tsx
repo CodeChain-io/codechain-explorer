@@ -8,6 +8,8 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Col, Popover, PopoverBody, Row } from "reactstrap";
 
 import {
+    AssetComposeTransactionDoc,
+    AssetDecomposeTransactionDoc,
     AssetMintTransactionDoc,
     AssetTransferTransactionDoc,
     TransactionDoc
@@ -192,6 +194,198 @@ class TransactionSummaryInternal extends React.Component<Props, State> {
                                             "None"
                                         )}
                                     </div>
+                                </div>
+                            </div>
+                        </Col>
+                    </Row>
+                </div>
+            );
+        } else if (Type.isAssetComposeTransactionDoc(transaction)) {
+            const transactionDoc = transaction as AssetComposeTransactionDoc;
+            const metadata = Type.getMetadata(transactionDoc.data.metadata);
+            return (
+                <div className="transaction-summary">
+                    {this.state.popoverTarget ? (
+                        <Popover placement="right" isOpen={this.state.popoverOpen} target={this.state.popoverTarget}>
+                            <PopoverBody>
+                                <div>
+                                    <p className="mb-0">{this.state.popoverName}</p>
+                                    <p className="mb-0">
+                                        x{this.state.popoverAmount ? this.state.popoverAmount.toLocaleString() : 0}
+                                    </p>
+                                    <p className="mb-0 popover-detail-label">click item to view detail</p>
+                                </div>
+                            </PopoverBody>
+                        </Popover>
+                    ) : null}
+                    <Row>
+                        {transactionDoc.data.inputs.length > 0 && [
+                            <Col key="col-1" lg="3">
+                                <div className="summary-item">
+                                    <div className="title-panel">
+                                        <h3>Inputs</h3>
+                                    </div>
+                                    <div className="item-panel">
+                                        {_.map(transactionDoc.data.inputs.slice(0, this.itemLimit), (input, i) =>
+                                            this.getAssetIcon(
+                                                Type.getMetadata(input.prevOut.assetScheme.metadata),
+                                                input.prevOut.assetType,
+                                                i,
+                                                input.prevOut.amount,
+                                                "input",
+                                                _.partial(this.onClickItem, "input", i)
+                                            )
+                                        )}
+                                        {transactionDoc.data.inputs.length > this.itemLimit ? (
+                                            <p className="mb-0">
+                                                {transactionDoc.data.inputs.length - this.itemLimit} more inputs
+                                            </p>
+                                        ) : null}
+                                    </div>
+                                </div>
+                            </Col>,
+                            <Col key="col-2" lg="3" className="d-flex align-items-center justify-content-center">
+                                <div className="text-center d-none d-lg-block arrow-icon">
+                                    <FontAwesomeIcon icon={faChevronCircleRight} size="2x" />
+                                </div>
+                                <div className="d-lg-none text-center pt-2 pb-2 arrow-icon">
+                                    <FontAwesomeIcon icon={faChevronCircleDown} size="2x" />
+                                </div>
+                            </Col>,
+                            <Col key="col-3" lg="3">
+                                <div className="summary-item">
+                                    <div className="title-panel">
+                                        <h3>Output</h3>
+                                    </div>
+                                    <div className="content-panel text-center">
+                                        <div className="content-item d-flex justify-content-center">
+                                            <ImageLoader
+                                                className="mr-3"
+                                                size={42}
+                                                data={transactionDoc.data.output.assetType}
+                                                isAssetImage={true}
+                                            />
+                                            <div className="content-title d-inline-block text-left">
+                                                <Link to={`/asset/0x${transactionDoc.data.output.assetType}`}>
+                                                    {metadata.name || transactionDoc.data.output.assetType}
+                                                </Link>
+                                                <div>
+                                                    <span>x{transactionDoc.data.output.amount}</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div className="content-description">{metadata.description}</div>
+                                    </div>
+                                    <div className="registrar-panel d-flex">
+                                        <div>Registrar</div>
+                                        <div className="registrar-text">
+                                            {transactionDoc.data.registrar ? (
+                                                <Link to={`/addr-platform/${transactionDoc.data.registrar}`}>
+                                                    {transactionDoc.data.registrar}
+                                                </Link>
+                                            ) : (
+                                                "None"
+                                            )}
+                                        </div>
+                                    </div>
+                                </div>
+                            </Col>
+                        ]}
+                    </Row>
+                </div>
+            );
+        } else if (Type.isAssetDecomposeTransactionDoc(transaction)) {
+            const transactionDoc = transaction as AssetDecomposeTransactionDoc;
+            const metadata = Type.getMetadata(transactionDoc.data.input.prevOut.assetScheme.metadata);
+            return (
+                <div className="transaction-summary">
+                    {this.state.popoverTarget ? (
+                        <Popover placement="right" isOpen={this.state.popoverOpen} target={this.state.popoverTarget}>
+                            <PopoverBody>
+                                <div>
+                                    <p className="mb-0">{this.state.popoverName}</p>
+                                    <p className="mb-0">
+                                        x{this.state.popoverAmount ? this.state.popoverAmount.toLocaleString() : 0}
+                                    </p>
+                                    <p className="mb-0 popover-detail-label">click item to view detail</p>
+                                </div>
+                            </PopoverBody>
+                        </Popover>
+                    ) : null}
+                    <Row>
+                        <Col key="col-1" lg="3">
+                            <div className="summary-item">
+                                <div className="title-panel">
+                                    <h3>Input</h3>
+                                </div>
+                                <div className="content-panel text-center">
+                                    <div className="content-item d-flex justify-content-center">
+                                        <ImageLoader
+                                            className="mr-3"
+                                            size={42}
+                                            data={transactionDoc.data.input.prevOut.assetType}
+                                            isAssetImage={true}
+                                        />
+                                        <div className="content-title d-inline-block text-left">
+                                            <Link to={`/asset/0x${transactionDoc.data.input.prevOut.assetType}`}>
+                                                {metadata.name || transactionDoc.data.input.prevOut.assetType}
+                                            </Link>
+                                            <div>
+                                                <span>x{transactionDoc.data.input.prevOut.amount}</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div className="content-description">{metadata.description}</div>
+                                </div>
+                                <div className="registrar-panel d-flex">
+                                    <div>Registrar</div>
+                                    <div className="registrar-text">
+                                        {transactionDoc.data.input.prevOut.assetScheme.registrar ? (
+                                            <Link
+                                                to={`/addr-platform/${
+                                                    transactionDoc.data.input.prevOut.assetScheme.registrar
+                                                }`}
+                                            >
+                                                {transactionDoc.data.input.prevOut.assetScheme.registrar}
+                                            </Link>
+                                        ) : (
+                                            "None"
+                                        )}
+                                    </div>
+                                </div>
+                            </div>
+                        </Col>
+                        ,
+                        <Col key="col-2" lg="3" className="d-flex align-items-center justify-content-center">
+                            <div className="text-center d-none d-lg-block arrow-icon">
+                                <FontAwesomeIcon icon={faChevronCircleRight} size="2x" />
+                            </div>
+                            <div className="d-lg-none text-center pt-2 pb-2 arrow-icon">
+                                <FontAwesomeIcon icon={faChevronCircleDown} size="2x" />
+                            </div>
+                        </Col>
+                        ,
+                        <Col key="col-3" lg="3">
+                            <div className="summary-item">
+                                <div className="title-panel">
+                                    <h3>Outputs</h3>
+                                </div>
+                                <div className="item-panel">
+                                    {_.map(transactionDoc.data.outputs.slice(0, this.itemLimit), (output, i) =>
+                                        this.getAssetIcon(
+                                            Type.getMetadata(output.assetScheme.metadata),
+                                            output.assetType,
+                                            i,
+                                            output.amount,
+                                            "output",
+                                            _.partial(this.onClickItem, "output", i)
+                                        )
+                                    )}
+                                    {transactionDoc.data.outputs.length > this.itemLimit ? (
+                                        <p className="mb-0">
+                                            {transactionDoc.data.outputs.length - this.itemLimit} more outputs
+                                        </p>
+                                    ) : null}
                                 </div>
                             </div>
                         </Col>
