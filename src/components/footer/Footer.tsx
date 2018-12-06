@@ -27,6 +27,11 @@ const Footer = () => {
                                     saluki.codechain.io
                                 </a>
                             </li>
+                            <li>
+                                <a href="https://corgi.codechain.io" target="_blank">
+                                    corgi.codechain.io
+                                </a>
+                            </li>
                             <li>Powered by Kodebox, Inc.</li>
                         </ul>
                     </Col>
