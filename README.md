@@ -1,6 +1,6 @@
 # CodeChain Explorer [![Gitter](https://badges.gitter.im/CodeChain-io/codechain-explorer.svg)](https://gitter.im/CodeChain-io/codechain-explorer?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge) [![Build Status](https://travis-ci.org/CodeChain-io/codechain-explorer.svg?branch=master)](https://travis-ci.org/CodeChain-io/codechain-explorer)
 
-CodeChain explorer is a simple, easy to use, an open-source visualization tool for viewing activity on the underlying blockchain network.
+CodeChain explorer is a simple, easy to use, open-source visualization tool for viewing activity on the underlying blockchain network.
 
 ## Table of Contents
 
@@ -12,7 +12,7 @@ CodeChain explorer is a simple, easy to use, an open-source visualization tool f
 
 ### Download
 
-Download CodeChain-explorer code from the GitHub repository
+Download CodeChain-explorer's code from the GitHub repository
 
 ```
 # git clone git@github.com:kodebox-io/codechain-explorer.git
@@ -27,7 +27,7 @@ Use yarn package manager to install packages
 # yarn install
 ```
 
-## Before start
+## Before starting
 
 ### Dependency
 
@@ -35,7 +35,7 @@ Use yarn package manager to install packages
 
 ### Running for development
 
-- Explorer will run at http://localhost:3000
+-The explorer will run at http://localhost:3000
 
 ```
 # yarn run start
@@ -48,7 +48,7 @@ Use yarn package manager to install packages
 
 #### Build
 
-Build CodeChain-explorer with following script. You can get optimized, uglified build code. It will locate at "/build" directory
+Build CodeChain-explorer with the following script. You can get optimized and uglified build code. It will be located in the "/build" directory
 
 ```
 # yarn run build
@@ -62,7 +62,7 @@ Build CodeChain-explorer with following script. You can get optimized, uglified 
 
 #### Serve static build file
 
-It start the static server serving build directory.
+It starts the static server, which serves the build directory
 
 ```
 # yarn run serve
