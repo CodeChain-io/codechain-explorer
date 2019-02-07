@@ -2,8 +2,7 @@ import * as _ from "lodash";
 import * as moment from "moment";
 import * as React from "react";
 
-import { AssetMintTransactionDoc, TransactionDoc } from "codechain-indexer-types/lib/types";
-import { Type } from "codechain-indexer-types/lib/utils";
+import { TransactionDoc } from "codechain-indexer-types";
 import { Link } from "react-router-dom";
 import { getTotalAssetCount } from "../../../utils/Asset";
 import DataTable from "../../util/DataTable/DataTable";
@@ -18,18 +17,18 @@ interface Props {
 
 function getAssetInfo(transaction: TransactionDoc) {
     let assetType = "";
-    if (Type.isAssetMintTransactionDoc(transaction)) {
-        assetType = (transaction as AssetMintTransactionDoc).data.output.assetType;
-    } else if (Type.isAssetTransferTransactionDoc(transaction)) {
-        if (transaction.data.inputs.length > 0) {
-            assetType = transaction.data.inputs[0].prevOut.assetType;
-        } else if (transaction.data.burns.length > 0) {
-            assetType = transaction.data.burns[0].prevOut.assetType;
+    if (transaction.type === "mintAsset") {
+        assetType = transaction.mintAsset.assetType;
+    } else if (transaction.type === "transferAsset") {
+        if (transaction.transferAsset.inputs.length > 0) {
+            assetType = transaction.transferAsset.inputs[0].prevOut.assetType;
+        } else if (transaction.transferAsset.burns.length > 0) {
+            assetType = transaction.transferAsset.burns[0].prevOut.assetType;
         }
-    } else if (Type.isAssetComposeTransactionDoc(transaction)) {
-        assetType = transaction.data.output.assetType;
-    } else if (Type.isAssetDecomposeTransactionDoc(transaction)) {
-        assetType = transaction.data.input.prevOut.assetType;
+    } else if (transaction.type === "composeAsset") {
+        assetType = transaction.composeAsset.assetType;
+    } else if (transaction.type === "decomposeAsset") {
+        assetType = transaction.decomposeAsset.input.prevOut.assetType;
     }
     return (
         <span>
@@ -58,19 +57,16 @@ const LatestTransactions = (props: Props) => {
                     <tbody>
                         {_.map(transactions.slice(0, 10), (transaction: TransactionDoc) => {
                             return (
-                                <tr key={`home-transaction-hash-${transaction.data.hash}`} className="animated fadeIn">
+                                <tr key={`home-transaction-hash-${transaction.hash}`} className="animated fadeIn">
                                     <td>
                                         <TypeBadge transaction={transaction} />{" "}
                                     </td>
                                     <td scope="row">
-                                        <HexString
-                                            link={`/tx/0x${transaction.data.hash}`}
-                                            text={transaction.data.hash}
-                                        />
+                                        <HexString link={`/tx/0x${transaction.hash}`} text={transaction.hash} />
                                     </td>
                                     <td>{getAssetInfo(transaction)}</td>
                                     <td>{getTotalAssetCount(transaction).toLocaleString()}</td>
-                                    <td>{moment.unix(transaction.data.timestamp).fromNow()}</td>
+                                    <td>{moment.unix(transaction.timestamp!).fromNow()}</td>
                                 </tr>
                             );
                         })}

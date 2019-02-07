@@ -10,14 +10,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import HexString from "../../util/HexString/HexString";
 import "./TransactionList.scss";
 
-import {
-    AssetComposeTransactionDoc,
-    AssetDecomposeTransactionDoc,
-    AssetMintTransactionDoc,
-    AssetTransferTransactionDoc,
-    TransactionDoc
-} from "codechain-indexer-types/lib/types";
-import { Type } from "codechain-indexer-types/lib/utils";
+import { TransactionDoc } from "codechain-indexer-types";
 import { H256 } from "codechain-sdk/lib/core/classes";
 import { connect } from "react-redux";
 import { Link } from "react-router-dom";
@@ -94,7 +87,7 @@ class TransactionList extends React.Component<Props, State> {
                 <Row>
                     <Col>
                         {loadedTransactions.map((transaction, i: number) => {
-                            const hash = transaction.data.hash;
+                            const hash = transaction.hash;
                             return (
                                 <div key={`parcel-transaction-${hash}`} className="card-list-item mt-small">
                                     <div className="card-list-item-header">
@@ -102,9 +95,9 @@ class TransactionList extends React.Component<Props, State> {
                                             <Col md="3" />
                                             <Col md="9">
                                                 <span className="timestamp float-right">
-                                                    {transaction.data.timestamp !== 0
+                                                    {!transaction.isPending
                                                         ? moment
-                                                              .unix(transaction.data.timestamp)
+                                                              .unix(transaction.timestamp!)
                                                               .format("YYYY-MM-DD HH:mm:ssZ")
                                                         : "Pending"}
                                                 </span>
@@ -135,7 +128,7 @@ class TransactionList extends React.Component<Props, State> {
                                                     bestBlockNumber && (
                                                         <StatusBadge
                                                             status={"confirmed"}
-                                                            currentBlockNumber={transaction.data.blockNumber}
+                                                            currentBlockNumber={transaction.blockNumber}
                                                             bestBlockNumber={bestBlockNumber}
                                                         />
                                                     )
@@ -165,42 +158,39 @@ class TransactionList extends React.Component<Props, State> {
         );
     }
     private TransactionObjectByType = (transaction: TransactionDoc, assetType?: H256, owner?: string) => {
-        if (Type.isAssetMintTransactionDoc(transaction)) {
-            const transactionDoc = transaction as AssetMintTransactionDoc;
+        if (transaction.type === "mintAsset") {
             return [
                 <Row key="asset-type">
                     <Col md="3">AssetType</Col>
                     <Col md="9">
                         <ImageLoader
-                            data={transactionDoc.data.output.assetType}
+                            data={transaction.mintAsset.assetType}
                             className="icon mr-2"
                             size={18}
                             isAssetImage={true}
                         />
-                        {assetType && assetType.value === transactionDoc.data.output.assetType ? (
-                            <HexString text={transactionDoc.data.output.assetType} />
+                        {assetType && assetType.value === transaction.mintAsset.assetType ? (
+                            <HexString text={transaction.mintAsset.assetType} />
                         ) : (
                             <HexString
-                                link={`/asset/0x${transactionDoc.data.output.assetType}`}
-                                text={transactionDoc.data.output.assetType}
+                                link={`/asset/0x${transaction.mintAsset.assetType}`}
+                                text={transaction.mintAsset.assetType}
                             />
                         )}
                     </Col>
                 </Row>,
                 <hr key="line3" />,
                 <Row key="amount">
-                    <Col md="3">Quantity</Col>
-                    <Col md="9">
-                        {transactionDoc.data.output.amount ? transactionDoc.data.output.amount.toLocaleString() : 0}
-                    </Col>
+                    <Col md="3">Total supply</Col>
+                    <Col md="9">{transaction.mintAsset.supply ? transaction.mintAsset.supply.toLocaleString() : 0}</Col>
                 </Row>,
                 <hr key="line1" />,
-                <Row key="registrar">
-                    <Col md="3">Registrar</Col>
+                <Row key="approver">
+                    <Col md="3">Approver</Col>
                     <Col md="9">
-                        {transactionDoc.data.registrar ? (
-                            <Link to={`/addr-platform/${transactionDoc.data.registrar}`}>
-                                {transactionDoc.data.registrar}
+                        {transaction.mintAsset.approver ? (
+                            <Link to={`/addr-platform/${transaction.mintAsset.approver}`}>
+                                {transaction.mintAsset.approver}
                             </Link>
                         ) : (
                             "None"
@@ -209,14 +199,14 @@ class TransactionList extends React.Component<Props, State> {
                 </Row>,
                 <hr key="line2" />,
                 <Row key="owner">
-                    <Col md="3">Owner</Col>
+                    <Col md="3">Recipient</Col>
                     <Col md="9">
-                        {transactionDoc.data.output.recipient ? (
-                            owner && owner === transactionDoc.data.output.recipient ? (
-                                transactionDoc.data.output.recipient
+                        {transaction.mintAsset.recipient ? (
+                            owner && owner === transaction.mintAsset.recipient ? (
+                                transaction.mintAsset.recipient
                             ) : (
-                                <Link to={`/addr-asset/${transactionDoc.data.output.recipient}`}>
-                                    {transactionDoc.data.output.recipient}
+                                <Link to={`/addr-asset/${transaction.mintAsset.recipient}`}>
+                                    {transaction.mintAsset.recipient}
                                 </Link>
                             )
                         ) : (
@@ -225,32 +215,31 @@ class TransactionList extends React.Component<Props, State> {
                     </Col>
                 </Row>
             ];
-        } else if (Type.isAssetTransferTransactionDoc(transaction)) {
-            const transactionDoc = transaction as AssetTransferTransactionDoc;
+        } else if (transaction.type === "transferAsset") {
             return [
                 <Row key="count-of-input">
                     <Col md="3"># of Input</Col>
-                    <Col md="9">{transactionDoc.data.inputs.length.toLocaleString()}</Col>
+                    <Col md="9">{transaction.transferAsset.inputs.length.toLocaleString()}</Col>
                 </Row>,
                 <hr key="line1" />,
                 <Row key="count-of-output">
                     <Col md="3"># of Output</Col>
-                    <Col md="9">{transactionDoc.data.outputs.length.toLocaleString()}</Col>
+                    <Col md="9">{transaction.transferAsset.outputs.length.toLocaleString()}</Col>
                 </Row>,
                 <hr key="line2" />,
                 <Row key="count-of-burn">
                     <Col md="3"># of Burn</Col>
-                    <Col md="9">{transactionDoc.data.burns.length.toLocaleString()}</Col>
+                    <Col md="9">{transaction.transferAsset.burns.length.toLocaleString()}</Col>
                 </Row>,
                 <hr key="line3" />,
                 <div key="input-output-burn">
-                    {transactionDoc.data.inputs.length > 0
+                    {transaction.transferAsset.inputs.length > 0
                         ? [
                               <div key="input-output">
                                   <Row>
                                       <Col md="5">
                                           <p className="mt-1 mb-0">Input</p>
-                                          {_.map(transactionDoc.data.inputs.slice(0, 3), (input, i) => {
+                                          {_.map(transaction.transferAsset.inputs.slice(0, 3), (input, i) => {
                                               return (
                                                   <DataSet
                                                       key={`input-${i}`}
@@ -299,14 +288,14 @@ class TransactionList extends React.Component<Props, State> {
                                                       <hr />
                                                       <Row>
                                                           <Col md="4">Quantity</Col>
-                                                          <Col md="8">{input.prevOut.amount.toLocaleString()}</Col>
+                                                          <Col md="8">{input.prevOut.quantity.toLocaleString()}</Col>
                                                       </Row>
                                                   </DataSet>
                                               );
                                           })}
-                                          {transactionDoc.data.inputs.length > 3 ? (
+                                          {transaction.transferAsset.inputs.length > 3 ? (
                                               <div className="view-more-transfer-btn">
-                                                  <Link to={`/tx/0x${transactionDoc.data.hash}`}>
+                                                  <Link to={`/tx/0x${transaction.hash}`}>
                                                       <button type="button" className="btn btn-primary w-100">
                                                           <span>View more inputs</span>
                                                       </button>
@@ -324,7 +313,7 @@ class TransactionList extends React.Component<Props, State> {
                                       </Col>
                                       <Col md="5">
                                           <p className="mt-1 mb-0">Output</p>
-                                          {_.map(transactionDoc.data.outputs.slice(0, 3), (output, i) => {
+                                          {_.map(transaction.transferAsset.outputs.slice(0, 3), (output, i) => {
                                               return (
                                                   <DataSet
                                                       key={`output-${i}`}
@@ -370,14 +359,14 @@ class TransactionList extends React.Component<Props, State> {
                                                       <hr />
                                                       <Row>
                                                           <Col md="4">Quantity</Col>
-                                                          <Col md="8">{output.amount.toLocaleString()}</Col>
+                                                          <Col md="8">{output.quantity.toLocaleString()}</Col>
                                                       </Row>
                                                   </DataSet>
                                               );
                                           })}
-                                          {transactionDoc.data.outputs.length > 3 ? (
+                                          {transaction.transferAsset.outputs.length > 3 ? (
                                               <div className="view-more-transfer-btn">
-                                                  <Link to={`/tx/0x${transactionDoc.data.hash}`}>
+                                                  <Link to={`/tx/0x${transaction.hash}`}>
                                                       <button type="button" className="btn btn-primary w-100">
                                                           <span>View more outputs</span>
                                                       </button>
@@ -389,13 +378,13 @@ class TransactionList extends React.Component<Props, State> {
                               </div>
                           ]
                         : null}
-                    {transactionDoc.data.burns.length > 0
+                    {transaction.transferAsset.burns.length > 0
                         ? [
                               <div key="burn-container">
                                   <Row>
                                       <Col md="5">
                                           <p className="mt-1 mb-0">Burn</p>
-                                          {_.map(transactionDoc.data.burns.slice(0, 3), (burn, i) => {
+                                          {_.map(transaction.transferAsset.burns.slice(0, 3), (burn, i) => {
                                               return (
                                                   <DataSet
                                                       key={`burn-${i}`}
@@ -442,14 +431,14 @@ class TransactionList extends React.Component<Props, State> {
                                                       <hr />
                                                       <Row>
                                                           <Col md="4">Quantity</Col>
-                                                          <Col md="8">{burn.prevOut.amount.toLocaleString()}</Col>
+                                                          <Col md="8">{burn.prevOut.quantity.toLocaleString()}</Col>
                                                       </Row>
                                                   </DataSet>
                                               );
                                           })}
-                                          {transactionDoc.data.burns.length > 3 ? (
+                                          {transaction.transferAsset.burns.length > 3 ? (
                                               <div className="view-more-transfer-btn">
-                                                  <Link to={`/tx/0x${transactionDoc.data.hash}`}>
+                                                  <Link to={`/tx/0x${transaction.hash}`}>
                                                       <button type="button" className="btn btn-primary w-100">
                                                           <span>View more burns</span>
                                                       </button>
@@ -463,12 +452,11 @@ class TransactionList extends React.Component<Props, State> {
                         : null}
                 </div>
             ];
-        } else if (Type.isAssetComposeTransactionDoc(transaction)) {
-            const transactionDoc = transaction as AssetComposeTransactionDoc;
+        } else if (transaction.type === "composeAsset") {
             return [
                 <Row key="count-of-input">
                     <Col md="3"># of Input</Col>
-                    <Col md="9">{transactionDoc.data.inputs.length.toLocaleString()}</Col>
+                    <Col md="9">{transaction.composeAsset.inputs.length.toLocaleString()}</Col>
                 </Row>,
                 <hr key="line1" />,
                 <Row key="count-of-output">
@@ -477,13 +465,13 @@ class TransactionList extends React.Component<Props, State> {
                 </Row>,
                 <hr key="line3" />,
                 <div key="input-output-burn">
-                    {transactionDoc.data.inputs.length > 0
+                    {transaction.composeAsset.inputs.length > 0
                         ? [
                               <div key="input-output">
                                   <Row>
                                       <Col md="5">
                                           <p className="mt-1 mb-0">Input</p>
-                                          {_.map(transactionDoc.data.inputs.slice(0, 3), (input, i) => {
+                                          {_.map(transaction.composeAsset.inputs.slice(0, 3), (input, i) => {
                                               return (
                                                   <DataSet
                                                       key={`input-${i}`}
@@ -532,14 +520,14 @@ class TransactionList extends React.Component<Props, State> {
                                                       <hr />
                                                       <Row>
                                                           <Col md="4">Quantity</Col>
-                                                          <Col md="8">{input.prevOut.amount.toLocaleString()}</Col>
+                                                          <Col md="8">{input.prevOut.quantity.toLocaleString()}</Col>
                                                       </Row>
                                                   </DataSet>
                                               );
                                           })}
-                                          {transactionDoc.data.inputs.length > 3 ? (
+                                          {transaction.composeAsset.inputs.length > 3 ? (
                                               <div className="view-more-transfer-btn">
-                                                  <Link to={`/tx/0x${transactionDoc.data.hash}`}>
+                                                  <Link to={`/tx/0x${transaction.hash}`}>
                                                       <button type="button" className="btn btn-primary w-100">
                                                           <span>View more inputs</span>
                                                       </button>
@@ -559,7 +547,7 @@ class TransactionList extends React.Component<Props, State> {
                                           <p className="mt-1 mb-0">Output</p>
                                           <DataSet
                                               className={`input-output-container ${
-                                                  owner && transaction.data.output.recipient === owner
+                                                  owner && transaction.composeAsset.recipient === owner
                                                       ? "output-highlight"
                                                       : ""
                                               }`}
@@ -568,35 +556,35 @@ class TransactionList extends React.Component<Props, State> {
                                                   <Col md="0" />
                                                   <Col md="12">
                                                       <ImageLoader
-                                                          data={transaction.data.output.assetType}
+                                                          data={transaction.composeAsset.assetType}
                                                           className="icon mr-2"
                                                           size={18}
                                                           isAssetImage={true}
                                                       />
                                                       {assetType &&
-                                                      assetType.value === transaction.data.output.assetType ? (
-                                                          <HexString text={transaction.data.output.assetType} />
+                                                      assetType.value === transaction.composeAsset.assetType ? (
+                                                          <HexString text={transaction.composeAsset.assetType} />
                                                       ) : (
                                                           <HexString
-                                                              link={`/asset/0x${transaction.data.output.assetType}`}
-                                                              text={transaction.data.output.assetType}
+                                                              link={`/asset/0x${transaction.composeAsset.assetType}`}
+                                                              text={transaction.composeAsset.assetType}
                                                           />
                                                       )}
                                                   </Col>
                                               </Row>
                                               <Row>
-                                                  <Col md="4">Owner</Col>
+                                                  <Col md="4">Recipient</Col>
                                                   <Col md="8">
-                                                      {transaction.data.output.recipient ? (
-                                                          owner && owner === transaction.data.output.recipient ? (
-                                                              transaction.data.output.recipient
+                                                      {transaction.composeAsset.recipient ? (
+                                                          owner && owner === transaction.composeAsset.recipient ? (
+                                                              transaction.composeAsset.recipient
                                                           ) : (
                                                               <Link
                                                                   to={`/addr-asset/${
-                                                                      transaction.data.output.recipient
+                                                                      transaction.composeAsset.recipient
                                                                   }`}
                                                               >
-                                                                  {transaction.data.output.recipient}
+                                                                  {transaction.composeAsset.recipient}
                                                               </Link>
                                                           )
                                                       ) : (
@@ -606,8 +594,8 @@ class TransactionList extends React.Component<Props, State> {
                                               </Row>
                                               <hr />
                                               <Row>
-                                                  <Col md="4">Quantity</Col>
-                                                  <Col md="8">{transaction.data.output.amount}</Col>
+                                                  <Col md="4">Total supply</Col>
+                                                  <Col md="8">{transaction.composeAsset.supply}</Col>
                                               </Row>
                                           </DataSet>
                                       </Col>
@@ -617,12 +605,11 @@ class TransactionList extends React.Component<Props, State> {
                         : null}
                 </div>
             ];
-        } else if (Type.isAssetDecomposeTransactionDoc(transaction)) {
-            const transactionDoc = transaction as AssetDecomposeTransactionDoc;
+        } else if (transaction.type === "decomposeAsset") {
             return [
                 <Row key="count-of-output">
                     <Col md="3"># of Output</Col>
-                    <Col md="9">{transactionDoc.data.outputs.length.toLocaleString()}</Col>
+                    <Col md="9">{transaction.decomposeAsset.outputs.length.toLocaleString()}</Col>
                 </Row>,
                 <hr key="line2" />,
                 <div key="input-output-burn">
@@ -632,7 +619,7 @@ class TransactionList extends React.Component<Props, State> {
                                 <p className="mt-1 mb-0">Input</p>
                                 <DataSet
                                     className={`input-output-container ${
-                                        owner && transactionDoc.data.input.prevOut.owner === owner
+                                        owner && transaction.decomposeAsset.input.prevOut.owner === owner
                                             ? "input-highlight"
                                             : ""
                                     }`}
@@ -641,31 +628,37 @@ class TransactionList extends React.Component<Props, State> {
                                         <Col md="0" />
                                         <Col md="12">
                                             <ImageLoader
-                                                data={transactionDoc.data.input.prevOut.assetType}
+                                                data={transaction.decomposeAsset.input.prevOut.assetType}
                                                 className="icon mr-2"
                                                 size={18}
                                                 isAssetImage={true}
                                             />
                                             {assetType &&
-                                            assetType.value === transactionDoc.data.input.prevOut.assetType ? (
-                                                <HexString text={transactionDoc.data.input.prevOut.assetType} />
+                                            assetType.value === transaction.decomposeAsset.input.prevOut.assetType ? (
+                                                <HexString text={transaction.decomposeAsset.input.prevOut.assetType} />
                                             ) : (
                                                 <HexString
-                                                    link={`/asset/0x${transactionDoc.data.input.prevOut.assetType}`}
-                                                    text={transactionDoc.data.input.prevOut.assetType}
+                                                    link={`/asset/0x${
+                                                        transaction.decomposeAsset.input.prevOut.assetType
+                                                    }`}
+                                                    text={transaction.decomposeAsset.input.prevOut.assetType}
                                                 />
                                             )}
                                         </Col>
                                     </Row>
                                     <Row>
-                                        <Col md="4">Owner</Col>
+                                        <Col md="4">Recipient</Col>
                                         <Col md="8">
-                                            {transactionDoc.data.input.prevOut.owner ? (
-                                                owner && owner === transactionDoc.data.input.prevOut.owner ? (
-                                                    transactionDoc.data.input.prevOut.owner
+                                            {transaction.decomposeAsset.input.prevOut.owner ? (
+                                                owner && owner === transaction.decomposeAsset.input.prevOut.owner ? (
+                                                    transaction.decomposeAsset.input.prevOut.owner
                                                 ) : (
-                                                    <Link to={`/addr-asset/${transactionDoc.data.input.prevOut.owner}`}>
-                                                        {transactionDoc.data.input.prevOut.owner}
+                                                    <Link
+                                                        to={`/addr-asset/${
+                                                            transaction.decomposeAsset.input.prevOut.owner
+                                                        }`}
+                                                    >
+                                                        {transaction.decomposeAsset.input.prevOut.owner}
                                                     </Link>
                                                 )
                                             ) : (
@@ -676,7 +669,9 @@ class TransactionList extends React.Component<Props, State> {
                                     <hr />
                                     <Row>
                                         <Col md="4">Quantity</Col>
-                                        <Col md="8">{transactionDoc.data.input.prevOut.amount.toLocaleString()}</Col>
+                                        <Col md="8">
+                                            {transaction.decomposeAsset.input.prevOut.quantity.toLocaleString()}
+                                        </Col>
                                     </Row>
                                 </DataSet>
                             </Col>
@@ -690,7 +685,7 @@ class TransactionList extends React.Component<Props, State> {
                             </Col>
                             <Col md="5">
                                 <p className="mt-1 mb-0">Output</p>
-                                {_.map(transactionDoc.data.outputs.slice(0, 3), (output, i) => {
+                                {_.map(transaction.decomposeAsset.outputs.slice(0, 3), (output, i) => {
                                     return (
                                         <DataSet
                                             key={`output-${i}`}
@@ -736,14 +731,14 @@ class TransactionList extends React.Component<Props, State> {
                                             <hr />
                                             <Row>
                                                 <Col md="4">Quantity</Col>
-                                                <Col md="8">{output.amount.toLocaleString()}</Col>
+                                                <Col md="8">{output.quantity.toLocaleString()}</Col>
                                             </Row>
                                         </DataSet>
                                     );
                                 })}
-                                {transactionDoc.data.outputs.length > 3 ? (
+                                {transaction.decomposeAsset.outputs.length > 3 ? (
                                     <div className="view-more-transfer-btn">
-                                        <Link to={`/tx/0x${transactionDoc.data.hash}`}>
+                                        <Link to={`/tx/0x${transaction.hash}`}>
                                             <button type="button" className="btn btn-primary w-100">
                                                 <span>View more outputs</span>
                                             </button>

@@ -1,12 +1,12 @@
 import * as React from "react";
 import { connect, Dispatch } from "react-redux";
 
-import { AggsUTXO } from "codechain-indexer-types/lib/types";
+import { AggsUTXODoc } from "codechain-indexer-types";
 import { ApiError, apiRequest } from "./ApiRequest";
 
 interface OwnProps {
     address: string;
-    onAggsUTXO: (aggsUTXO: AggsUTXO[]) => void;
+    onAggsUTXO: (aggsUTXO: AggsUTXODoc[]) => void;
     onError: (e: ApiError) => void;
 }
 
@@ -21,7 +21,7 @@ class RequestAssetTransferAddressUTXO extends React.Component<Props> {
         const { address, onAggsUTXO, onError, dispatch } = this.props;
         const path = `aggs-utxo/${address}`;
         apiRequest({ path, dispatch, showProgressBar: true })
-            .then((response: AggsUTXO[]) => {
+            .then((response: AggsUTXODoc[]) => {
                 onAggsUTXO(response);
             })
             .catch(onError);

@@ -7,7 +7,6 @@ import { ApiError, apiRequest } from "./ApiRequest";
 
 export enum WeeklyLogType {
     BLOCK_COUNT = "BLOCK_COUNT",
-    PARCEL_COUNT = "PARCEL_COUNT",
     TX_COUNT = "TX_COUNT"
 }
 
@@ -45,9 +44,6 @@ class RequestWeeklyLogs extends React.Component<Props> {
         switch (type) {
             case WeeklyLogType.BLOCK_COUNT:
                 query = "log/blockCount";
-                break;
-            case WeeklyLogType.PARCEL_COUNT:
-                query = "log/parcelCount";
                 break;
             case WeeklyLogType.TX_COUNT:
                 query = "log/txCount";

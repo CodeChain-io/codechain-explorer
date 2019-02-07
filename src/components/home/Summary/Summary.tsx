@@ -123,7 +123,6 @@ class Summary extends React.Component<Props, State> {
                                         onChange={this.onWeeklyLogTypeChanged}
                                     >
                                         <option value={WeeklyLogType.BLOCK_COUNT}>Block</option>
-                                        <option value={WeeklyLogType.PARCEL_COUNT}>Parcel</option>
                                         <option value={WeeklyLogType.TX_COUNT}>Tx</option>
                                     </select>
                                 </div>
@@ -275,9 +274,6 @@ class Summary extends React.Component<Props, State> {
             case WeeklyLogType.BLOCK_COUNT:
                 dailyLogType = DailyLogType.BEST_MINER;
                 break;
-            case WeeklyLogType.PARCEL_COUNT:
-                dailyLogType = DailyLogType.PARCEL_ACTION;
-                break;
             case WeeklyLogType.TX_COUNT:
                 dailyLogType = DailyLogType.TX_TYPE;
                 break;
@@ -301,8 +297,6 @@ class Summary extends React.Component<Props, State> {
                 return "block";
             case WeeklyLogType.TX_COUNT:
                 return "transaction";
-            case WeeklyLogType.PARCEL_COUNT:
-                return "parcel";
         }
         return "";
     };
@@ -313,8 +307,6 @@ class Summary extends React.Component<Props, State> {
                 return "blocks";
             case WeeklyLogType.TX_COUNT:
                 return "tx";
-            case WeeklyLogType.PARCEL_COUNT:
-                return "parcels";
         }
         return "";
     };
@@ -323,8 +315,6 @@ class Summary extends React.Component<Props, State> {
         switch (type) {
             case DailyLogType.BEST_MINER:
                 return "block";
-            case DailyLogType.PARCEL_ACTION:
-                return "parcel";
             case DailyLogType.TX_TYPE:
                 return "transaction";
         }
@@ -335,8 +325,6 @@ class Summary extends React.Component<Props, State> {
         switch (type) {
             case DailyLogType.BEST_MINER:
                 return "Top reward address";
-            case DailyLogType.PARCEL_ACTION:
-                return "Parcel actions";
             case DailyLogType.TX_TYPE:
                 return "Transaction types";
         }
@@ -347,8 +335,6 @@ class Summary extends React.Component<Props, State> {
         switch (type) {
             case DailyLogType.BEST_MINER:
                 return "# of blocks";
-            case DailyLogType.PARCEL_ACTION:
-                return "# of parcels";
             case DailyLogType.TX_TYPE:
                 return "# of transactions";
         }

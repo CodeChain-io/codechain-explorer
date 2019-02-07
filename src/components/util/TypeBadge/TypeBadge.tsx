@@ -1,6 +1,6 @@
 import { faSquare } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { TransactionDoc } from "codechain-indexer-types/lib/types";
+import { TransactionDoc } from "codechain-indexer-types";
 import * as React from "react";
 
 interface Props {

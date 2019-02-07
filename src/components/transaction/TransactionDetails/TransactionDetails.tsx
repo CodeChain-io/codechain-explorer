@@ -6,16 +6,10 @@ import { Col, Row } from "reactstrap";
 import { RootState } from "../../../redux/actions";
 
 import { Buffer } from "buffer";
-import {
-    AssetComposeTransactionDoc,
-    AssetDecomposeTransactionDoc,
-    AssetMintTransactionDoc,
-    AssetTransferTransactionDoc,
-    TransactionDoc
-} from "codechain-indexer-types/lib/types";
-import { Type } from "codechain-indexer-types/lib/utils";
+import { TransactionDoc } from "codechain-indexer-types";
 import { Script } from "codechain-sdk/lib/core/classes";
 import { Link } from "react-router-dom";
+import * as Metadata from "../../../utils/Metadata";
 import DataSet from "../../util/DataSet/DataSet";
 import HexString from "../../util/HexString/HexString";
 import { ImageLoader } from "../../util/ImageLoader/ImageLoader";
@@ -23,14 +17,8 @@ import { StatusBadge } from "../../util/StatusBadge/StatusBadge";
 import { TypeBadge } from "../../util/TypeBadge/TypeBadge";
 import "./TransactionDetails.scss";
 
-interface TransactionResult {
-    transaction: TransactionDoc;
-    status: string;
-    timestamp?: number;
-}
-
 interface OwnProps {
-    transactionResult: TransactionResult;
+    transaction: TransactionDoc;
     moveToSectionRef?: string;
 }
 
@@ -70,7 +58,7 @@ class TransactionDetailsInternal extends React.Component<Props, State> {
     }
 
     public render() {
-        const { transactionResult } = this.props;
+        const { transaction } = this.props;
         return (
             <div className="transaction-details">
                 <Row>
@@ -80,9 +68,9 @@ class TransactionDetailsInternal extends React.Component<Props, State> {
                     </Col>
                 </Row>
                 {this.getTransactionInfoByType(
-                    transactionResult.transaction,
-                    transactionResult.status,
-                    transactionResult.timestamp
+                    transaction,
+                    transaction.isPending ? "pending" : "confirmed",
+                    transaction.pendingTimestamp
                 )}
             </div>
         );
@@ -98,11 +86,14 @@ class TransactionDetailsInternal extends React.Component<Props, State> {
         return `0x${lockScriptHash}`;
     };
 
-    private getTransactionInfoByType = (transaction: TransactionDoc, status: string, pendingDuration?: number) => {
+    private getTransactionInfoByType = (
+        transaction: TransactionDoc,
+        status: string,
+        pendingDuration?: number | null
+    ) => {
         const { pageForBurn, pageForOutput, pageForInput } = this.state;
         const { bestBlockNumber } = this.props;
-        if (Type.isAssetTransferTransactionDoc(transaction)) {
-            const transactionDoc = transaction as AssetTransferTransactionDoc;
+        if (transaction.type === "transferAsset") {
             return [
                 <Row key="details">
                     <Col lg="12">
@@ -115,18 +106,15 @@ class TransactionDetailsInternal extends React.Component<Props, State> {
                             </Row>
                             <hr />
                             <Row>
-                                <Col md="3">Parcel Hash</Col>
+                                <Col md="3">Block</Col>
                                 <Col md="9">
-                                    <HexString
-                                        text={transactionDoc.data.parcelHash}
-                                        link={`/parcel/0x${transactionDoc.data.parcelHash}`}
-                                    />
+                                    <Link to={`/block/${transaction.blockNumber}`}>{transaction.blockNumber}</Link>
                                 </Col>
                             </Row>
                             <hr />
                             <Row>
                                 <Col md="3">NetworkID</Col>
-                                <Col md="9">{transactionDoc.data.networkId}</Col>
+                                <Col md="9">{transaction.networkId}</Col>
                             </Row>
                             <hr />
                             <Row>
@@ -137,7 +125,7 @@ class TransactionDetailsInternal extends React.Component<Props, State> {
                                             status={status}
                                             timestamp={pendingDuration}
                                             bestBlockNumber={bestBlockNumber}
-                                            currentBlockNumber={transaction.data.blockNumber}
+                                            currentBlockNumber={transaction.blockNumber}
                                         />
                                     )}
                                 </Col>
@@ -148,9 +136,7 @@ class TransactionDetailsInternal extends React.Component<Props, State> {
                                       <Row key="invoice-row">
                                           <Col md="3">Invoice</Col>
                                           <Col md="9">
-                                              {transactionDoc.data.invoice
-                                                  ? "Success"
-                                                  : `Fail - ${transactionDoc.data.errorType}`}
+                                              {transaction.invoice ? "Success" : `Fail - ${transaction.errorType}`}
                                           </Col>
                                       </Row>,
                                       <hr key="invoice-hr" />
@@ -158,111 +144,114 @@ class TransactionDetailsInternal extends React.Component<Props, State> {
                                 : null}
                             <Row>
                                 <Col md="3"># of Input</Col>
-                                <Col md="9">{transactionDoc.data.inputs.length.toLocaleString()}</Col>
+                                <Col md="9">{transaction.transferAsset.inputs.length.toLocaleString()}</Col>
                             </Row>
                             <hr />
                             <Row>
                                 <Col md="3"># of Output</Col>
-                                <Col md="9">{transactionDoc.data.outputs.length.toLocaleString()}</Col>
+                                <Col md="9">{transaction.transferAsset.outputs.length.toLocaleString()}</Col>
                             </Row>
                             <hr />
                             <Row>
                                 <Col md="3"># of Burn</Col>
-                                <Col md="9">{transactionDoc.data.burns.length.toLocaleString()}</Col>
+                                <Col md="9">{transaction.transferAsset.burns.length.toLocaleString()}</Col>
                             </Row>
                             <hr />
                         </DataSet>
                     </Col>
                 </Row>,
                 <div key="input">
-                    {_.map(transactionDoc.data.inputs.slice(0, this.itemsPerPage * pageForInput), (input, index) => {
-                        return [
-                            <div
-                                key={`transaction-header-table-input-title-${index}`}
-                                className="mt-large"
-                                ref={(re: any) => {
-                                    this.refList[`input-${index}`] = re;
-                                }}
-                            >
-                                <h3>Input #{index}</h3>
-                                <hr className="heading-hr" />
-                            </div>,
-                            <Row key={`transaction-header-table-input-detail-${index}`}>
-                                <Col lg="12">
-                                    <DataSet>
-                                        <Row>
-                                            <Col md="3">AssetType</Col>
-                                            <Col md="9">
-                                                <ImageLoader
-                                                    className="mr-2"
-                                                    size={18}
-                                                    data={input.prevOut.assetType}
-                                                    isAssetImage={true}
-                                                />
-                                                <HexString
-                                                    link={`/asset/0x${input.prevOut.assetType}`}
-                                                    text={input.prevOut.assetType}
-                                                />
-                                            </Col>
-                                        </Row>
-                                        <hr />
-                                        <Row>
-                                            <Col md="3">Owner</Col>
-                                            <Col md="9">
-                                                {input.prevOut.owner ? (
-                                                    <Link to={`/addr-asset/${input.prevOut.owner}`}>
-                                                        {input.prevOut.owner}
-                                                    </Link>
-                                                ) : (
-                                                    "Unknown"
-                                                )}
-                                            </Col>
-                                        </Row>
-                                        <hr />
-                                        <Row>
-                                            <Col md="3">Quantity</Col>
-                                            <Col md="9">{input.prevOut.amount.toLocaleString()}</Col>
-                                        </Row>
-                                        <hr />
-                                        <Row>
-                                            <Col md="3">LockScript</Col>
-                                            <Col md="9">
-                                                <div className="text-area">
-                                                    {new Script(input.lockScript).toTokens().join(" ")}
-                                                </div>
-                                            </Col>
-                                        </Row>
-                                        <hr />
-                                        <Row>
-                                            <Col md="3">UnlockScript</Col>
-                                            <Col md="9">
-                                                <div className="text-area">
-                                                    {new Script(input.unlockScript).toTokens().join(" ")}
-                                                </div>
-                                            </Col>
-                                        </Row>
-                                        <hr />
-                                        <Row>
-                                            <Col md="3">Prev Tx</Col>
-                                            <Col md="9">
-                                                <HexString
-                                                    link={`/tx/0x${input.prevOut.transactionHash}`}
-                                                    text={input.prevOut.transactionHash}
-                                                />
-                                            </Col>
-                                        </Row>
-                                        <hr />
-                                        <Row>
-                                            <Col md="3">Prev Tx Index</Col>
-                                            <Col md="9">{input.prevOut.index.toLocaleString()}</Col>
-                                        </Row>
-                                        <hr />
-                                    </DataSet>
-                                </Col>
-                            </Row>
-                        ];
-                    })}
-                    {this.itemsPerPage * pageForInput < transactionDoc.data.inputs.length ? (
+                    {_.map(
+                        transaction.transferAsset.inputs.slice(0, this.itemsPerPage * pageForInput),
+                        (input, index) => {
+                            return [
+                                <div
+                                    key={`transaction-header-table-input-title-${index}`}
+                                    className="mt-large"
+                                    ref={(re: any) => {
+                                        this.refList[`input-${index}`] = re;
+                                    }}
+                                >
+                                    <h3>Input #{index}</h3>
+                                    <hr className="heading-hr" />
+                                </div>,
+                                <Row key={`transaction-header-table-input-detail-${index}`}>
+                                    <Col lg="12">
+                                        <DataSet>
+                                            <Row>
+                                                <Col md="3">AssetType</Col>
+                                                <Col md="9">
+                                                    <ImageLoader
+                                                        className="mr-2"
+                                                        size={18}
+                                                        data={input.prevOut.assetType}
+                                                        isAssetImage={true}
+                                                    />
+                                                    <HexString
+                                                        link={`/asset/0x${input.prevOut.assetType}`}
+                                                        text={input.prevOut.assetType}
+                                                    />
+                                                </Col>
+                                            </Row>
+                                            <hr />
+                                            <Row>
+                                                <Col md="3">Owner</Col>
+                                                <Col md="9">
+                                                    {input.prevOut.owner ? (
+                                                        <Link to={`/addr-asset/${input.prevOut.owner}`}>
+                                                            {input.prevOut.owner}
+                                                        </Link>
+                                                    ) : (
+                                                        "Unknown"
+                                                    )}
+                                                </Col>
+                                            </Row>
+                                            <hr />
+                                            <Row>
+                                                <Col md="3">Quantity</Col>
+                                                <Col md="9">{input.prevOut.quantity.toLocaleString()}</Col>
+                                            </Row>
+                                            <hr />
+                                            <Row>
+                                                <Col md="3">LockScript</Col>
+                                                <Col md="9">
+                                                    <div className="text-area">
+                                                        {new Script(input.lockScript).toTokens().join(" ")}
+                                                    </div>
+                                                </Col>
+                                            </Row>
+                                            <hr />
+                                            <Row>
+                                                <Col md="3">UnlockScript</Col>
+                                                <Col md="9">
+                                                    <div className="text-area">
+                                                        {new Script(input.unlockScript).toTokens().join(" ")}
+                                                    </div>
+                                                </Col>
+                                            </Row>
+                                            <hr />
+                                            <Row>
+                                                <Col md="3">Prev Tx</Col>
+                                                <Col md="9">
+                                                    <HexString
+                                                        link={`/tx/0x${input.prevOut.tracker}`}
+                                                        text={input.prevOut.tracker}
+                                                    />
+                                                </Col>
+                                            </Row>
+                                            <hr />
+                                            <Row>
+                                                <Col md="3">Prev Tx Index</Col>
+                                                <Col md="9">{input.prevOut.index.toLocaleString()}</Col>
+                                            </Row>
+                                            <hr />
+                                        </DataSet>
+                                    </Col>
+                                </Row>
+                            ];
+                        }
+                    )}
+                    {this.itemsPerPage * pageForInput < transaction.transferAsset.inputs.length ? (
                         <Row>
                             <Col>
                                 <div className="mt-small">
@@ -275,7 +264,7 @@ class TransactionDetailsInternal extends React.Component<Props, State> {
                     ) : null}
                 </div>,
                 <div key="burn">
-                    {_.map(transactionDoc.data.burns.slice(0, this.itemsPerPage * pageForBurn), (burn, index) => {
+                    {_.map(transaction.transferAsset.burns.slice(0, this.itemsPerPage * pageForBurn), (burn, index) => {
                         return [
                             <div
                                 key={`transaction-header-table-burn-title-${index}`}
@@ -321,7 +310,7 @@ class TransactionDetailsInternal extends React.Component<Props, State> {
                                         <hr />
                                         <Row>
                                             <Col md="3">Quantity</Col>
-                                            <Col md="9">{burn.prevOut.amount.toLocaleString()}</Col>
+                                            <Col md="9">{burn.prevOut.quantity.toLocaleString()}</Col>
                                         </Row>
                                         <hr />
                                         <Row>
@@ -346,8 +335,8 @@ class TransactionDetailsInternal extends React.Component<Props, State> {
                                             <Col md="3">Prev Tx</Col>
                                             <Col md="9">
                                                 <HexString
-                                                    link={`/tx/0x${burn.prevOut.transactionHash}`}
-                                                    text={burn.prevOut.transactionHash}
+                                                    link={`/tx/0x${burn.prevOut.tracker}`}
+                                                    text={burn.prevOut.tracker}
                                                 />
                                             </Col>
                                         </Row>
@@ -362,7 +351,7 @@ class TransactionDetailsInternal extends React.Component<Props, State> {
                             </Row>
                         ];
                     })}
-                    {this.itemsPerPage * pageForBurn < transactionDoc.data.burns.length ? (
+                    {this.itemsPerPage * pageForBurn < transaction.transferAsset.burns.length ? (
                         <Row>
                             <Col>
                                 <div className="mt-small">
@@ -375,79 +364,82 @@ class TransactionDetailsInternal extends React.Component<Props, State> {
                     ) : null}
                 </div>,
                 <div key="output">
-                    {_.map(transactionDoc.data.outputs.slice(0, this.itemsPerPage * pageForOutput), (output, index) => {
-                        return [
-                            <div
-                                key={`transaction-header-table-output-title-${index}`}
-                                className="mt-large"
-                                ref={(re: any) => {
-                                    this.refList[`output-${index}`] = re;
-                                }}
-                            >
-                                <h3>Output #{index}</h3>
-                                <hr className="heading-hr" />
-                            </div>,
-                            <Row key={`transaction-header-table-output-details-${index}`}>
-                                <Col lg="12">
-                                    <DataSet>
-                                        <Row>
-                                            <Col md="3">AssetType</Col>
-                                            <Col md="9">
-                                                <ImageLoader
-                                                    size={18}
-                                                    data={output.assetType}
-                                                    className="mr-2"
-                                                    isAssetImage={true}
-                                                />
-                                                <HexString
-                                                    link={`/asset/0x${output.assetType}`}
-                                                    text={output.assetType}
-                                                />
-                                            </Col>
-                                        </Row>
-                                        <hr />
-                                        <Row>
-                                            <Col md="3">Owner</Col>
-                                            <Col md="9">
-                                                {output.owner ? (
-                                                    <Link to={`/addr-asset/${output.owner}`}>{output.owner}</Link>
-                                                ) : (
-                                                    "Unknown"
-                                                )}
-                                            </Col>
-                                        </Row>
-                                        <hr />
-                                        <Row>
-                                            <Col md="3">Quantity</Col>
-                                            <Col md="9">{output.amount.toLocaleString()}</Col>
-                                        </Row>
-                                        <hr />
-                                        <Row>
-                                            <Col md="3">LockScriptHash</Col>
-                                            <Col md="9">{this.getLockScriptName(output.lockScriptHash)}</Col>
-                                        </Row>
-                                        <hr />
-                                        <Row>
-                                            <Col md="3">Parameters</Col>
-                                            <Col md="9">
-                                                <div className="text-area">
-                                                    {_.map(output.parameters, (parameter, i) => {
-                                                        return (
-                                                            <div key={`transaction-paramter-${i}`}>
-                                                                {Buffer.from(parameter).toString("hex")}
-                                                            </div>
-                                                        );
-                                                    })}
-                                                </div>
-                                            </Col>
-                                        </Row>
-                                        <hr />
-                                    </DataSet>
-                                </Col>
-                            </Row>
-                        ];
-                    })}
-                    {this.itemsPerPage * pageForOutput < transactionDoc.data.outputs.length ? (
+                    {_.map(
+                        transaction.transferAsset.outputs.slice(0, this.itemsPerPage * pageForOutput),
+                        (output, index) => {
+                            return [
+                                <div
+                                    key={`transaction-header-table-output-title-${index}`}
+                                    className="mt-large"
+                                    ref={(re: any) => {
+                                        this.refList[`output-${index}`] = re;
+                                    }}
+                                >
+                                    <h3>Output #{index}</h3>
+                                    <hr className="heading-hr" />
+                                </div>,
+                                <Row key={`transaction-header-table-output-details-${index}`}>
+                                    <Col lg="12">
+                                        <DataSet>
+                                            <Row>
+                                                <Col md="3">AssetType</Col>
+                                                <Col md="9">
+                                                    <ImageLoader
+                                                        size={18}
+                                                        data={output.assetType}
+                                                        className="mr-2"
+                                                        isAssetImage={true}
+                                                    />
+                                                    <HexString
+                                                        link={`/asset/0x${output.assetType}`}
+                                                        text={output.assetType}
+                                                    />
+                                                </Col>
+                                            </Row>
+                                            <hr />
+                                            <Row>
+                                                <Col md="3">Owner</Col>
+                                                <Col md="9">
+                                                    {output.owner ? (
+                                                        <Link to={`/addr-asset/${output.owner}`}>{output.owner}</Link>
+                                                    ) : (
+                                                        "Unknown"
+                                                    )}
+                                                </Col>
+                                            </Row>
+                                            <hr />
+                                            <Row>
+                                                <Col md="3">Quantity</Col>
+                                                <Col md="9">{output.quantity.toLocaleString()}</Col>
+                                            </Row>
+                                            <hr />
+                                            <Row>
+                                                <Col md="3">LockScriptHash</Col>
+                                                <Col md="9">{this.getLockScriptName(output.lockScriptHash)}</Col>
+                                            </Row>
+                                            <hr />
+                                            <Row>
+                                                <Col md="3">Parameters</Col>
+                                                <Col md="9">
+                                                    <div className="text-area">
+                                                        {_.map(output.parameters, (parameter, i) => {
+                                                            return (
+                                                                <div key={`transaction-paramter-${i}`}>
+                                                                    {Buffer.from(parameter).toString("hex")}
+                                                                </div>
+                                                            );
+                                                        })}
+                                                    </div>
+                                                </Col>
+                                            </Row>
+                                            <hr />
+                                        </DataSet>
+                                    </Col>
+                                </Row>
+                            ];
+                        }
+                    )}
+                    {this.itemsPerPage * pageForOutput < transaction.transferAsset.outputs.length ? (
                         <Row>
                             <Col>
                                 <div className="mt-small">
@@ -460,9 +452,8 @@ class TransactionDetailsInternal extends React.Component<Props, State> {
                     ) : null}
                 </div>
             ];
-        } else if (Type.isAssetMintTransactionDoc(transaction)) {
-            const transactionDoc = transaction as AssetMintTransactionDoc;
-            const metadata = Type.getMetadata(transactionDoc.data.metadata);
+        } else if (transaction.type === "mintAsset") {
+            const metadata = Metadata.parseMetadata(transaction.mintAsset.metadata);
             return [
                 <Row key="details">
                     <Col lg="12">
@@ -475,18 +466,15 @@ class TransactionDetailsInternal extends React.Component<Props, State> {
                             </Row>
                             <hr />
                             <Row>
-                                <Col md="3">Parcel Hash</Col>
+                                <Col md="3">Block</Col>
                                 <Col md="9">
-                                    <HexString
-                                        text={transactionDoc.data.parcelHash}
-                                        link={`/parcel/0x${transactionDoc.data.parcelHash}`}
-                                    />
+                                    <Link to={`/block/${transaction.blockNumber}`}>{transaction.blockNumber}</Link>
                                 </Col>
                             </Row>
                             <hr />
                             <Row>
                                 <Col md="3">NetworkID</Col>
-                                <Col md="9">{transactionDoc.data.networkId}</Col>
+                                <Col md="9">{transaction.networkId}</Col>
                             </Row>
                             <hr />
                             <Row>
@@ -497,7 +485,7 @@ class TransactionDetailsInternal extends React.Component<Props, State> {
                                             status={status}
                                             timestamp={pendingDuration}
                                             bestBlockNumber={bestBlockNumber}
-                                            currentBlockNumber={transaction.data.blockNumber}
+                                            currentBlockNumber={transaction.blockNumber}
                                         />
                                     )}
                                 </Col>
@@ -508,9 +496,7 @@ class TransactionDetailsInternal extends React.Component<Props, State> {
                                       <Row key="invoice-row">
                                           <Col md="3">Invoice</Col>
                                           <Col md="9">
-                                              {transactionDoc.data.invoice
-                                                  ? "Success"
-                                                  : `Fail - ${transactionDoc.data.errorType}`}
+                                              {transaction.invoice ? "Success" : `Fail - ${transaction.errorType}`}
                                           </Col>
                                       </Row>,
                                       <hr key="invoice-hr" />
@@ -518,14 +504,14 @@ class TransactionDetailsInternal extends React.Component<Props, State> {
                                 : null}
                             <Row>
                                 <Col md="3">LockScriptHash</Col>
-                                <Col md="9">{this.getLockScriptName(transactionDoc.data.output.lockScriptHash)}</Col>
+                                <Col md="9">{this.getLockScriptName(transaction.mintAsset.lockScriptHash)}</Col>
                             </Row>
                             <hr />
                             <Row>
                                 <Col md="3">Parameters</Col>
                                 <Col md="9">
                                     <div className="text-area">
-                                        {_.map(transactionDoc.data.output.parameters, (parameter, i) => {
+                                        {_.map(transaction.mintAsset.parameters, (parameter, i) => {
                                             return (
                                                 <div key={`transaction-heder-param-${i}`}>
                                                     {Buffer.from(parameter).toString("hex")}
@@ -540,14 +526,14 @@ class TransactionDetailsInternal extends React.Component<Props, State> {
                                 <Col md="3">AssetType</Col>
                                 <Col md="9">
                                     <ImageLoader
-                                        data={transactionDoc.data.output.assetType}
+                                        data={transaction.mintAsset.assetType}
                                         size={18}
                                         className="mr-2"
                                         isAssetImage={true}
                                     />
                                     <HexString
-                                        link={`/asset/0x${transactionDoc.data.output.assetType}`}
-                                        text={transactionDoc.data.output.assetType}
+                                        link={`/asset/0x${transaction.mintAsset.assetType}`}
+                                        text={transaction.mintAsset.assetType}
                                     />
                                 </Col>
                             </Row>
@@ -555,18 +541,16 @@ class TransactionDetailsInternal extends React.Component<Props, State> {
                             <Row>
                                 <Col md="3">Quantity</Col>
                                 <Col md="9">
-                                    {transactionDoc.data.output.amount
-                                        ? transactionDoc.data.output.amount.toLocaleString()
-                                        : 0}
+                                    {transaction.mintAsset.supply ? transaction.mintAsset.supply.toLocaleString() : 0}
                                 </Col>
                             </Row>
                             <hr />
                             <Row>
-                                <Col md="3">Registrar</Col>
+                                <Col md="3">Approver</Col>
                                 <Col md="9">
-                                    {transactionDoc.data.registrar ? (
-                                        <Link to={`/addr-platform/${transactionDoc.data.registrar}`}>
-                                            {transactionDoc.data.registrar}
+                                    {transaction.mintAsset.approver ? (
+                                        <Link to={`/addr-platform/${transaction.mintAsset.approver}`}>
+                                            {transaction.mintAsset.approver}
                                         </Link>
                                     ) : (
                                         "None"
@@ -575,11 +559,11 @@ class TransactionDetailsInternal extends React.Component<Props, State> {
                             </Row>
                             <hr />
                             <Row>
-                                <Col md="3">Owner</Col>
+                                <Col md="3">Recipient</Col>
                                 <Col md="9">
-                                    {transactionDoc.data.output.recipient ? (
-                                        <Link to={`/addr-asset/${transactionDoc.data.output.recipient}`}>
-                                            {transactionDoc.data.output.recipient}
+                                    {transaction.mintAsset.recipient ? (
+                                        <Link to={`/addr-asset/${transaction.mintAsset.recipient}`}>
+                                            {transaction.mintAsset.recipient}
                                         </Link>
                                     ) : (
                                         "Unknown"
@@ -623,7 +607,7 @@ class TransactionDetailsInternal extends React.Component<Props, State> {
                             <Row>
                                 <Col md="3">Raw data</Col>
                                 <Col md="9">
-                                    <div className="text-area">{transactionDoc.data.metadata}</div>
+                                    <div className="text-area">{transaction.mintAsset.metadata}</div>
                                 </Col>
                             </Row>
                             <hr />
@@ -631,8 +615,7 @@ class TransactionDetailsInternal extends React.Component<Props, State> {
                     </Col>
                 </Row>
             ];
-        } else if (Type.isAssetComposeTransactionDoc(transaction)) {
-            const transactionDoc = transaction as AssetComposeTransactionDoc;
+        } else if (transaction.type === "composeAsset") {
             return [
                 <Row key="details">
                     <Col lg="12">
@@ -645,18 +628,15 @@ class TransactionDetailsInternal extends React.Component<Props, State> {
                             </Row>
                             <hr />
                             <Row>
-                                <Col md="3">Parcel Hash</Col>
+                                <Col md="3">Block</Col>
                                 <Col md="9">
-                                    <HexString
-                                        text={transactionDoc.data.parcelHash}
-                                        link={`/parcel/0x${transactionDoc.data.parcelHash}`}
-                                    />
+                                    <Link to={`block/${transaction.blockNumber}`}>{transaction.blockNumber}</Link>
                                 </Col>
                             </Row>
                             <hr />
                             <Row>
                                 <Col md="3">NetworkID</Col>
-                                <Col md="9">{transactionDoc.data.networkId}</Col>
+                                <Col md="9">{transaction.networkId}</Col>
                             </Row>
                             <hr />
                             <Row>
@@ -667,7 +647,7 @@ class TransactionDetailsInternal extends React.Component<Props, State> {
                                             status={status}
                                             timestamp={pendingDuration}
                                             bestBlockNumber={bestBlockNumber}
-                                            currentBlockNumber={transaction.data.blockNumber}
+                                            currentBlockNumber={transaction.blockNumber}
                                         />
                                     )}
                                 </Col>
@@ -678,9 +658,7 @@ class TransactionDetailsInternal extends React.Component<Props, State> {
                                       <Row key="invoice-row">
                                           <Col md="3">Invoice</Col>
                                           <Col md="9">
-                                              {transactionDoc.data.invoice
-                                                  ? "Success"
-                                                  : `Fail - ${transactionDoc.data.errorType}`}
+                                              {transaction.invoice ? "Success" : `Fail - ${transaction.errorType}`}
                                           </Col>
                                       </Row>,
                                       <hr key="invoice-hr" />
@@ -688,7 +666,7 @@ class TransactionDetailsInternal extends React.Component<Props, State> {
                                 : null}
                             <Row>
                                 <Col md="3"># of Input</Col>
-                                <Col md="9">{transactionDoc.data.inputs.length.toLocaleString()}</Col>
+                                <Col md="9">{transaction.composeAsset.inputs.length.toLocaleString()}</Col>
                             </Row>
                             <hr />
                             <Row>
@@ -700,94 +678,97 @@ class TransactionDetailsInternal extends React.Component<Props, State> {
                     </Col>
                 </Row>,
                 <div key="input">
-                    {_.map(transactionDoc.data.inputs.slice(0, this.itemsPerPage * pageForInput), (input, index) => {
-                        return [
-                            <div
-                                key={`transaction-header-table-input-title-${index}`}
-                                className="mt-large"
-                                ref={(re: any) => {
-                                    this.refList[`input-${index}`] = re;
-                                }}
-                            >
-                                <h3>Input #{index}</h3>
-                                <hr className="heading-hr" />
-                            </div>,
-                            <Row key={`transaction-header-table-input-detail-${index}`}>
-                                <Col lg="12">
-                                    <DataSet>
-                                        <Row>
-                                            <Col md="3">AssetType</Col>
-                                            <Col md="9">
-                                                <ImageLoader
-                                                    className="mr-2"
-                                                    size={18}
-                                                    data={input.prevOut.assetType}
-                                                    isAssetImage={true}
-                                                />
-                                                <HexString
-                                                    link={`/asset/0x${input.prevOut.assetType}`}
-                                                    text={input.prevOut.assetType}
-                                                />
-                                            </Col>
-                                        </Row>
-                                        <hr />
-                                        <Row>
-                                            <Col md="3">Owner</Col>
-                                            <Col md="9">
-                                                {input.prevOut.owner ? (
-                                                    <Link to={`/addr-asset/${input.prevOut.owner}`}>
-                                                        {input.prevOut.owner}
-                                                    </Link>
-                                                ) : (
-                                                    "Unknown"
-                                                )}
-                                            </Col>
-                                        </Row>
-                                        <hr />
-                                        <Row>
-                                            <Col md="3">Quantity</Col>
-                                            <Col md="9">{input.prevOut.amount.toLocaleString()}</Col>
-                                        </Row>
-                                        <hr />
-                                        <Row>
-                                            <Col md="3">LockScript</Col>
-                                            <Col md="9">
-                                                <div className="text-area">
-                                                    {new Script(input.lockScript).toTokens().join(" ")}
-                                                </div>
-                                            </Col>
-                                        </Row>
-                                        <hr />
-                                        <Row>
-                                            <Col md="3">UnlockScript</Col>
-                                            <Col md="9">
-                                                <div className="text-area">
-                                                    {new Script(input.unlockScript).toTokens().join(" ")}
-                                                </div>
-                                            </Col>
-                                        </Row>
-                                        <hr />
-                                        <Row>
-                                            <Col md="3">Prev Tx</Col>
-                                            <Col md="9">
-                                                <HexString
-                                                    link={`/tx/0x${input.prevOut.transactionHash}`}
-                                                    text={input.prevOut.transactionHash}
-                                                />
-                                            </Col>
-                                        </Row>
-                                        <hr />
-                                        <Row>
-                                            <Col md="3">Prev Tx Index</Col>
-                                            <Col md="9">{input.prevOut.index.toLocaleString()}</Col>
-                                        </Row>
-                                        <hr />
-                                    </DataSet>
-                                </Col>
-                            </Row>
-                        ];
-                    })}
-                    {this.itemsPerPage * pageForInput < transactionDoc.data.inputs.length ? (
+                    {_.map(
+                        transaction.composeAsset.inputs.slice(0, this.itemsPerPage * pageForInput),
+                        (input, index) => {
+                            return [
+                                <div
+                                    key={`transaction-header-table-input-title-${index}`}
+                                    className="mt-large"
+                                    ref={(re: any) => {
+                                        this.refList[`input-${index}`] = re;
+                                    }}
+                                >
+                                    <h3>Input #{index}</h3>
+                                    <hr className="heading-hr" />
+                                </div>,
+                                <Row key={`transaction-header-table-input-detail-${index}`}>
+                                    <Col lg="12">
+                                        <DataSet>
+                                            <Row>
+                                                <Col md="3">AssetType</Col>
+                                                <Col md="9">
+                                                    <ImageLoader
+                                                        className="mr-2"
+                                                        size={18}
+                                                        data={input.prevOut.assetType}
+                                                        isAssetImage={true}
+                                                    />
+                                                    <HexString
+                                                        link={`/asset/0x${input.prevOut.assetType}`}
+                                                        text={input.prevOut.assetType}
+                                                    />
+                                                </Col>
+                                            </Row>
+                                            <hr />
+                                            <Row>
+                                                <Col md="3">Owner</Col>
+                                                <Col md="9">
+                                                    {input.prevOut.owner ? (
+                                                        <Link to={`/addr-asset/${input.prevOut.owner}`}>
+                                                            {input.prevOut.owner}
+                                                        </Link>
+                                                    ) : (
+                                                        "Unknown"
+                                                    )}
+                                                </Col>
+                                            </Row>
+                                            <hr />
+                                            <Row>
+                                                <Col md="3">Quantity</Col>
+                                                <Col md="9">{input.prevOut.quantity.toLocaleString()}</Col>
+                                            </Row>
+                                            <hr />
+                                            <Row>
+                                                <Col md="3">LockScript</Col>
+                                                <Col md="9">
+                                                    <div className="text-area">
+                                                        {new Script(input.lockScript).toTokens().join(" ")}
+                                                    </div>
+                                                </Col>
+                                            </Row>
+                                            <hr />
+                                            <Row>
+                                                <Col md="3">UnlockScript</Col>
+                                                <Col md="9">
+                                                    <div className="text-area">
+                                                        {new Script(input.unlockScript).toTokens().join(" ")}
+                                                    </div>
+                                                </Col>
+                                            </Row>
+                                            <hr />
+                                            <Row>
+                                                <Col md="3">Prev Tx</Col>
+                                                <Col md="9">
+                                                    <HexString
+                                                        link={`/tx/0x${input.prevOut.tracker}`}
+                                                        text={input.prevOut.tracker}
+                                                    />
+                                                </Col>
+                                            </Row>
+                                            <hr />
+                                            <Row>
+                                                <Col md="3">Prev Tx Index</Col>
+                                                <Col md="9">{input.prevOut.index.toLocaleString()}</Col>
+                                            </Row>
+                                            <hr />
+                                        </DataSet>
+                                    </Col>
+                                </Row>
+                            ];
+                        }
+                    )}
+                    {this.itemsPerPage * pageForInput < transaction.composeAsset.inputs.length ? (
                         <Row>
                             <Col>
                                 <div className="mt-small">
@@ -817,23 +798,23 @@ class TransactionDetailsInternal extends React.Component<Props, State> {
                                     <Col md="9">
                                         <ImageLoader
                                             size={18}
-                                            data={transactionDoc.data.output.assetType}
+                                            data={transaction.composeAsset.assetType}
                                             className="mr-2"
                                             isAssetImage={true}
                                         />
                                         <HexString
-                                            link={`/asset/0x${transactionDoc.data.output.assetType}`}
-                                            text={transactionDoc.data.output.assetType}
+                                            link={`/asset/0x${transaction.composeAsset.assetType}`}
+                                            text={transaction.composeAsset.assetType}
                                         />
                                     </Col>
                                 </Row>
                                 <hr />
                                 <Row>
-                                    <Col md="3">Owner</Col>
+                                    <Col md="3">Recipient</Col>
                                     <Col md="9">
-                                        {transactionDoc.data.output.recipient ? (
-                                            <Link to={`/addr-asset/${transactionDoc.data.output.recipient}`}>
-                                                {transactionDoc.data.output.recipient}
+                                        {transaction.composeAsset.recipient ? (
+                                            <Link to={`/addr-asset/${transaction.composeAsset.recipient}`}>
+                                                {transaction.composeAsset.recipient}
                                             </Link>
                                         ) : (
                                             "Unknown"
@@ -843,21 +824,19 @@ class TransactionDetailsInternal extends React.Component<Props, State> {
                                 <hr />
                                 <Row>
                                     <Col md="3">Quantity</Col>
-                                    <Col md="9">{transactionDoc.data.output.amount || "0"}</Col>
+                                    <Col md="9">{transaction.composeAsset.supply}</Col>
                                 </Row>
                                 <hr />
                                 <Row>
                                     <Col md="3">LockScriptHash</Col>
-                                    <Col md="9">
-                                        {this.getLockScriptName(transactionDoc.data.output.lockScriptHash)}
-                                    </Col>
+                                    <Col md="9">{this.getLockScriptName(transaction.composeAsset.lockScriptHash)}</Col>
                                 </Row>
                                 <hr />
                                 <Row>
                                     <Col md="3">Parameters</Col>
                                     <Col md="9">
                                         <div className="text-area">
-                                            {_.map(transactionDoc.data.output.parameters, (parameter, i) => {
+                                            {_.map(transaction.composeAsset.parameters, (parameter, i) => {
                                                 return (
                                                     <div key={`transaction-paramter-${i}`}>
                                                         {Buffer.from(parameter).toString("hex")}
@@ -873,8 +852,7 @@ class TransactionDetailsInternal extends React.Component<Props, State> {
                     </Row>
                 </div>
             ];
-        } else if (Type.isAssetDecomposeTransactionDoc(transaction)) {
-            const transactionDoc = transaction as AssetDecomposeTransactionDoc;
+        } else if (transaction.type === "decomposeAsset") {
             return [
                 <Row key="details">
                     <Col lg="12">
@@ -887,18 +865,15 @@ class TransactionDetailsInternal extends React.Component<Props, State> {
                             </Row>
                             <hr />
                             <Row>
-                                <Col md="3">Parcel Hash</Col>
+                                <Col md="3">Block</Col>
                                 <Col md="9">
-                                    <HexString
-                                        text={transactionDoc.data.parcelHash}
-                                        link={`/parcel/0x${transactionDoc.data.parcelHash}`}
-                                    />
+                                    <Link to={`/block/${transaction.blockNumber}`}>{transaction.blockNumber}</Link>
                                 </Col>
                             </Row>
                             <hr />
                             <Row>
                                 <Col md="3">NetworkID</Col>
-                                <Col md="9">{transactionDoc.data.networkId}</Col>
+                                <Col md="9">{transaction.networkId}</Col>
                             </Row>
                             <hr />
                             <Row>
@@ -909,7 +884,7 @@ class TransactionDetailsInternal extends React.Component<Props, State> {
                                             status={status}
                                             timestamp={pendingDuration}
                                             bestBlockNumber={bestBlockNumber}
-                                            currentBlockNumber={transaction.data.blockNumber}
+                                            currentBlockNumber={transaction.blockNumber}
                                         />
                                     )}
                                 </Col>
@@ -920,9 +895,7 @@ class TransactionDetailsInternal extends React.Component<Props, State> {
                                       <Row key="invoice-row">
                                           <Col md="3">Invoice</Col>
                                           <Col md="9">
-                                              {transactionDoc.data.invoice
-                                                  ? "Success"
-                                                  : `Fail - ${transactionDoc.data.errorType}`}
+                                              {transaction.invoice ? "Success" : `Fail - ${transaction.errorType}`}
                                           </Col>
                                       </Row>,
                                       <hr key="invoice-hr" />
@@ -935,7 +908,7 @@ class TransactionDetailsInternal extends React.Component<Props, State> {
                             <hr />
                             <Row>
                                 <Col md="3"># of Output</Col>
-                                <Col md="9">{transactionDoc.data.outputs.length.toLocaleString()}</Col>
+                                <Col md="9">{transaction.decomposeAsset.outputs.length.toLocaleString()}</Col>
                             </Row>
                             <hr />
                         </DataSet>
@@ -960,12 +933,12 @@ class TransactionDetailsInternal extends React.Component<Props, State> {
                                         <ImageLoader
                                             className="mr-2"
                                             size={18}
-                                            data={transaction.data.input.prevOut.assetType}
+                                            data={transaction.decomposeAsset.input.prevOut.assetType}
                                             isAssetImage={true}
                                         />
                                         <HexString
-                                            link={`/asset/0x${transaction.data.input.prevOut.assetType}`}
-                                            text={transaction.data.input.prevOut.assetType}
+                                            link={`/asset/0x${transaction.decomposeAsset.input.prevOut.assetType}`}
+                                            text={transaction.decomposeAsset.input.prevOut.assetType}
                                         />
                                     </Col>
                                 </Row>
@@ -973,9 +946,9 @@ class TransactionDetailsInternal extends React.Component<Props, State> {
                                 <Row>
                                     <Col md="3">Owner</Col>
                                     <Col md="9">
-                                        {transaction.data.input.prevOut.owner ? (
-                                            <Link to={`/addr-asset/${transaction.data.input.prevOut.owner}`}>
-                                                {transaction.data.input.prevOut.owner}
+                                        {transaction.decomposeAsset.input.prevOut.owner ? (
+                                            <Link to={`/addr-asset/${transaction.decomposeAsset.input.prevOut.owner}`}>
+                                                {transaction.decomposeAsset.input.prevOut.owner}
                                             </Link>
                                         ) : (
                                             "Unknown"
@@ -985,14 +958,16 @@ class TransactionDetailsInternal extends React.Component<Props, State> {
                                 <hr />
                                 <Row>
                                     <Col md="3">Quantity</Col>
-                                    <Col md="9">{transaction.data.input.prevOut.amount || "0"}</Col>
+                                    <Col md="9">{transaction.decomposeAsset.input.prevOut.quantity}</Col>
                                 </Row>
                                 <hr />
                                 <Row>
                                     <Col md="3">LockScript</Col>
                                     <Col md="9">
                                         <div className="text-area">
-                                            {new Script(transaction.data.input.lockScript).toTokens().join(" ")}
+                                            {new Script(transaction.decomposeAsset.input.lockScript)
+                                                .toTokens()
+                                                .join(" ")}
                                         </div>
                                     </Col>
                                 </Row>
@@ -1001,7 +976,9 @@ class TransactionDetailsInternal extends React.Component<Props, State> {
                                     <Col md="3">UnlockScript</Col>
                                     <Col md="9">
                                         <div className="text-area">
-                                            {new Script(transaction.data.input.unlockScript).toTokens().join(" ")}
+                                            {new Script(transaction.decomposeAsset.input.unlockScript)
+                                                .toTokens()
+                                                .join(" ")}
                                         </div>
                                     </Col>
                                 </Row>
@@ -1010,15 +987,15 @@ class TransactionDetailsInternal extends React.Component<Props, State> {
                                     <Col md="3">Prev Tx</Col>
                                     <Col md="9">
                                         <HexString
-                                            link={`/tx/0x${transaction.data.input.prevOut.transactionHash}`}
-                                            text={transaction.data.input.prevOut.transactionHash}
+                                            link={`/tx/0x${transaction.decomposeAsset.input.prevOut.tracker}`}
+                                            text={transaction.decomposeAsset.input.prevOut.tracker}
                                         />
                                     </Col>
                                 </Row>
                                 <hr />
                                 <Row>
                                     <Col md="3">Prev Tx Index</Col>
-                                    <Col md="9">{transaction.data.input.prevOut.index.toLocaleString()}</Col>
+                                    <Col md="9">{transaction.decomposeAsset.input.prevOut.index.toLocaleString()}</Col>
                                 </Row>
                                 <hr />
                             </DataSet>
@@ -1026,79 +1003,82 @@ class TransactionDetailsInternal extends React.Component<Props, State> {
                     </Row>
                 </div>,
                 <div key="output">
-                    {_.map(transactionDoc.data.outputs.slice(0, this.itemsPerPage * pageForOutput), (output, index) => {
-                        return [
-                            <div
-                                key={`transaction-header-table-output-title-${index}`}
-                                className="mt-large"
-                                ref={(re: any) => {
-                                    this.refList[`output-${index}`] = re;
-                                }}
-                            >
-                                <h3>Output #{index}</h3>
-                                <hr className="heading-hr" />
-                            </div>,
-                            <Row key={`transaction-header-table-output-details-${index}`}>
-                                <Col lg="12">
-                                    <DataSet>
-                                        <Row>
-                                            <Col md="3">AssetType</Col>
-                                            <Col md="9">
-                                                <ImageLoader
-                                                    size={18}
-                                                    data={output.assetType}
-                                                    className="mr-2"
-                                                    isAssetImage={true}
-                                                />
-                                                <HexString
-                                                    link={`/asset/0x${output.assetType}`}
-                                                    text={output.assetType}
-                                                />
-                                            </Col>
-                                        </Row>
-                                        <hr />
-                                        <Row>
-                                            <Col md="3">Owner</Col>
-                                            <Col md="9">
-                                                {output.owner ? (
-                                                    <Link to={`/addr-asset/${output.owner}`}>{output.owner}</Link>
-                                                ) : (
-                                                    "Unknown"
-                                                )}
-                                            </Col>
-                                        </Row>
-                                        <hr />
-                                        <Row>
-                                            <Col md="3">Quantity</Col>
-                                            <Col md="9">{output.amount.toLocaleString()}</Col>
-                                        </Row>
-                                        <hr />
-                                        <Row>
-                                            <Col md="3">LockScriptHash</Col>
-                                            <Col md="9">{this.getLockScriptName(output.lockScriptHash)}</Col>
-                                        </Row>
-                                        <hr />
-                                        <Row>
-                                            <Col md="3">Parameters</Col>
-                                            <Col md="9">
-                                                <div className="text-area">
-                                                    {_.map(output.parameters, (parameter, i) => {
-                                                        return (
-                                                            <div key={`transaction-paramter-${i}`}>
-                                                                {Buffer.from(parameter).toString("hex")}
-                                                            </div>
-                                                        );
-                                                    })}
-                                                </div>
-                                            </Col>
-                                        </Row>
-                                        <hr />
-                                    </DataSet>
-                                </Col>
-                            </Row>
-                        ];
-                    })}
-                    {this.itemsPerPage * pageForOutput < transactionDoc.data.outputs.length ? (
+                    {_.map(
+                        transaction.decomposeAsset.outputs.slice(0, this.itemsPerPage * pageForOutput),
+                        (output, index) => {
+                            return [
+                                <div
+                                    key={`transaction-header-table-output-title-${index}`}
+                                    className="mt-large"
+                                    ref={(re: any) => {
+                                        this.refList[`output-${index}`] = re;
+                                    }}
+                                >
+                                    <h3>Output #{index}</h3>
+                                    <hr className="heading-hr" />
+                                </div>,
+                                <Row key={`transaction-header-table-output-details-${index}`}>
+                                    <Col lg="12">
+                                        <DataSet>
+                                            <Row>
+                                                <Col md="3">AssetType</Col>
+                                                <Col md="9">
+                                                    <ImageLoader
+                                                        size={18}
+                                                        data={output.assetType}
+                                                        className="mr-2"
+                                                        isAssetImage={true}
+                                                    />
+                                                    <HexString
+                                                        link={`/asset/0x${output.assetType}`}
+                                                        text={output.assetType}
+                                                    />
+                                                </Col>
+                                            </Row>
+                                            <hr />
+                                            <Row>
+                                                <Col md="3">Owner</Col>
+                                                <Col md="9">
+                                                    {output.owner ? (
+                                                        <Link to={`/addr-asset/${output.owner}`}>{output.owner}</Link>
+                                                    ) : (
+                                                        "Unknown"
+                                                    )}
+                                                </Col>
+                                            </Row>
+                                            <hr />
+                                            <Row>
+                                                <Col md="3">Quantity</Col>
+                                                <Col md="9">{output.quantity.toLocaleString()}</Col>
+                                            </Row>
+                                            <hr />
+                                            <Row>
+                                                <Col md="3">LockScriptHash</Col>
+                                                <Col md="9">{this.getLockScriptName(output.lockScriptHash)}</Col>
+                                            </Row>
+                                            <hr />
+                                            <Row>
+                                                <Col md="3">Parameters</Col>
+                                                <Col md="9">
+                                                    <div className="text-area">
+                                                        {_.map(output.parameters, (parameter, i) => {
+                                                            return (
+                                                                <div key={`transaction-paramter-${i}`}>
+                                                                    {Buffer.from(parameter).toString("hex")}
+                                                                </div>
+                                                            );
+                                                        })}
+                                                    </div>
+                                                </Col>
+                                            </Row>
+                                            <hr />
+                                        </DataSet>
+                                    </Col>
+                                </Row>
+                            ];
+                        }
+                    )}
+                    {this.itemsPerPage * pageForOutput < transaction.decomposeAsset.outputs.length ? (
                         <Row>
                             <Col>
                                 <div className="mt-small">

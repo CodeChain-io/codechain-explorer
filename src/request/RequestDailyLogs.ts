@@ -6,7 +6,6 @@ import { ApiError, apiRequest } from "./ApiRequest";
 
 export enum DailyLogType {
     BEST_MINER = "BEST_MINER",
-    PARCEL_ACTION = "PARCEL_ACTION",
     TX_TYPE = "TX_TYPE"
 }
 
@@ -86,86 +85,6 @@ class RequestDailyLogs extends React.Component<Props> {
                 };
             });
             onData(results);
-        } else if (type === DailyLogType.PARCEL_ACTION) {
-            const paymentParcelCount = (await apiRequest({
-                path: `log/paymentCount?date=${date}`,
-                dispatch,
-                showProgressBar: true
-            })) as number;
-            const assetTransactionScount = (await apiRequest({
-                path: `log/assetTransactionCount?date=${date}`,
-                dispatch,
-                showProgressBar: true
-            })) as number;
-            const setRegularKeyCount = (await apiRequest({
-                path: `log/setRegularKeyCount?date=${date}`,
-                dispatch,
-                showProgressBar: true
-            })) as number;
-            const createShardCount = (await apiRequest({
-                path: `log/createShardCount?date=${date}`,
-                dispatch,
-                showProgressBar: true
-            })) as number;
-            const setShardOwnerCount = (await apiRequest({
-                path: `log/setShardOwnerCount?date=${date}`,
-                dispatch,
-                showProgressBar: true
-            })) as number;
-            const setShardUserCount = (await apiRequest({
-                path: `log/setShardUserCount?date=${date}`,
-                dispatch,
-                showProgressBar: true
-            })) as number;
-            const total =
-                paymentParcelCount +
-                assetTransactionScount +
-                setRegularKeyCount +
-                setShardOwnerCount +
-                setShardUserCount +
-                createShardCount;
-            if (total === 0) {
-                onEmptyResult();
-                return;
-            }
-            onData([
-                {
-                    id: `Payment (${((paymentParcelCount / total) * 100).toFixed(1)}%)`,
-                    label: "Payment",
-                    value: paymentParcelCount,
-                    color: "hsl(36, 86%, 62%)"
-                },
-                {
-                    id: `AssetTransaction (${((assetTransactionScount / total) * 100).toFixed(1)}%)`,
-                    label: "AssetTransaction",
-                    value: assetTransactionScount,
-                    color: "hsl(90, 100%, 42%)"
-                },
-                {
-                    id: `SetRegularKey (${((setRegularKeyCount / total) * 100).toFixed(1)}%)`,
-                    label: "SetRegularKey",
-                    value: setRegularKeyCount,
-                    color: "hsl(11, 100%, 71%)"
-                },
-                {
-                    id: `CreateShard (${((createShardCount / total) * 100).toFixed(1)}%)`,
-                    label: "CreateShard",
-                    value: createShardCount,
-                    color: "hsl(53, 48%, 40%)"
-                },
-                {
-                    id: `SetShardOwner (${((setShardOwnerCount / total) * 100).toFixed(1)}%)`,
-                    label: "SetShardOwner",
-                    value: setShardOwnerCount,
-                    color: "hsl(86, 100%, 71%)"
-                },
-                {
-                    id: `SetShardUser (${((setShardUserCount / total) * 100).toFixed(1)}%)`,
-                    label: "SetShardUser",
-                    value: setShardUserCount,
-                    color: "hsl(46, 33%, 52%)"
-                }
-            ]);
         } else if (type === DailyLogType.TX_TYPE) {
             const transferCount = (await apiRequest({
                 path: `log/transferTxCount?date=${date}`,

@@ -1,9 +1,9 @@
 import * as React from "react";
 
-import { AssetSchemeDoc } from "codechain-indexer-types/lib/types";
-import { Type } from "codechain-indexer-types/lib/utils";
+import { AssetSchemeDoc } from "codechain-indexer-types";
 import { Link } from "react-router-dom";
 import { Col, Row } from "reactstrap";
+import * as Metadata from "../../../utils/Metadata";
 import DataSet from "../../util/DataSet/DataSet";
 import "./AssetDetails.scss";
 
@@ -13,7 +13,7 @@ interface OwnProps {
 }
 
 const AssetDetails = (prop: OwnProps) => {
-    const metadata = Type.getMetadata(prop.assetScheme.metadata);
+    const metadata = Metadata.parseMetadata(prop.assetScheme.metadata);
     return (
         <div className="asset-details">
             <Row>
@@ -52,11 +52,11 @@ const AssetDetails = (prop: OwnProps) => {
                         </Row>
                         <hr />
                         <Row>
-                            <Col md="3">Registrar</Col>
+                            <Col md="3">Approver</Col>
                             <Col md="9">
-                                {prop.assetScheme.registrar ? (
-                                    <Link to={`/addr-platform/${prop.assetScheme.registrar}`}>
-                                        {prop.assetScheme.registrar}
+                                {prop.assetScheme.approver ? (
+                                    <Link to={`/addr-platform/${prop.assetScheme.approver}`}>
+                                        {prop.assetScheme.approver}
                                     </Link>
                                 ) : (
                                     "None"
@@ -66,7 +66,7 @@ const AssetDetails = (prop: OwnProps) => {
                         <hr />
                         <Row>
                             <Col md="3">Total Supply</Col>
-                            <Col md="9">{prop.assetScheme.amount ? prop.assetScheme.amount.toLocaleString() : 0}</Col>
+                            <Col md="9">{prop.assetScheme.supply ? prop.assetScheme.supply.toLocaleString() : 0}</Col>
                         </Row>
                         <hr />
                     </DataSet>

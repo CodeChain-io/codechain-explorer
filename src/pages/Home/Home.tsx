@@ -2,11 +2,10 @@ import * as _ from "lodash";
 import * as React from "react";
 import { Container } from "reactstrap";
 import LatestBlocks from "../../components/home/LatestBlocks/LatestBlocks";
-import LatestParcels from "../../components/home/LatestParcels/LatestParcels";
 import LatestTransactions from "../../components/home/LatestTransactions/LatestTransactions";
-import { RequestBlocks, RequestParcels, RequestTransactions } from "../../request";
+import { RequestBlocks, RequestTransactions } from "../../request";
 
-import { BlockDoc, ParcelDoc, TransactionDoc } from "codechain-indexer-types/lib/types";
+import { BlockDoc, TransactionDoc } from "codechain-indexer-types";
 import { connect } from "react-redux";
 import Summary from "../../components/home/Summary/Summary";
 import { RootState } from "../../redux/actions";
@@ -15,10 +14,8 @@ import "./Home.scss";
 interface State {
     lastBestBlockNumber?: number;
     blocks: BlockDoc[];
-    parcels: ParcelDoc[];
     transactions: TransactionDoc[];
     requestBlocks: boolean;
-    requestParcels: boolean;
     requestTransactions: boolean;
 }
 
@@ -35,10 +32,8 @@ class Home extends React.Component<Props, State> {
         this.state = {
             lastBestBlockNumber: undefined,
             blocks: [],
-            parcels: [],
             transactions: [],
             requestBlocks: true,
-            requestParcels: true,
             requestTransactions: true
         };
     }
@@ -51,7 +46,7 @@ class Home extends React.Component<Props, State> {
         this.refresher = setInterval(this.checkNewBlock, 5000);
     }
     public render() {
-        const { blocks, parcels, transactions, requestBlocks, requestParcels, requestTransactions } = this.state;
+        const { blocks, transactions, requestBlocks, requestTransactions } = this.state;
         return (
             <div className="home animated fadeIn">
                 <Container>
@@ -62,17 +57,6 @@ class Home extends React.Component<Props, State> {
                         <LatestBlocks blocks={blocks} />
                         {requestBlocks && (
                             <RequestBlocks page={1} itemsPerPage={10} onBlocks={this.onBlocks} onError={this.onError} />
-                        )}
-                    </div>
-                    <div className="home-element-container">
-                        <LatestParcels parcels={parcels} />
-                        {requestParcels && (
-                            <RequestParcels
-                                page={1}
-                                itemsPerPage={10}
-                                onParcels={this.onParcels}
-                                onError={this.onError}
-                            />
                         )}
                     </div>
                     <div className="home-element-container">
@@ -95,10 +79,6 @@ class Home extends React.Component<Props, State> {
         this.setState({ blocks, requestBlocks: false });
     };
 
-    private onParcels = (parcels: ParcelDoc[]) => {
-        this.setState({ parcels, requestParcels: false });
-    };
-
     private onTransactions = (transactions: TransactionDoc[]) => {
         this.setState({ transactions, requestTransactions: false });
     };
@@ -107,7 +87,7 @@ class Home extends React.Component<Props, State> {
         const { bestBlockNumber } = this.props;
         const { lastBestBlockNumber } = this.state;
         if (bestBlockNumber && lastBestBlockNumber && bestBlockNumber > lastBestBlockNumber) {
-            this.setState({ requestBlocks: true, requestParcels: true, requestTransactions: true });
+            this.setState({ requestBlocks: true, requestTransactions: true });
         }
         this.setState({ lastBestBlockNumber: bestBlockNumber });
     };

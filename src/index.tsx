@@ -17,25 +17,12 @@ import Block from "./pages/Block/Block";
 import Blocks from "./pages/Blocks/Blocks";
 import Home from "./pages/Home/Home";
 import NotFound from "./pages/NotFound/NotFound";
-import Parcel from "./pages/Parcel/Parcel";
-import Parcels from "./pages/Parcels/Parcels";
-import PendingParcels from "./pages/PendingParcels/PendingParcels";
 import PlatformAddress from "./pages/PlatformAddress/PlatformAddress";
 import Status from "./pages/Status/Status";
 import Transaction from "./pages/Transaction/Transaction";
 import Transactions from "./pages/Transactions/Transactions";
 import { store } from "./redux/store";
 import RegisterServiceWorker from "./register_service_worker";
-const CCKey = require("codechain-keystore");
-
-async function example() {
-    const cckey = await CCKey.create();
-    await cckey.platform.createKey({ passphrase: "my password" });
-    const savedKeys2 = await cckey.platform.getKeys();
-    console.dir(savedKeys2);
-    console.log(await cckey.platform.exportKey(savedKeys2[0], { passphrase: "my password" }));
-}
-example();
 
 ReactDOM.render(
     <Provider store={store}>
@@ -48,13 +35,10 @@ ReactDOM.render(
                             <Route exact={true} path="/" component={Home} />
                             <Route path="/status" component={Status} />
                             <Route path="/block/:id" component={Block} />
-                            <Route path="/parcel/:hash" component={Parcel} />
                             <Route path="/asset/:assetType" component={Asset} />
                             <Route path="/tx/:hash" component={Transaction} />
                             <Route path="/addr-platform/:address" component={PlatformAddress} />
                             <Route path="/addr-asset/:address" component={AssetTransferAddress} />
-                            <Route path="/parcels-pending" component={PendingParcels} />
-                            <Route path="/parcels" component={Parcels} />
                             <Route path="/txs" component={Transactions} />
                             <Route path="/blocks" component={Blocks} />
                             <Route component={NotFound} />

@@ -1,6 +1,6 @@
 import { faAngleDoubleLeft, faAngleDoubleRight, faAngleLeft, faAngleRight } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { BlockDoc } from "codechain-indexer-types/lib/types";
+import { BlockDoc } from "codechain-indexer-types";
 import * as _ from "lodash";
 import * as moment from "moment";
 import * as React from "react";
@@ -184,7 +184,7 @@ class Blocks extends React.Component<Props, State> {
                                 <thead>
                                     <tr>
                                         <th style={{ width: "15%" }}>No.</th>
-                                        <th style={{ width: "15%" }}>Parcels</th>
+                                        <th style={{ width: "15%" }}>Transactions</th>
                                         <th style={{ width: "35%" }}>Author</th>
                                         <th style={{ width: "15%" }}>Reward</th>
                                         <th style={{ width: "20%" }}>Last seen</th>
@@ -199,7 +199,11 @@ class Blocks extends React.Component<Props, State> {
                                                         {block.number.toLocaleString()}
                                                     </Link>
                                                 </td>
-                                                <td>{block.parcels.length.toLocaleString()}</td>
+                                                <td>
+                                                    {block.transactions
+                                                        ? block.transactions.length.toLocaleString()
+                                                        : 0}
+                                                </td>
                                                 <td>
                                                     <Link to={`/addr-platform/${block.author}`}>{block.author}</Link>
                                                 </td>

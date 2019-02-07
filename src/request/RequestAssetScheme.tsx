@@ -3,8 +3,7 @@ import { connect, Dispatch } from "react-redux";
 
 import { H256 } from "codechain-sdk/lib/core/classes";
 
-import { AssetSchemeDoc } from "codechain-indexer-types/lib/types";
-import { Type } from "codechain-indexer-types/lib/utils";
+import { AssetSchemeDoc } from "codechain-indexer-types";
 import { RootState } from "../redux/actions";
 import { getCurrentTimestamp } from "../utils/Time";
 import { ApiError, apiRequest } from "./ApiRequest";
@@ -75,10 +74,7 @@ class RequestAssetScheme extends React.Component<Props> {
 }
 
 export default connect((state: RootState, props: OwnProps) => {
-    let cacheKey = props.assetType;
-    if (Type.isH256String(cacheKey)) {
-        cacheKey = new H256(cacheKey).value;
-    }
+    const cacheKey = new H256(props.assetType).value;
     const cachedAssetScheme = state.appReducer.assetSchemeByAssetType[cacheKey];
     return {
         cached: cachedAssetScheme && {

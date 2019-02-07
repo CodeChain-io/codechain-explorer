@@ -14,7 +14,7 @@ export interface ApiError {
 }
 
 export const apiRequest = ({ path, body, dispatch, progressBarTarget, showProgressBar }: ApiRequestData) => {
-    const host = process.env.REACT_APP_SERVER_HOST || "http://localhost:8081";
+    const host = process.env.REACT_APP_SERVER_HOST || "http://localhost:9001";
 
     const showLoadingBar = () => {
         if (showProgressBar) {

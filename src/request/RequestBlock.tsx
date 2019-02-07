@@ -4,8 +4,7 @@ import { connect, Dispatch } from "react-redux";
 
 import { H256 } from "codechain-sdk/lib/core/classes";
 
-import { AssetMintTransactionDoc, BlockDoc } from "codechain-indexer-types/lib/types";
-import { Type } from "codechain-indexer-types/lib/utils";
+import { BlockDoc } from "codechain-indexer-types";
 import { RootState } from "../redux/actions";
 import { getCurrentTimestamp } from "../utils/Time";
 import { apiRequest } from "./ApiRequest";
@@ -49,30 +48,24 @@ class RequestBlock extends React.Component<Props> {
                     type: "CACHE_BLOCK",
                     data: block
                 });
-                _.each(block.parcels, parcel => {
-                    dispatch({
-                        type: "CACHE_PARCEL",
-                        data: parcel
-                    });
-                    if (Type.isAssetTransactionDoc(parcel.action)) {
-                        const transaction = parcel.action.transaction;
+
+                if (block.transactions) {
+                    block.transactions.map(transaction => {
                         dispatch({
                             type: "CACHE_TRANSACTION",
                             data: transaction
                         });
-
-                        if (Type.isAssetMintTransactionDoc(transaction)) {
+                        if (transaction.type === "mintAsset") {
                             dispatch({
                                 type: "CACHE_ASSET_SCHEME",
                                 data: {
-                                    assetType: (transaction as AssetMintTransactionDoc).data.output.assetType,
-                                    assetScheme: Type.getAssetSchemeDoc(transaction as AssetMintTransactionDoc)
+                                    assetType: transaction.mintAsset.assetType,
+                                    assetScheme: transaction.mintAsset
                                 }
                             });
                         }
-                    }
-                });
-
+                    });
+                }
                 onBlock(block);
             })
             .catch(onError);
@@ -86,18 +79,17 @@ class RequestBlock extends React.Component<Props> {
 export default connect((state: RootState, props: OwnProps) => {
     const { blocksByHash, blocksByNumber } = state.appReducer;
     const { id } = props;
-    const strId = id.toString();
-    if (Type.isH256String(strId)) {
+    if (H256.check(id)) {
+        const strId = String(id);
         return {
             cached: blocksByHash[new H256(strId).value] && {
                 data: blocksByHash[new H256(strId).value].data,
                 updatedAt: blocksByHash[new H256(strId).value].updatedAt
             }
         };
-    }
-    if (blocksByNumber[id]) {
+    } else {
         return {
-            cached: {
+            cached: blocksByNumber[id] && {
                 data: blocksByNumber[id].data,
                 updatedAt: blocksByNumber[id].updatedAt
             }

@@ -4,12 +4,8 @@ import * as React from "react";
 import { match } from "react-router";
 import { Col, Container, Row } from "reactstrap";
 
-import { AggsUTXO, PendingTransactionDoc, TransactionDoc } from "codechain-indexer-types/lib/types";
-import {
-    RequestAssetTransferAddressTransactions,
-    RequestAssetTransferAddressUTXO,
-    RequestPendingTransactionsByAddress
-} from "../../request";
+import { AggsUTXODoc, TransactionDoc } from "codechain-indexer-types";
+import { RequestAssetTransferAddressTransactions, RequestAssetTransferAddressUTXO } from "../../request";
 
 import * as _ from "lodash";
 import AssetList from "../../components/asset/AssetList/AssetList";
@@ -25,13 +21,11 @@ interface Props {
 }
 
 interface State {
-    aggsUTXO: AggsUTXO[];
+    aggsUTXO: AggsUTXODoc[];
     transactions: TransactionDoc[];
-    pendingTransactions: PendingTransactionDoc[];
     pageForTransactions: number;
     loadUTXO: boolean;
     loadTransaction: boolean;
-    loadPendingTransaction: boolean;
     totalTransactionCount: number;
     noMoreTransaction: boolean;
     requestTotalTransactionCount: boolean;
@@ -48,8 +42,6 @@ class AssetTransferAddress extends React.Component<Props, State> {
             totalTransactionCount: 0,
             loadUTXO: true,
             loadTransaction: true,
-            pendingTransactions: [],
-            loadPendingTransaction: true,
             noMoreTransaction: false,
             requestTotalTransactionCount: true
         };
@@ -72,11 +64,9 @@ class AssetTransferAddress extends React.Component<Props, State> {
                 transactions: [],
                 pageForTransactions: 1,
                 totalTransactionCount: 0,
-                pendingTransactions: [],
                 loadUTXO: true,
                 loadTransaction: true,
                 noMoreTransaction: false,
-                loadPendingTransaction: true,
                 requestTotalTransactionCount: true
             });
         }
@@ -95,9 +85,7 @@ class AssetTransferAddress extends React.Component<Props, State> {
             loadTransaction,
             loadUTXO,
             totalTransactionCount,
-            loadPendingTransaction,
             noMoreTransaction,
-            pendingTransactions,
             requestTotalTransactionCount
         } = this.state;
         return (
@@ -154,25 +142,6 @@ class AssetTransferAddress extends React.Component<Props, State> {
                                 onError={this.onError}
                             />
                         )}
-                        {loadPendingTransaction && (
-                            <div>
-                                <RequestPendingTransactionsByAddress
-                                    address={address}
-                                    onPendingTransactions={this.onPendingTransactions}
-                                    onError={this.onError}
-                                />
-                            </div>
-                        )}
-                        {pendingTransactions.length > 0 && (
-                            <div className="mt-large">
-                                <TransactionList
-                                    owner={address}
-                                    transactions={_.map(pendingTransactions, pendingTx => pendingTx.transaction)}
-                                    totalCount={pendingTransactions.length}
-                                    isPendingTransactionList={true}
-                                />
-                            </div>
-                        )}
                         {loadTransaction ? (
                             <RequestAssetTransferAddressTransactions
                                 address={address}
@@ -206,10 +175,6 @@ class AssetTransferAddress extends React.Component<Props, State> {
         });
     };
 
-    private onPendingTransactions = (pendingTransactions: PendingTransactionDoc[]) => {
-        this.setState({ pendingTransactions, loadPendingTransaction: false });
-    };
-
     private onTransactions = (transactions: TransactionDoc[]) => {
         this.setState({
             transactions: this.state.transactions.concat(transactions),
@@ -224,7 +189,7 @@ class AssetTransferAddress extends React.Component<Props, State> {
         this.setState({ totalTransactionCount: totalCount, requestTotalTransactionCount: false });
     };
 
-    private onAggsUTXO = (aggsUTXO: AggsUTXO[]) => {
+    private onAggsUTXO = (aggsUTXO: AggsUTXODoc[]) => {
         this.setState({ aggsUTXO: this.state.aggsUTXO.concat(aggsUTXO), loadUTXO: false });
     };
 

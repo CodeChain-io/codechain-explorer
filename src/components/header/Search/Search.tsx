@@ -6,25 +6,15 @@ import * as Autosuggest from "react-autosuggest";
 import LoadingBar from "react-redux-loading-bar";
 import { Redirect } from "react-router";
 import { Button, Form, FormGroup, Popover, PopoverBody } from "reactstrap";
+import * as Metadata from "../../../utils/Metadata";
 
-import {
-    AssetSchemeDoc,
-    BlockDoc,
-    ParcelDoc,
-    PendingParcelDoc,
-    PendingTransactionDoc,
-    TransactionDoc
-} from "codechain-indexer-types/lib/types";
-import { Type } from "codechain-indexer-types/lib/utils";
+import { AssetSchemeDoc, BlockDoc, TransactionDoc } from "codechain-indexer-types";
 import { H256, U256 } from "codechain-sdk/lib/core/classes";
 import {
     RequestAssetInfosByName,
     RequestAssetScheme,
     RequestAssetTransferAddressTransactions,
     RequestBlock,
-    RequestParcel,
-    RequestPendingParcel,
-    RequestPendingTransaction,
     RequestPlatformAddressAccount,
     RequestTransaction
 } from "../../../request";
@@ -83,7 +73,7 @@ class Search extends React.Component<Props, State> {
             popoverOpen
         } = this.state;
         const inputProps = {
-            placeholder: "Block / Parcel / Tx / Asset / Address",
+            placeholder: "Block / Tx / Asset / Address",
             value: inputValue,
             onChange: this.updateInputValue
         };
@@ -117,13 +107,6 @@ class Search extends React.Component<Props, State> {
                             onBlockNotExist={this.onReqeustNotExist}
                             onError={this.onError}
                         />
-                        <RequestParcel
-                            progressBarTarget="searchBar"
-                            hash={inputValue}
-                            onParcel={this.onParcel}
-                            onParcelNotExist={this.onReqeustNotExist}
-                            onError={this.onError}
-                        />
                         <RequestTransaction
                             progressBarTarget="searchBar"
                             hash={inputValue}
@@ -143,20 +126,6 @@ class Search extends React.Component<Props, State> {
                             address={inputValue}
                             onAccount={this.onAccount}
                             onAccountNotExist={this.onReqeustNotExist}
-                            onError={this.onError}
-                        />
-                        <RequestPendingParcel
-                            progressBarTarget="searchBar"
-                            hash={inputValue}
-                            onPendingParcel={this.onPendingParcel}
-                            onPendingParcelNotExist={this.onReqeustNotExist}
-                            onError={this.onError}
-                        />
-                        <RequestPendingTransaction
-                            progressBarTarget="searchBar"
-                            hash={inputValue}
-                            onPendingTransaction={this.onPendingTransaction}
-                            onPendingTransactionNotExist={this.onReqeustNotExist}
                             onError={this.onError}
                         />
                         <RequestAssetTransferAddressTransactions
@@ -215,18 +184,10 @@ class Search extends React.Component<Props, State> {
         });
     };
 
-    private onParcel = (parcel: ParcelDoc) => {
-        this.cancelOtherRequest();
-        this.setState({
-            redirectTo: `/parcel/0x${parcel.hash}`,
-            requestCount: this.state.requestCount - 1
-        });
-    };
-
     private onTransaction = (transaction: TransactionDoc) => {
         this.cancelOtherRequest();
         this.setState({
-            redirectTo: `/tx/0x${transaction.data.hash}`,
+            redirectTo: `/tx/0x${transaction.hash}`,
             requestCount: this.state.requestCount - 1
         });
     };
@@ -235,14 +196,6 @@ class Search extends React.Component<Props, State> {
         this.cancelOtherRequest();
         this.setState({
             redirectTo: `/asset/${assetType}`,
-            requestCount: this.state.requestCount - 1
-        });
-    };
-
-    private onPendingParcel = (pendingParcel: PendingParcelDoc) => {
-        this.cancelOtherRequest();
-        this.setState({
-            redirectTo: `/parcel/0x${pendingParcel.parcel.hash}`,
             requestCount: this.state.requestCount - 1
         });
     };
@@ -263,14 +216,6 @@ class Search extends React.Component<Props, State> {
         this.cancelOtherRequest();
         this.setState({
             redirectTo: `/addr-platform/${address}`,
-            requestCount: this.state.requestCount - 1
-        });
-    };
-
-    private onPendingTransaction = (pendingTransaction: PendingTransactionDoc) => {
-        this.cancelOtherRequest();
-        this.setState({
-            redirectTo: `/tx/0x${pendingTransaction.transaction.data.hash}`,
             requestCount: this.state.requestCount - 1
         });
     };
@@ -321,7 +266,7 @@ class Search extends React.Component<Props, State> {
     private renderSuggestion = (suggestion: { assetType: string; assetScheme: AssetSchemeDoc }) => (
         <div>
             <ImageLoader className="icon" size={20} data={new H256(suggestion.assetType).value} isAssetImage={true} />
-            <span className="name">{Type.getMetadata(suggestion.assetScheme.metadata).name}</span>
+            <span className="name">{Metadata.parseMetadata(suggestion.assetScheme.metadata).name}</span>
         </div>
     );
 

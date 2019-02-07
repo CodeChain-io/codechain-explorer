@@ -1,5 +1,3 @@
-import { faSquare } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import * as _ from "lodash";
 import * as moment from "moment";
 import * as React from "react";
@@ -8,11 +6,9 @@ import { Col, Container, Row } from "reactstrap";
 import { Error } from "../../components/error/Error/Error";
 
 import BlockDetails from "../../components/block/BlockDetails/BlockDetails";
-import ParcelList from "../../components/parcel/ParcelList/ParcelList";
 import { RequestBlock } from "../../request";
 
-import { BlockDoc } from "codechain-indexer-types/lib/types";
-import { Type } from "codechain-indexer-types/lib/utils";
+import { BlockDoc } from "codechain-indexer-types";
 import { Link } from "react-router-dom";
 import CopyButton from "../../components/util/CopyButton/CopyButton";
 import HexString from "../../components/util/HexString/HexString";
@@ -124,146 +120,7 @@ class Block extends React.Component<Props, State> {
                     <Col lg="9">
                         <BlockDetails block={block} />
                     </Col>
-                    <Col lg="3">
-                        <div className="right-panel-item mt-3 mt-lg-0">
-                            <h2># of Parcel types</h2>
-                            <hr />
-                            <div className="d-flex align-items-center">
-                                <FontAwesomeIcon className="square payment-action-text-color" icon={faSquare} />
-                                <span className="mr-auto item-name">Payment</span>
-                                <span>
-                                    {_.filter(block.parcels, parcel =>
-                                        Type.isPaymentDoc(parcel.action)
-                                    ).length.toLocaleString()}
-                                </span>
-                            </div>
-                            <hr />
-                            <div className="d-flex align-items-center">
-                                <FontAwesomeIcon
-                                    className="square asset-transaction-group-action-text-color"
-                                    icon={faSquare}
-                                />
-                                <span className="mr-auto item-name">AssetTransaction</span>
-                                <span>
-                                    {_.filter(block.parcels, parcel =>
-                                        Type.isAssetTransactionDoc(parcel.action)
-                                    ).length.toLocaleString()}
-                                </span>
-                            </div>
-                            <hr />
-                            <div className="d-flex align-items-center">
-                                <FontAwesomeIcon className="square set-regular-key-action-text-color" icon={faSquare} />
-                                <span className="mr-auto item-name">SetRegularKey</span>
-                                <span>
-                                    {_.filter(block.parcels, parcel =>
-                                        Type.isSetRegularKeyDoc(parcel.action)
-                                    ).length.toLocaleString()}
-                                </span>
-                            </div>
-                            <hr />
-                            <div className="d-flex align-items-center">
-                                <FontAwesomeIcon className="square create-shard-action-text-color" icon={faSquare} />
-                                <span className="mr-auto item-name">CreateShard</span>
-                                <span>
-                                    {_.filter(block.parcels, parcel =>
-                                        Type.isCreateShardDoc(parcel.action)
-                                    ).length.toLocaleString()}
-                                </span>
-                            </div>
-                            <hr />
-                            <div className="d-flex align-items-center">
-                                <FontAwesomeIcon className="square set-shard-owner-action-text-color" icon={faSquare} />
-                                <span className="mr-auto item-name">SetShardOwner</span>
-                                <span>
-                                    {_.filter(block.parcels, parcel =>
-                                        Type.isSetShardOwnersDoc(parcel.action)
-                                    ).length.toLocaleString()}
-                                </span>
-                            </div>
-                            <hr />
-                            <div className="d-flex align-items-center">
-                                <FontAwesomeIcon className="square set-shard-user-action-text-color" icon={faSquare} />
-                                <span className="mr-auto item-name">SetShardUser</span>
-                                <span>
-                                    {_.filter(block.parcels, parcel =>
-                                        Type.isSetShardUsersDoc(parcel.action)
-                                    ).length.toLocaleString()}
-                                </span>
-                            </div>
-                        </div>
-                        <div className="right-panel-item mt-small">
-                            <h2># of Transaction types</h2>
-                            <hr />
-                            <div className="d-flex align-items-center">
-                                <FontAwesomeIcon
-                                    className="square asset-transfer-transaction-text-color"
-                                    icon={faSquare}
-                                />
-                                <span className="mr-auto item-name">Transfer</span>
-                                <span>
-                                    {_.filter(
-                                        block.parcels,
-                                        parcel =>
-                                            Type.isAssetTransactionDoc(parcel.action) &&
-                                            Type.isAssetTransferTransactionDoc(parcel.action.transaction)
-                                    ).length.toLocaleString()}
-                                </span>
-                            </div>
-                            <hr />
-                            <div className="d-flex align-items-center">
-                                <FontAwesomeIcon className="square asset-mint-transaction-text-color" icon={faSquare} />
-                                <span className="mr-auto item-name">Mint</span>
-                                <span>
-                                    {_.filter(
-                                        block.parcels,
-                                        parcel =>
-                                            Type.isAssetTransactionDoc(parcel.action) &&
-                                            Type.isAssetMintTransactionDoc(parcel.action.transaction)
-                                    ).length.toLocaleString()}
-                                </span>
-                            </div>
-                            <hr />
-                            <div className="d-flex align-items-center">
-                                <FontAwesomeIcon
-                                    className="square asset-compose-transaction-text-color"
-                                    icon={faSquare}
-                                />
-                                <span className="mr-auto item-name">Compose</span>
-                                <span>
-                                    {_.filter(
-                                        block.parcels,
-                                        parcel =>
-                                            Type.isAssetTransactionDoc(parcel.action) &&
-                                            Type.isAssetComposeTransactionDoc(parcel.action.transaction)
-                                    ).length.toLocaleString()}
-                                </span>
-                            </div>
-                            <hr />
-                            <div className="d-flex align-items-center">
-                                <FontAwesomeIcon
-                                    className="square asset-decompose-transaction-text-color"
-                                    icon={faSquare}
-                                />
-                                <span className="mr-auto item-name">Decompose</span>
-                                <span>
-                                    {_.filter(
-                                        block.parcels,
-                                        parcel =>
-                                            Type.isAssetTransactionDoc(parcel.action) &&
-                                            Type.isAssetDecomposeTransactionDoc(parcel.action.transaction)
-                                    ).length.toLocaleString()}
-                                </span>
-                            </div>
-                        </div>
-                    </Col>
                 </Row>
-                {block.parcels.length > 0 && (
-                    <Row className="mt-large">
-                        <Col lg="9">
-                            <ParcelList parcels={block.parcels} totalCount={block.parcels.length} />
-                        </Col>
-                    </Row>
-                )}
             </Container>
         );
     }

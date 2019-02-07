@@ -2,8 +2,7 @@ import { H256 } from "codechain-sdk/lib/core/classes";
 import * as React from "react";
 import { connect, Dispatch } from "react-redux";
 
-import { AssetMintTransactionDoc, TransactionDoc } from "codechain-indexer-types/lib/types";
-import { Type } from "codechain-indexer-types/lib/utils";
+import { TransactionDoc } from "codechain-indexer-types";
 import { RootState } from "../redux/actions";
 import { getCurrentTimestamp } from "../utils/Time";
 import { ApiError, apiRequest } from "./ApiRequest";
@@ -49,12 +48,12 @@ class RequestTransaction extends React.Component<Props> {
                     data: transaction
                 });
 
-                if (Type.isAssetMintTransactionDoc(transaction)) {
+                if (transaction.type === "mintAsset") {
                     dispatch({
                         type: "CACHE_ASSET_SCHEME",
                         data: {
-                            assetType: (transaction as AssetMintTransactionDoc).data.output.assetType,
-                            assetScheme: Type.getAssetSchemeDoc(transaction as AssetMintTransactionDoc)
+                            assetType: transaction.mintAsset.assetType,
+                            assetScheme: transaction.mintAsset
                         }
                     });
                 }
@@ -68,10 +67,7 @@ class RequestTransaction extends React.Component<Props> {
     }
 }
 export default connect((state: RootState, props: OwnProps) => {
-    let cacheKey = props.hash;
-    if (Type.isH256String(cacheKey)) {
-        cacheKey = new H256(cacheKey).value;
-    }
+    const cacheKey = new H256(props.hash).value;
     const cachedTx = state.appReducer.transactionByHash[cacheKey];
     return {
         cached: cachedTx && {

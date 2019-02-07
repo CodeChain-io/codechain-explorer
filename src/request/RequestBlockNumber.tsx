@@ -60,7 +60,7 @@ class RequestBlockNumber extends React.Component<Props, State> {
 
     private request() {
         const { dispatch, onBlockNumber, onError } = this.props;
-        apiRequest({ path: "blockNumber", showProgressBar: false, dispatch })
+        apiRequest({ path: "block/count", showProgressBar: false, dispatch })
             .then((response: string) => {
                 const num = Number.parseInt(response);
                 dispatch({

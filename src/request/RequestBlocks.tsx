@@ -1,7 +1,7 @@
 import * as React from "react";
 import { connect, Dispatch } from "react-redux";
 
-import { BlockDoc } from "codechain-indexer-types/lib/types";
+import { BlockDoc } from "codechain-indexer-types";
 import { ApiError, apiRequest } from "./ApiRequest";
 
 interface OwnProps {
@@ -21,7 +21,7 @@ type Props = OwnProps & DispatchProps;
 class RequestBlocks extends React.Component<Props> {
     public componentWillMount() {
         const { onError, onBlocks, dispatch, page, itemsPerPage, lastBlockNumber } = this.props;
-        let path = `blocks?page=${page}&itemsPerPage=${itemsPerPage}`;
+        let path = `block?page=${page}&itemsPerPage=${itemsPerPage}`;
         if (lastBlockNumber) {
             path += `&lastBlockNumber=${lastBlockNumber}`;
         }

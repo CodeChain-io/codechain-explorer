@@ -6,12 +6,7 @@ import * as React from "react";
 import { Redirect } from "react-router";
 import { Container } from "reactstrap";
 
-import {
-    AssetMintTransactionDoc,
-    AssetTransferTransactionDoc,
-    TransactionDoc
-} from "codechain-indexer-types/lib/types";
-import { Type } from "codechain-indexer-types/lib/utils";
+import { TransactionDoc } from "codechain-indexer-types";
 import DataTable from "../../components/util/DataTable/DataTable";
 import HexString from "../../components/util/HexString/HexString";
 import { ImageLoader } from "../../components/util/ImageLoader/ImageLoader";
@@ -76,9 +71,6 @@ class Transactions extends React.Component<Props, State> {
         const lastBlockNumber = params.get("lastBlockNumber")
             ? parseInt(params.get("lastBlockNumber") as string, 10)
             : undefined;
-        const lastParcelIndex = params.get("lastParcelIndex")
-            ? parseInt(params.get("lastParcelIndex") as string, 10)
-            : undefined;
         const lastTransactionIndex = params.get("lastTransactionIndex")
             ? parseInt(params.get("lastTransactionIndex") as string, 10)
             : undefined;
@@ -97,9 +89,7 @@ class Transactions extends React.Component<Props, State> {
                     push={true}
                     to={`/txs?page=${redirectPage || currentPage}&itemsPerPage=${redirectItemsPerPage ||
                         itemsPerPage}&lastBlockNumber=${
-                        transactions.length > 0 ? transactions[transactions.length - 1].data.blockNumber : undefined
-                    }&lastParcelIndex=${
-                        transactions.length > 0 ? transactions[transactions.length - 1].data.parcelIndex : undefined
+                        transactions.length > 0 ? transactions[transactions.length - 1].blockNumber : undefined
                     }`}
                 />
             ) : (
@@ -127,7 +117,6 @@ class Transactions extends React.Component<Props, State> {
                         itemsPerPage={itemsPerPage}
                         onError={this.onError}
                         lastBlockNumber={lastBlockNumber}
-                        lastParcelIndex={lastParcelIndex}
                         lastTransactionIndex={lastTransactionIndex}
                     />
                 ) : null}
@@ -223,19 +212,19 @@ class Transactions extends React.Component<Props, State> {
                                 <tbody>
                                     {_.map(transactions, transaction => {
                                         return (
-                                            <tr key={`transaction-${transaction.data.hash}`}>
+                                            <tr key={`transaction-${transaction.hash}`}>
                                                 <td>
                                                     <TypeBadge transaction={transaction} />
                                                 </td>
                                                 <td scope="row">
                                                     <HexString
-                                                        link={`/tx/0x${transaction.data.hash}`}
-                                                        text={transaction.data.hash}
+                                                        link={`/tx/0x${transaction.hash}`}
+                                                        text={transaction.hash}
                                                     />
                                                 </td>
                                                 <td>{this.getAssetInfo(transaction)}</td>
                                                 <td>{getTotalAssetCount(transaction).toLocaleString()}</td>
-                                                <td>{moment.unix(transaction.data.timestamp).fromNow()}</td>
+                                                <td>{moment.unix(transaction.timestamp!).fromNow()}</td>
                                             </tr>
                                         );
                                     })}
@@ -250,18 +239,18 @@ class Transactions extends React.Component<Props, State> {
 
     private getAssetInfo(transaction: TransactionDoc) {
         let assetType = "";
-        if (Type.isAssetMintTransactionDoc(transaction)) {
-            assetType = (transaction as AssetMintTransactionDoc).data.output.assetType;
-        } else if (Type.isAssetTransferTransactionDoc(transaction)) {
-            if ((transaction as AssetTransferTransactionDoc).data.inputs.length > 0) {
-                assetType = (transaction as AssetTransferTransactionDoc).data.inputs[0].prevOut.assetType;
-            } else if ((transaction as AssetTransferTransactionDoc).data.burns.length > 0) {
-                assetType = (transaction as AssetTransferTransactionDoc).data.burns[0].prevOut.assetType;
+        if (transaction.type === "mintAsset") {
+            assetType = transaction.mintAsset.assetType;
+        } else if (transaction.type === "transferAsset") {
+            if (transaction.transferAsset.inputs.length > 0) {
+                assetType = transaction.transferAsset.inputs[0].prevOut.assetType;
+            } else if (transaction.transferAsset.burns.length > 0) {
+                assetType = transaction.transferAsset.burns[0].prevOut.assetType;
             }
-        } else if (Type.isAssetComposeTransactionDoc(transaction)) {
-            assetType = transaction.data.output.assetType;
-        } else if (Type.isAssetDecomposeTransactionDoc(transaction)) {
-            assetType = transaction.data.input.prevOut.assetType;
+        } else if (transaction.type === "composeAsset") {
+            assetType = transaction.composeAsset.assetType;
+        } else if (transaction.type === "decomposeAsset") {
+            assetType = transaction.decomposeAsset.input.prevOut.assetType;
         }
         return (
             <span>

@@ -4,17 +4,11 @@ import { match } from "react-router";
 import { Col, Container, Row } from "reactstrap";
 import { Error } from "../../components/error/Error/Error";
 
-import { BlockDoc, ParcelDoc } from "codechain-indexer-types/lib/types";
+import { BlockDoc } from "codechain-indexer-types";
 import { U256 } from "codechain-sdk/lib/core/classes";
 import BlockList from "../../components/block/BlockList/BlockList";
-import ParcelList from "../../components/parcel/ParcelList/ParcelList";
 import AccountDetails from "../../components/platformAddress/AccountDetails/AccountDetails";
-import {
-    RequestPlatformAddressAccount,
-    RequestPlatformAddressParcels,
-    RequestTotalPlatformBlockCount,
-    RequestTotalPlatformParcelCount
-} from "../../request";
+import { RequestPlatformAddressAccount, RequestTotalPlatformBlockCount } from "../../request";
 import RequestPlatformAddressBlocks from "../../request/RequestPlatformAddressBlocks";
 
 import CopyButton from "../../components/util/CopyButton/CopyButton";
@@ -31,35 +25,24 @@ interface State {
         balance: U256;
     };
     blocks: BlockDoc[];
-    parcels: ParcelDoc[];
     loadBlock: boolean;
-    loadParcel: boolean;
     pageForBlock: number;
-    pageForParcel: number;
     noMoreBlock: boolean;
-    noMoreParcel: boolean;
     notFound: boolean;
     totalBlockCount: number;
-    totalParcelCount: number;
 }
 
 class Address extends React.Component<Props, State> {
     private blockItemsPerPage = 6;
-    private parcelItemsPerPage = 6;
     constructor(props: Props) {
         super(props);
         this.state = {
             blocks: [],
-            parcels: [],
             notFound: false,
             loadBlock: true,
-            loadParcel: true,
             pageForBlock: 1,
-            pageForParcel: 1,
             noMoreBlock: false,
-            noMoreParcel: false,
-            totalBlockCount: 0,
-            totalParcelCount: 0
+            totalBlockCount: 0
         };
     }
 
@@ -78,16 +61,10 @@ class Address extends React.Component<Props, State> {
             this.setState({
                 account: undefined,
                 blocks: [],
-                parcels: [],
                 notFound: false,
                 loadBlock: true,
-                loadParcel: true,
-                pageForBlock: 1,
-                pageForParcel: 1,
                 noMoreBlock: false,
-                noMoreParcel: false,
-                totalBlockCount: 0,
-                totalParcelCount: 0
+                totalBlockCount: 0
             });
         }
     }
@@ -98,20 +75,7 @@ class Address extends React.Component<Props, State> {
                 params: { address }
             }
         } = this.props;
-        const {
-            account,
-            blocks,
-            parcels,
-            notFound,
-            loadBlock,
-            loadParcel,
-            pageForBlock,
-            pageForParcel,
-            noMoreBlock,
-            noMoreParcel,
-            totalBlockCount,
-            totalParcelCount
-        } = this.state;
+        const { account, blocks, notFound, loadBlock, pageForBlock, noMoreBlock, totalBlockCount } = this.state;
         if (notFound) {
             return (
                 <div>
@@ -159,34 +123,6 @@ class Address extends React.Component<Props, State> {
                     <AccountDetails account={account} />
                 </div>
                 {
-                    <RequestTotalPlatformParcelCount
-                        address={address}
-                        onTotalCount={this.onTotalParcelCount}
-                        onError={this.onError}
-                    />
-                }
-                {loadParcel ? (
-                    <RequestPlatformAddressParcels
-                        page={pageForParcel}
-                        itemsPerPage={this.parcelItemsPerPage}
-                        address={address}
-                        onParcels={this.onParcels}
-                        onError={this.onError}
-                    />
-                ) : null}
-                {parcels.length > 0 ? (
-                    <div className="mt-large">
-                        <ParcelList
-                            address={address}
-                            hideTitle={true}
-                            parcels={parcels}
-                            totalCount={totalParcelCount}
-                            loadMoreAction={this.loadMoreParcel}
-                            hideMoreButton={noMoreParcel}
-                        />
-                    </div>
-                ) : null}
-                {
                     <RequestTotalPlatformBlockCount
                         address={address}
                         onTotalCount={this.onTotalBlockCount}
@@ -215,15 +151,6 @@ class Address extends React.Component<Props, State> {
             </Container>
         );
     }
-    private onParcels = (parcels: ParcelDoc[]) => {
-        if (parcels.length < this.parcelItemsPerPage) {
-            this.setState({ noMoreParcel: true });
-        }
-        this.setState({
-            parcels: this.state.parcels.concat(parcels),
-            loadParcel: false
-        });
-    };
     private onBlocks = (blocks: BlockDoc[]) => {
         if (blocks.length < this.blockItemsPerPage) {
             this.setState({ noMoreBlock: true });
@@ -233,20 +160,11 @@ class Address extends React.Component<Props, State> {
             loadBlock: false
         });
     };
-    private loadMoreParcel = () => {
-        this.setState({
-            loadParcel: true,
-            pageForParcel: this.state.pageForParcel + 1
-        });
-    };
     private loadMoreBlock = () => {
         this.setState({
             loadBlock: true,
             pageForBlock: this.state.pageForBlock + 1
         });
-    };
-    private onTotalParcelCount = (totalCount: number) => {
-        this.setState({ totalParcelCount: totalCount });
     };
     private onTotalBlockCount = (totalCount: number) => {
         this.setState({ totalBlockCount: totalCount });

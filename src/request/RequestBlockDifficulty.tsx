@@ -2,7 +2,7 @@ import * as _ from "lodash";
 import * as React from "react";
 import { connect, Dispatch } from "react-redux";
 
-import { BlockDoc } from "codechain-indexer-types/lib/types";
+import { BlockDoc } from "codechain-indexer-types";
 import { ApiError, apiRequest } from "./ApiRequest";
 
 interface OwnProps {

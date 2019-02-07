@@ -7,15 +7,9 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 import { Col, Popover, PopoverBody, Row } from "reactstrap";
 
-import {
-    AssetComposeTransactionDoc,
-    AssetDecomposeTransactionDoc,
-    AssetMintTransactionDoc,
-    AssetTransferTransactionDoc,
-    TransactionDoc
-} from "codechain-indexer-types/lib/types";
-import { MetadataFormat, Type } from "codechain-indexer-types/lib/utils";
+import { TransactionDoc } from "codechain-indexer-types";
 import { Link } from "react-router-dom";
+import * as Metadata from "../../../utils/Metadata";
 import { ImageLoader } from "../../util/ImageLoader/ImageLoader";
 import "./TransactionSummary.scss";
 
@@ -49,8 +43,7 @@ class TransactionSummaryInternal extends React.Component<Props, State> {
     }
     public render() {
         const { transaction } = this.props;
-        if (Type.isAssetTransferTransactionDoc(transaction)) {
-            const transactionDoc = transaction as AssetTransferTransactionDoc;
+        if (transaction.type === "transferAsset") {
             return (
                 <div className="transaction-summary">
                     {this.state.popoverTarget ? (
@@ -67,7 +60,7 @@ class TransactionSummaryInternal extends React.Component<Props, State> {
                         </Popover>
                     ) : null}
                     <Row>
-                        {transactionDoc.data.inputs.length > 0
+                        {transaction.transferAsset.inputs.length > 0
                             ? [
                                   <Col key="col-1" lg="3">
                                       <div className="summary-item">
@@ -75,19 +68,22 @@ class TransactionSummaryInternal extends React.Component<Props, State> {
                                               <h3>Inputs</h3>
                                           </div>
                                           <div className="item-panel">
-                                              {_.map(transactionDoc.data.inputs.slice(0, this.itemLimit), (input, i) =>
-                                                  this.getAssetIcon(
-                                                      Type.getMetadata(input.prevOut.assetScheme.metadata),
-                                                      input.prevOut.assetType,
-                                                      i,
-                                                      input.prevOut.amount,
-                                                      "input",
-                                                      _.partial(this.onClickItem, "input", i)
-                                                  )
+                                              {_.map(
+                                                  transaction.transferAsset.inputs.slice(0, this.itemLimit),
+                                                  (input, i) =>
+                                                      this.getAssetIcon(
+                                                          Metadata.parseMetadata(input.prevOut.assetScheme.metadata),
+                                                          input.prevOut.assetType,
+                                                          i,
+                                                          input.prevOut.quantity,
+                                                          "input",
+                                                          _.partial(this.onClickItem, "input", i)
+                                                      )
                                               )}
-                                              {transactionDoc.data.inputs.length > this.itemLimit ? (
+                                              {transaction.transferAsset.inputs.length > this.itemLimit ? (
                                                   <p className="mb-0">
-                                                      {transactionDoc.data.inputs.length - this.itemLimit} more inputs
+                                                      {transaction.transferAsset.inputs.length - this.itemLimit} more
+                                                      inputs
                                                   </p>
                                               ) : null}
                                           </div>
@@ -108,20 +104,21 @@ class TransactionSummaryInternal extends React.Component<Props, State> {
                                           </div>
                                           <div className="item-panel">
                                               {_.map(
-                                                  transactionDoc.data.outputs.slice(0, this.itemLimit),
+                                                  transaction.transferAsset.outputs.slice(0, this.itemLimit),
                                                   (output, i) =>
                                                       this.getAssetIcon(
-                                                          Type.getMetadata(output.assetScheme.metadata),
+                                                          Metadata.parseMetadata(output.assetScheme.metadata),
                                                           output.assetType,
                                                           i,
-                                                          output.amount,
+                                                          output.quantity,
                                                           "output",
                                                           _.partial(this.onClickItem, "output", i)
                                                       )
                                               )}
-                                              {transactionDoc.data.outputs.length > this.itemLimit ? (
+                                              {transaction.transferAsset.outputs.length > this.itemLimit ? (
                                                   <p className="mb-0">
-                                                      {transactionDoc.data.outputs.length - this.itemLimit} more outputs
+                                                      {transaction.transferAsset.outputs.length - this.itemLimit} more
+                                                      outputs
                                                   </p>
                                               ) : null}
                                           </div>
@@ -129,19 +126,19 @@ class TransactionSummaryInternal extends React.Component<Props, State> {
                                   </Col>
                               ]
                             : null}
-                        {transactionDoc.data.burns.length > 0 ? (
+                        {transaction.transferAsset.burns.length > 0 ? (
                             <Col lg="3" className="mt-3 mt-lg-0">
                                 <div className="summary-item">
                                     <div className="title-panel">
                                         <h3 className="burn-title">Burns</h3>
                                     </div>
                                     <div className="item-panel">
-                                        {_.map(transactionDoc.data.burns, (burn, i) =>
+                                        {_.map(transaction.transferAsset.burns, (burn, i) =>
                                             this.getAssetIcon(
-                                                Type.getMetadata(burn.prevOut.assetScheme.metadata),
+                                                Metadata.parseMetadata(burn.prevOut.assetScheme.metadata),
                                                 burn.prevOut.assetType,
                                                 i,
-                                                burn.prevOut.amount,
+                                                burn.prevOut.quantity,
                                                 "burn",
                                                 _.partial(this.onClickItem, "burn", i)
                                             )
@@ -153,9 +150,8 @@ class TransactionSummaryInternal extends React.Component<Props, State> {
                     </Row>
                 </div>
             );
-        } else if (Type.isAssetMintTransactionDoc(transaction)) {
-            const transactionDoc = transaction as AssetMintTransactionDoc;
-            const metadata = Type.getMetadata(transactionDoc.data.metadata);
+        } else if (transaction.type === "mintAsset") {
+            const metadata = Metadata.parseMetadata(transaction.mintAsset.metadata);
             return (
                 <div className="transaction-summary">
                     <Row>
@@ -169,26 +165,26 @@ class TransactionSummaryInternal extends React.Component<Props, State> {
                                         <ImageLoader
                                             className="mr-3"
                                             size={42}
-                                            data={transactionDoc.data.output.assetType}
+                                            data={transaction.mintAsset.assetType}
                                             isAssetImage={true}
                                         />
                                         <div className="content-title d-inline-block text-left">
-                                            <Link to={`/asset/0x${transactionDoc.data.output.assetType}`}>
-                                                {metadata.name || transactionDoc.data.output.assetType}
+                                            <Link to={`/asset/0x${transaction.mintAsset.assetType}`}>
+                                                {metadata.name || transaction.mintAsset.assetType}
                                             </Link>
                                             <div>
-                                                <span>x{transactionDoc.data.output.amount}</span>
+                                                <span>x{transaction.mintAsset.supply}</span>
                                             </div>
                                         </div>
                                     </div>
                                     <div className="content-description">{metadata.description}</div>
                                 </div>
                                 <div className="registrar-panel d-flex">
-                                    <div>Registrar</div>
+                                    <div>Approver</div>
                                     <div className="registrar-text">
-                                        {transactionDoc.data.registrar ? (
-                                            <Link to={`/addr-platform/${transactionDoc.data.registrar}`}>
-                                                {transactionDoc.data.registrar}
+                                        {transaction.mintAsset.approver ? (
+                                            <Link to={`/addr-platform/${transaction.mintAsset.approver}`}>
+                                                {transaction.mintAsset.approver}
                                             </Link>
                                         ) : (
                                             "None"
@@ -200,9 +196,8 @@ class TransactionSummaryInternal extends React.Component<Props, State> {
                     </Row>
                 </div>
             );
-        } else if (Type.isAssetComposeTransactionDoc(transaction)) {
-            const transactionDoc = transaction as AssetComposeTransactionDoc;
-            const metadata = Type.getMetadata(transactionDoc.data.metadata);
+        } else if (transaction.type === "composeAsset") {
+            const metadata = Metadata.parseMetadata(transaction.composeAsset.metadata);
             return (
                 <div className="transaction-summary">
                     {this.state.popoverTarget ? (
@@ -219,26 +214,26 @@ class TransactionSummaryInternal extends React.Component<Props, State> {
                         </Popover>
                     ) : null}
                     <Row>
-                        {transactionDoc.data.inputs.length > 0 && [
+                        {transaction.composeAsset.inputs.length > 0 && [
                             <Col key="col-1" lg="3">
                                 <div className="summary-item">
                                     <div className="title-panel">
                                         <h3>Inputs</h3>
                                     </div>
                                     <div className="item-panel">
-                                        {_.map(transactionDoc.data.inputs.slice(0, this.itemLimit), (input, i) =>
+                                        {_.map(transaction.composeAsset.inputs.slice(0, this.itemLimit), (input, i) =>
                                             this.getAssetIcon(
-                                                Type.getMetadata(input.prevOut.assetScheme.metadata),
+                                                Metadata.parseMetadata(input.prevOut.assetScheme.metadata),
                                                 input.prevOut.assetType,
                                                 i,
-                                                input.prevOut.amount,
+                                                input.prevOut.quantity,
                                                 "input",
                                                 _.partial(this.onClickItem, "input", i)
                                             )
                                         )}
-                                        {transactionDoc.data.inputs.length > this.itemLimit ? (
+                                        {transaction.composeAsset.inputs.length > this.itemLimit ? (
                                             <p className="mb-0">
-                                                {transactionDoc.data.inputs.length - this.itemLimit} more inputs
+                                                {transaction.composeAsset.inputs.length - this.itemLimit} more inputs
                                             </p>
                                         ) : null}
                                     </div>
@@ -262,26 +257,26 @@ class TransactionSummaryInternal extends React.Component<Props, State> {
                                             <ImageLoader
                                                 className="mr-3"
                                                 size={42}
-                                                data={transactionDoc.data.output.assetType}
+                                                data={transaction.composeAsset.assetType}
                                                 isAssetImage={true}
                                             />
                                             <div className="content-title d-inline-block text-left">
-                                                <Link to={`/asset/0x${transactionDoc.data.output.assetType}`}>
-                                                    {metadata.name || transactionDoc.data.output.assetType}
+                                                <Link to={`/asset/0x${transaction.composeAsset.assetType}`}>
+                                                    {metadata.name || transaction.composeAsset.assetType}
                                                 </Link>
                                                 <div>
-                                                    <span>x{transactionDoc.data.output.amount}</span>
+                                                    <span>x{transaction.composeAsset.supply}</span>
                                                 </div>
                                             </div>
                                         </div>
                                         <div className="content-description">{metadata.description}</div>
                                     </div>
                                     <div className="registrar-panel d-flex">
-                                        <div>Registrar</div>
+                                        <div>approver</div>
                                         <div className="registrar-text">
-                                            {transactionDoc.data.registrar ? (
-                                                <Link to={`/addr-platform/${transactionDoc.data.registrar}`}>
-                                                    {transactionDoc.data.registrar}
+                                            {transaction.composeAsset.approver ? (
+                                                <Link to={`/addr-platform/${transaction.composeAsset.approver}`}>
+                                                    {transaction.composeAsset.approver}
                                                 </Link>
                                             ) : (
                                                 "None"
@@ -294,9 +289,8 @@ class TransactionSummaryInternal extends React.Component<Props, State> {
                     </Row>
                 </div>
             );
-        } else if (Type.isAssetDecomposeTransactionDoc(transaction)) {
-            const transactionDoc = transaction as AssetDecomposeTransactionDoc;
-            const metadata = Type.getMetadata(transactionDoc.data.input.prevOut.assetScheme.metadata);
+        } else if (transaction.type === "decomposeAsset") {
+            const metadata = Metadata.parseMetadata(transaction.decomposeAsset.input.prevOut.assetScheme.metadata);
             return (
                 <div className="transaction-summary">
                     {this.state.popoverTarget ? (
@@ -323,30 +317,30 @@ class TransactionSummaryInternal extends React.Component<Props, State> {
                                         <ImageLoader
                                             className="mr-3"
                                             size={42}
-                                            data={transactionDoc.data.input.prevOut.assetType}
+                                            data={transaction.decomposeAsset.input.prevOut.assetType}
                                             isAssetImage={true}
                                         />
                                         <div className="content-title d-inline-block text-left">
-                                            <Link to={`/asset/0x${transactionDoc.data.input.prevOut.assetType}`}>
-                                                {metadata.name || transactionDoc.data.input.prevOut.assetType}
+                                            <Link to={`/asset/0x${transaction.decomposeAsset.input.prevOut.assetType}`}>
+                                                {metadata.name || transaction.decomposeAsset.input.prevOut.assetType}
                                             </Link>
                                             <div>
-                                                <span>x{transactionDoc.data.input.prevOut.amount}</span>
+                                                <span>x{transaction.decomposeAsset.input.prevOut.quantity}</span>
                                             </div>
                                         </div>
                                     </div>
                                     <div className="content-description">{metadata.description}</div>
                                 </div>
                                 <div className="registrar-panel d-flex">
-                                    <div>Registrar</div>
+                                    <div>Approver</div>
                                     <div className="registrar-text">
-                                        {transactionDoc.data.input.prevOut.assetScheme.registrar ? (
+                                        {transaction.decomposeAsset.input.prevOut.assetScheme.approver ? (
                                             <Link
                                                 to={`/addr-platform/${
-                                                    transactionDoc.data.input.prevOut.assetScheme.registrar
+                                                    transaction.decomposeAsset.input.prevOut.assetScheme.approver
                                                 }`}
                                             >
-                                                {transactionDoc.data.input.prevOut.assetScheme.registrar}
+                                                {transaction.decomposeAsset.input.prevOut.assetScheme.approver}
                                             </Link>
                                         ) : (
                                             "None"
@@ -371,19 +365,19 @@ class TransactionSummaryInternal extends React.Component<Props, State> {
                                     <h3>Outputs</h3>
                                 </div>
                                 <div className="item-panel">
-                                    {_.map(transactionDoc.data.outputs.slice(0, this.itemLimit), (output, i) =>
+                                    {_.map(transaction.decomposeAsset.outputs.slice(0, this.itemLimit), (output, i) =>
                                         this.getAssetIcon(
-                                            Type.getMetadata(output.assetScheme.metadata),
+                                            Metadata.parseMetadata(output.assetScheme.metadata),
                                             output.assetType,
                                             i,
-                                            output.amount,
+                                            output.quantity,
                                             "output",
                                             _.partial(this.onClickItem, "output", i)
                                         )
                                     )}
-                                    {transactionDoc.data.outputs.length > this.itemLimit ? (
+                                    {transaction.decomposeAsset.outputs.length > this.itemLimit ? (
                                         <p className="mb-0">
-                                            {transactionDoc.data.outputs.length - this.itemLimit} more outputs
+                                            {transaction.decomposeAsset.outputs.length - this.itemLimit} more outputs
                                         </p>
                                     ) : null}
                                 </div>
@@ -397,7 +391,7 @@ class TransactionSummaryInternal extends React.Component<Props, State> {
     }
 
     private getAssetIcon = (
-        metadata: MetadataFormat,
+        metadata: Metadata.Metadata,
         assetType: string,
         index: number,
         amount: string,

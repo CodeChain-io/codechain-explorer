@@ -83,14 +83,8 @@ class Header extends React.Component<{}, State> {
                                         <IndexLinkContainer to="/blocks">
                                             <DropdownItem>Latest Blocks</DropdownItem>
                                         </IndexLinkContainer>
-                                        <IndexLinkContainer to="/parcels">
-                                            <DropdownItem>Latest Parcels</DropdownItem>
-                                        </IndexLinkContainer>
                                         <IndexLinkContainer to="/txs">
                                             <DropdownItem>Latest Transactions</DropdownItem>
-                                        </IndexLinkContainer>
-                                        <IndexLinkContainer to="/parcels-pending">
-                                            <DropdownItem>Pending Parcels</DropdownItem>
                                         </IndexLinkContainer>
                                     </DropdownMenu>
                                 </UncontrolledDropdown>

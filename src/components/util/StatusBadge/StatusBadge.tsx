@@ -9,7 +9,7 @@ interface Props {
     bestBlockNumber?: number | null;
     currentBlockNumber?: number | null;
     className?: string;
-    timestamp?: number;
+    timestamp?: number | null;
 }
 const getBadgeBackgroundColorClassByStatus = (
     status: string,
@@ -28,8 +28,6 @@ const getBadgeBackgroundColorClassByStatus = (
             }
         case "pending":
             return "text-warning";
-        case "dead":
-            return "text-danger";
     }
     return "";
 };
@@ -46,8 +44,6 @@ const getStatusString = (status: string, bestBlockNumber?: number | null, curren
             }
         case "pending":
             return "Pending";
-        case "dead":
-            return "Dead";
     }
     return "";
 };

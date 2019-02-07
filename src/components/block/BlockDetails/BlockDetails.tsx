@@ -4,7 +4,7 @@ import * as React from "react";
 import { Col, Row } from "reactstrap";
 import DataSet from "../../util/DataSet/DataSet";
 
-import { BlockDoc } from "codechain-indexer-types/lib/types";
+import { BlockDoc } from "codechain-indexer-types";
 import { Link } from "react-router-dom";
 import { CommaNumberString } from "../../util/CommaNumberString/CommaNumberString";
 import HexString from "../../util/HexString/HexString";
@@ -36,9 +36,9 @@ class BlockDetails extends React.Component<OwnProps> {
                             </Row>
                             <hr />
                             <Row>
-                                <Col md="3">Parcels Root</Col>
+                                <Col md="3">Transactions Root</Col>
                                 <Col md="9">
-                                    <HexString text={block.parcelsRoot} />
+                                    <HexString text={block.transactionsRoot} />
                                 </Col>
                             </Row>
                             <hr />
@@ -87,29 +87,8 @@ class BlockDetails extends React.Component<OwnProps> {
                             </Row>
                             <hr />
                             <Row>
-                                <Col md="3"># of Parcels</Col>
-                                <Col md="9">{block.parcels.length.toLocaleString()}</Col>
-                            </Row>
-                            <hr />
-                            <Row>
                                 <Col md="3"># of Transactions</Col>
-                                <Col md="9">
-                                    1
-                                    {/*_.reduce(
-                                        block.parcels,
-                                        (memo, parcel) => {
-                                            if (Type.isAssetTransactionDoc(parcel.action)) {
-                                                return (
-                                                    (parcel.action as AssetTransactionDoc).transactions.length +
-                                                    memo
-                                                );
-                                            } else {
-                                                return memo;
-                                            }
-                                        },
-                                        0
-                                    ).toLocaleString()*/}
-                                </Col>
+                                <Col md="9">{block.transactions ? block.transactions.length.toLocaleString() : 0}</Col>
                             </Row>
                             <hr />
                         </DataSet>
