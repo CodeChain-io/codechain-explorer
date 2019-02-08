@@ -1,4 +1,4 @@
-import { BlockDoc } from "codechain-indexer-types";
+import { TransactionDoc } from "codechain-indexer-types";
 import * as React from "react";
 import { connect, Dispatch } from "react-redux";
 import { ApiError, apiRequest } from "./ApiRequest";
@@ -7,7 +7,7 @@ interface OwnProps {
     itemsPerPage: number;
     page: number;
     address: string;
-    onBlocks: (blocks: BlockDoc[]) => void;
+    onTransactions: (txs: TransactionDoc[]) => void;
     onError: (e: ApiError) => void;
 }
 
@@ -17,16 +17,16 @@ interface DispatchProps {
 
 type Props = OwnProps & DispatchProps;
 
-class RequestPlatformAddressBlocks extends React.Component<Props> {
+class RequestPlatformAddressTransactions extends React.Component<Props> {
     public componentWillMount() {
-        const { address, onBlocks, onError, dispatch, page, itemsPerPage } = this.props;
+        const { address, onTransactions, onError, dispatch, page, itemsPerPage } = this.props;
         apiRequest({
-            path: `block?page=${page}&itemsPerPage=${itemsPerPage}&address=${address}`,
+            path: `tx?page=${page}&itemsPerPage=${itemsPerPage}&address=${address}`,
             dispatch,
             showProgressBar: true
         })
-            .then((response: BlockDoc[]) => {
-                onBlocks(response);
+            .then((response: TransactionDoc[]) => {
+                onTransactions(response);
             })
             .catch(onError);
     }
@@ -36,4 +36,4 @@ class RequestPlatformAddressBlocks extends React.Component<Props> {
     }
 }
 
-export default connect()(RequestPlatformAddressBlocks);
+export default connect()(RequestPlatformAddressTransactions);

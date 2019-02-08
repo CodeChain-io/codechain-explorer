@@ -22,7 +22,7 @@ class RequestAssetTransactions extends React.Component<Props> {
     public componentWillMount() {
         const { dispatch, assetType, onTransactions, onError, page, itemsPerPage } = this.props;
         apiRequest({
-            path: `tx/?page=${page}&itemsPerPage=${itemsPerPage}&assetType=${assetType}`,
+            path: `tx?page=${page}&itemsPerPage=${itemsPerPage}&assetType=${assetType}`,
             dispatch,
             showProgressBar: true
         })

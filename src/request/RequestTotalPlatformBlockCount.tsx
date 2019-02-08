@@ -19,7 +19,7 @@ class RequestTotalPlatfromBlockCount extends React.Component<Props> {
     public componentWillMount() {
         const { onError, onTotalCount, dispatch, address } = this.props;
         apiRequest({
-            path: `addr-platform-blocks/${address}/totalCount`,
+            path: `block/count?address=${address}`,
             dispatch,
             showProgressBar: true
         })

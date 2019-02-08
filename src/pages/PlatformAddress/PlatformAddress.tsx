@@ -4,7 +4,7 @@ import { match } from "react-router";
 import { Col, Container, Row } from "reactstrap";
 import { Error } from "../../components/error/Error/Error";
 
-import { BlockDoc } from "codechain-indexer-types";
+import { BlockDoc, TransactionDoc } from "codechain-indexer-types";
 import { U256 } from "codechain-sdk/lib/core/classes";
 import BlockList from "../../components/block/BlockList/BlockList";
 import AccountDetails from "../../components/platformAddress/AccountDetails/AccountDetails";
@@ -25,6 +25,8 @@ interface State {
         balance: U256;
     };
     blocks: BlockDoc[];
+    transactions: TransactionDoc[];
+    loadTransaction: boolean;
     loadBlock: boolean;
     pageForBlock: number;
     noMoreBlock: boolean;
@@ -38,8 +40,10 @@ class Address extends React.Component<Props, State> {
         super(props);
         this.state = {
             blocks: [],
+            transactions: [],
             notFound: false,
             loadBlock: true,
+            loadTransaction: true,
             pageForBlock: 1,
             noMoreBlock: false,
             totalBlockCount: 0
@@ -61,8 +65,10 @@ class Address extends React.Component<Props, State> {
             this.setState({
                 account: undefined,
                 blocks: [],
+                transactions: [],
                 notFound: false,
                 loadBlock: true,
+                loadTransaction: true,
                 noMoreBlock: false,
                 totalBlockCount: 0
             });

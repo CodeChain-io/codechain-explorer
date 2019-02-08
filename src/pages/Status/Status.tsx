@@ -7,12 +7,12 @@ import NodeStatus from "../../components/status/NodeStatus/NodeStatus";
 import SyncStatus from "../../components/status/SyncStatus/SyncStatus";
 import RequestBlockDifficulty from "../../request/RequestBlockDifficulty";
 import RequestCodeChainStatus, { CodeChainData } from "../../request/RequestCodeChainStatus";
-import RequestNodeStatus, { NodeStatusData } from "../../request/RequestNodeStatus";
+import RequestNodeStatus from "../../request/RequestNodeStatus";
 import RequestSyncStatus, { SyncData } from "../../request/RequestSyncStatus";
 import "./Status.scss";
 
 interface State {
-    nodeStatus?: NodeStatusData;
+    nodeStatus?: boolean;
     syncStatus?: SyncData;
     chainInfo?: CodeChainData;
     difficulty?: Array<{
@@ -43,7 +43,7 @@ class Status extends React.Component<{}, State> {
 
     public componentDidMount() {
         this.interval = setInterval(() => {
-            if (this.state.nodeStatus) {
+            if (this.state.nodeStatus != null) {
                 this.setState({ requestNodeStatus: true });
             }
             if (this.state.syncStatus) {
@@ -79,7 +79,7 @@ class Status extends React.Component<{}, State> {
                     <h1>Status</h1>
                     <Row>
                         <Col lg="6">
-                            {nodeStatus ? (
+                            {nodeStatus != null ? (
                                 <div className="mt-large">
                                     <NodeStatus nodeStatus={nodeStatus} />
                                 </div>
@@ -125,7 +125,7 @@ class Status extends React.Component<{}, State> {
     private onBlockDifficulty = (difficulty: Array<{ x: string; y: string }>) => {
         this.setState({ difficulty, requestDifficulty: false });
     };
-    private onNodeStatus = (nodeStatus: NodeStatusData) => {
+    private onNodeStatus = (nodeStatus: boolean) => {
         this.setState({ nodeStatus, requestNodeStatus: false });
     };
     private onChainInfo = (chainInfo: CodeChainData) => {

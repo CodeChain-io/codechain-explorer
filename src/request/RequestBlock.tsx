@@ -48,24 +48,6 @@ class RequestBlock extends React.Component<Props> {
                     type: "CACHE_BLOCK",
                     data: block
                 });
-
-                if (block.transactions) {
-                    block.transactions.map(transaction => {
-                        dispatch({
-                            type: "CACHE_TRANSACTION",
-                            data: transaction
-                        });
-                        if (transaction.type === "mintAsset") {
-                            dispatch({
-                                type: "CACHE_ASSET_SCHEME",
-                                data: {
-                                    assetType: transaction.mintAsset.assetType,
-                                    assetScheme: transaction.mintAsset
-                                }
-                            });
-                        }
-                    });
-                }
                 onBlock(block);
             })
             .catch(onError);

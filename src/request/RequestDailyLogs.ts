@@ -30,9 +30,8 @@ interface DispatchProps {
 }
 
 interface MinerLog {
-    date: string;
     count: number;
-    value: string;
+    address: string;
 }
 
 type Props = OwnProps & DispatchProps;
@@ -66,7 +65,7 @@ class RequestDailyLogs extends React.Component<Props> {
 
         if (type === DailyLogType.BEST_MINER) {
             const bestMineres = (await apiRequest({
-                path: `log/bestMiners?date=${date}`,
+                path: `log/miners?date=${date}`,
                 dispatch,
                 showProgressBar: true
             })) as MinerLog[];
@@ -77,32 +76,32 @@ class RequestDailyLogs extends React.Component<Props> {
             const total = _.sumBy(bestMineres, miner => miner.count);
             const results = _.map(bestMineres, (bestMiner, index) => {
                 return {
-                    id: `${bestMiner.value.slice(0, 7)}... (${((bestMiner.count / total) * 100).toFixed(1)}%)`,
-                    label: `${bestMiner.value.slice(0, 7)}...`,
+                    id: `${bestMiner.address.slice(0, 7)}... (${((bestMiner.count / total) * 100).toFixed(1)}%)`,
+                    label: `${bestMiner.address.slice(0, 7)}...`,
                     value: bestMiner.count,
                     color: this.getColor(index),
-                    minerAddress: bestMiner.value
+                    minerAddress: bestMiner.address
                 };
             });
             onData(results);
         } else if (type === DailyLogType.TX_TYPE) {
             const transferCount = (await apiRequest({
-                path: `log/transferTxCount?date=${date}`,
+                path: `log/count?date=${date}&filter=transferAsset`,
                 dispatch,
                 showProgressBar: true
             })) as number;
             const mintCount = (await apiRequest({
-                path: `log/mintTxCount?date=${date}`,
+                path: `log/count?date=${date}&filter=mintAsset`,
                 dispatch,
                 showProgressBar: true
             })) as number;
             const composeCount = (await apiRequest({
-                path: `log/composeTxCount?date=${date}`,
+                path: `log/count?date=${date}&filter=composeAsset`,
                 dispatch,
                 showProgressBar: true
             })) as number;
             const decomposeCount = (await apiRequest({
-                path: `log/decomposeTxCount?date=${date}`,
+                path: `log/count?date=${date}&filter=decomposeAsset`,
                 dispatch,
                 showProgressBar: true
             })) as number;

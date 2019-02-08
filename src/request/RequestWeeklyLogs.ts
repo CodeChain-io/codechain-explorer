@@ -43,10 +43,10 @@ class RequestWeeklyLogs extends React.Component<Props> {
         let query = "";
         switch (type) {
             case WeeklyLogType.BLOCK_COUNT:
-                query = "log/blockCount";
+                query = "log/count?filter=block";
                 break;
             case WeeklyLogType.TX_COUNT:
-                query = "log/txCount";
+                query = "log/count?filter=tx";
                 break;
         }
         try {
@@ -57,14 +57,14 @@ class RequestWeeklyLogs extends React.Component<Props> {
                 const dateString = momentObject.format("YYYY-MM-DD");
                 const resultDateString = momentObject.format("MM-DD");
                 const count = (await apiRequest({
-                    path: `${query}?date=${dateString}`,
+                    path: `${query}&date=${dateString}`,
                     dispatch,
                     showProgressBar: true
                 })) as string;
                 return {
                     date: resultDateString,
                     "#": count,
-                    color: "hsl(237, 49%, 45%)",
+                    color: "hsl(191, 95%, 42%)",
                     fullDate: dateString
                 };
             });

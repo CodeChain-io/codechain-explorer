@@ -7,12 +7,12 @@ import { Redirect } from "react-router";
 import { Container } from "reactstrap";
 
 import { TransactionDoc } from "codechain-indexer-types";
+import { Link } from "react-router-dom";
 import DataTable from "../../components/util/DataTable/DataTable";
 import HexString from "../../components/util/HexString/HexString";
-import { ImageLoader } from "../../components/util/ImageLoader/ImageLoader";
 import { TypeBadge } from "../../components/util/TypeBadge/TypeBadge";
 import { RequestTotalTransactionCount, RequestTransactions } from "../../request";
-import { getTotalAssetCount } from "../../utils/Asset";
+import { changeQuarkStringToCCC } from "../../utils/Formatter";
 import "./Transactions.scss";
 
 interface State {
@@ -195,10 +195,14 @@ class Transactions extends React.Component<Props, State> {
                                 <thead>
                                     <tr>
                                         <th style={{ width: "20%" }}>Type</th>
-                                        <th style={{ width: "20%" }}>Hash</th>
-                                        <th style={{ width: "25%" }}>Assets</th>
-                                        <th style={{ width: "15%" }}>Quantity</th>
-                                        <th style={{ width: "20%" }}>Last seen</th>
+                                        <th style={{ width: "25%" }}>Hash</th>
+                                        <th style={{ width: "15%" }} className="text-right">
+                                            Fee
+                                        </th>
+                                        <th style={{ width: "25%" }}>Fee payer</th>
+                                        <th style={{ width: "15%" }} className="text-right">
+                                            Last seen
+                                        </th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -206,7 +210,7 @@ class Transactions extends React.Component<Props, State> {
                                         return (
                                             <tr key={`transaction-${transaction.hash}`}>
                                                 <td>
-                                                    <TypeBadge transaction={transaction} />
+                                                    <TypeBadge transaction={transaction} />{" "}
                                                 </td>
                                                 <td scope="row">
                                                     <HexString
@@ -214,9 +218,18 @@ class Transactions extends React.Component<Props, State> {
                                                         text={transaction.hash}
                                                     />
                                                 </td>
-                                                <td>{this.getAssetInfo(transaction)}</td>
-                                                <td>{getTotalAssetCount(transaction).toLocaleString()}</td>
-                                                <td>{moment.unix(transaction.timestamp!).fromNow()}</td>
+                                                <td className="text-right">
+                                                    {changeQuarkStringToCCC(transaction.fee)}
+                                                    CCC
+                                                </td>
+                                                <td>
+                                                    <Link to={`/addr-platform/${transaction.signer}`}>
+                                                        {transaction.signer}
+                                                    </Link>
+                                                </td>
+                                                <td className="text-right">
+                                                    {moment.unix(transaction.timestamp!).fromNow()}
+                                                </td>
                                             </tr>
                                         );
                                     })}
@@ -226,29 +239,6 @@ class Transactions extends React.Component<Props, State> {
                     </div>
                 </div>
             </Container>
-        );
-    }
-
-    private getAssetInfo(transaction: TransactionDoc) {
-        let assetType = "";
-        if (transaction.type === "mintAsset") {
-            assetType = transaction.mintAsset.assetType;
-        } else if (transaction.type === "transferAsset") {
-            if (transaction.transferAsset.inputs.length > 0) {
-                assetType = transaction.transferAsset.inputs[0].prevOut.assetType;
-            } else if (transaction.transferAsset.burns.length > 0) {
-                assetType = transaction.transferAsset.burns[0].prevOut.assetType;
-            }
-        } else if (transaction.type === "composeAsset") {
-            assetType = transaction.composeAsset.assetType;
-        } else if (transaction.type === "decomposeAsset") {
-            assetType = transaction.decomposeAsset.input.prevOut.assetType;
-        }
-        return (
-            <span>
-                <ImageLoader className="mr-2" data={assetType} size={18} isAssetImage={true} />
-                <HexString link={`/asset/0x${assetType}`} text={assetType} />
-            </span>
         );
     }
 

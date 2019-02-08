@@ -2,12 +2,11 @@ import { faCircle } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import * as React from "react";
 
-import { NodeStatusData } from "../../../request/RequestNodeStatus";
 import DataSet from "../../util/DataSet/DataSet";
 import "./NodeStatus.scss";
 
 interface Props {
-    nodeStatus: NodeStatusData;
+    nodeStatus: boolean;
 }
 
 class NodeStatus extends React.Component<Props, {}> {
@@ -25,24 +24,9 @@ class NodeStatus extends React.Component<Props, {}> {
                 </div>
                 <DataSet isStatus={true}>
                     <div className="one-line-data-set">
-                        <div>Node status</div>
+                        <div>Status</div>
                         <div>
-                            {nodeStatus.isCodeChainRunning ? (
-                                <span className="running">
-                                    <FontAwesomeIcon icon={faCircle} /> Running
-                                </span>
-                            ) : (
-                                <span className="text-danger">
-                                    <FontAwesomeIcon icon={faCircle} /> Stopped
-                                </span>
-                            )}
-                        </div>
-                    </div>
-                    <hr />
-                    <div className="one-line-data-set">
-                        <div>Server status</div>
-                        <div>
-                            {nodeStatus.isServerRunning ? (
+                            {nodeStatus ? (
                                 <span className="running">
                                     <FontAwesomeIcon icon={faCircle} /> Running
                                 </span>
