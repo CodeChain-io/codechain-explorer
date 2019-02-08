@@ -22,7 +22,7 @@ import Status from "./pages/Status/Status";
 import Transaction from "./pages/Transaction/Transaction";
 import Transactions from "./pages/Transactions/Transactions";
 import { store } from "./redux/store";
-import RegisterServiceWorker from "./register_service_worker";
+// import RegisterServiceWorker from "./register_service_worker";
 
 ReactDOM.render(
     <Provider store={store}>
@@ -52,4 +52,5 @@ ReactDOM.render(
     </Provider>,
     document.getElementById("root") as HTMLElement
 );
-RegisterServiceWorker();
+
+// RegisterServiceWorker();
