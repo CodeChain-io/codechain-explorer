@@ -17,7 +17,7 @@ type Props = OwnProps & DispatchProps;
 class RequestTotalTransactionCount extends React.Component<Props> {
     public componentWillMount() {
         const { onError, onTransactionTotalCount, dispatch } = this.props;
-        apiRequest({ path: `txs/totalCount`, dispatch, showProgressBar: true })
+        apiRequest({ path: `tx/count`, dispatch, showProgressBar: true })
             .then((response: any) => {
                 onTransactionTotalCount(response);
             })

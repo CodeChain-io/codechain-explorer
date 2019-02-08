@@ -19,7 +19,7 @@ class ReqeustTotalTransferTransactionCount extends React.Component<Props> {
     public componentWillMount() {
         const { onError, onTotalCount, dispatch, address } = this.props;
         apiRequest({
-            path: `addr-asset-txs/${address}/totalCount`,
+            path: `tx/count?address=${address}`,
             dispatch,
             showProgressBar: true
         })

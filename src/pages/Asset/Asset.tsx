@@ -9,7 +9,7 @@ import TransactionList from "../../components/transaction/TransactionList/Transa
 import { RequestAssetScheme, RequestTotalAssetTransactionCount } from "../../request";
 import RequestAssetTransactions from "../../request/RequestAssetTransactions";
 
-import { H256 } from "codechain-sdk/lib/core/H256";
+import { H160 } from "codechain-sdk/lib/core/classes";
 import CopyButton from "../../components/util/CopyButton/CopyButton";
 import HexString from "../../components/util/HexString/HexString";
 import { ImageLoader } from "../../components/util/ImageLoader/ImageLoader";
@@ -108,17 +108,17 @@ class Asset extends React.Component<Props, State> {
                     <Col>
                         <div className="title-container d-flex">
                             <div className="d-inline-block left-container">
-                                <ImageLoader size={65} data={new H256(assetType).value} isAssetImage={true} />
+                                <ImageLoader size={65} data={new H160(assetType).value} isAssetImage={true} />
                             </div>
                             <div className="d-inline-block right-container">
                                 <h1>Asset</h1>
                                 <div className="hash-container d-flex">
                                     <div className="d-inline-block hash">
-                                        <HexString text={new H256(assetType).value} />
+                                        <HexString text={new H160(assetType).value} />
                                     </div>
                                     <CopyButton
                                         className="d-inline-block"
-                                        copyString={`0x${new H256(assetType).value}`}
+                                        copyString={`0x${new H160(assetType).value}`}
                                     />
                                 </div>
                             </div>
@@ -147,7 +147,7 @@ class Asset extends React.Component<Props, State> {
                 {totalTransactionCount !== 0 ? (
                     <div className="mt-large">
                         <TransactionList
-                            assetType={new H256(assetType)}
+                            assetType={new H160(assetType)}
                             transactions={transactions}
                             totalCount={totalTransactionCount}
                             loadMoreAction={this.loadMoreAction}

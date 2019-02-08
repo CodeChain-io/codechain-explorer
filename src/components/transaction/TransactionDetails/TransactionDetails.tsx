@@ -23,7 +23,6 @@ interface OwnProps {
 }
 
 interface StateProps {
-    bestBlockNumber?: number;
     moveToSectionRef?: string;
 }
 
@@ -92,7 +91,6 @@ class TransactionDetailsInternal extends React.Component<Props, State> {
         pendingDuration?: number | null
     ) => {
         const { pageForBurn, pageForOutput, pageForInput } = this.state;
-        const { bestBlockNumber } = this.props;
         if (transaction.type === "transferAsset") {
             return [
                 <Row key="details">
@@ -120,14 +118,7 @@ class TransactionDetailsInternal extends React.Component<Props, State> {
                             <Row>
                                 <Col md="3">Status</Col>
                                 <Col md="9">
-                                    {bestBlockNumber && (
-                                        <StatusBadge
-                                            status={status}
-                                            timestamp={pendingDuration}
-                                            bestBlockNumber={bestBlockNumber}
-                                            currentBlockNumber={transaction.blockNumber}
-                                        />
-                                    )}
+                                    <StatusBadge tx={transaction} />
                                 </Col>
                             </Row>
                             <hr />
@@ -480,14 +471,7 @@ class TransactionDetailsInternal extends React.Component<Props, State> {
                             <Row>
                                 <Col md="3">Status</Col>
                                 <Col md="9">
-                                    {bestBlockNumber && (
-                                        <StatusBadge
-                                            status={status}
-                                            timestamp={pendingDuration}
-                                            bestBlockNumber={bestBlockNumber}
-                                            currentBlockNumber={transaction.blockNumber}
-                                        />
-                                    )}
+                                    <StatusBadge tx={transaction} />
                                 </Col>
                             </Row>
                             <hr />
@@ -642,14 +626,7 @@ class TransactionDetailsInternal extends React.Component<Props, State> {
                             <Row>
                                 <Col md="3">Status</Col>
                                 <Col md="9">
-                                    {bestBlockNumber && (
-                                        <StatusBadge
-                                            status={status}
-                                            timestamp={pendingDuration}
-                                            bestBlockNumber={bestBlockNumber}
-                                            currentBlockNumber={transaction.blockNumber}
-                                        />
-                                    )}
+                                    <StatusBadge tx={transaction} />
                                 </Col>
                             </Row>
                             <hr />
@@ -879,14 +856,7 @@ class TransactionDetailsInternal extends React.Component<Props, State> {
                             <Row>
                                 <Col md="3">Status</Col>
                                 <Col md="9">
-                                    {bestBlockNumber && (
-                                        <StatusBadge
-                                            status={status}
-                                            timestamp={pendingDuration}
-                                            bestBlockNumber={bestBlockNumber}
-                                            currentBlockNumber={transaction.blockNumber}
-                                        />
-                                    )}
+                                    <StatusBadge tx={transaction} />
                                 </Col>
                             </Row>
                             <hr />
@@ -1129,8 +1099,7 @@ class TransactionDetailsInternal extends React.Component<Props, State> {
 const TransactionDetails = connect((state: RootState) => {
     const { moveToSectionRef } = state.appReducer;
     return {
-        moveToSectionRef,
-        bestBlockNumber: state.appReducer.bestBlockNumber
+        moveToSectionRef
     };
 })(TransactionDetailsInternal);
 

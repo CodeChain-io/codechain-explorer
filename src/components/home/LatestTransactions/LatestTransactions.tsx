@@ -4,38 +4,14 @@ import * as React from "react";
 
 import { TransactionDoc } from "codechain-indexer-types";
 import { Link } from "react-router-dom";
-import { getTotalAssetCount } from "../../../utils/Asset";
+import { changeQuarkStringToCCC } from "../../../utils/Formatter";
 import DataTable from "../../util/DataTable/DataTable";
 import HexString from "../../util/HexString/HexString";
-import { ImageLoader } from "../../util/ImageLoader/ImageLoader";
 import { TypeBadge } from "../../util/TypeBadge/TypeBadge";
 import "./LatestTransactions.scss";
 
 interface Props {
     transactions: TransactionDoc[];
-}
-
-function getAssetInfo(transaction: TransactionDoc) {
-    let assetType = "";
-    if (transaction.type === "mintAsset") {
-        assetType = transaction.mintAsset.assetType;
-    } else if (transaction.type === "transferAsset") {
-        if (transaction.transferAsset.inputs.length > 0) {
-            assetType = transaction.transferAsset.inputs[0].prevOut.assetType;
-        } else if (transaction.transferAsset.burns.length > 0) {
-            assetType = transaction.transferAsset.burns[0].prevOut.assetType;
-        }
-    } else if (transaction.type === "composeAsset") {
-        assetType = transaction.composeAsset.assetType;
-    } else if (transaction.type === "decomposeAsset") {
-        assetType = transaction.decomposeAsset.input.prevOut.assetType;
-    }
-    return (
-        <span>
-            <ImageLoader className="mr-2" data={assetType} size={18} isAssetImage={true} />
-            <HexString link={`/asset/0x${assetType}`} text={assetType} />
-        </span>
-    );
 }
 
 const LatestTransactions = (props: Props) => {
@@ -48,10 +24,14 @@ const LatestTransactions = (props: Props) => {
                     <thead>
                         <tr>
                             <th style={{ width: "20%" }}>Type</th>
-                            <th style={{ width: "20%" }}>Hash</th>
-                            <th style={{ width: "25%" }}>Assets</th>
-                            <th style={{ width: "15%" }}>Quantity</th>
-                            <th style={{ width: "20%" }}>Last seen</th>
+                            <th style={{ width: "25%" }}>Hash</th>
+                            <th style={{ width: "15%" }} className="text-right">
+                                Fee
+                            </th>
+                            <th style={{ width: "25%" }}>Fee payer</th>
+                            <th style={{ width: "15%" }} className="text-right">
+                                Last seen
+                            </th>
                         </tr>
                     </thead>
                     <tbody>
@@ -64,9 +44,14 @@ const LatestTransactions = (props: Props) => {
                                     <td scope="row">
                                         <HexString link={`/tx/0x${transaction.hash}`} text={transaction.hash} />
                                     </td>
-                                    <td>{getAssetInfo(transaction)}</td>
-                                    <td>{getTotalAssetCount(transaction).toLocaleString()}</td>
-                                    <td>{moment.unix(transaction.timestamp!).fromNow()}</td>
+                                    <td className="text-right">
+                                        {changeQuarkStringToCCC(transaction.fee)}
+                                        CCC
+                                    </td>
+                                    <td>
+                                        <Link to={`/addr-platform/${transaction.signer}`}>{transaction.signer}</Link>
+                                    </td>
+                                    <td className="text-right">{moment.unix(transaction.timestamp!).fromNow()}</td>
                                 </tr>
                             );
                         })}

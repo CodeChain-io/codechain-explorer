@@ -18,7 +18,7 @@ class RequestTotalBlockCount extends React.Component<Props> {
     public componentWillMount() {
         const { onError, onBlockTotalCount, dispatch } = this.props;
         apiRequest({
-            path: `blocks/totalCount`,
+            path: `block/count`,
             dispatch,
             showProgressBar: true
         })

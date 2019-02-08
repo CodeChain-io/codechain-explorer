@@ -23,7 +23,7 @@ class RequestPlatformAddressAccount extends React.Component<Props> {
     public componentWillMount() {
         const { address, onAccount, onError, dispatch, progressBarTarget, onAccountNotExist } = this.props;
         apiRequest({
-            path: `addr-platform-account/${address}`,
+            path: `account/${address}`,
             dispatch,
             progressBarTarget,
             showProgressBar: true

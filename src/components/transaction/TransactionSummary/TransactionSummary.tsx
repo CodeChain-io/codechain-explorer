@@ -105,15 +105,16 @@ class TransactionSummaryInternal extends React.Component<Props, State> {
                                           <div className="item-panel">
                                               {_.map(
                                                   transaction.transferAsset.outputs.slice(0, this.itemLimit),
-                                                  (output, i) =>
-                                                      this.getAssetIcon(
+                                                  (output, i) => {
+                                                      return this.getAssetIcon(
                                                           Metadata.parseMetadata(output.assetScheme.metadata),
                                                           output.assetType,
                                                           i,
                                                           output.quantity,
                                                           "output",
                                                           _.partial(this.onClickItem, "output", i)
-                                                      )
+                                                      );
+                                                  }
                                               )}
                                               {transaction.transferAsset.outputs.length > this.itemLimit ? (
                                                   <p className="mb-0">

@@ -18,7 +18,7 @@ export class ImageLoader extends React.Component<Props, State> {
         super(prop);
         let requestUrl;
         if (prop.isAssetImage) {
-            requestUrl = `${this.host}/api/asset/image/${prop.data}`;
+            requestUrl = `${this.host}/api/asset-image/${prop.data}`;
         } else {
             requestUrl = this.getDefaultImage();
         }

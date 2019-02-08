@@ -1,7 +1,7 @@
 import * as React from "react";
 import { connect, Dispatch } from "react-redux";
 
-import { H256 } from "codechain-sdk/lib/core/classes";
+import { H160 } from "codechain-sdk/lib/core/classes";
 
 import { AssetSchemeDoc } from "codechain-indexer-types";
 import { RootState } from "../redux/actions";
@@ -45,7 +45,7 @@ class RequestAssetScheme extends React.Component<Props> {
             return;
         }
         apiRequest({
-            path: `asset/${assetType}`,
+            path: `asset-scheme/${assetType}`,
             dispatch,
             progressBarTarget,
             showProgressBar: true
@@ -55,7 +55,7 @@ class RequestAssetScheme extends React.Component<Props> {
                     return onAssetSchemeNotExist();
                 }
                 const assetScheme = response;
-                const cacheKey = new H256(assetType).value;
+                const cacheKey = new H160(assetType).value;
                 dispatch({
                     type: "CACHE_ASSET_SCHEME",
                     data: {
@@ -74,8 +74,13 @@ class RequestAssetScheme extends React.Component<Props> {
 }
 
 export default connect((state: RootState, props: OwnProps) => {
-    const cacheKey = new H256(props.assetType).value;
-    const cachedAssetScheme = state.appReducer.assetSchemeByAssetType[cacheKey];
+    let cachedAssetScheme;
+    try {
+        const cacheKey = new H160(props.assetType).value;
+        cachedAssetScheme = state.appReducer.assetSchemeByAssetType[cacheKey];
+    } catch (e) {
+        //
+    }
     return {
         cached: cachedAssetScheme && {
             data: cachedAssetScheme.data,

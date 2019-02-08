@@ -23,10 +23,16 @@ const LatestBlocks = (props: Props) => {
                     <thead>
                         <tr>
                             <th style={{ width: "15%" }}>No.</th>
-                            <th style={{ width: "15%" }}>Transactions</th>
-                            <th style={{ width: "35%" }}>Author</th>
-                            <th style={{ width: "15%" }}>Reward</th>
-                            <th style={{ width: "20%" }}>Last seen</th>
+                            <th style={{ width: "10%" }} className="text-right">
+                                # of TXs
+                            </th>
+                            <th style={{ width: "40%" }}>Author</th>
+                            <th style={{ width: "15%" }} className="text-right">
+                                Reward
+                            </th>
+                            <th style={{ width: "20%" }} className="text-right">
+                                Last seen
+                            </th>
                         </tr>
                     </thead>
                     <tbody>
@@ -36,15 +42,19 @@ const LatestBlocks = (props: Props) => {
                                     <td scope="row">
                                         <Link to={`/block/${block.number}`}>{block.number.toLocaleString()}</Link>
                                     </td>
-                                    <td>{block.transactions ? block.transactions.length.toLocaleString() : 0}</td>
+                                    <td className="text-right">
+                                        {block.transactions ? block.transactions.length.toLocaleString() : 0}
+                                    </td>
                                     <td>
                                         <Link to={`/addr-platform/${block.author}`}>{block.author}</Link>
                                     </td>
-                                    <td>
+                                    <td className="text-right">
                                         <CommaNumberString text={changeQuarkStringToCCC(block.miningReward)} />
                                         CCC
                                     </td>
-                                    <td>{block.timestamp ? moment.unix(block.timestamp).fromNow() : "Genesis"}</td>
+                                    <td className="text-right">
+                                        {block.timestamp ? moment.unix(block.timestamp).fromNow() : "Genesis"}
+                                    </td>
                                 </tr>
                             );
                         })}

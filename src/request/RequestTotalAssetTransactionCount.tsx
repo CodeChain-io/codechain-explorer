@@ -19,7 +19,7 @@ class RequestTotalAssetTransactionCount extends React.Component<Props> {
     public componentWillMount() {
         const { onError, onTotalCount, dispatch, assetType } = this.props;
         apiRequest({
-            path: `asset-txs/${assetType}/totalCount`,
+            path: `tx/count?assetType=${assetType}`,
             dispatch,
             showProgressBar: true
         })

@@ -68,12 +68,6 @@ class Transactions extends React.Component<Props, State> {
         const params = new URLSearchParams(search);
         const currentPage = params.get("page") ? parseInt(params.get("page") as string, 10) : 1;
         const itemsPerPage = params.get("itemsPerPage") ? parseInt(params.get("itemsPerPage") as string, 10) : 25;
-        const lastBlockNumber = params.get("lastBlockNumber")
-            ? parseInt(params.get("lastBlockNumber") as string, 10)
-            : undefined;
-        const lastTransactionIndex = params.get("lastTransactionIndex")
-            ? parseInt(params.get("lastTransactionIndex") as string, 10)
-            : undefined;
         const {
             transactions,
             totalTransactionCount,
@@ -116,8 +110,6 @@ class Transactions extends React.Component<Props, State> {
                         page={currentPage}
                         itemsPerPage={itemsPerPage}
                         onError={this.onError}
-                        lastBlockNumber={lastBlockNumber}
-                        lastTransactionIndex={lastTransactionIndex}
                     />
                 ) : null}
                 <div className="d-flex align-items-end">

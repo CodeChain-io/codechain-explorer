@@ -19,7 +19,7 @@ type Props = OwnProps & DispatchProps;
 class RequestAssetTransferAddressUTXO extends React.Component<Props> {
     public componentWillMount() {
         const { address, onAggsUTXO, onError, dispatch } = this.props;
-        const path = `aggs-utxo/${address}`;
+        const path = `aggs-utxo?address=${address}`;
         apiRequest({ path, dispatch, showProgressBar: true })
             .then((response: AggsUTXODoc[]) => {
                 onAggsUTXO(response);

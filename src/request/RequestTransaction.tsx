@@ -38,11 +38,25 @@ class RequestTransaction extends React.Component<Props> {
             progressBarTarget,
             showProgressBar: true
         })
-            .then((response: TransactionDoc) => {
+            .then(async (response: TransactionDoc) => {
                 if (response === null) {
                     return onTransactionNotExist();
                 }
                 const transaction = response;
+
+                if (transaction.type === "transferAsset") {
+                    await Promise.all(
+                        transaction.transferAsset.outputs.map(async output => {
+                            const assetScheme: any = await apiRequest({
+                                path: `asset-scheme/${output.assetType}`,
+                                dispatch,
+                                showProgressBar: false
+                            });
+                            output.assetScheme = assetScheme;
+                        })
+                    );
+                }
+
                 dispatch({
                     type: "CACHE_TRANSACTION",
                     data: transaction
@@ -67,8 +81,13 @@ class RequestTransaction extends React.Component<Props> {
     }
 }
 export default connect((state: RootState, props: OwnProps) => {
-    const cacheKey = new H256(props.hash).value;
-    const cachedTx = state.appReducer.transactionByHash[cacheKey];
+    let cachedTx;
+    try {
+        const cacheKey = new H256(props.hash).value;
+        cachedTx = state.appReducer.transactionByHash[cacheKey];
+    } catch (e) {
+        //
+    }
     return {
         cached: cachedTx && {
             data: cachedTx.data,

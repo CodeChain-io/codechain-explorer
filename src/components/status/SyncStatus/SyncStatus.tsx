@@ -42,8 +42,8 @@ class SyncStatus extends React.Component<Props, {}> {
                     <div className="one-line-data-set">
                         <div>Last block number (Explorer)</div>
                         <div>
-                            <Link to={`/block/${syncStatus.explorerLastBlockNumber}`}>
-                                {syncStatus.explorerLastBlockNumber.toLocaleString()}
+                            <Link to={`/block/${syncStatus.indexedBlockNumber}`}>
+                                {syncStatus.indexedBlockNumber.toLocaleString()}
                             </Link>
                         </div>
                     </div>
@@ -52,8 +52,8 @@ class SyncStatus extends React.Component<Props, {}> {
                         <Col md="6">Last block hash (Explorer)</Col>
                         <Col md="6">
                             <HexString
-                                text={syncStatus.explorerLastBlockHash}
-                                link={`/block/0x${syncStatus.explorerLastBlockHash}`}
+                                text={syncStatus.indexedBlockHash}
+                                link={`/block/0x${syncStatus.indexedBlockHash}`}
                             />
                         </Col>
                     </Row>
@@ -66,14 +66,13 @@ class SyncStatus extends React.Component<Props, {}> {
                                 color="success"
                                 value={
                                     Math.floor(
-                                        (syncStatus.explorerLastBlockNumber / syncStatus.codechainBestBlockNumber) *
-                                            1000
+                                        (syncStatus.indexedBlockNumber / syncStatus.codechainBestBlockNumber) * 1000
                                     ) / 10
                                 }
                             />
                             <span className="progress-value">
                                 {Math.floor(
-                                    (syncStatus.explorerLastBlockNumber / syncStatus.codechainBestBlockNumber) * 1000
+                                    (syncStatus.indexedBlockNumber / syncStatus.codechainBestBlockNumber) * 1000
                                 ) / 10}
                                 %
                             </span>

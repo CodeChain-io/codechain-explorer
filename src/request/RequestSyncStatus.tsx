@@ -6,8 +6,8 @@ import { ApiError, apiRequest } from "./ApiRequest";
 export interface SyncData {
     codechainBestBlockNumber: number;
     codechainBestBlockHash: string;
-    explorerLastBlockNumber: number;
-    explorerLastBlockHash: string;
+    indexedBlockNumber: number;
+    indexedBlockHash: string;
 }
 
 interface OwnProps {

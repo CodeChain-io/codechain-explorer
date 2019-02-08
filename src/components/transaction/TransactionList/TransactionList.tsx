@@ -11,7 +11,7 @@ import HexString from "../../util/HexString/HexString";
 import "./TransactionList.scss";
 
 import { TransactionDoc } from "codechain-indexer-types";
-import { H256 } from "codechain-sdk/lib/core/classes";
+import { H160 } from "codechain-sdk/lib/core/classes";
 import { connect } from "react-redux";
 import { Link } from "react-router-dom";
 import { RootState } from "../../../redux/actions";
@@ -22,7 +22,7 @@ import { TypeBadge } from "../../util/TypeBadge/TypeBadge";
 
 interface OwnProps {
     owner?: string;
-    assetType?: H256;
+    assetType?: H160;
     transactions: TransactionDoc[];
     loadMoreAction?: () => void;
     totalCount: number;
@@ -30,15 +30,11 @@ interface OwnProps {
     isPendingTransactionList?: boolean;
 }
 
-interface StateProps {
-    bestBlockNumber?: number;
-}
-
 interface State {
     page: number;
 }
 
-type Props = OwnProps & StateProps;
+type Props = OwnProps;
 
 class TransactionList extends React.Component<Props, State> {
     private itemPerPage = 6;
@@ -58,8 +54,7 @@ class TransactionList extends React.Component<Props, State> {
             loadMoreAction,
             totalCount,
             hideMoreButton,
-            isPendingTransactionList,
-            bestBlockNumber
+            isPendingTransactionList
         } = this.props;
         let loadedTransactions;
         if (loadMoreAction) {
@@ -122,17 +117,7 @@ class TransactionList extends React.Component<Props, State> {
                                         <Row key="row-item">
                                             <Col md="3">Status</Col>
                                             <Col md="9">
-                                                {isPendingTransactionList ? (
-                                                    <StatusBadge status={"pending"} />
-                                                ) : (
-                                                    bestBlockNumber && (
-                                                        <StatusBadge
-                                                            status={"confirmed"}
-                                                            currentBlockNumber={transaction.blockNumber}
-                                                            bestBlockNumber={bestBlockNumber}
-                                                        />
-                                                    )
-                                                )}
+                                                <StatusBadge tx={transaction} />
                                             </Col>
                                         </Row>
                                         <hr key="hr-item" />
@@ -157,7 +142,7 @@ class TransactionList extends React.Component<Props, State> {
             </div>
         );
     }
-    private TransactionObjectByType = (transaction: TransactionDoc, assetType?: H256, owner?: string) => {
+    private TransactionObjectByType = (transaction: TransactionDoc, assetType?: H160, owner?: string) => {
         if (transaction.type === "mintAsset") {
             return [
                 <Row key="asset-type">
