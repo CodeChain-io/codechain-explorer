@@ -11,9 +11,9 @@ import { Link } from "react-router-dom";
 import DataTable from "../../components/util/DataTable/DataTable";
 import HexString from "../../components/util/HexString/HexString";
 import { TypeBadge } from "../../components/util/TypeBadge/TypeBadge";
-import { RequestTotalTransactionCount, RequestTransactions } from "../../request";
+import { RequestPendingTransactions, RequestTotalPendingTransactionCount } from "../../request";
 import { changeQuarkStringToCCC } from "../../utils/Formatter";
-import "./Transactions.scss";
+import "./PendingTransactions.scss";
 
 interface State {
     transactions: TransactionDoc[];
@@ -30,7 +30,7 @@ interface Props {
     };
 }
 
-class Transactions extends React.Component<Props, State> {
+class PendingTransactions extends React.Component<Props, State> {
     constructor(props: Props) {
         super(props);
         this.state = {
@@ -87,7 +87,7 @@ class Transactions extends React.Component<Props, State> {
         }
         if (totalTransactionCount === undefined) {
             return (
-                <RequestTotalTransactionCount
+                <RequestTotalPendingTransactionCount
                     onTransactionTotalCount={this.onTotalTransactionCount}
                     onError={this.onError}
                 />
@@ -95,9 +95,9 @@ class Transactions extends React.Component<Props, State> {
         }
         const maxPage = Math.floor(Math.max(0, totalTransactionCount - 1) / itemsPerPage) + 1;
         return (
-            <Container className="transactions animated fadeIn">
+            <Container className="Pending-transactions animated fadeIn">
                 {!isTransactionRequested ? (
-                    <RequestTransactions
+                    <RequestPendingTransactions
                         onTransactions={this.onTransactions}
                         page={currentPage}
                         itemsPerPage={itemsPerPage}
@@ -106,7 +106,7 @@ class Transactions extends React.Component<Props, State> {
                 ) : null}
                 <div className="d-flex align-items-end">
                     <div>
-                        <h1>Latest transactions</h1>
+                        <h1>Pending transactions</h1>
                         <div>
                             <div className="d-flex mt-small">
                                 <div className="d-inline ml-auto pager">
@@ -220,7 +220,7 @@ class Transactions extends React.Component<Props, State> {
                                                     </Link>
                                                 </td>
                                                 <td className="text-right">
-                                                    {moment.unix(transaction.timestamp!).fromNow()}
+                                                    {moment.unix(transaction.pendingTimestamp!).fromNow()}
                                                 </td>
                                             </tr>
                                         );
@@ -287,4 +287,4 @@ class Transactions extends React.Component<Props, State> {
     };
 }
 
-export default Transactions;
+export default PendingTransactions;

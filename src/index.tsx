@@ -17,6 +17,7 @@ import Block from "./pages/Block/Block";
 import Blocks from "./pages/Blocks/Blocks";
 import Home from "./pages/Home/Home";
 import NotFound from "./pages/NotFound/NotFound";
+import PendingTransactions from "./pages/PendingTransactions/PendingTransactions";
 import PlatformAddress from "./pages/PlatformAddress/PlatformAddress";
 import Status from "./pages/Status/Status";
 import Transaction from "./pages/Transaction/Transaction";
@@ -40,6 +41,7 @@ ReactDOM.render(
                             <Route path="/addr-platform/:address" component={PlatformAddress} />
                             <Route path="/addr-asset/:address" component={AssetTransferAddress} />
                             <Route path="/txs" component={Transactions} />
+                            <Route path="/pending-txs" component={PendingTransactions} />
                             <Route path="/blocks" component={Blocks} />
                             <Route component={NotFound} />
                         </Switch>
