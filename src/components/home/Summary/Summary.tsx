@@ -229,7 +229,7 @@ class Summary extends React.Component<Props, State> {
                                             radialLabelsLinkStrokeWidth={1}
                                             radialLabelsLinkColor="inherit"
                                             slicesLabelsSkipAngle={10}
-                                            slicesLabelsTextColor="#333333"
+                                            slicesLabelsTextColor="#ffffff"
                                             animate={true}
                                             motionStiffness={90}
                                             motionDamping={15}

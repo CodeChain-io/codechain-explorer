@@ -15,6 +15,7 @@ import { H160 } from "codechain-sdk/lib/core/classes";
 import { connect } from "react-redux";
 import { Link } from "react-router-dom";
 import { RootState } from "../../../redux/actions";
+import { changeQuarkStringToCCC } from "../../../utils/Formatter";
 import DataSet from "../../util/DataSet/DataSet";
 import { ImageLoader } from "../../util/ImageLoader/ImageLoader";
 import { StatusBadge } from "../../util/StatusBadge/StatusBadge";
@@ -114,13 +115,34 @@ class TransactionList extends React.Component<Props, State> {
                                             </Col>
                                         </Row>
                                         <hr />
-                                        <Row key="row-item">
+                                        <Row>
                                             <Col md="3">Status</Col>
                                             <Col md="9">
                                                 <StatusBadge tx={transaction} />
                                             </Col>
                                         </Row>
-                                        <hr key="hr-item" />
+                                        <hr />
+                                        <Row>
+                                            <Col md="3">Sequence</Col>
+                                            <Col md="9">{transaction.seq}</Col>
+                                        </Row>
+                                        <hr />
+                                        <Row>
+                                            <Col md="3">Fee</Col>
+                                            <Col md="9">
+                                                {changeQuarkStringToCCC(transaction.fee)}
+                                                CCC
+                                            </Col>
+                                        </Row>
+                                        <hr />
+                                        <Row>
+                                            <Col md="3">Signer</Col>
+                                            <Col md="9">
+                                                <Link to={`/addr-platform/${transaction.signer}`}>
+                                                    {transaction.signer}
+                                                </Link>
+                                            </Col>
+                                        </Row>
                                         {this.TransactionObjectByType(transaction, assetType, owner)}
                                     </DataSet>
                                 </div>
@@ -143,8 +165,27 @@ class TransactionList extends React.Component<Props, State> {
         );
     }
     private TransactionObjectByType = (transaction: TransactionDoc, assetType?: H160, owner?: string) => {
-        if (transaction.type === "mintAsset") {
+        if (transaction.type === "pay") {
             return [
+                <hr key="line1" />,
+                <Row key="quantity">
+                    <Col md="3">Quantity</Col>
+                    <Col md="9">
+                        {changeQuarkStringToCCC(transaction.pay.quantity)}
+                        CCC
+                    </Col>
+                </Row>,
+                <hr key="line2" />,
+                <Row key="receiver">
+                    <Col md="3">Receiver</Col>
+                    <Col md="9">
+                        <Link to={`/addr-platform/${transaction.pay.receiver}`}>{transaction.pay.receiver}</Link>
+                    </Col>
+                </Row>
+            ];
+        } else if (transaction.type === "mintAsset") {
+            return [
+                <hr key="line1" />,
                 <Row key="asset-type">
                     <Col md="3">AssetType</Col>
                     <Col md="9">
@@ -164,12 +205,12 @@ class TransactionList extends React.Component<Props, State> {
                         )}
                     </Col>
                 </Row>,
-                <hr key="line3" />,
+                <hr key="line2" />,
                 <Row key="amount">
                     <Col md="3">Total supply</Col>
                     <Col md="9">{transaction.mintAsset.supply ? transaction.mintAsset.supply.toLocaleString() : 0}</Col>
                 </Row>,
-                <hr key="line1" />,
+                <hr key="line3" />,
                 <Row key="approver">
                     <Col md="3">Approver</Col>
                     <Col md="9">
@@ -182,7 +223,7 @@ class TransactionList extends React.Component<Props, State> {
                         )}
                     </Col>
                 </Row>,
-                <hr key="line2" />,
+                <hr key="line4" />,
                 <Row key="owner">
                     <Col md="3">Recipient</Col>
                     <Col md="9">
@@ -202,21 +243,22 @@ class TransactionList extends React.Component<Props, State> {
             ];
         } else if (transaction.type === "transferAsset") {
             return [
+                <hr key="line1" />,
                 <Row key="count-of-input">
                     <Col md="3"># of Input</Col>
                     <Col md="9">{transaction.transferAsset.inputs.length.toLocaleString()}</Col>
                 </Row>,
-                <hr key="line1" />,
+                <hr key="line2" />,
                 <Row key="count-of-output">
                     <Col md="3"># of Output</Col>
                     <Col md="9">{transaction.transferAsset.outputs.length.toLocaleString()}</Col>
                 </Row>,
-                <hr key="line2" />,
+                <hr key="line3" />,
                 <Row key="count-of-burn">
                     <Col md="3"># of Burn</Col>
                     <Col md="9">{transaction.transferAsset.burns.length.toLocaleString()}</Col>
                 </Row>,
-                <hr key="line3" />,
+                <hr key="line4" />,
                 <div key="input-output-burn">
                     {transaction.transferAsset.inputs.length > 0
                         ? [
@@ -439,11 +481,12 @@ class TransactionList extends React.Component<Props, State> {
             ];
         } else if (transaction.type === "composeAsset") {
             return [
+                <hr key="line1" />,
                 <Row key="count-of-input">
                     <Col md="3"># of Input</Col>
                     <Col md="9">{transaction.composeAsset.inputs.length.toLocaleString()}</Col>
                 </Row>,
-                <hr key="line1" />,
+                <hr key="line2" />,
                 <Row key="count-of-output">
                     <Col md="3"># of Output</Col>
                     <Col md="9">1</Col>
@@ -592,6 +635,7 @@ class TransactionList extends React.Component<Props, State> {
             ];
         } else if (transaction.type === "decomposeAsset") {
             return [
+                <hr key="line1" />,
                 <Row key="count-of-output">
                     <Col md="3"># of Output</Col>
                     <Col md="9">{transaction.decomposeAsset.outputs.length.toLocaleString()}</Col>

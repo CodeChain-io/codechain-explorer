@@ -28,7 +28,7 @@ const LatestTransactions = (props: Props) => {
                             <th style={{ width: "15%" }} className="text-right">
                                 Fee
                             </th>
-                            <th style={{ width: "25%" }}>Fee payer</th>
+                            <th style={{ width: "25%" }}>Signer</th>
                             <th style={{ width: "15%" }} className="text-right">
                                 Last seen
                             </th>

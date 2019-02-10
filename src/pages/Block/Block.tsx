@@ -1,4 +1,3 @@
-import { faSquare } from "@fortawesome/free-solid-svg-icons";
 import * as _ from "lodash";
 import * as moment from "moment";
 import * as React from "react";
@@ -9,29 +8,13 @@ import { Error } from "../../components/error/Error/Error";
 import BlockDetails from "../../components/block/BlockDetails/BlockDetails";
 import { RequestBlock } from "../../request";
 
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { BlockDoc } from "codechain-indexer-types";
 import { Link } from "react-router-dom";
 import TransactionList from "../../components/transaction/TransactionList/TransactionList";
 import CopyButton from "../../components/util/CopyButton/CopyButton";
 import HexString from "../../components/util/HexString/HexString";
+import { TransactionTypes } from "../../utils/Transactions";
 import "./Block.scss";
-
-const TransactionTypes = [
-    "pay",
-    "mintAsset",
-    "transferAsset",
-    "composeAsset",
-    "decomposeAsset",
-    "wrapCCC",
-    "unwrapCCC",
-    "setRegularKey",
-    "createShard",
-    "setShardOwners",
-    "store",
-    "remove",
-    "custom"
-];
 
 interface State {
     block?: BlockDoc;
@@ -154,7 +137,6 @@ class Block extends React.Component<Props, State> {
                             {TransactionTypes.map(tt => {
                                 return [
                                     <div className="d-flex align-items-center" key="asset-info">
-                                        <FontAwesomeIcon className="square" icon={faSquare} />
                                         <span className="mr-auto item-name">{tt}</span>
                                         <span>{block.transactions.filter(tx => tx.type === tt).length}</span>
                                     </div>,

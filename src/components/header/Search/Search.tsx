@@ -177,7 +177,6 @@ class Search extends React.Component<Props, State> {
     };
 
     private onBlock = (block: BlockDoc) => {
-        this.cancelOtherRequest();
         this.setState({
             redirectTo: `/block/${block.number}`,
             requestCount: this.state.requestCount - 1
@@ -185,7 +184,6 @@ class Search extends React.Component<Props, State> {
     };
 
     private onTransaction = (transaction: TransactionDoc) => {
-        this.cancelOtherRequest();
         this.setState({
             redirectTo: `/tx/0x${transaction.hash}`,
             requestCount: this.state.requestCount - 1
@@ -193,7 +191,6 @@ class Search extends React.Component<Props, State> {
     };
 
     private onAssetScheme = (asset: AssetSchemeDoc, assetType: string) => {
-        this.cancelOtherRequest();
         this.setState({
             redirectTo: `/asset/${assetType}`,
             requestCount: this.state.requestCount - 1
@@ -202,7 +199,6 @@ class Search extends React.Component<Props, State> {
 
     private onTransactionsForAssetTransferAddress = (transactions: TransactionDoc[], address: string) => {
         if (transactions.length > 0) {
-            this.cancelOtherRequest();
             this.setState({
                 redirectTo: `/addr-asset/${address}`,
                 requestCount: this.state.requestCount - 1
@@ -213,22 +209,17 @@ class Search extends React.Component<Props, State> {
     };
 
     private onAccount = (account: { seq: U256; balance: U256 }, address: string) => {
-        this.cancelOtherRequest();
         this.setState({
             redirectTo: `/addr-platform/${address}`,
             requestCount: this.state.requestCount - 1
         });
     };
 
-    private cancelOtherRequest = () => {
-        // TODO
-    };
-
     private onReqeustNotExist = () => {
         this.handleNotFoundOrError();
     };
 
-    private onError = (e: any) => {
+    private onError = () => {
         this.handleNotFoundOrError();
     };
 
@@ -291,9 +282,9 @@ class Search extends React.Component<Props, State> {
         }
         if (this.state.suggestions.length > 0) {
             const firstSuggestion = this.state.suggestions[0];
-            this.setState({ status: "search", requestCount: 8, inputValue: firstSuggestion.assetType });
+            this.setState({ status: "search", requestCount: 5, inputValue: firstSuggestion.assetType });
         } else {
-            this.setState({ status: "search", requestCount: 8, inputValue });
+            this.setState({ status: "search", requestCount: 5, inputValue });
         }
     };
 }

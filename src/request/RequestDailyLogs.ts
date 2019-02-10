@@ -36,6 +36,22 @@ interface MinerLog {
 
 type Props = OwnProps & DispatchProps;
 
+const colorSet = [
+    "hsl(191, 100%, 41%)",
+    "hsl(206, 75%, 42%)",
+    "hsl(223, 45%, 64%)",
+    "hsl(239, 34%, 47%)",
+    "hsl(271, 40%, 40%)",
+    "hsl(289, 33%, 45%)",
+    "hsl(308, 34%, 55%)",
+    "hsl(326, 57%, 68%)",
+    "hsl(42, 91% 74%)",
+    "hsl(55, 94% 74%)",
+    "hsl(80, 55% 70%)",
+    "hsl(122, 36% 59%)",
+    "hsl(170, 42% 69%)"
+];
+
 class RequestDailyLogs extends React.Component<Props> {
     public componentWillMount() {
         try {
@@ -50,13 +66,6 @@ class RequestDailyLogs extends React.Component<Props> {
     }
 
     private getColor = (index: number) => {
-        const colorSet = [
-            "hsl(238, 100%, 73%)",
-            "hsl(237, 100%, 78%)",
-            "hsl(238, 100%, 85%)",
-            "hsl(238, 100%, 89%)",
-            "hsl(238, 100%, 94%)"
-        ];
         return colorSet[index];
     };
 
@@ -85,13 +94,13 @@ class RequestDailyLogs extends React.Component<Props> {
             });
             onData(results);
         } else if (type === DailyLogType.TX_TYPE) {
-            const transferCount = (await apiRequest({
-                path: `log/count?date=${date}&filter=transferAsset`,
+            const mintCount = (await apiRequest({
+                path: `log/count?date=${date}&filter=mintAsset`,
                 dispatch,
                 showProgressBar: true
             })) as number;
-            const mintCount = (await apiRequest({
-                path: `log/count?date=${date}&filter=mintAsset`,
+            const transferCount = (await apiRequest({
+                path: `log/count?date=${date}&filter=transferAsset`,
                 dispatch,
                 showProgressBar: true
             })) as number;
@@ -105,7 +114,29 @@ class RequestDailyLogs extends React.Component<Props> {
                 dispatch,
                 showProgressBar: true
             })) as number;
-            const total = mintCount + transferCount + composeCount + decomposeCount;
+            const payCount = (await apiRequest({
+                path: `log/count?date=${date}&filter=pay`,
+                dispatch,
+                showProgressBar: true
+            })) as number;
+            const createShardCount = (await apiRequest({
+                path: `log/count?date=${date}&filter=createShard`,
+                dispatch,
+                showProgressBar: true
+            })) as number;
+            const setRegularKeyCount = (await apiRequest({
+                path: `log/count?date=${date}&filter=setRegularKey`,
+                dispatch,
+                showProgressBar: true
+            })) as number;
+            const total =
+                mintCount +
+                transferCount +
+                composeCount +
+                decomposeCount +
+                payCount +
+                createShardCount +
+                setRegularKeyCount;
             if (total === 0) {
                 onEmptyResult();
                 return;
@@ -115,25 +146,43 @@ class RequestDailyLogs extends React.Component<Props> {
                     id: `Transfer (${((transferCount / total) * 100).toFixed(1)}%)`,
                     label: "Transfer",
                     value: transferCount,
-                    color: "hsl(263, 83%, 68%)"
+                    color: colorSet[0]
                 },
                 {
                     id: `Mint (${((mintCount / total) * 100).toFixed(1)}%)`,
                     label: "Mint",
                     value: mintCount,
-                    color: "hsl(169, 100%, 43%)"
+                    color: colorSet[1]
                 },
                 {
                     id: `Compose (${((composeCount / total) * 100).toFixed(1)}%)`,
                     label: "Compose",
                     value: composeCount,
-                    color: "hsl(53, 100%, 43%)"
+                    color: colorSet[2]
                 },
                 {
                     id: `Decompose (${((decomposeCount / total) * 100).toFixed(1)}%)`,
                     label: "Decompose",
                     value: decomposeCount,
-                    color: "hsl(86, 42%, 56%)"
+                    color: colorSet[3]
+                },
+                {
+                    id: `Pay (${((payCount / total) * 100).toFixed(1)}%)`,
+                    label: "Pay",
+                    value: payCount,
+                    color: colorSet[4]
+                },
+                {
+                    id: `CreateShard (${((createShardCount / total) * 100).toFixed(1)}%)`,
+                    label: "CreateShard",
+                    value: createShardCount,
+                    color: colorSet[5]
+                },
+                {
+                    id: `setRegularKey (${((setRegularKeyCount / total) * 100).toFixed(1)}%)`,
+                    label: "setRegularKey",
+                    value: setRegularKeyCount,
+                    color: colorSet[6]
                 }
             ]);
         }

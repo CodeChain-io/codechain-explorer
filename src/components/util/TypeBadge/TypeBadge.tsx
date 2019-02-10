@@ -1,5 +1,3 @@
-import { faSquare } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { TransactionDoc } from "codechain-indexer-types";
 import * as React from "react";
 import "./TypeBadge.scss";
@@ -15,9 +13,5 @@ function capitalizeFirstLetter(str: string) {
 
 export const TypeBadge = (props: Props) => {
     const { className, transaction } = props;
-    return (
-        <span className={className}>
-            <FontAwesomeIcon icon={faSquare} className="type-badge" /> {capitalizeFirstLetter(transaction.type)}
-        </span>
-    );
+    return <span className={className}>{capitalizeFirstLetter(transaction.type)}</span>;
 };

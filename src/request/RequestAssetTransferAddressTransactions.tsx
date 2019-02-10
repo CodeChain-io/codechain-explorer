@@ -23,7 +23,7 @@ class RequestAssetTransferAddressTransactions extends React.Component<Props> {
     public componentWillMount() {
         const { address, onTransactions, onError, dispatch, progressBarTarget, page, itemsPerPage } = this.props;
         apiRequest({
-            path: `tx/count?page=${page}&itemsPerPage=${itemsPerPage}&address=${address}`,
+            path: `tx?page=${page}&itemsPerPage=${itemsPerPage}&address=${address}`,
             dispatch,
             showProgressBar: true,
             progressBarTarget

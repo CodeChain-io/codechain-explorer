@@ -8,11 +8,17 @@ import { BlockDoc, TransactionDoc } from "codechain-indexer-types";
 import { U256 } from "codechain-sdk/lib/core/classes";
 import BlockList from "../../components/block/BlockList/BlockList";
 import AccountDetails from "../../components/platformAddress/AccountDetails/AccountDetails";
-import { RequestPlatformAddressAccount, RequestTotalPlatformBlockCount } from "../../request";
+import {
+    RequestPlatformAddressAccount,
+    RequestTotalPlatformBlockCount,
+    RequestTotalTransactionCount
+} from "../../request";
 import RequestPlatformAddressBlocks from "../../request/RequestPlatformAddressBlocks";
 
+import TransactionList from "../../components/transaction/TransactionList/TransactionList";
 import CopyButton from "../../components/util/CopyButton/CopyButton";
 import { ImageLoader } from "../../components/util/ImageLoader/ImageLoader";
+import RequestPlatformAddressTransactions from "../../request/RequestPlatformAddressTransactions";
 import "./PlatformAddress.scss";
 
 interface Props {
@@ -29,13 +35,17 @@ interface State {
     loadTransaction: boolean;
     loadBlock: boolean;
     pageForBlock: number;
+    pageForTransaction: number;
     noMoreBlock: boolean;
     notFound: boolean;
-    totalBlockCount: number;
+    totalBlockCount?: number;
+    totalTransactionCount?: number;
+    noMoreTransaction: boolean;
 }
 
 class Address extends React.Component<Props, State> {
     private blockItemsPerPage = 6;
+    private transactionsPerPage = 6;
     constructor(props: Props) {
         super(props);
         this.state = {
@@ -45,8 +55,11 @@ class Address extends React.Component<Props, State> {
             loadBlock: true,
             loadTransaction: true,
             pageForBlock: 1,
+            pageForTransaction: 1,
             noMoreBlock: false,
-            totalBlockCount: 0
+            totalBlockCount: undefined,
+            totalTransactionCount: undefined,
+            noMoreTransaction: false
         };
     }
 
@@ -70,7 +83,9 @@ class Address extends React.Component<Props, State> {
                 loadBlock: true,
                 loadTransaction: true,
                 noMoreBlock: false,
-                totalBlockCount: 0
+                noMoreTransaction: false,
+                totalBlockCount: undefined,
+                totalTransactionCount: undefined
             });
         }
     }
@@ -81,7 +96,20 @@ class Address extends React.Component<Props, State> {
                 params: { address }
             }
         } = this.props;
-        const { account, blocks, notFound, loadBlock, pageForBlock, noMoreBlock, totalBlockCount } = this.state;
+        const {
+            account,
+            blocks,
+            notFound,
+            loadBlock,
+            loadTransaction,
+            pageForBlock,
+            noMoreBlock,
+            totalBlockCount,
+            pageForTransaction,
+            transactions,
+            totalTransactionCount,
+            noMoreTransaction
+        } = this.state;
         if (notFound) {
             return (
                 <div>
@@ -128,14 +156,21 @@ class Address extends React.Component<Props, State> {
                 <div className="mt-large">
                     <AccountDetails account={account} />
                 </div>
-                {
+                {totalBlockCount == null && (
                     <RequestTotalPlatformBlockCount
                         address={address}
                         onTotalCount={this.onTotalBlockCount}
                         onError={this.onError}
                     />
-                }
-                {loadBlock ? (
+                )}
+                {totalTransactionCount == null && (
+                    <RequestTotalTransactionCount
+                        address={address}
+                        onTransactionTotalCount={this.onTotalTransactionCount}
+                        onError={this.onError}
+                    />
+                )}
+                {totalBlockCount != null && loadBlock ? (
                     <RequestPlatformAddressBlocks
                         page={pageForBlock}
                         itemsPerPage={this.blockItemsPerPage}
@@ -144,7 +179,17 @@ class Address extends React.Component<Props, State> {
                         onError={this.onError}
                     />
                 ) : null}
-                {blocks.length > 0 ? (
+                {totalTransactionCount != null &&
+                    loadTransaction && (
+                        <RequestPlatformAddressTransactions
+                            page={pageForTransaction}
+                            itemsPerPage={this.transactionsPerPage}
+                            address={address}
+                            onTransactions={this.onTransactions}
+                            onError={this.onError}
+                        />
+                    )}
+                {totalBlockCount != null && blocks.length > 0 ? (
                     <div className="mt-large">
                         <BlockList
                             blocks={blocks}
@@ -154,6 +199,17 @@ class Address extends React.Component<Props, State> {
                         />
                     </div>
                 ) : null}
+                {totalTransactionCount != null &&
+                    transactions.length > 0 && (
+                        <div className="mt-large">
+                            <TransactionList
+                                transactions={transactions}
+                                totalCount={totalTransactionCount}
+                                loadMoreAction={this.loadMoreTransaction}
+                                hideMoreButton={noMoreTransaction}
+                            />
+                        </div>
+                    )}
             </Container>
         );
     }
@@ -166,11 +222,29 @@ class Address extends React.Component<Props, State> {
             loadBlock: false
         });
     };
+    private onTransactions = (transactions: TransactionDoc[]) => {
+        if (transactions.length < this.transactionsPerPage) {
+            this.setState({ noMoreTransaction: true });
+        }
+        this.setState({
+            transactions: this.state.transactions.concat(transactions),
+            loadTransaction: false
+        });
+    };
     private loadMoreBlock = () => {
         this.setState({
             loadBlock: true,
             pageForBlock: this.state.pageForBlock + 1
         });
+    };
+    private loadMoreTransaction = () => {
+        this.setState({
+            loadTransaction: true,
+            pageForTransaction: this.state.pageForTransaction + 1
+        });
+    };
+    private onTotalTransactionCount = (totalCount: number) => {
+        this.setState({ totalTransactionCount: totalCount });
     };
     private onTotalBlockCount = (totalCount: number) => {
         this.setState({ totalBlockCount: totalCount });

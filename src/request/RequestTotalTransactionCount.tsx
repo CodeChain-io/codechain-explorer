@@ -4,6 +4,7 @@ import { connect, Dispatch } from "react-redux";
 import { ApiError, apiRequest } from "./ApiRequest";
 
 interface OwnProps {
+    address?: string;
     onTransactionTotalCount: (transactionTotalCount: number) => void;
     onError: (e: ApiError) => void;
 }
@@ -16,8 +17,8 @@ type Props = OwnProps & DispatchProps;
 
 class RequestTotalTransactionCount extends React.Component<Props> {
     public componentWillMount() {
-        const { onError, onTransactionTotalCount, dispatch } = this.props;
-        apiRequest({ path: `tx/count`, dispatch, showProgressBar: true })
+        const { onError, onTransactionTotalCount, dispatch, address } = this.props;
+        apiRequest({ path: `tx/count${address ? `?address=${address}` : ""}`, dispatch, showProgressBar: true })
             .then((response: any) => {
                 onTransactionTotalCount(response);
             })
