@@ -75,10 +75,11 @@
     height: 34px;
     width: 100px;
     color: white;
-    background-color: #00dbb4;
+    border: 1px solid white;
+    background-color: $primary-color;
     font-weight: 600;
     &:hover {
-      background-color: rgb(1, 167, 136);
+      background-color: #0a8faf;
     }
     @media (max-width: 400px) {
       & {
