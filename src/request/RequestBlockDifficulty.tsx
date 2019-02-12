@@ -6,7 +6,7 @@ import { BlockDoc } from "codechain-indexer-types";
 import { ApiError, apiRequest } from "./ApiRequest";
 
 interface OwnProps {
-    onBlockDifficulty: (difficulty: Array<{ x: string; y: string }>) => void;
+    onBlockTransactions: (transactions: Array<{ x: string; y: string }>) => void;
     onError: (e: ApiError) => void;
 }
 
@@ -16,7 +16,7 @@ interface DispatchProps {
 
 type Props = OwnProps & DispatchProps;
 
-class RequestBlockDifficulty extends React.Component<Props> {
+class RequestBlockTransactions extends React.Component<Props> {
     public componentWillMount() {
         const { onError } = this.props;
         try {
@@ -31,7 +31,7 @@ class RequestBlockDifficulty extends React.Component<Props> {
     }
 
     private requestNodeStat = async () => {
-        const { onBlockDifficulty, dispatch } = this.props;
+        const { onBlockTransactions: onBlockDifficulty, dispatch } = this.props;
         const blocks: any = await apiRequest({
             path: `/block?page=1&itemsPerPage=50`,
             dispatch,
@@ -42,11 +42,11 @@ class RequestBlockDifficulty extends React.Component<Props> {
             _.map(_.reverse(blocks), (block: BlockDoc) => {
                 return {
                     x: block.number.toString(),
-                    y: block.score
+                    y: block.transactions ? block.transactions.length.toLocaleString() : "0"
                 };
             })
         );
     };
 }
 
-export default connect()(RequestBlockDifficulty);
+export default connect()(RequestBlockTransactions);

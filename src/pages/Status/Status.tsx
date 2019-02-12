@@ -2,10 +2,10 @@ import * as React from "react";
 import { Col, Container, Row } from "reactstrap";
 
 import ChainInfo from "../../components/status/ChainInfo/ChainInfo";
-import DifficultyChart from "../../components/status/DifficultyChart/DifficultyChart";
 import NodeStatus from "../../components/status/NodeStatus/NodeStatus";
 import SyncStatus from "../../components/status/SyncStatus/SyncStatus";
-import RequestBlockDifficulty from "../../request/RequestBlockDifficulty";
+import TransactionChart from "../../components/status/TransactionChart/TransactionChart";
+import RequestBlockTransactions from "../../request/RequestBlockDifficulty";
 import RequestCodeChainStatus, { CodeChainData } from "../../request/RequestCodeChainStatus";
 import RequestNodeStatus from "../../request/RequestNodeStatus";
 import RequestSyncStatus, { SyncData } from "../../request/RequestSyncStatus";
@@ -15,14 +15,14 @@ interface State {
     nodeStatus?: boolean;
     syncStatus?: SyncData;
     chainInfo?: CodeChainData;
-    difficulty?: Array<{
+    transactions?: Array<{
         x: string;
         y: string;
     }>;
     requestNodeStatus: boolean;
     requestSyncStatus: boolean;
     requestChainInfo: boolean;
-    requestDifficulty: boolean;
+    requestTransactions: boolean;
 }
 
 class Status extends React.Component<{}, State> {
@@ -33,10 +33,10 @@ class Status extends React.Component<{}, State> {
             nodeStatus: undefined,
             syncStatus: undefined,
             chainInfo: undefined,
-            difficulty: undefined,
+            transactions: undefined,
             requestNodeStatus: true,
             requestSyncStatus: true,
-            requestDifficulty: true,
+            requestTransactions: true,
             requestChainInfo: true
         };
     }
@@ -52,8 +52,8 @@ class Status extends React.Component<{}, State> {
             if (this.state.chainInfo) {
                 this.setState({ requestChainInfo: true });
             }
-            if (this.state.difficulty) {
-                this.setState({ requestDifficulty: true });
+            if (this.state.transactions) {
+                this.setState({ requestTransactions: true });
             }
         }, 10000);
     }
@@ -67,11 +67,11 @@ class Status extends React.Component<{}, State> {
             nodeStatus,
             syncStatus,
             chainInfo,
-            difficulty,
+            transactions,
             requestNodeStatus,
             requestSyncStatus,
             requestChainInfo,
-            requestDifficulty
+            requestTransactions
         } = this.state;
         return (
             <div className="status animated fadeIn">
@@ -105,14 +105,14 @@ class Status extends React.Component<{}, State> {
                             ) : null}
                         </Col>
                         <Col lg="6">
-                            {difficulty ? (
+                            {transactions ? (
                                 <div className="mt-large">
-                                    <DifficultyChart difficulty={difficulty} />
+                                    <TransactionChart transactions={transactions} />
                                 </div>
                             ) : null}
-                            {requestDifficulty ? (
-                                <RequestBlockDifficulty
-                                    onBlockDifficulty={this.onBlockDifficulty}
+                            {requestTransactions ? (
+                                <RequestBlockTransactions
+                                    onBlockTransactions={this.onTransactions}
                                     onError={this.onError}
                                 />
                             ) : null}
@@ -122,8 +122,8 @@ class Status extends React.Component<{}, State> {
             </div>
         );
     }
-    private onBlockDifficulty = (difficulty: Array<{ x: string; y: string }>) => {
-        this.setState({ difficulty, requestDifficulty: false });
+    private onTransactions = (transactions: Array<{ x: string; y: string }>) => {
+        this.setState({ transactions, requestTransactions: false });
     };
     private onNodeStatus = (nodeStatus: boolean) => {
         this.setState({ nodeStatus, requestNodeStatus: false });

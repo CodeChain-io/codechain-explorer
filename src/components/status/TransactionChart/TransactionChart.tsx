@@ -2,43 +2,41 @@ import * as _ from "lodash";
 import * as React from "react";
 const { ResponsiveLine } = require("@nivo/line");
 
-import "./DifficultyChart.scss";
-
 interface Props {
-    difficulty: Array<{
+    transactions: Array<{
         x: string;
         y: string;
     }>;
 }
 
-class DifficultyChart extends React.Component<Props, {}> {
+class TransactionChart extends React.Component<Props, {}> {
     constructor(props: Props) {
         super(props);
     }
 
     public render() {
-        const { difficulty } = this.props;
-        const first = _.first(difficulty);
-        const last = _.last(difficulty);
+        const { transactions } = this.props;
+        const first = _.first(transactions);
+        const last = _.last(transactions);
         let tickValues: any = [];
         if (first && last) {
             tickValues = [first.x, last.x];
         }
         return (
-            <div className="difficulty-chart">
+            <div className="transaction-chart">
                 <div className="chart-container">
                     <div className="chart">
                         <div className="header-part">
-                            <h2 className="title">Block Difficulty</h2>
+                            <h2 className="title">Block transactions</h2>
                             <p className="week">Last 50 blocks</p>
                         </div>
                         <div className="chart-item">
                             <ResponsiveLine
                                 data={[
                                     {
-                                        id: "Score",
+                                        id: "# of TXs",
                                         color: "hsl(191, 95%, 42%)",
-                                        data: difficulty
+                                        data: transactions
                                     }
                                 ]}
                                 margin={{
@@ -59,11 +57,10 @@ class DifficultyChart extends React.Component<Props, {}> {
                                     tickPadding: 5,
                                     tickRotation: 0,
                                     legendOffset: -60,
-                                    legend: "Score"
+                                    legend: "# of TXs"
                                 }}
                                 enableDots={false}
                                 enableArea={true}
-                                curve="natural"
                                 // tslint:disable-next-line:jsx-no-lambda
                                 colorBy={(e: any) => e.color}
                                 dotSize={10}
@@ -84,4 +81,4 @@ class DifficultyChart extends React.Component<Props, {}> {
     }
 }
 
-export default DifficultyChart;
+export default TransactionChart;
