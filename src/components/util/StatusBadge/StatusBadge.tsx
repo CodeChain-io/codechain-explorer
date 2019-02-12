@@ -20,9 +20,13 @@ const getBadgeBackgroundColorClassByStatus = (tx: TransactionDoc) => {
 
 const getStatusString = (tx: TransactionDoc) => {
     if (tx.isPending) {
-        return `Pending(${<FontAwesomeIcon className="spin" icon={faSpinner} />}${moment
-            .unix(tx.pendingTimestamp!)
-            .fromNow()})`;
+        return (
+            <span>
+                Pending(
+                <FontAwesomeIcon className="spin" icon={faSpinner} />
+                {moment.unix(tx.pendingTimestamp!).fromNow()})
+            </span>
+        );
     } else {
         return "Confirmed";
     }

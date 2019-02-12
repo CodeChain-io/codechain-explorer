@@ -105,7 +105,7 @@ class TransactionDetailsInternal extends React.Component<Props, State> {
                         {!transaction.isPending && [
                             <Row key="index-row">
                                 <Col md="3">Transaction Index</Col>
-                                <Col md="9">{transaction.transactionIndex}</Col>
+                                <Col md="9">{transaction.transactionIndex!.toLocaleString()}</Col>
                             </Row>,
                             <hr key="index-hr" />
                         ]}

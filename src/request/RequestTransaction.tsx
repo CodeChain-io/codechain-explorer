@@ -44,6 +44,7 @@ class RequestTransaction extends React.Component<Props> {
                 }
                 const transaction = response;
 
+                // FIXME: This is temporary code. https://github.com/CodeChain-io/codechain-indexer/issues/57
                 if (transaction.type === "transferAsset") {
                     await Promise.all(
                         transaction.transferAsset.outputs.map(async output => {
