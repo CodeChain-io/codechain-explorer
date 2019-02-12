@@ -15,22 +15,22 @@ import * as emptyImage from "./img/empty.png";
 import "./Summary.scss";
 
 interface State {
-    weeklyLogs: Array<{
+    weeklyLogs?: Array<{
         date: string;
         "#": string;
         color: string;
         fullDate: string;
-    }>;
+    }> | null;
     isWeeklyLogRequested: boolean;
     type: WeeklyLogType;
     isDailyLogRequested: boolean;
     dailyLogType: DailyLogType;
-    dailyLogs: Array<{
+    dailyLogs?: Array<{
         id: string;
         label: string;
         value: number;
         color: string;
-    }>;
+    }> | null;
     selectedDate: string;
     selectedIndex: number;
     isEmptyForDailyLog: boolean;
@@ -49,13 +49,13 @@ class Summary extends React.Component<Props, State> {
     constructor(props: {}) {
         super(props);
         this.state = {
-            weeklyLogs: [],
+            weeklyLogs: undefined,
             isWeeklyLogRequested: false,
             type: WeeklyLogType.BLOCK_COUNT,
             isDailyLogRequested: false,
             selectedIndex: 6,
             dailyLogType: DailyLogType.BEST_MINER,
-            dailyLogs: [],
+            dailyLogs: undefined,
             selectedDate: moment()
                 .utc()
                 .format("YYYY-MM-DD"),
@@ -99,141 +99,58 @@ class Summary extends React.Component<Props, State> {
                 {!isWeeklyLogRequested ? (
                     <RequestWeeklyLogs type={type} onData={this.onWeeklyLogData} onError={this.onError} />
                 ) : null}
-                {!isDailyLogRequested ? (
+                {!isDailyLogRequested && weeklyLogs ? (
                     <RequestDailyLogs
                         onEmptyResult={this.onEmptyResult}
                         type={dailyLogType}
                         date={selectedDate}
+                        dailyBlockTotal={weeklyLogs[selectedIndex] ? Number(weeklyLogs[selectedIndex]["#"]) : 0}
                         onData={this.onDailyLogData}
                         onError={this.onError}
                     />
                 ) : null}
                 <Row>
                     <Col lg="6">
-                        <div className="chart-container">
-                            <div className="chart">
-                                <div className="header-part">
-                                    <h2 className="title">Weekly {this.getWeeklyLogTitle(type)} log</h2>
-                                    <p className="week">
-                                        {before7days} ~ {today} (UTC)
-                                    </p>
-                                    <select
-                                        className="select"
-                                        defaultValue={type}
-                                        onChange={this.onWeeklyLogTypeChanged}
-                                    >
-                                        <option value={WeeklyLogType.BLOCK_COUNT}>Block</option>
-                                        <option value={WeeklyLogType.TX_COUNT}>Tx</option>
-                                    </select>
-                                </div>
-                                <div className="chart-item">
-                                    <ResponsiveBar
-                                        data={weeklyLogs}
-                                        keys={["#"]}
-                                        indexBy="date"
-                                        margin={{
-                                            top: 20,
-                                            right: 30,
-                                            bottom: 50,
-                                            left: 60
-                                        }}
-                                        padding={0.3}
-                                        colors="nivo"
-                                        // tslint:disable-next-line:jsx-no-lambda
-                                        colorBy={(e: any) => e.data.color}
-                                        borderColor="inherit:darker(1.6)"
-                                        enableLabel={false}
-                                        labelSkipWidth={12}
-                                        labelSkipHeight={12}
-                                        labelTextColor="inherit:darker(1.6)"
-                                        animate={true}
-                                        motionStiffness={90}
-                                        motionDamping={15}
-                                        theme={{
-                                            tooltip: {
-                                                container: {
-                                                    fontSize: "13px"
-                                                }
-                                            },
-                                            labels: {
-                                                textColor: "#555"
-                                            }
-                                        }}
-                                        onClick={this.onClickWeeklyLog}
-                                    />
-                                </div>
-                                <div className="weekly-total">
-                                    This week:{" "}
-                                    {_.reduce(
-                                        weeklyLogs,
-                                        (memo, log) => parseInt(log["#"], 10) + memo,
-                                        0
-                                    ).toLocaleString()}{" "}
-                                    {this.getWeeklyTotalLabel(type)}
-                                    {type === WeeklyLogType.BLOCK_COUNT ? (
-                                        <span>
-                                            &nbsp;(Total acc.: {bestBlockNumber ? bestBlockNumber.toLocaleString() : 0}{" "}
-                                            blocks)
-                                        </span>
-                                    ) : null}
-                                </div>
-                            </div>
-                        </div>
-                    </Col>
-                    <Col lg="6" className="mt-3 mt-lg-0">
-                        <div className={`chart-container daily-log-item ${this.getDailyLogTitle(dailyLogType)}`}>
-                            <div className="chart">
-                                <div className="header-part">
-                                    <h2 className="title">Daily {this.getDailyLogTitle(dailyLogType)} log</h2>
-                                    <p className="week">{selectedDate} (UTC)</p>
-                                    <span className="subtitle">{this.getDailyLogSubTitle(dailyLogType)}</span>
-                                    <span className="subtitle-amount">
-                                        {weeklyLogs.length > 0
-                                            ? parseInt(weeklyLogs[selectedIndex]["#"], 10).toLocaleString()
-                                            : 0}
-                                    </span>
-                                    <hr />
-                                    <span className="subname">{this.getDailyLogSubName(dailyLogType)}</span>
-                                </div>
-                                <div className="chart-item">
-                                    {isEmptyForDailyLog ? (
-                                        <div className="empty-container align-items-center justify-content-center">
-                                            <img className="empty-icon" src={emptyImage} />
-                                            <div>
-                                                <h3>Empty!</h3>
-                                                <span>There is no data to display.</span>
-                                            </div>
-                                        </div>
-                                    ) : (
-                                        <ResponsivePie
-                                            data={dailyLogs}
+                        {weeklyLogs && (
+                            <div className="chart-container">
+                                <div className="chart">
+                                    <div className="header-part">
+                                        <h2 className="title">Weekly {this.getWeeklyLogTitle(type)} log</h2>
+                                        <p className="week">
+                                            {before7days} ~ {today} (UTC)
+                                        </p>
+                                        <select
+                                            className="select"
+                                            defaultValue={type}
+                                            onChange={this.onWeeklyLogTypeChanged}
+                                        >
+                                            <option value={WeeklyLogType.BLOCK_COUNT}>Block</option>
+                                            <option value={WeeklyLogType.TX_COUNT}>Tx</option>
+                                        </select>
+                                    </div>
+                                    <div className="chart-item">
+                                        <ResponsiveBar
+                                            data={weeklyLogs}
+                                            keys={["#"]}
+                                            indexBy="date"
                                             margin={{
-                                                top: 80,
-                                                right: 80,
-                                                bottom: 40,
-                                                left: 80
+                                                top: 20,
+                                                right: 30,
+                                                bottom: 50,
+                                                left: 60
                                             }}
-                                            innerRadius={0.5}
-                                            padAngle={0.7}
+                                            padding={0.3}
+                                            colors="nivo"
                                             // tslint:disable-next-line:jsx-no-lambda
-                                            colorBy={(e: any) => e.color}
-                                            borderWidth={1}
-                                            borderColor="inherit:darker(0.2)"
-                                            enableSlicesLabels={true}
-                                            radialLabelsSkipAngle={10}
-                                            radialLabelsTextXOffset={6}
-                                            radialLabelsTextColor="#333333"
-                                            radialLabelsLinkOffset={0}
-                                            radialLabelsLinkDiagonalLength={16}
-                                            radialLabelsLinkHorizontalLength={24}
-                                            radialLabelsLinkStrokeWidth={1}
-                                            radialLabelsLinkColor="inherit"
-                                            slicesLabelsSkipAngle={10}
-                                            slicesLabelsTextColor="#ffffff"
+                                            colorBy={(e: any) => e.data.color}
+                                            borderColor="inherit:darker(1.6)"
+                                            enableLabel={false}
+                                            labelSkipWidth={12}
+                                            labelSkipHeight={12}
+                                            labelTextColor="inherit:darker(1.6)"
                                             animate={true}
                                             motionStiffness={90}
                                             motionDamping={15}
-                                            onClick={this.onClickDailyLog}
                                             theme={{
                                                 tooltip: {
                                                     container: {
@@ -244,11 +161,102 @@ class Summary extends React.Component<Props, State> {
                                                     textColor: "#555"
                                                 }
                                             }}
+                                            onClick={this.onClickWeeklyLog}
                                         />
-                                    )}
+                                    </div>
+                                    <div className="weekly-total">
+                                        This week:{" "}
+                                        {_.reduce(
+                                            weeklyLogs,
+                                            (memo, log) => parseInt(log["#"], 10) + memo,
+                                            0
+                                        ).toLocaleString()}{" "}
+                                        {this.getWeeklyTotalLabel(type)}
+                                        {type === WeeklyLogType.BLOCK_COUNT ? (
+                                            <span>
+                                                &nbsp;(Total acc.:{" "}
+                                                {bestBlockNumber ? bestBlockNumber.toLocaleString() : 0} blocks)
+                                            </span>
+                                        ) : null}
+                                    </div>
                                 </div>
                             </div>
-                        </div>
+                        )}
+                    </Col>
+                    <Col lg="6" className="mt-3 mt-lg-0">
+                        {weeklyLogs &&
+                            dailyLogs && (
+                                <div
+                                    className={`chart-container daily-log-item ${this.getDailyLogTitle(dailyLogType)}`}
+                                >
+                                    <div className="chart">
+                                        <div className="header-part">
+                                            <h2 className="title">Daily {this.getDailyLogTitle(dailyLogType)} log</h2>
+                                            <p className="week">{selectedDate} (UTC)</p>
+                                            <span className="subtitle">{this.getDailyLogSubTitle(dailyLogType)}</span>
+                                            <span className="subtitle-amount">
+                                                {weeklyLogs && weeklyLogs[selectedIndex]
+                                                    ? parseInt(weeklyLogs[selectedIndex]["#"], 10).toLocaleString()
+                                                    : 0}
+                                            </span>
+                                            <hr />
+                                            <span className="subname">{this.getDailyLogSubName(dailyLogType)}</span>
+                                        </div>
+                                        <div className="chart-item">
+                                            {isEmptyForDailyLog ? (
+                                                <div className="empty-container align-items-center justify-content-center">
+                                                    <img className="empty-icon" src={emptyImage} />
+                                                    <div>
+                                                        <h3>Empty!</h3>
+                                                        <span>There is no data to display.</span>
+                                                    </div>
+                                                </div>
+                                            ) : (
+                                                <ResponsivePie
+                                                    data={dailyLogs}
+                                                    margin={{
+                                                        top: 80,
+                                                        right: 80,
+                                                        bottom: 40,
+                                                        left: 80
+                                                    }}
+                                                    innerRadius={0.5}
+                                                    padAngle={0.7}
+                                                    // tslint:disable-next-line:jsx-no-lambda
+                                                    colorBy={(e: any) => e.color}
+                                                    borderWidth={1}
+                                                    borderColor="inherit:darker(0.2)"
+                                                    enableSlicesLabels={true}
+                                                    radialLabelsSkipAngle={10}
+                                                    radialLabelsTextXOffset={6}
+                                                    radialLabelsTextColor="#333333"
+                                                    radialLabelsLinkOffset={0}
+                                                    radialLabelsLinkDiagonalLength={16}
+                                                    radialLabelsLinkHorizontalLength={24}
+                                                    radialLabelsLinkStrokeWidth={1}
+                                                    radialLabelsLinkColor="inherit"
+                                                    slicesLabelsSkipAngle={10}
+                                                    slicesLabelsTextColor="#ffffff"
+                                                    animate={true}
+                                                    motionStiffness={90}
+                                                    motionDamping={15}
+                                                    onClick={this.onClickDailyLog}
+                                                    theme={{
+                                                        tooltip: {
+                                                            container: {
+                                                                fontSize: "13px"
+                                                            }
+                                                        },
+                                                        labels: {
+                                                            textColor: "#555"
+                                                        }
+                                                    }}
+                                                />
+                                            )}
+                                        </div>
+                                    </div>
+                                </div>
+                            )}
                     </Col>
                 </Row>
             </div>
@@ -288,7 +296,7 @@ class Summary extends React.Component<Props, State> {
     };
 
     private onEmptyResult = () => {
-        this.setState({ isEmptyForDailyLog: true, isDailyLogRequested: true });
+        this.setState({ isEmptyForDailyLog: true, isDailyLogRequested: true, dailyLogs: [] });
     };
 
     private getWeeklyLogTitle = (type: WeeklyLogType) => {

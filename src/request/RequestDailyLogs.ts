@@ -12,6 +12,7 @@ export enum DailyLogType {
 interface OwnProps {
     date: string;
     type: DailyLogType;
+    dailyBlockTotal: number;
     onData: (
         dailyLogs: Array<{
             id: string;
@@ -70,27 +71,37 @@ class RequestDailyLogs extends React.Component<Props> {
     };
 
     private queryDailyLog = async () => {
-        const { onData, dispatch, type, date, onEmptyResult } = this.props;
+        const { onData, dispatch, type, date, onEmptyResult, dailyBlockTotal } = this.props;
 
         if (type === DailyLogType.BEST_MINER) {
-            const bestMineres = (await apiRequest({
+            const bestMiners = (await apiRequest({
                 path: `log/miners?date=${date}`,
                 dispatch,
                 showProgressBar: true
             })) as MinerLog[];
-            if (bestMineres.length === 0) {
+            if (bestMiners.length === 0) {
                 onEmptyResult();
                 return;
             }
-            const total = _.sumBy(bestMineres, miner => miner.count);
-            const results = _.map(bestMineres, (bestMiner, index) => {
+            const minerTotal = _.sumBy(bestMiners, miner => miner.count);
+            const results = _.map(bestMiners, (bestMiner, index) => {
                 return {
-                    id: `${bestMiner.address.slice(0, 7)}... (${((bestMiner.count / total) * 100).toFixed(1)}%)`,
+                    id: `${bestMiner.address.slice(0, 7)}... (${((bestMiner.count / dailyBlockTotal) * 100).toFixed(
+                        1
+                    )}%)`,
                     label: `${bestMiner.address.slice(0, 7)}...`,
                     value: bestMiner.count,
-                    color: this.getColor(index),
+                    color: this.getColor(index + 1),
                     minerAddress: bestMiner.address
                 };
+            });
+            const remainTotal = dailyBlockTotal - minerTotal;
+            results.push({
+                id: `others (${((remainTotal / dailyBlockTotal) * 100).toFixed(1)}%)`,
+                label: `others`,
+                value: remainTotal,
+                color: this.getColor(0),
+                minerAddress: ""
             });
             onData(results);
         } else if (type === DailyLogType.TX_TYPE) {
@@ -129,7 +140,7 @@ class RequestDailyLogs extends React.Component<Props> {
                 dispatch,
                 showProgressBar: true
             })) as number;
-            const total =
+            const logTotal =
                 mintCount +
                 transferCount +
                 composeCount +
@@ -137,49 +148,49 @@ class RequestDailyLogs extends React.Component<Props> {
                 payCount +
                 createShardCount +
                 setRegularKeyCount;
-            if (total === 0) {
+            if (logTotal === 0) {
                 onEmptyResult();
                 return;
             }
             onData([
                 {
-                    id: `Transfer (${((transferCount / total) * 100).toFixed(1)}%)`,
+                    id: `Transfer (${((transferCount / logTotal) * 100).toFixed(1)}%)`,
                     label: "Transfer",
                     value: transferCount,
                     color: colorSet[0]
                 },
                 {
-                    id: `Mint (${((mintCount / total) * 100).toFixed(1)}%)`,
+                    id: `Mint (${((mintCount / logTotal) * 100).toFixed(1)}%)`,
                     label: "Mint",
                     value: mintCount,
                     color: colorSet[1]
                 },
                 {
-                    id: `Compose (${((composeCount / total) * 100).toFixed(1)}%)`,
+                    id: `Compose (${((composeCount / logTotal) * 100).toFixed(1)}%)`,
                     label: "Compose",
                     value: composeCount,
                     color: colorSet[2]
                 },
                 {
-                    id: `Decompose (${((decomposeCount / total) * 100).toFixed(1)}%)`,
+                    id: `Decompose (${((decomposeCount / logTotal) * 100).toFixed(1)}%)`,
                     label: "Decompose",
                     value: decomposeCount,
                     color: colorSet[3]
                 },
                 {
-                    id: `Pay (${((payCount / total) * 100).toFixed(1)}%)`,
+                    id: `Pay (${((payCount / logTotal) * 100).toFixed(1)}%)`,
                     label: "Pay",
                     value: payCount,
                     color: colorSet[4]
                 },
                 {
-                    id: `CreateShard (${((createShardCount / total) * 100).toFixed(1)}%)`,
+                    id: `CreateShard (${((createShardCount / logTotal) * 100).toFixed(1)}%)`,
                     label: "CreateShard",
                     value: createShardCount,
                     color: colorSet[5]
                 },
                 {
-                    id: `setRegularKey (${((setRegularKeyCount / total) * 100).toFixed(1)}%)`,
+                    id: `setRegularKey (${((setRegularKeyCount / logTotal) * 100).toFixed(1)}%)`,
                     label: "setRegularKey",
                     value: setRegularKeyCount,
                     color: colorSet[6]
