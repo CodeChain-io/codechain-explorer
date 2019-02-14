@@ -72,7 +72,7 @@ class TransactionSummaryInternal extends React.Component<Props, State> {
                                                   transaction.transferAsset.inputs.slice(0, this.itemLimit),
                                                   (input, i) =>
                                                       this.getAssetIcon(
-                                                          Metadata.parseMetadata(input.prevOut.assetScheme.metadata),
+                                                          Metadata.parseMetadata(input.assetScheme.metadata),
                                                           input.prevOut.assetType,
                                                           i,
                                                           input.prevOut.quantity,
@@ -136,7 +136,7 @@ class TransactionSummaryInternal extends React.Component<Props, State> {
                                     <div className="item-panel">
                                         {_.map(transaction.transferAsset.burns, (burn, i) =>
                                             this.getAssetIcon(
-                                                Metadata.parseMetadata(burn.prevOut.assetScheme.metadata),
+                                                Metadata.parseMetadata(burn.assetScheme.metadata),
                                                 burn.prevOut.assetType,
                                                 i,
                                                 burn.prevOut.quantity,
@@ -224,7 +224,7 @@ class TransactionSummaryInternal extends React.Component<Props, State> {
                                     <div className="item-panel">
                                         {_.map(transaction.composeAsset.inputs.slice(0, this.itemLimit), (input, i) =>
                                             this.getAssetIcon(
-                                                Metadata.parseMetadata(input.prevOut.assetScheme.metadata),
+                                                Metadata.parseMetadata(input.assetScheme.metadata),
                                                 input.prevOut.assetType,
                                                 i,
                                                 input.prevOut.quantity,
@@ -291,7 +291,7 @@ class TransactionSummaryInternal extends React.Component<Props, State> {
                 </div>
             );
         } else if (transaction.type === "decomposeAsset") {
-            const metadata = Metadata.parseMetadata(transaction.decomposeAsset.input.prevOut.assetScheme.metadata);
+            const metadata = Metadata.parseMetadata(transaction.decomposeAsset.input.assetScheme.metadata);
             return (
                 <div className="transaction-summary">
                     {this.state.popoverTarget ? (
@@ -335,13 +335,13 @@ class TransactionSummaryInternal extends React.Component<Props, State> {
                                 <div className="registrar-panel d-flex">
                                     <div>Approver</div>
                                     <div className="registrar-text">
-                                        {transaction.decomposeAsset.input.prevOut.assetScheme.approver ? (
+                                        {transaction.decomposeAsset.input.assetScheme.approver ? (
                                             <Link
                                                 to={`/addr-platform/${
-                                                    transaction.decomposeAsset.input.prevOut.assetScheme.approver
+                                                    transaction.decomposeAsset.input.assetScheme.approver
                                                 }`}
                                             >
-                                                {transaction.decomposeAsset.input.prevOut.assetScheme.approver}
+                                                {transaction.decomposeAsset.input.assetScheme.approver}
                                             </Link>
                                         ) : (
                                             "None"
