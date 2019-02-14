@@ -144,7 +144,7 @@ class TransactionDetailsInternal extends React.Component<Props, State> {
                         {!transaction.isPending && [
                             <Row key="invoice-row">
                                 <Col md="3">Invoice</Col>
-                                <Col md="9">{transaction.invoice ? "Success" : `Fail - ${transaction.errorType}`}</Col>
+                                <Col md="9">{transaction.success ? "Success" : `Fail - ${transaction.errorHint}`}</Col>
                             </Row>,
                             <hr key="invoice-hr" />
                         ]}

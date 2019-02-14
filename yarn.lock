@@ -2135,9 +2135,10 @@ code-point-at@^1.0.0:
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/code-point-at/-/code-point-at-1.1.0.tgz#0d070b4d043a5bea33a2f1a40e2edb3d9a4ccf77"
 
-"codechain-indexer-types@https://github.com/majecty/codechain-indexer-types-js#c906e6abc5662cb475bc314497d8dee0de551d91":
-  version "0.4.0-alpha.1"
-  resolved "https://github.com/majecty/codechain-indexer-types-js#c906e6abc5662cb475bc314497d8dee0de551d91"
+codechain-indexer-types@^0.5.0-alpha.2:
+  version "0.5.0-alpha.2"
+  resolved "https://registry.yarnpkg.com/codechain-indexer-types/-/codechain-indexer-types-0.5.0-alpha.2.tgz#ffda5542db1b8146b71ba9878305d6ae30f2b9e6"
+  integrity sha512-h5Z/fxdgKsCJ6S4pfm84RwEIJoVjxmQhlincXFLPMAFXQuVo1yMsTZ3MJIRVc+GQkF2svFrEWEWU+JZ9EFmdLA==
   dependencies:
     buffer "^5.2.1"
     lodash "^4.17.10"

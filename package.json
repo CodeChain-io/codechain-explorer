@@ -26,7 +26,7 @@
     "buffer": "^5.1.0",
     "case-sensitive-paths-webpack-plugin": "^2.1.2",
     "chalk": "1.1.3",
-    "codechain-indexer-types": "https://github.com/majecty/codechain-indexer-types-js#c906e6abc5662cb475bc314497d8dee0de551d91",
+    "codechain-indexer-types": "^0.5.0-alpha.2",
     "codechain-sdk": "https://github.com/CodeChain-io/codechain-sdk-js#eee5d450b69e128bda39ac33820c7b43a6e4e13a",
     "concurrently": "^3.6.0",
     "css-loader": "0.28.7",
