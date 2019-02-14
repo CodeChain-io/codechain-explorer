@@ -4,6 +4,7 @@ import { Col, Row } from "reactstrap";
 
 import { AggsUTXODoc } from "codechain-indexer-types";
 import { Link } from "react-router-dom";
+import * as Metadata from "../../../utils/Metadata";
 import { ImageLoader } from "../../util/ImageLoader/ImageLoader";
 import "./AssetList.scss";
 
@@ -43,6 +44,7 @@ class AssetList extends React.Component<Props, State> {
                     <Col>
                         <Row>
                             {_.map(loadedAsset, (utxo, index) => {
+                                const metadata = Metadata.parseMetadata(utxo.assetScheme.metadata);
                                 return (
                                     <Col key={`asset-item-${index}`} lg="3" md="4" sm="6" className="mt-small">
                                         <div className="asset-item d-flex">
@@ -57,7 +59,7 @@ class AssetList extends React.Component<Props, State> {
                                             <div className="d-inline-block d-flex align-items-center asset-text-container">
                                                 <div>
                                                     <Link to={`/asset/0x${utxo.assetType}`}>
-                                                        <div className="asset-name">AssetName(not implemented)</div>
+                                                        <div className="asset-name">{metadata.name}</div>
                                                     </Link>
                                                     <div>
                                                         <span>x {utxo.totalAssetQuantity.toLocaleString()}</span>
