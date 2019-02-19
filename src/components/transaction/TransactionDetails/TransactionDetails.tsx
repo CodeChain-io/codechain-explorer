@@ -176,6 +176,14 @@ class TransactionDetailsInternal extends React.Component<Props, State> {
             ];
         } else if (transaction.type === "mintAsset") {
             return [
+                <Row key="row-tracker">
+                    <Col md="3">Tracker</Col>
+                    <Col md="9">
+                        0x
+                        {transaction.tracker}
+                    </Col>
+                </Row>,
+                <hr key="hr-tracker" />,
                 <Row key="row1">
                     <Col md="3">LockScriptHash</Col>
                     <Col md="9">{this.getLockScriptName(transaction.mintAsset.lockScriptHash)}</Col>
@@ -391,12 +399,10 @@ class TransactionDetailsInternal extends React.Component<Props, State> {
                                             </Row>
                                             <hr />
                                             <Row>
-                                                <Col md="3">Prev Tx</Col>
+                                                <Col md="3">Prev Tx tracker </Col>
                                                 <Col md="9">
-                                                    <HexString
-                                                        link={`/tx/0x${input.prevOut.tracker}`}
-                                                        text={input.prevOut.tracker}
-                                                    />
+                                                    0x
+                                                    {input.prevOut.tracker}
                                                 </Col>
                                             </Row>
                                             <hr />
@@ -492,12 +498,10 @@ class TransactionDetailsInternal extends React.Component<Props, State> {
                                         </Row>
                                         <hr />
                                         <Row>
-                                            <Col md="3">Prev Tx</Col>
+                                            <Col md="3">Prev Tx tracker</Col>
                                             <Col md="9">
-                                                <HexString
-                                                    link={`/tx/0x${burn.prevOut.tracker}`}
-                                                    text={burn.prevOut.tracker}
-                                                />
+                                                0x
+                                                {burn.prevOut.tracker}
                                             </Col>
                                         </Row>
                                         <hr />
@@ -729,12 +733,10 @@ class TransactionDetailsInternal extends React.Component<Props, State> {
                                             </Row>
                                             <hr />
                                             <Row>
-                                                <Col md="3">Prev Tx</Col>
+                                                <Col md="3">Prev Tx tracker</Col>
                                                 <Col md="9">
-                                                    <HexString
-                                                        link={`/tx/0x${input.prevOut.tracker}`}
-                                                        text={input.prevOut.tracker}
-                                                    />
+                                                    0x
+                                                    {input.prevOut.tracker}
                                                 </Col>
                                             </Row>
                                             <hr />
@@ -905,12 +907,10 @@ class TransactionDetailsInternal extends React.Component<Props, State> {
                                 </Row>
                                 <hr />
                                 <Row>
-                                    <Col md="3">Prev Tx</Col>
+                                    <Col md="3">Prev Tx tracker</Col>
                                     <Col md="9">
-                                        <HexString
-                                            link={`/tx/0x${transaction.decomposeAsset.input.prevOut.tracker}`}
-                                            text={transaction.decomposeAsset.input.prevOut.tracker}
-                                        />
+                                        0x
+                                        {transaction.decomposeAsset.input.prevOut.tracker}
                                     </Col>
                                 </Row>
                                 <hr />
