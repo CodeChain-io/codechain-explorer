@@ -1,0 +1,95 @@
+import { MintAssetTransactionDoc, TransactionDoc } from "codechain-indexer-types";
+import * as _ from "lodash";
+import * as React from "react";
+import { Link } from "react-router-dom";
+import Col from "reactstrap/lib/Col";
+import Row from "reactstrap/lib/Row";
+import { getLockScriptName } from "../../../../../utils/Transactions";
+import HexString from "../../../../util/HexString/HexString";
+import { ImageLoader } from "../../../../util/ImageLoader/ImageLoader";
+
+interface Props {
+    tx: TransactionDoc;
+}
+
+export default class AssetMintDetails extends React.Component<Props, any> {
+    public render() {
+        const { tx } = this.props;
+        const transaction = tx as MintAssetTransactionDoc;
+        return [
+            <Row key="tracker">
+                <Col md="3">Tracker</Col>
+                <Col md="9">
+                    0x
+                    {transaction.tracker}
+                </Col>
+            </Row>,
+            <hr key="tracker-hr" />,
+            <Row key="lockScriptHash">
+                <Col md="3">LockScriptHash</Col>
+                <Col md="9">{getLockScriptName(transaction.mintAsset.lockScriptHash)}</Col>
+            </Row>,
+            <hr key="lockScriptHash-hr" />,
+            <Row key="parameters">
+                <Col md="3">Parameters</Col>
+                <Col md="9">
+                    <div className="text-area">
+                        {_.map(transaction.mintAsset.parameters, (parameter, i) => {
+                            return (
+                                <div key={`transaction-heder-param-${i}`}>{Buffer.from(parameter).toString("hex")}</div>
+                            );
+                        })}
+                    </div>
+                </Col>
+            </Row>,
+            <hr key="parameters-hr" />,
+            <Row key="assetType">
+                <Col md="3">AssetType</Col>
+                <Col md="9">
+                    <ImageLoader
+                        data={transaction.mintAsset.assetType}
+                        size={18}
+                        className="mr-2"
+                        isAssetImage={true}
+                    />
+                    <HexString
+                        link={`/asset/0x${transaction.mintAsset.assetType}`}
+                        text={transaction.mintAsset.assetType}
+                    />
+                </Col>
+            </Row>,
+            <hr key="assetType-hr" />,
+            <Row key="quantity">
+                <Col md="3">Quantity</Col>
+                <Col md="9">{transaction.mintAsset.supply ? transaction.mintAsset.supply.toLocaleString() : 0}</Col>
+            </Row>,
+            <hr key="quantity-hr" />,
+            <Row key="approver">
+                <Col md="3">Approver</Col>
+                <Col md="9">
+                    {transaction.mintAsset.approver ? (
+                        <Link to={`/addr-platform/${transaction.mintAsset.approver}`}>
+                            {transaction.mintAsset.approver}
+                        </Link>
+                    ) : (
+                        "None"
+                    )}
+                </Col>
+            </Row>,
+            <hr key="approver-hr" />,
+            <Row key="recipient">
+                <Col md="3">Recipient</Col>
+                <Col md="9">
+                    {transaction.mintAsset.recipient ? (
+                        <Link to={`/addr-asset/${transaction.mintAsset.recipient}`}>
+                            {transaction.mintAsset.recipient}
+                        </Link>
+                    ) : (
+                        "Unknown"
+                    )}
+                </Col>
+            </Row>,
+            <hr key="recipient-hr" />
+        ];
+    }
+}

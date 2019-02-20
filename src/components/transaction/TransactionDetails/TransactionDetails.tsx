@@ -11,11 +11,13 @@ import { Script } from "codechain-sdk/lib/core/classes";
 import { Link } from "react-router-dom";
 import { changeQuarkStringToCCC } from "../../../utils/Formatter";
 import * as Metadata from "../../../utils/Metadata";
+import { getLockScriptName } from "../../../utils/Transactions";
 import DataSet from "../../util/DataSet/DataSet";
 import HexString from "../../util/HexString/HexString";
 import { ImageLoader } from "../../util/ImageLoader/ImageLoader";
 import { StatusBadge } from "../../util/StatusBadge/StatusBadge";
 import { TypeBadge } from "../../util/TypeBadge/TypeBadge";
+import DetailsByType from "./DetailsByType/DetailsByType";
 import "./TransactionDetails.scss";
 
 interface OwnProps {
@@ -72,16 +74,6 @@ class TransactionDetailsInternal extends React.Component<Props, State> {
             </div>
         );
     }
-
-    private getLockScriptName = (lockScriptHash: string) => {
-        switch (lockScriptHash) {
-            case "0x5f5960a7bca6ceeeb0c97bc717562914e7a1de04":
-                return "P2PKH(0x5f5960a7bca6ceeeb0c97bc717562914e7a1de04)";
-            case "0x37572bdcc22d39a59c0d12d301f6271ba3fdd451":
-                return "P2PKHBurn(0x37572bdcc22d39a59c0d12d301f6271ba3fdd451)";
-        }
-        return `${lockScriptHash}`;
-    };
 
     private renderTransactionInfo = (transaction: TransactionDoc) => {
         return (
@@ -148,180 +140,11 @@ class TransactionDetailsInternal extends React.Component<Props, State> {
                             </Row>,
                             <hr key="invoice-hr" />
                         ]}
-                        {this.renderTransactionInfoByType(transaction)}
+                        <DetailsByType tx={transaction} />
                     </DataSet>
                 </Col>
             </Row>
         );
-    };
-
-    private renderTransactionInfoByType = (transaction: TransactionDoc) => {
-        if (transaction.type === "transferAsset") {
-            return [
-                <Row key="row1">
-                    <Col md="3"># of Input</Col>
-                    <Col md="9">{transaction.transferAsset.inputs.length.toLocaleString()}</Col>
-                </Row>,
-                <hr key="hr1" />,
-                <Row key="row2">
-                    <Col md="3"># of Output</Col>
-                    <Col md="9">{transaction.transferAsset.outputs.length.toLocaleString()}</Col>
-                </Row>,
-                <hr key="hr2" />,
-                <Row key="row3">
-                    <Col md="3"># of Burn</Col>
-                    <Col md="9">{transaction.transferAsset.burns.length.toLocaleString()}</Col>
-                </Row>,
-                <hr key="hr3" />
-            ];
-        } else if (transaction.type === "mintAsset") {
-            return [
-                <Row key="row-tracker">
-                    <Col md="3">Tracker</Col>
-                    <Col md="9">
-                        0x
-                        {transaction.tracker}
-                    </Col>
-                </Row>,
-                <hr key="hr-tracker" />,
-                <Row key="row1">
-                    <Col md="3">LockScriptHash</Col>
-                    <Col md="9">{this.getLockScriptName(transaction.mintAsset.lockScriptHash)}</Col>
-                </Row>,
-                <hr key="hr1" />,
-                <Row key="row2">
-                    <Col md="3">Parameters</Col>
-                    <Col md="9">
-                        <div className="text-area">
-                            {_.map(transaction.mintAsset.parameters, (parameter, i) => {
-                                return (
-                                    <div key={`transaction-heder-param-${i}`}>
-                                        {Buffer.from(parameter).toString("hex")}
-                                    </div>
-                                );
-                            })}
-                        </div>
-                    </Col>
-                </Row>,
-                <hr key="hr2" />,
-                <Row key="row3">
-                    <Col md="3">AssetType</Col>
-                    <Col md="9">
-                        <ImageLoader
-                            data={transaction.mintAsset.assetType}
-                            size={18}
-                            className="mr-2"
-                            isAssetImage={true}
-                        />
-                        <HexString
-                            link={`/asset/0x${transaction.mintAsset.assetType}`}
-                            text={transaction.mintAsset.assetType}
-                        />
-                    </Col>
-                </Row>,
-                <hr key="hr3" />,
-                <Row key="row4">
-                    <Col md="3">Quantity</Col>
-                    <Col md="9">{transaction.mintAsset.supply ? transaction.mintAsset.supply.toLocaleString() : 0}</Col>
-                </Row>,
-                <hr key="hr4" />,
-                <Row key="row5">
-                    <Col md="3">Approver</Col>
-                    <Col md="9">
-                        {transaction.mintAsset.approver ? (
-                            <Link to={`/addr-platform/${transaction.mintAsset.approver}`}>
-                                {transaction.mintAsset.approver}
-                            </Link>
-                        ) : (
-                            "None"
-                        )}
-                    </Col>
-                </Row>,
-                <hr key="hr5" />,
-                <Row key="row6">
-                    <Col md="3">Recipient</Col>
-                    <Col md="9">
-                        {transaction.mintAsset.recipient ? (
-                            <Link to={`/addr-asset/${transaction.mintAsset.recipient}`}>
-                                {transaction.mintAsset.recipient}
-                            </Link>
-                        ) : (
-                            "Unknown"
-                        )}
-                    </Col>
-                </Row>,
-                <hr key="hr6" />
-            ];
-        } else if (transaction.type === "composeAsset") {
-            return [
-                <Row key="row1">
-                    <Col md="3"># of Input</Col>
-                    <Col md="9">{transaction.composeAsset.inputs.length.toLocaleString()}</Col>
-                </Row>,
-                <hr key="hr1" />,
-                <Row key="row2">
-                    <Col md="3"># of Output</Col>
-                    <Col md="9">1</Col>
-                </Row>,
-                <hr key="hr2" />
-            ];
-        } else if (transaction.type === "decomposeAsset") {
-            return [
-                <Row key="row1">
-                    <Col md="3"># of Input</Col>
-                    <Col md="9">1</Col>
-                </Row>,
-                <hr key="hr1" />,
-                <Row key="row2">
-                    <Col md="3"># of Output</Col>
-                    <Col md="9">{transaction.decomposeAsset.outputs.length.toLocaleString()}</Col>
-                </Row>,
-                <hr key="hr2" />
-            ];
-        } else if (transaction.type === "pay") {
-            return [
-                <Row key="row1">
-                    <Col md="3">Quantity</Col>
-                    <Col md="9">
-                        {changeQuarkStringToCCC(transaction.pay.quantity)}
-                        CCC
-                    </Col>
-                </Row>,
-                <hr key="hr1" />,
-                <Row key="row2">
-                    <Col md="3">Receiver</Col>
-                    <Col md="9">
-                        <Link to={`/addr-platform/${transaction.pay.receiver}`}>{transaction.pay.receiver}</Link>
-                    </Col>
-                </Row>,
-                <hr key="hr2" />
-            ];
-        } else if (transaction.type === "setRegularKey") {
-            return [
-                <Row key="row1">
-                    <Col md="3">Key</Col>
-                    <Col md="9">{transaction.setRegularKey.key}</Col>
-                </Row>
-            ];
-        } else if (transaction.type === "store") {
-            return [
-                <Row key="row1">
-                    <Col md="3">Content</Col>
-                    <Col md="9">
-                        <div className="text-area">{transaction.store.content}</div>
-                    </Col>
-                </Row>,
-                <hr key="hr1" />,
-                <Row key="row2">
-                    <Col md="3">Certifier</Col>
-                    <Col md="9">
-                        <Link to={`/addr-asset/${transaction.store.certifier}`}>{transaction.store.certifier}</Link>
-                    </Col>
-                </Row>,
-                <hr key="hr2" />
-            ];
-        }
-        return null;
     };
 
     private renderMoreInfoByType = (transaction: TransactionDoc) => {
@@ -579,7 +402,7 @@ class TransactionDetailsInternal extends React.Component<Props, State> {
                                             <hr />
                                             <Row>
                                                 <Col md="3">LockScriptHash</Col>
-                                                <Col md="9">{this.getLockScriptName(output.lockScriptHash)}</Col>
+                                                <Col md="9">{getLockScriptName(output.lockScriptHash)}</Col>
                                             </Row>
                                             <hr />
                                             <Row>
@@ -812,7 +635,7 @@ class TransactionDetailsInternal extends React.Component<Props, State> {
                                 <hr />
                                 <Row>
                                     <Col md="3">LockScriptHash</Col>
-                                    <Col md="9">{this.getLockScriptName(transaction.composeAsset.lockScriptHash)}</Col>
+                                    <Col md="9">{getLockScriptName(transaction.composeAsset.lockScriptHash)}</Col>
                                 </Row>
                                 <hr />
                                 <Row>
@@ -975,7 +798,7 @@ class TransactionDetailsInternal extends React.Component<Props, State> {
                                             <hr />
                                             <Row>
                                                 <Col md="3">LockScriptHash</Col>
-                                                <Col md="9">{this.getLockScriptName(output.lockScriptHash)}</Col>
+                                                <Col md="9">{getLockScriptName(output.lockScriptHash)}</Col>
                                             </Row>
                                             <hr />
                                             <Row>
