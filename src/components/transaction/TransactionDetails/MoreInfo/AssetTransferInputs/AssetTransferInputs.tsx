@@ -106,8 +106,17 @@ export default class AssetTransferInputs extends React.Component<Props, State> {
                             </Col>
                         </Row>
                         <hr />
+                        {input.prevOut.hash && [
+                            <Row key="txHash">
+                                <Col md="3">Prev Tx hash</Col>
+                                <Col md="9">
+                                    <HexString link={`/tx/0x${input.prevOut.hash}`} text={input.prevOut.hash} />
+                                </Col>
+                            </Row>,
+                            <hr key="txHash-hr" />
+                        ]}
                         <Row>
-                            <Col md="3">Prev Tx tracker </Col>
+                            <Col md="3">Prev Tx tracker</Col>
                             <Col md="9">
                                 0x
                                 {input.prevOut.tracker}
