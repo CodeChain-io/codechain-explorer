@@ -45,6 +45,8 @@ export default class MoreInfo extends React.Component<Props, State> {
                 <AssetTransferInputs inputs={[transaction.decomposeAsset.input]} key="input" isBurn={false} />,
                 <AssetTransferOutputs outputs={transaction.decomposeAsset.outputs} key="outputs" />
             ];
+        } else if (transaction.type === "unwrapCCC") {
+            return [<AssetTransferInputs inputs={[transaction.unwrapCCC.burn]} key="burn" isBurn={true} />];
         }
         return null;
     }
