@@ -9,14 +9,12 @@ import { Buffer } from "buffer";
 import { TransactionDoc } from "codechain-indexer-types";
 import { Script } from "codechain-sdk/lib/core/classes";
 import { Link } from "react-router-dom";
-import { changeQuarkStringToCCC } from "../../../utils/Formatter";
 import * as Metadata from "../../../utils/Metadata";
 import { getLockScriptName } from "../../../utils/Transactions";
 import DataSet from "../../util/DataSet/DataSet";
 import HexString from "../../util/HexString/HexString";
 import { ImageLoader } from "../../util/ImageLoader/ImageLoader";
-import { StatusBadge } from "../../util/StatusBadge/StatusBadge";
-import { TypeBadge } from "../../util/TypeBadge/TypeBadge";
+import CommonDetails from "./CommonDetails/CommonDetails";
 import DetailsByType from "./DetailsByType/DetailsByType";
 import "./TransactionDetails.scss";
 
@@ -80,66 +78,7 @@ class TransactionDetailsInternal extends React.Component<Props, State> {
             <Row key="details">
                 <Col lg="12">
                     <DataSet>
-                        <Row>
-                            <Col md="3">Type</Col>
-                            <Col md="9">
-                                <TypeBadge transaction={transaction} />
-                            </Col>
-                        </Row>
-                        <hr />
-                        <Row>
-                            <Col md="3">Block</Col>
-                            <Col md="9">
-                                <Link to={`/block/${transaction.blockNumber}`}>{transaction.blockNumber}</Link>
-                            </Col>
-                        </Row>
-                        <hr />
-                        {!transaction.isPending && [
-                            <Row key="index-row">
-                                <Col md="3">Transaction Index</Col>
-                                <Col md="9">{transaction.transactionIndex!.toLocaleString()}</Col>
-                            </Row>,
-                            <hr key="index-hr" />
-                        ]}
-                        <Row>
-                            <Col md="3">Sequence</Col>
-                            <Col md="9">{transaction.seq}</Col>
-                        </Row>
-                        <hr />
-                        <Row>
-                            <Col md="3">Fee</Col>
-                            <Col md="9">
-                                {changeQuarkStringToCCC(transaction.fee)}
-                                CCC
-                            </Col>
-                        </Row>
-                        <hr />
-                        <Row>
-                            <Col md="3">Signer</Col>
-                            <Col md="9">
-                                <Link to={`/addr-platform/${transaction.signer}`}>{transaction.signer}</Link>
-                            </Col>
-                        </Row>
-                        <hr />
-                        <Row>
-                            <Col md="3">NetworkID</Col>
-                            <Col md="9">{transaction.networkId}</Col>
-                        </Row>
-                        <hr />
-                        <Row>
-                            <Col md="3">Status</Col>
-                            <Col md="9">
-                                <StatusBadge tx={transaction} />
-                            </Col>
-                        </Row>
-                        <hr />
-                        {!transaction.isPending && [
-                            <Row key="invoice-row">
-                                <Col md="3">Invoice</Col>
-                                <Col md="9">{transaction.success ? "Success" : `Fail - ${transaction.errorHint}`}</Col>
-                            </Row>,
-                            <hr key="invoice-hr" />
-                        ]}
+                        <CommonDetails tx={transaction} />
                         <DetailsByType tx={transaction} />
                     </DataSet>
                 </Col>
