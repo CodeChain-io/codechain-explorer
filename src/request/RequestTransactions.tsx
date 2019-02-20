@@ -8,6 +8,7 @@ interface OwnProps {
     itemsPerPage: number;
     onTransactions: (transactions: TransactionDoc[]) => void;
     onError: (e: ApiError) => void;
+    selectedTypes?: string[];
 }
 
 interface DispatchProps {
@@ -18,8 +19,11 @@ type Props = OwnProps & DispatchProps;
 
 class RequestTransactions extends React.Component<Props> {
     public componentWillMount() {
-        const { onError, onTransactions, dispatch, page, itemsPerPage } = this.props;
-        const path = `tx?page=${page}&itemsPerPage=${itemsPerPage}`;
+        const { onError, onTransactions, dispatch, page, itemsPerPage, selectedTypes } = this.props;
+        let path = `tx?page=${page}&itemsPerPage=${itemsPerPage}`;
+        if (selectedTypes && selectedTypes.length > 0) {
+            path += `&type=${selectedTypes.join(",")}`;
+        }
         apiRequest({
             path,
             dispatch,

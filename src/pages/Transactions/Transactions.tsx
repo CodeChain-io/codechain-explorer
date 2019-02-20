@@ -8,11 +8,14 @@ import { Container } from "reactstrap";
 
 import { TransactionDoc } from "codechain-indexer-types";
 import { Link } from "react-router-dom";
+import Col from "reactstrap/lib/Col";
+import Row from "reactstrap/lib/Row";
 import DataTable from "../../components/util/DataTable/DataTable";
 import HexString from "../../components/util/HexString/HexString";
 import { TypeBadge } from "../../components/util/TypeBadge/TypeBadge";
 import { RequestTotalTransactionCount, RequestTransactions } from "../../request";
 import { changeQuarkStringToCCC } from "../../utils/Formatter";
+import { TransactionTypes } from "../../utils/Transactions";
 import "./Transactions.scss";
 
 interface State {
@@ -22,6 +25,8 @@ interface State {
     redirect: boolean;
     redirectPage?: number;
     redirectItemsPerPage?: number;
+    selectedTypes: string[];
+    showTypeFilter: boolean;
 }
 
 interface Props {
@@ -39,7 +44,9 @@ class Transactions extends React.Component<Props, State> {
             isTransactionRequested: false,
             redirect: false,
             redirectItemsPerPage: undefined,
-            redirectPage: undefined
+            redirectPage: undefined,
+            selectedTypes: [],
+            showTypeFilter: false
         };
     }
 
@@ -74,7 +81,9 @@ class Transactions extends React.Component<Props, State> {
             isTransactionRequested,
             redirect,
             redirectItemsPerPage,
-            redirectPage
+            redirectPage,
+            showTypeFilter,
+            selectedTypes
         } = this.state;
 
         if (redirect) {
@@ -102,11 +111,53 @@ class Transactions extends React.Component<Props, State> {
                         page={currentPage}
                         itemsPerPage={itemsPerPage}
                         onError={this.onError}
+                        selectedTypes={selectedTypes}
                     />
                 ) : null}
+                <h1>Latest transactions</h1>
+                {!showTypeFilter && (
+                    <div className="show-type-filter-container">
+                        <span className="filter-btn" onClick={this.showTypeFilter}>
+                            Show type filter
+                        </span>
+                    </div>
+                )}
+                {showTypeFilter && (
+                    <div className="type-filter-container">
+                        <div className="filter-title">
+                            <span>Type Filter</span>
+                        </div>
+                        <Row>
+                            {TransactionTypes.map(type => {
+                                return (
+                                    <Col md={3} key={type}>
+                                        <div className="form-check">
+                                            <input
+                                                className="form-check-input"
+                                                type="checkbox"
+                                                id={type}
+                                                checked={_.includes(selectedTypes, type)}
+                                                value={type}
+                                                onChange={this.handleFilterChange}
+                                            />
+                                            <label className="form-check-label" htmlFor={`${type}`}>
+                                                {type}
+                                            </label>
+                                        </div>
+                                    </Col>
+                                );
+                            })}
+                        </Row>
+                        <div className="hide-type-filter-container">
+                            <span className="filter-btn" onClick={this.hideTypeFilter}>
+                                Hide type filter
+                            </span>
+                        </div>
+                    </div>
+                )}
+
                 <div className="d-flex align-items-end">
                     <div>
-                        <h1>Latest transactions</h1>
                         <div>
                             <div className="d-flex mt-small">
                                 <div className="d-inline ml-auto pager">
@@ -233,6 +284,28 @@ class Transactions extends React.Component<Props, State> {
             </Container>
         );
     }
+
+    private showTypeFilter = () => {
+        this.setState({ showTypeFilter: true });
+    };
+
+    private hideTypeFilter = () => {
+        this.setState({ showTypeFilter: false });
+    };
+
+    private handleFilterChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        if (event.target.checked) {
+            this.setState({
+                selectedTypes: [...this.state.selectedTypes, event.target.value],
+                isTransactionRequested: false
+            });
+        } else {
+            this.setState({
+                selectedTypes: this.state.selectedTypes.filter(type => type !== event.target.value),
+                isTransactionRequested: false
+            });
+        }
+    };
 
     private moveNext = (currentPage: number, maxPage: number, e: any) => {
         e.preventDefault();

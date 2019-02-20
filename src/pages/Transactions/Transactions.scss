@@ -1,4 +1,32 @@
+@import "../../variables.scss";
+
 .transactions {
   padding-top: 60px;
   padding-bottom: 108px;
+
+  .type-filter-container {
+    margin-top: 18px;
+    border: 1px solid $primary-color;
+    padding: 18px;
+
+    .filter-title {
+      margin-bottom: 18px;
+      span {
+        font-weight: bold;
+      }
+    }
+
+    .hide-type-filter-container {
+      margin-top: 20px;
+    }
+  }
+
+  .show-type-filter-container {
+    margin-top: 20px;
+  }
+
+  .filter-btn {
+    cursor: pointer;
+    text-decoration: underline;
+  }
 }
