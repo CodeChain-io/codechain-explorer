@@ -33,7 +33,6 @@ interface AppReducer {
             updatedAt: number;
         };
     };
-    moveToSectionRef?: string;
 }
 
 const initialState: AppReducer = {
@@ -41,8 +40,7 @@ const initialState: AppReducer = {
     blocksByNumber: {},
     blocksByHash: {},
     assetSchemeByAssetType: {},
-    transactionByHash: {},
-    moveToSectionRef: undefined
+    transactionByHash: {}
 };
 
 interface BestBlockNumberAction {
@@ -68,17 +66,7 @@ interface CacheAssetSchemeAction {
     };
 }
 
-interface MoveToSectionAction {
-    type: "MOVE_TO_SECTION";
-    data: string;
-}
-
-type Action =
-    | BestBlockNumberAction
-    | CacheAssetSchemeAction
-    | CacheBlockAction
-    | CacheTransactionAction
-    | MoveToSectionAction;
+type Action = BestBlockNumberAction | CacheAssetSchemeAction | CacheBlockAction | CacheTransactionAction;
 
 const appReducer = (state = initialState, action: Action) => {
     if (action.type === "BEST_BLOCK_NUMBER_ACTION") {
@@ -105,8 +93,6 @@ const appReducer = (state = initialState, action: Action) => {
             [assetType]: { data: assetScheme, updatedAt: getCurrentTimestamp() }
         };
         return { ...state, assetSchemeByAssetType };
-    } else if (action.type === "MOVE_TO_SECTION") {
-        return { ...state, moveToSectionRef: action.data };
     } else {
         return state;
     }
