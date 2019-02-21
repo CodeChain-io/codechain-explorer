@@ -60,17 +60,6 @@ Build CodeChain-explorer with the following script. You can get optimized and ug
 # REACT_APP_SERVER_HOST=http://127.0.0.1:8080 yarn run build
 ```
 
-#### Serve static build file
-
-It starts the static server, which serves the build directory
-
-```
-# yarn run serve
-
-//You can change the port using an environment variable
-# SERVE_PORT=8080 yarn run serve
-```
-
 ## Custom Configuration
 
 ### Build
@@ -80,9 +69,3 @@ It starts the static server, which serves the build directory
 | REACT_APP_SERVER_HOST         | http://127.0.0.1:8081 |         |                                 |
 | REACT_APP_URL                 |                       |         | This is used for the open graph |
 | REACT_APP_GOOGLE_ANALYTICS_ID |                       |         |                                 |
-
-### Serve
-
-|            | Default | Options | Description |
-| ---------- | ------- | ------- | ----------- |
-| SERVE_PORT | 5000    |         |             |

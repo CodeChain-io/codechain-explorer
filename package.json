@@ -80,7 +80,6 @@
   "scripts": {
     "start": "node scripts/start.js",
     "build": "node scripts/build.js",
-    "serve": "node scripts/serve.js",
     "test": "yarn lint && node scripts/test.js --env=jsdom",
     "lint": "tslint -p tsconfig.json && prettier 'src/**/*.{ts,tsx,scss,json,html,js,jsx}' -l",
     "fmt": "tslint -p tsconfig.json --fix && prettier 'src/**/*.{ts,tsx,scss,json,html,js,jsx}' --write"
