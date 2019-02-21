@@ -273,7 +273,7 @@ class TransactionSummaryInternal extends React.Component<Props, State> {
                                         <div className="content-description">{metadata.description}</div>
                                     </div>
                                     <div className="registrar-panel d-flex">
-                                        <div>approver</div>
+                                        <div>Approver</div>
                                         <div className="registrar-text">
                                             {transaction.composeAsset.approver ? (
                                                 <Link to={`/addr-platform/${transaction.composeAsset.approver}`}>

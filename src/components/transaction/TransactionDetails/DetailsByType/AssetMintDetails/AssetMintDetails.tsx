@@ -63,19 +63,6 @@ export default class AssetMintDetails extends React.Component<Props, any> {
                 <Col md="3">Quantity</Col>
                 <Col md="9">{transaction.mintAsset.supply ? transaction.mintAsset.supply.toLocaleString() : 0}</Col>
             </Row>,
-            <hr key="quantity-hr" />,
-            <Row key="approver">
-                <Col md="3">Approver</Col>
-                <Col md="9">
-                    {transaction.mintAsset.approver ? (
-                        <Link to={`/addr-platform/${transaction.mintAsset.approver}`}>
-                            {transaction.mintAsset.approver}
-                        </Link>
-                    ) : (
-                        "None"
-                    )}
-                </Col>
-            </Row>,
             <hr key="approver-hr" />,
             <Row key="recipient">
                 <Col md="3">Recipient</Col>

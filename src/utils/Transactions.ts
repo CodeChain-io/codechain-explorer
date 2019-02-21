@@ -1,18 +1,25 @@
-export const TransactionTypes = [
-    "pay",
-    "mintAsset",
-    "transferAsset",
-    "composeAsset",
-    "decomposeAsset",
-    "wrapCCC",
-    "unwrapCCC",
-    "setRegularKey",
-    "createShard",
-    "setShardOwners",
-    "store",
-    "remove",
-    "custom"
-];
+import { TransactionDoc } from "codechain-indexer-types";
+
+const x: { [T in TransactionDoc["type"]]: null } = {
+    pay: null,
+    mintAsset: null,
+    transferAsset: null,
+    composeAsset: null,
+    decomposeAsset: null,
+    wrapCCC: null,
+    unwrapCCC: null,
+    setRegularKey: null,
+    createShard: null,
+    setShardOwners: null,
+    setShardUsers: null,
+    store: null,
+    remove: null,
+    custom: null,
+    increaseAssetSupply: null,
+    changeAssetScheme: null
+};
+
+export const TransactionTypes = Object.keys(x);
 
 export const getLockScriptName = (lockScriptHash: string) => {
     switch (lockScriptHash) {

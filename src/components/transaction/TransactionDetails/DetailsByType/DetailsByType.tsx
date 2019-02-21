@@ -2,14 +2,17 @@ import { TransactionDoc } from "codechain-indexer-types";
 import * as React from "react";
 import AssetMintDetails from "./AssetMintDetails/AssetMintDetails";
 import AssetTransferDetails from "./AssetTransferDetails/AssetTransferDetails";
+import ChangeAssetSchemeDetails from "./ChangeAssetSchemeDetails/ChangeAssetSchemeDetails";
 import ComposeAssetDetails from "./ComposeAssetDetails/ComposeAssetDetails";
 import CreateShardDetails from "./CreateShardDetails/CreateShardDetails";
 import CustomDetails from "./CustomDetails/CustomDetails";
 import DecomposeAssetDetails from "./DecomposeAssetDetails/DecomposeAssetDetails";
+import IncreaseAssetSupplyDetails from "./IncreaseAssetSupplyDetails/IncreaseAssetSupplyDetails";
 import PayDetails from "./PayDetails/PayDetails";
 import RemoveDetails from "./RemoveDetails/RemoveDetails";
 import SetRegularKeyDetails from "./SetRegularKeyDetails/SetRegularKeyDetails";
 import SetShardOwnersDetails from "./SetShardOwnersDetails/SetShardOwnersDetails";
+import SetShardUsersDetails from "./SetShardUsersDetails/SetShardUsersDetails";
 import StoreDetails from "./StoreDetails/StoreDetails";
 import UnwrapCCCDetails from "./UnwrapCCCDetails/UnwrapCCCDetails";
 import WrapCCCDetails from "./WrapCCCDetails/WrapCCCDetails";
@@ -39,6 +42,8 @@ export default class DetailsByType extends React.Component<Props, any> {
             return <CreateShardDetails tx={transaction} />;
         } else if (transaction.type === "setShardOwners") {
             return <SetShardOwnersDetails tx={transaction} />;
+        } else if (transaction.type === "setShardUsers") {
+            return <SetShardUsersDetails tx={transaction} />;
         } else if (transaction.type === "remove") {
             return <RemoveDetails tx={transaction} />;
         } else if (transaction.type === "unwrapCCC") {
@@ -47,6 +52,10 @@ export default class DetailsByType extends React.Component<Props, any> {
             return <WrapCCCDetails tx={transaction} />;
         } else if (transaction.type === "custom") {
             return <CustomDetails tx={transaction} />;
+        } else if (transaction.type === "changeAssetScheme") {
+            return <ChangeAssetSchemeDetails tx={transaction} />;
+        } else if (transaction.type === "increaseAssetSupply") {
+            return <IncreaseAssetSupplyDetails tx={transaction} />;
         }
         return null;
     }
