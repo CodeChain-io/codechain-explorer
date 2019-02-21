@@ -31,7 +31,7 @@ Use yarn package manager to install packages
 
 ### Dependency
 
-- Get CodeChain-indexer ready for indexing block data and running the API server
+- Get [CodeChain-indexer](https://github.com/CodeChain-io/codechain-indexer) ready for indexing block data and running the API server
 
 ### Running for development
 
