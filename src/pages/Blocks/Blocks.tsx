@@ -66,9 +66,6 @@ class Blocks extends React.Component<Props, State> {
         const params = new URLSearchParams(search);
         const currentPage = params.get("page") ? parseInt(params.get("page") as string, 10) : 1;
         const itemsPerPage = params.get("itemsPerPage") ? parseInt(params.get("itemsPerPage") as string, 10) : 25;
-        const lastBlockNumber = params.get("lastBlockNumber")
-            ? parseInt(params.get("lastBlockNumber") as string, 10)
-            : undefined;
         const { blocks, totalBlockCount, isBlockRequested, redirect, redirectItemsPerPage, redirectPage } = this.state;
 
         if (redirect) {
@@ -76,9 +73,7 @@ class Blocks extends React.Component<Props, State> {
                 <Redirect
                     push={true}
                     to={`/blocks?page=${redirectPage || currentPage}&itemsPerPage=${redirectItemsPerPage ||
-                        itemsPerPage}&lastBlockNumber=${
-                        blocks.length > 0 ? blocks[blocks.length - 1].number : undefined
-                    }`}
+                        itemsPerPage}`}
                 />
             ) : (
                 <Redirect
@@ -100,7 +95,6 @@ class Blocks extends React.Component<Props, State> {
                         page={currentPage}
                         itemsPerPage={itemsPerPage}
                         onError={this.onError}
-                        lastBlockNumber={lastBlockNumber}
                     />
                 ) : null}
                 <div className="d-flex align-items-end">
