@@ -43,9 +43,9 @@ class BlockDetails extends React.Component<OwnProps> {
                             </Row>
                             <hr />
                             <Row>
-                                <Col md="3">Invoices Root</Col>
+                                <Col md="3">Results Root</Col>
                                 <Col md="9">
-                                    <HexString text={block.invoicesRoot} />
+                                    <HexString text={block.resultsRoot} />
                                 </Col>
                             </Row>
                             <hr />

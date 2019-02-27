@@ -1,4 +1,4 @@
-import { IncreaseAssetSupplyDoc } from "codechain-indexer-types";
+import { IncreaseAssetSupplyTransactionDoc } from "codechain-indexer-types";
 import * as React from "react";
 import Col from "reactstrap/lib/Col";
 import Row from "reactstrap/lib/Row";
@@ -6,7 +6,7 @@ import HexString from "../../../../util/HexString/HexString";
 import { ImageLoader } from "../../../../util/ImageLoader/ImageLoader";
 
 interface Props {
-    tx: IncreaseAssetSupplyDoc;
+    tx: IncreaseAssetSupplyTransactionDoc;
 }
 
 export default class IncreaseAssetSupplyDetails extends React.Component<Props, any> {
