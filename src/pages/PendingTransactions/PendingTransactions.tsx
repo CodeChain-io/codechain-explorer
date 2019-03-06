@@ -81,7 +81,8 @@ class PendingTransactions extends React.Component<Props, State> {
             return (
                 <Redirect
                     push={true}
-                    to={`/txs?page=${redirectPage || currentPage}&itemsPerPage=${redirectItemsPerPage || itemsPerPage}`}
+                    to={`/pending-txs?page=${redirectPage || currentPage}&itemsPerPage=${redirectItemsPerPage ||
+                        itemsPerPage}`}
                 />
             );
         }
