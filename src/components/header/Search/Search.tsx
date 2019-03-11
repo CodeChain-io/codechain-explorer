@@ -18,6 +18,7 @@ import {
     RequestPlatformAddressAccount,
     RequestTransaction
 } from "../../../request";
+import { isAssetAddress } from "../../../utils/Address";
 import { ImageLoader } from "../../util/ImageLoader/ImageLoader";
 import "./Search.scss";
 
@@ -198,7 +199,7 @@ class Search extends React.Component<Props, State> {
     };
 
     private onTransactionsForAssetTransferAddress = (transactions: TransactionDoc[], address: string) => {
-        if (transactions.length > 0) {
+        if (isAssetAddress(address) && transactions.length > 0) {
             this.setState({
                 redirectTo: `/addr-asset/${address}`,
                 requestCount: this.state.requestCount - 1
