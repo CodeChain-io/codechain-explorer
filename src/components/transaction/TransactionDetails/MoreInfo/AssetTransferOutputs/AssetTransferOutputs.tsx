@@ -91,11 +91,7 @@ export default class AssetTransferOutputs extends React.Component<Props, State> 
                             <Col md="9">
                                 <div className="text-area">
                                     {_.map(output.parameters, (parameter, i) => {
-                                        return (
-                                            <div key={`transaction-paramter-${i}`}>
-                                                {Buffer.from(parameter).toString("hex")}
-                                            </div>
-                                        );
+                                        return <div key={`transaction-paramter-${i}`}>{parameter}</div>;
                                     })}
                                 </div>
                             </Col>

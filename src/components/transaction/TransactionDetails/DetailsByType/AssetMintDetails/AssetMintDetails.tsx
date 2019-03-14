@@ -35,9 +35,7 @@ export default class AssetMintDetails extends React.Component<Props, any> {
                 <Col md="9">
                     <div className="text-area">
                         {_.map(transaction.mintAsset.parameters, (parameter, i) => {
-                            return (
-                                <div key={`transaction-heder-param-${i}`}>{Buffer.from(parameter).toString("hex")}</div>
-                            );
+                            return <div key={`transaction-heder-param-${i}`}>{parameter}</div>;
                         })}
                     </div>
                 </Col>
