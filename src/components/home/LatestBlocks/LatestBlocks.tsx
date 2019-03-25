@@ -40,7 +40,7 @@ const LatestBlocks = (props: Props) => {
                                     <td scope="row">
                                         <Link to={`/block/${block.number}`}>{block.number.toLocaleString()}</Link>
                                     </td>
-                                    <td>{block.transactions ? block.transactions.length.toLocaleString() : 0}</td>
+                                    <td>{block.transactionsCount.toLocaleString()}</td>
                                     <td>
                                         <Link to={`/addr-platform/${block.author}`}>{block.author}</Link>
                                     </td>

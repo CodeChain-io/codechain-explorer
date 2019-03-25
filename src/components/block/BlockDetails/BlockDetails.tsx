@@ -88,7 +88,7 @@ class BlockDetails extends React.Component<OwnProps> {
                             <hr />
                             <Row>
                                 <Col md="3"># of Transactions</Col>
-                                <Col md="9">{block.transactions ? block.transactions.length.toLocaleString() : 0}</Col>
+                                <Col md="9">{block.transactionsCount.toLocaleString()}</Col>
                             </Row>
                             <hr />
                         </DataSet>

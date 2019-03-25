@@ -42,7 +42,7 @@ class RequestBlockTransactions extends React.Component<Props> {
             _.map(_.reverse(blocks), (block: BlockDoc) => {
                 return {
                     x: block.number.toString(),
-                    y: block.transactions ? block.transactions.length.toLocaleString() : "0"
+                    y: block.transactionsCount.toLocaleString()
                 };
             })
         );

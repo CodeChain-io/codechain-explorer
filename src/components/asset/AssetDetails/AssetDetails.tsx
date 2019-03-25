@@ -65,11 +65,11 @@ const AssetDetails = (prop: OwnProps) => {
                         </Row>
                         <hr />
                         <Row>
-                            <Col md="3">Administrator</Col>
+                            <Col md="3">Registrar</Col>
                             <Col md="9">
-                                {prop.assetScheme.administrator ? (
-                                    <Link to={`/addr-platform/${prop.assetScheme.approver}`}>
-                                        {prop.assetScheme.approver}
+                                {prop.assetScheme.registrar ? (
+                                    <Link to={`/addr-platform/${prop.assetScheme.registrar}`}>
+                                        {prop.assetScheme.registrar}
                                     </Link>
                                 ) : (
                                     "None"

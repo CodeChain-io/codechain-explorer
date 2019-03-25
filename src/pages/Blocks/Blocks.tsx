@@ -200,9 +200,7 @@ class Blocks extends React.Component<Props, State> {
                                                     </Link>
                                                 </td>
                                                 <td className="text-right">
-                                                    {block.transactions
-                                                        ? block.transactions.length.toLocaleString()
-                                                        : 0}
+                                                    {block.transactionsCount.toLocaleString()}
                                                 </td>
                                                 <td>
                                                     <Link to={`/addr-platform/${block.author}`}>{block.author}</Link>

@@ -13,7 +13,7 @@ export interface Asset {
     shardId: number;
     metadata: string;
     approver: string | null;
-    administrator: string | null;
+    registrar: string | null;
     allowedScriptHashes: string[];
     approvals: string[];
     lockScriptHash: string;

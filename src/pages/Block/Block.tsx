@@ -121,12 +121,10 @@ class Block extends React.Component<Props, State> {
                 <Row className="mt-large">
                     <Col lg="9">
                         <BlockDetails block={block} />
-                        {block.transactions.length > 0 && (
+                        {block.transactionsCount > 0 && (
                             <div key="parcel-transaction" className="mt-large">
-                                <TransactionList
-                                    transactions={block.transactions}
-                                    totalCount={block.transactions.length}
-                                />
+                                {/* FIXME: */}
+                                <TransactionList transactions={[]} totalCount={block.transactionsCount} />
                             </div>
                         )}
                     </Col>
@@ -138,7 +136,8 @@ class Block extends React.Component<Props, State> {
                                 return [
                                     <div className="d-flex align-items-center" key="asset-info">
                                         <span className="mr-auto item-name">{tt}</span>
-                                        <span>{block.transactions.filter(tx => tx.type === tt).length}</span>
+                                        {/* FIXME: */}
+                                        <span>{0}</span>
                                     </div>,
                                     <hr key="hr" />
                                 ];
