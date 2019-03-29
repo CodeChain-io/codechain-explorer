@@ -3,7 +3,6 @@ import * as React from "react";
 import { Link } from "react-router-dom";
 import Col from "reactstrap/lib/Col";
 import Row from "reactstrap/lib/Row";
-import { changeQuarkStringToCCC } from "../../../../../utils/Formatter";
 
 interface Props {
     tx: TransactionDoc;
@@ -17,7 +16,7 @@ export default class PayDetails extends React.Component<Props, any> {
             <Row key="row1">
                 <Col md="3">Quantity</Col>
                 <Col md="9">
-                    {changeQuarkStringToCCC(transaction.pay.quantity)}
+                    {transaction.pay.quantity}
                     CCC
                 </Col>
             </Row>,

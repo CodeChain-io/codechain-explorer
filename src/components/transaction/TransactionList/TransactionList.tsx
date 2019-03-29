@@ -15,7 +15,6 @@ import { H160 } from "codechain-sdk/lib/core/classes";
 import { connect } from "react-redux";
 import { Link } from "react-router-dom";
 import { RootState } from "../../../redux/actions";
-import { changeQuarkStringToCCC } from "../../../utils/Formatter";
 import DataSet from "../../util/DataSet/DataSet";
 import { ImageLoader } from "../../util/ImageLoader/ImageLoader";
 import { StatusBadge } from "../../util/StatusBadge/StatusBadge";
@@ -130,7 +129,7 @@ class TransactionList extends React.Component<Props, State> {
                                         <Row>
                                             <Col md="3">Fee</Col>
                                             <Col md="9">
-                                                {changeQuarkStringToCCC(transaction.fee)}
+                                                {transaction.fee}
                                                 CCC
                                             </Col>
                                         </Row>
@@ -171,7 +170,7 @@ class TransactionList extends React.Component<Props, State> {
                 <Row key="quantity">
                     <Col md="3">Quantity</Col>
                     <Col md="9">
-                        {changeQuarkStringToCCC(transaction.pay.quantity)}
+                        {transaction.pay.quantity}
                         CCC
                     </Col>
                 </Row>,

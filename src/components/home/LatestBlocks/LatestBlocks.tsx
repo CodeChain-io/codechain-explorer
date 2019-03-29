@@ -4,7 +4,6 @@ import * as React from "react";
 import { Link } from "react-router-dom";
 
 import { BlockDoc } from "codechain-indexer-types";
-import { changeQuarkStringToCCC } from "../../../utils/Formatter";
 import { CommaNumberString } from "../../util/CommaNumberString/CommaNumberString";
 import DataTable from "../../util/DataTable/DataTable";
 import "./LatestBlocks.scss";
@@ -45,7 +44,7 @@ const LatestBlocks = (props: Props) => {
                                         <Link to={`/addr-platform/${block.author}`}>{block.author}</Link>
                                     </td>
                                     <td className="text-right">
-                                        <CommaNumberString text={changeQuarkStringToCCC(block.miningReward)} />
+                                        <CommaNumberString text={block.miningReward} />
                                         CCC
                                     </td>
                                     <td className="text-right">

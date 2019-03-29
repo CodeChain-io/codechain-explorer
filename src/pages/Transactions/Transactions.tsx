@@ -14,7 +14,6 @@ import DataTable from "../../components/util/DataTable/DataTable";
 import HexString from "../../components/util/HexString/HexString";
 import { TypeBadge } from "../../components/util/TypeBadge/TypeBadge";
 import { RequestTotalTransactionCount, RequestTransactions } from "../../request";
-import { changeQuarkStringToCCC } from "../../utils/Formatter";
 import { TransactionTypes } from "../../utils/Transactions";
 import "./Transactions.scss";
 
@@ -262,7 +261,7 @@ class Transactions extends React.Component<Props, State> {
                                                     />
                                                 </td>
                                                 <td className="text-right">
-                                                    {changeQuarkStringToCCC(transaction.fee)}
+                                                    {transaction.fee}
                                                     CCC
                                                 </td>
                                                 <td>

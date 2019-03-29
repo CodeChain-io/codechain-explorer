@@ -3,7 +3,6 @@ import * as React from "react";
 import { Link } from "react-router-dom";
 import Col from "reactstrap/lib/Col";
 import Row from "reactstrap/lib/Row";
-import { changeQuarkStringToCCC } from "../../../../utils/Formatter";
 import { StatusBadge } from "../../../util/StatusBadge/StatusBadge";
 import { TypeBadge } from "../../../util/TypeBadge/TypeBadge";
 
@@ -44,7 +43,7 @@ export default class CommonDetails extends React.Component<Props, any> {
             <Row key="fee">
                 <Col md="3">Fee</Col>
                 <Col md="9">
-                    {changeQuarkStringToCCC(transaction.fee)}
+                    {transaction.fee}
                     CCC
                 </Col>
             </Row>,

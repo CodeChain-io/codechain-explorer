@@ -4,7 +4,6 @@ import * as React from "react";
 
 import { TransactionDoc } from "codechain-indexer-types";
 import { Link } from "react-router-dom";
-import { changeQuarkStringToCCC } from "../../../utils/Formatter";
 import DataTable from "../../util/DataTable/DataTable";
 import HexString from "../../util/HexString/HexString";
 import { TypeBadge } from "../../util/TypeBadge/TypeBadge";
@@ -45,7 +44,7 @@ const LatestTransactions = (props: Props) => {
                                         <HexString link={`/tx/0x${transaction.hash}`} text={transaction.hash} />
                                     </td>
                                     <td className="text-right">
-                                        {changeQuarkStringToCCC(transaction.fee)}
+                                        {transaction.fee}
                                         CCC
                                     </td>
                                     <td>

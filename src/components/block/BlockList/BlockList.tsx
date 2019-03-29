@@ -7,7 +7,6 @@ import * as moment from "moment";
 
 import { BlockDoc } from "codechain-indexer-types";
 import { Link } from "react-router-dom";
-import { changeQuarkStringToCCC } from "../../../utils/Formatter";
 import { CommaNumberString } from "../../util/CommaNumberString/CommaNumberString";
 import DataSet from "../../util/DataSet/DataSet";
 import HexString from "../../util/HexString/HexString";
@@ -90,7 +89,7 @@ class BlockList extends React.Component<Props, State> {
                                         <Row>
                                             <Col md="2">Reward</Col>
                                             <Col md="10">
-                                                <CommaNumberString text={changeQuarkStringToCCC(block.miningReward)} />
+                                                <CommaNumberString text={block.miningReward} />
                                                 CCC
                                             </Col>
                                         </Row>

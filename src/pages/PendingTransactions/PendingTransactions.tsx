@@ -12,7 +12,6 @@ import DataTable from "../../components/util/DataTable/DataTable";
 import HexString from "../../components/util/HexString/HexString";
 import { TypeBadge } from "../../components/util/TypeBadge/TypeBadge";
 import { RequestPendingTransactions, RequestTotalPendingTransactionCount } from "../../request";
-import { changeQuarkStringToCCC } from "../../utils/Formatter";
 import "./PendingTransactions.scss";
 
 interface State {
@@ -212,7 +211,7 @@ class PendingTransactions extends React.Component<Props, State> {
                                                     />
                                                 </td>
                                                 <td className="text-right">
-                                                    {changeQuarkStringToCCC(transaction.fee)}
+                                                    {transaction.fee}
                                                     CCC
                                                 </td>
                                                 <td>

@@ -10,7 +10,6 @@ import { Container } from "reactstrap";
 import { CommaNumberString } from "../../components/util/CommaNumberString/CommaNumberString";
 import DataTable from "../../components/util/DataTable/DataTable";
 import { RequestBlocks, RequestTotalBlockCount } from "../../request";
-import { changeQuarkStringToCCC } from "../../utils/Formatter";
 import "./Blocks.scss";
 
 interface State {
@@ -206,9 +205,7 @@ class Blocks extends React.Component<Props, State> {
                                                     <Link to={`/addr-platform/${block.author}`}>{block.author}</Link>
                                                 </td>
                                                 <td className="text-right">
-                                                    <CommaNumberString
-                                                        text={changeQuarkStringToCCC(block.miningReward)}
-                                                    />
+                                                    <CommaNumberString text={block.miningReward} />
                                                     CCC
                                                 </td>
                                                 <td className="text-right">
