@@ -8,6 +8,10 @@
   },
   "author": "CodeChain Team <hi@codechain.io>",
   "license": "Apache-2.0",
+  "engines": {
+    "node": ">=10",
+    "yarn": "^1.15.0"
+  },
   "dependencies": {
     "@data-ui/histogram": "^0.0.78",
     "@fortawesome/fontawesome-svg-core": "^1.2.0-14",
