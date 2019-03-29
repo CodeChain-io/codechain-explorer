@@ -67,14 +67,7 @@ export default class CommonDetails extends React.Component<Props, any> {
                     <StatusBadge tx={transaction} />
                 </Col>
             </Row>,
-            <hr key="status-hr" />,
-            !transaction.isPending && [
-                <Row key="invoice-row">
-                    <Col md="3">Invoice</Col>
-                    <Col md="9">{transaction.success ? "Success" : `Fail - ${transaction.errorHint}`}</Col>
-                </Row>,
-                <hr key="invoice-hr" />
-            ]
+            <hr key="status-hr" />
         ];
     }
 }
