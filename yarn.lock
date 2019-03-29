@@ -2143,10 +2143,10 @@ code-point-at@^1.0.0:
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/code-point-at/-/code-point-at-1.1.0.tgz#0d070b4d043a5bea33a2f1a40e2edb3d9a4ccf77"
 
-codechain-indexer-types@^0.9.0:
-  version "0.9.0"
-  resolved "https://registry.yarnpkg.com/codechain-indexer-types/-/codechain-indexer-types-0.9.0.tgz#20a8a233777ffe67b8886766a61ce17f060e31d0"
-  integrity sha512-zQFOFZeSSArA7bbHu0axj5T1G7mygri9Ym6cFa4GxbH8G1vHOFGACnYypOA4yDTcsdavBs3UVbMc32ceVgXWDg==
+codechain-indexer-types@^0.10.0:
+  version "0.10.0"
+  resolved "https://registry.yarnpkg.com/codechain-indexer-types/-/codechain-indexer-types-0.10.0.tgz#265220e002556716d443af34601dc38c4da5e1d7"
+  integrity sha512-pbremRPRKEE73Eb8A4J5LCUzIZZMhA4FGM6NnM8QHDRWcAq/bXKAkQbgJJ6kT0qMP2dE132eGnM85rVnsXML7Q==
   dependencies:
     buffer "^5.2.1"
     lodash "^4.17.10"
