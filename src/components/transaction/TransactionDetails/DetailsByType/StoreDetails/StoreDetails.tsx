@@ -20,6 +20,13 @@ export default class StoreDetails extends React.Component<Props, any> {
                 </Col>
             </Row>,
             <hr key="content-hr" />,
+            <Row key="signature">
+                <Col md="3">Signature</Col>
+                <Col md="9">
+                    <div className="text-area">{transaction.store.signature}</div>
+                </Col>
+            </Row>,
+            <hr key="signature-hr" />,
             <Row key="certifier">
                 <Col md="3">Certifier</Col>
                 <Col md="9">
