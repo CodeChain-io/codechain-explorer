@@ -30,11 +30,11 @@ export default class AssetMintDetails extends React.Component<Props, any> {
                 </Col>
             </Row>,
             <hr key="tracker-hr" />,
-            <Row key="administrator">
-                <Col md="3">Administrator</Col>
-                <Col md="9">{transaction.mintAsset.administrator ? transaction.mintAsset.administrator : "None"}</Col>
+            <Row key="registrar">
+                <Col md="3">Registrar</Col>
+                <Col md="9">{transaction.mintAsset.registrar ? transaction.mintAsset.registrar : "None"}</Col>
             </Row>,
-            <hr key="administrator-hr" />,
+            <hr key="registrar-hr" />,
             <Row key="allowedScriptHashes">
                 <Col md="3">AllowedScriptHashes</Col>
                 <Col md="9">

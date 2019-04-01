@@ -19,11 +19,11 @@ export default class ChangeAssetSchemeDetails extends React.Component<Props, any
                 <Col md="9">{tx.changeAssetScheme.shardId}</Col>
             </Row>,
             <hr key="shardId-hr" />,
-            <Row key="administrator">
-                <Col md="3">Administrator</Col>
-                <Col md="9">{tx.changeAssetScheme.administrator ? tx.changeAssetScheme.administrator : "None"}</Col>
+            <Row key="registrar">
+                <Col md="3">Registrar</Col>
+                <Col md="9">{tx.changeAssetScheme.registrar ? tx.changeAssetScheme.registrar : "None"}</Col>
             </Row>,
-            <hr key="administrator-hr" />,
+            <hr key="registrar-hr" />,
             <Row key="allowedScriptHashes">
                 <Col md="3">AllowedScriptHashes</Col>
                 <Col md="9">
