@@ -1,4 +1,4 @@
-import { U256 } from "codechain-sdk/lib/core/classes";
+import { U64 } from "codechain-sdk/lib/core/classes";
 import * as React from "react";
 import { Col, Row } from "reactstrap";
 
@@ -8,8 +8,8 @@ import "./AccountDetails.scss";
 
 interface OwnProps {
     account: {
-        seq: U256;
-        balance: U256;
+        seq: U64;
+        balance: U64;
     };
 }
 
@@ -29,7 +29,7 @@ const AccountDetails = (prop: OwnProps) => {
                         <Row>
                             <Col md="3">Balance</Col>
                             <Col md="9">
-                                <CommaNumberString text={account.balance.value.div(Math.pow(10, 9)).toString(10)} />
+                                <CommaNumberString text={account.balance.value.toString(10)} />
                                 CCC
                             </Col>
                         </Row>
