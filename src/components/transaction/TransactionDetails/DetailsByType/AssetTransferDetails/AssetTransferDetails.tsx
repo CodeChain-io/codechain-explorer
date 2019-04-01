@@ -1,4 +1,5 @@
 import { TransactionDoc, TransferAssetTransactionDoc } from "codechain-indexer-types";
+import * as _ from "lodash";
 import * as React from "react";
 import Col from "reactstrap/lib/Col";
 import Row from "reactstrap/lib/Row";
@@ -12,6 +13,21 @@ export default class AssetTransferDetails extends React.Component<Props, any> {
         const { tx } = this.props;
         const transaction = tx as TransferAssetTransactionDoc;
         return [
+            <Row key="approvals">
+                <Col md="3">Approvals</Col>
+                <Col md="9">
+                    {transaction.transferAsset.approvals.length !== 0 ? (
+                        <div className="text-area">
+                            {_.map(transaction.transferAsset.approvals, (approval, i) => {
+                                return <div key={`transaction-heder-param-${i}`}>{approval}</div>;
+                            })}
+                        </div>
+                    ) : (
+                        "None"
+                    )}
+                </Col>
+            </Row>,
+            <hr key="approvals-hr" />,
             <Row key="input">
                 <Col md="3"># of Input</Col>
                 <Col md="9">{transaction.transferAsset.inputs.length.toLocaleString()}</Col>

@@ -17,6 +17,11 @@ export default class AssetMintDetails extends React.Component<Props, any> {
         const { tx } = this.props;
         const transaction = tx as MintAssetTransactionDoc;
         return [
+            <Row key="shardId">
+                <Col md="3">ShardId</Col>
+                <Col md="9">{transaction.mintAsset.shardId}</Col>
+            </Row>,
+            <hr key="shardId-hr" />,
             <Row key="tracker">
                 <Col md="3">Tracker</Col>
                 <Col md="9">
@@ -25,6 +30,41 @@ export default class AssetMintDetails extends React.Component<Props, any> {
                 </Col>
             </Row>,
             <hr key="tracker-hr" />,
+            <Row key="administrator">
+                <Col md="3">Administrator</Col>
+                <Col md="9">{transaction.mintAsset.administrator ? transaction.mintAsset.administrator : "None"}</Col>
+            </Row>,
+            <hr key="administrator-hr" />,
+            <Row key="allowedScriptHashes">
+                <Col md="3">AllowedScriptHashes</Col>
+                <Col md="9">
+                    {transaction.mintAsset.allowedScriptHashes.length !== 0 ? (
+                        <div className="text-area">
+                            {_.map(transaction.mintAsset.allowedScriptHashes, (allowedScriptHash, i) => {
+                                return <div key={`transaction-heder-param-${i}`}>{allowedScriptHash}</div>;
+                            })}
+                        </div>
+                    ) : (
+                        "None"
+                    )}
+                </Col>
+            </Row>,
+            <hr key="allowedScriptHashes-hr" />,
+            <Row key="approvals">
+                <Col md="3">Approvals</Col>
+                <Col md="9">
+                    {transaction.mintAsset.approvals.length !== 0 ? (
+                        <div className="text-area">
+                            {_.map(transaction.mintAsset.approvals, (approval, i) => {
+                                return <div key={`transaction-heder-param-${i}`}>{approval}</div>;
+                            })}
+                        </div>
+                    ) : (
+                        "None"
+                    )}
+                </Col>
+            </Row>,
+            <hr key="approvals-hr" />,
             <Row key="lockScriptHash">
                 <Col md="3">LockScriptHash</Col>
                 <Col md="9">{getLockScriptName(transaction.mintAsset.lockScriptHash)}</Col>
@@ -57,11 +97,11 @@ export default class AssetMintDetails extends React.Component<Props, any> {
                 </Col>
             </Row>,
             <hr key="assetType-hr" />,
-            <Row key="quantity">
-                <Col md="3">Quantity</Col>
+            <Row key="supply">
+                <Col md="3">Supply</Col>
                 <Col md="9">{transaction.mintAsset.supply ? transaction.mintAsset.supply.toLocaleString() : 0}</Col>
             </Row>,
-            <hr key="approver-hr" />,
+            <hr key="supply-hr" />,
             <Row key="recipient">
                 <Col md="3">Recipient</Col>
                 <Col md="9">
