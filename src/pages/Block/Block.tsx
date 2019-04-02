@@ -2,18 +2,19 @@ import * as _ from "lodash";
 import * as moment from "moment";
 import * as React from "react";
 import { match } from "react-router";
+import { Link } from "react-router-dom";
 import { Col, Container, Row } from "reactstrap";
-import { Error } from "../../components/error/Error/Error";
-
-import BlockDetails from "../../components/block/BlockDetails/BlockDetails";
-import { RequestBlock } from "../../request";
 
 import { BlockDoc } from "codechain-indexer-types";
-import { Link } from "react-router-dom";
-import TransactionList from "../../components/transaction/TransactionList/TransactionList";
+
+import BlockDetails from "../../components/block/BlockDetails/BlockDetails";
+import { Error } from "../../components/error/Error/Error";
+import BlockTransactionList from "../../components/transaction/BlockTransactionList/BlockTransactionList";
 import CopyButton from "../../components/util/CopyButton/CopyButton";
 import HexString from "../../components/util/HexString/HexString";
+import { RequestBlock } from "../../request";
 import { TransactionTypes } from "../../utils/Transactions";
+
 import "./Block.scss";
 
 interface State {
@@ -123,8 +124,7 @@ class Block extends React.Component<Props, State> {
                         <BlockDetails block={block} />
                         {block.transactionsCount > 0 && (
                             <div key="parcel-transaction" className="mt-large">
-                                {/* FIXME: */}
-                                <TransactionList transactions={[]} totalCount={block.transactionsCount} />
+                                <BlockTransactionList blockId={block.number} totalCount={block.transactionsCount} />
                             </div>
                         )}
                     </Col>
