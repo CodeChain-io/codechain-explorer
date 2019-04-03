@@ -164,7 +164,10 @@ class Asset extends React.Component<Props, State> {
     };
 
     private onTransactionTotalCount = (totalCount: number) => {
-        this.setState({ totalTransactionCount: totalCount });
+        this.setState({
+            totalTransactionCount: totalCount,
+            noMoreTransaction: this.state.transactions.length >= totalCount
+        });
     };
 
     private onAssetScheme = (assetScheme: AssetSchemeDoc) => {

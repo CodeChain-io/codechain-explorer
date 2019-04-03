@@ -166,7 +166,7 @@ class Address extends React.Component<Props, State> {
                 {totalTransactionCount == null && (
                     <RequestTotalTransactionCount
                         address={address}
-                        onTransactionTotalCount={this.onTotalTransactionCount}
+                        onTransactionTotalCount={this.onTransactionTotalCount}
                         onError={this.onError}
                     />
                 )}
@@ -243,11 +243,17 @@ class Address extends React.Component<Props, State> {
             pageForTransaction: this.state.pageForTransaction + 1
         });
     };
-    private onTotalTransactionCount = (totalCount: number) => {
-        this.setState({ totalTransactionCount: totalCount });
+    private onTransactionTotalCount = (totalCount: number) => {
+        this.setState({
+            totalTransactionCount: totalCount,
+            noMoreTransaction: this.state.transactions.length >= totalCount
+        });
     };
     private onTotalBlockCount = (totalCount: number) => {
-        this.setState({ totalBlockCount: totalCount });
+        this.setState({
+            totalBlockCount: totalCount,
+            noMoreBlock: this.state.blocks.length >= totalCount
+        });
     };
     private onAccountNotExist = () => {
         this.setState({ notFound: true });
