@@ -7,7 +7,13 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 import { Col, Popover, PopoverBody, Row } from "reactstrap";
 
-import { TransactionDoc } from "codechain-indexer-types";
+import {
+    ComposeAssetTransactionDoc,
+    DecomposeAssetTransactionDoc,
+    MintAssetTransactionDoc,
+    TransactionDoc,
+    TransferAssetTransactionDoc
+} from "codechain-indexer-types";
 import { Link } from "react-router-dom";
 import * as Metadata from "../../../utils/Metadata";
 import { ImageLoader } from "../../util/ImageLoader/ImageLoader";
@@ -44,150 +50,263 @@ class TransactionSummaryInternal extends React.Component<Props, State> {
     public render() {
         const { transaction } = this.props;
         if (transaction.type === "transferAsset") {
-            return (
-                <div className="transaction-summary">
-                    {this.state.popoverTarget ? (
-                        <Popover placement="right" isOpen={this.state.popoverOpen} target={this.state.popoverTarget}>
-                            <PopoverBody>
-                                <div>
-                                    <p className="mb-0">{this.state.popoverName}</p>
-                                    <p className="mb-0">
-                                        x{this.state.popoverAmount ? this.state.popoverAmount.toLocaleString() : 0}
-                                    </p>
-                                    <p className="mb-0 popover-detail-label">click item to view detail</p>
-                                </div>
-                            </PopoverBody>
-                        </Popover>
-                    ) : null}
-                    <Row>
-                        {transaction.transferAsset.inputs.length > 0
-                            ? [
-                                  <Col key="col-1" lg="3">
-                                      <div className="summary-item">
-                                          <div className="title-panel">
-                                              <h3>Inputs</h3>
-                                          </div>
-                                          <div className="item-panel">
-                                              {_.map(
-                                                  transaction.transferAsset.inputs.slice(0, this.itemLimit),
-                                                  (input, i) =>
-                                                      input.assetScheme == null ? (
-                                                          <>x</>
-                                                      ) : (
-                                                          this.getAssetIcon(
-                                                              Metadata.parseMetadata(input.assetScheme.metadata),
-                                                              input.prevOut.assetType,
-                                                              i,
-                                                              input.prevOut.quantity,
-                                                              "input",
-                                                              _.partial(this.onClickItem, "input", i)
-                                                          )
-                                                      )
-                                              )}
-                                              {transaction.transferAsset.inputs.length > this.itemLimit ? (
-                                                  <p className="mb-0">
-                                                      {transaction.transferAsset.inputs.length - this.itemLimit} more
-                                                      inputs
-                                                  </p>
-                                              ) : null}
-                                          </div>
-                                      </div>
-                                  </Col>,
-                                  <Col key="col-2" lg="3" className="d-flex align-items-center justify-content-center">
-                                      <div className="text-center d-none d-lg-block arrow-icon">
-                                          <FontAwesomeIcon icon={faChevronCircleRight} size="2x" />
-                                      </div>
-                                      <div className="d-lg-none text-center pt-2 pb-2 arrow-icon">
-                                          <FontAwesomeIcon icon={faChevronCircleDown} size="2x" />
-                                      </div>
-                                  </Col>,
-                                  <Col key="col-3" lg="3">
-                                      <div className="summary-item">
-                                          <div className="title-panel">
-                                              <h3>Outputs</h3>
-                                          </div>
-                                          <div className="item-panel">
-                                              {_.map(
-                                                  transaction.transferAsset.outputs.slice(0, this.itemLimit),
-                                                  (output, i) =>
-                                                      output.assetScheme == null ? (
-                                                          <>x</>
-                                                      ) : (
-                                                          this.getAssetIcon(
-                                                              Metadata.parseMetadata(output.assetScheme.metadata),
-                                                              output.assetType,
-                                                              i,
-                                                              output.quantity,
-                                                              "output",
-                                                              _.partial(this.onClickItem, "output", i)
-                                                          )
-                                                      )
-                                              )}
-                                              {transaction.transferAsset.outputs.length > this.itemLimit ? (
-                                                  <p className="mb-0">
-                                                      {transaction.transferAsset.outputs.length - this.itemLimit} more
-                                                      outputs
-                                                  </p>
-                                              ) : null}
-                                          </div>
-                                      </div>
-                                  </Col>
-                              ]
-                            : null}
-                        {transaction.transferAsset.burns.length > 0 ? (
-                            <Col lg="3" className="mt-3 mt-lg-0">
-                                <div className="summary-item">
-                                    <div className="title-panel">
-                                        <h3 className="burn-title">Burns</h3>
-                                    </div>
-                                    <div className="item-panel">
-                                        {_.map(
-                                            transaction.transferAsset.burns,
-                                            (burn, i) =>
-                                                burn.assetScheme == null ? (
-                                                    <>x</>
-                                                ) : (
-                                                    this.getAssetIcon(
-                                                        Metadata.parseMetadata(burn.assetScheme.metadata),
-                                                        burn.prevOut.assetType,
-                                                        i,
-                                                        burn.prevOut.quantity,
-                                                        "burn",
-                                                        _.partial(this.onClickItem, "burn", i)
-                                                    )
-                                                )
-                                        )}
-                                    </div>
-                                </div>
-                            </Col>
-                        ) : null}
-                    </Row>
-                </div>
-            );
+            return this.renderTransferAssetSummary(transaction);
         } else if (transaction.type === "mintAsset") {
-            const metadata = Metadata.parseMetadata(transaction.mintAsset.metadata);
-            return (
-                <div className="transaction-summary">
-                    <Row>
-                        <Col lg="3">
+            return this.renderMintAssetSummary(transaction);
+        } else if (transaction.type === "composeAsset") {
+            return this.renderComposeAssetSummary(transaction);
+        } else if (transaction.type === "decomposeAsset") {
+            return this.renderDecomposeAssetSummary(transaction);
+        }
+        return null;
+    }
+
+    private renderMintAssetSummary = (transaction: MintAssetTransactionDoc) => {
+        const metadata = Metadata.parseMetadata(transaction.mintAsset.metadata);
+        return (
+            <div className="transaction-summary">
+                <Row>
+                    <Col lg="3">
+                        <div className="summary-item">
+                            <div className="title-panel">
+                                <h3>Asset</h3>
+                            </div>
+                            <div className="content-panel text-center">
+                                <div className="content-item d-flex justify-content-center">
+                                    <ImageLoader
+                                        className="mr-3"
+                                        size={42}
+                                        data={transaction.mintAsset.assetType}
+                                        isAssetImage={true}
+                                    />
+                                    <div className="content-title d-inline-block text-left">
+                                        <Link to={`/asset/0x${transaction.mintAsset.assetType}`}>
+                                            {metadata.name || transaction.mintAsset.assetType}
+                                        </Link>
+                                        <div>
+                                            <span>x{transaction.mintAsset.supply}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div className="content-description">{metadata.description}</div>
+                            </div>
+                            <div className="registrar-panel d-flex">
+                                <div>Approver</div>
+                                <div className="registrar-text">
+                                    {transaction.mintAsset.approver ? (
+                                        <Link to={`/addr-platform/${transaction.mintAsset.approver}`}>
+                                            {transaction.mintAsset.approver}
+                                        </Link>
+                                    ) : (
+                                        "None"
+                                    )}
+                                </div>
+                            </div>
+                        </div>
+                    </Col>
+                </Row>
+            </div>
+        );
+    };
+
+    private renderTransferAssetSummary = (transaction: TransferAssetTransactionDoc) => {
+        return (
+            <div className="transaction-summary">
+                {this.state.popoverTarget ? (
+                    <Popover placement="right" isOpen={this.state.popoverOpen} target={this.state.popoverTarget}>
+                        <PopoverBody>
+                            <div>
+                                <p className="mb-0">{this.state.popoverName}</p>
+                                <p className="mb-0">
+                                    x{this.state.popoverAmount ? this.state.popoverAmount.toLocaleString() : 0}
+                                </p>
+                                <p className="mb-0 popover-detail-label">click item to view detail</p>
+                            </div>
+                        </PopoverBody>
+                    </Popover>
+                ) : null}
+                <Row>
+                    {transaction.transferAsset.inputs.length > 0
+                        ? [
+                              <Col key="col-1" lg="3">
+                                  <div className="summary-item">
+                                      <div className="title-panel">
+                                          <h3>Inputs</h3>
+                                      </div>
+                                      <div className="item-panel">
+                                          {_.map(
+                                              transaction.transferAsset.inputs.slice(0, this.itemLimit),
+                                              (input, i) =>
+                                                  input.assetScheme == null ? (
+                                                      <>x</>
+                                                  ) : (
+                                                      this.renderAssetIcon(
+                                                          Metadata.parseMetadata(input.assetScheme.metadata),
+                                                          input.prevOut.assetType,
+                                                          i,
+                                                          input.prevOut.quantity,
+                                                          "input",
+                                                          _.partial(this.onClickItem, "input", i)
+                                                      )
+                                                  )
+                                          )}
+                                          {transaction.transferAsset.inputs.length > this.itemLimit ? (
+                                              <p className="mb-0">
+                                                  {transaction.transferAsset.inputs.length - this.itemLimit} more inputs
+                                              </p>
+                                          ) : null}
+                                      </div>
+                                  </div>
+                              </Col>,
+                              <Col key="col-2" lg="3" className="d-flex align-items-center justify-content-center">
+                                  <div className="text-center d-none d-lg-block arrow-icon">
+                                      <FontAwesomeIcon icon={faChevronCircleRight} size="2x" />
+                                  </div>
+                                  <div className="d-lg-none text-center pt-2 pb-2 arrow-icon">
+                                      <FontAwesomeIcon icon={faChevronCircleDown} size="2x" />
+                                  </div>
+                              </Col>,
+                              <Col key="col-3" lg="3">
+                                  <div className="summary-item">
+                                      <div className="title-panel">
+                                          <h3>Outputs</h3>
+                                      </div>
+                                      <div className="item-panel">
+                                          {_.map(
+                                              transaction.transferAsset.outputs.slice(0, this.itemLimit),
+                                              (output, i) =>
+                                                  output.assetScheme == null ? (
+                                                      <>x</>
+                                                  ) : (
+                                                      this.renderAssetIcon(
+                                                          Metadata.parseMetadata(output.assetScheme.metadata),
+                                                          output.assetType,
+                                                          i,
+                                                          output.quantity,
+                                                          "output",
+                                                          _.partial(this.onClickItem, "output", i)
+                                                      )
+                                                  )
+                                          )}
+                                          {transaction.transferAsset.outputs.length > this.itemLimit ? (
+                                              <p className="mb-0">
+                                                  {transaction.transferAsset.outputs.length - this.itemLimit} more
+                                                  outputs
+                                              </p>
+                                          ) : null}
+                                      </div>
+                                  </div>
+                              </Col>
+                          ]
+                        : null}
+                    {transaction.transferAsset.burns.length > 0 ? (
+                        <Col lg="3" className="mt-3 mt-lg-0">
                             <div className="summary-item">
                                 <div className="title-panel">
-                                    <h3>Asset</h3>
+                                    <h3 className="burn-title">Burns</h3>
+                                </div>
+                                <div className="item-panel">
+                                    {_.map(
+                                        transaction.transferAsset.burns,
+                                        (burn, i) =>
+                                            burn.assetScheme == null ? (
+                                                <>x</>
+                                            ) : (
+                                                this.renderAssetIcon(
+                                                    Metadata.parseMetadata(burn.assetScheme.metadata),
+                                                    burn.prevOut.assetType,
+                                                    i,
+                                                    burn.prevOut.quantity,
+                                                    "burn",
+                                                    _.partial(this.onClickItem, "burn", i)
+                                                )
+                                            )
+                                    )}
+                                </div>
+                            </div>
+                        </Col>
+                    ) : null}
+                </Row>
+            </div>
+        );
+    };
+
+    private renderComposeAssetSummary = (transaction: ComposeAssetTransactionDoc) => {
+        const metadata = Metadata.parseMetadata(transaction.composeAsset.metadata);
+        return (
+            <div className="transaction-summary">
+                {this.state.popoverTarget ? (
+                    <Popover placement="right" isOpen={this.state.popoverOpen} target={this.state.popoverTarget}>
+                        <PopoverBody>
+                            <div>
+                                <p className="mb-0">{this.state.popoverName}</p>
+                                <p className="mb-0">
+                                    x{this.state.popoverAmount ? this.state.popoverAmount.toLocaleString() : 0}
+                                </p>
+                                <p className="mb-0 popover-detail-label">click item to view detail</p>
+                            </div>
+                        </PopoverBody>
+                    </Popover>
+                ) : null}
+                <Row>
+                    {transaction.composeAsset.inputs.length > 0 && [
+                        <Col key="col-1" lg="3">
+                            <div className="summary-item">
+                                <div className="title-panel">
+                                    <h3>Inputs</h3>
+                                </div>
+                                <div className="item-panel">
+                                    {_.map(
+                                        transaction.composeAsset.inputs.slice(0, this.itemLimit),
+                                        (input, i) =>
+                                            input.assetScheme == null ? (
+                                                <>x</>
+                                            ) : (
+                                                this.renderAssetIcon(
+                                                    Metadata.parseMetadata(input.assetScheme.metadata),
+                                                    input.prevOut.assetType,
+                                                    i,
+                                                    input.prevOut.quantity,
+                                                    "input",
+                                                    _.partial(this.onClickItem, "input", i)
+                                                )
+                                            )
+                                    )}
+                                    {transaction.composeAsset.inputs.length > this.itemLimit ? (
+                                        <p className="mb-0">
+                                            {transaction.composeAsset.inputs.length - this.itemLimit} more inputs
+                                        </p>
+                                    ) : null}
+                                </div>
+                            </div>
+                        </Col>,
+                        <Col key="col-2" lg="3" className="d-flex align-items-center justify-content-center">
+                            <div className="text-center d-none d-lg-block arrow-icon">
+                                <FontAwesomeIcon icon={faChevronCircleRight} size="2x" />
+                            </div>
+                            <div className="d-lg-none text-center pt-2 pb-2 arrow-icon">
+                                <FontAwesomeIcon icon={faChevronCircleDown} size="2x" />
+                            </div>
+                        </Col>,
+                        <Col key="col-3" lg="3">
+                            <div className="summary-item">
+                                <div className="title-panel">
+                                    <h3>Output</h3>
                                 </div>
                                 <div className="content-panel text-center">
                                     <div className="content-item d-flex justify-content-center">
                                         <ImageLoader
                                             className="mr-3"
                                             size={42}
-                                            data={transaction.mintAsset.assetType}
+                                            data={transaction.composeAsset.assetType}
                                             isAssetImage={true}
                                         />
                                         <div className="content-title d-inline-block text-left">
-                                            <Link to={`/asset/0x${transaction.mintAsset.assetType}`}>
-                                                {metadata.name || transaction.mintAsset.assetType}
+                                            <Link to={`/asset/0x${transaction.composeAsset.assetType}`}>
+                                                {metadata.name || transaction.composeAsset.assetType}
                                             </Link>
                                             <div>
-                                                <span>x{transaction.mintAsset.supply}</span>
+                                                <span>x{transaction.composeAsset.supply}</span>
                                             </div>
                                         </div>
                                     </div>
@@ -196,9 +315,9 @@ class TransactionSummaryInternal extends React.Component<Props, State> {
                                 <div className="registrar-panel d-flex">
                                     <div>Approver</div>
                                     <div className="registrar-text">
-                                        {transaction.mintAsset.approver ? (
-                                            <Link to={`/addr-platform/${transaction.mintAsset.approver}`}>
-                                                {transaction.mintAsset.approver}
+                                        {transaction.composeAsset.approver ? (
+                                            <Link to={`/addr-platform/${transaction.composeAsset.approver}`}>
+                                                {transaction.composeAsset.approver}
                                             </Link>
                                         ) : (
                                             "None"
@@ -207,221 +326,123 @@ class TransactionSummaryInternal extends React.Component<Props, State> {
                                 </div>
                             </div>
                         </Col>
-                    </Row>
-                </div>
-            );
-        } else if (transaction.type === "composeAsset") {
-            const metadata = Metadata.parseMetadata(transaction.composeAsset.metadata);
-            return (
-                <div className="transaction-summary">
-                    {this.state.popoverTarget ? (
-                        <Popover placement="right" isOpen={this.state.popoverOpen} target={this.state.popoverTarget}>
-                            <PopoverBody>
-                                <div>
-                                    <p className="mb-0">{this.state.popoverName}</p>
-                                    <p className="mb-0">
-                                        x{this.state.popoverAmount ? this.state.popoverAmount.toLocaleString() : 0}
-                                    </p>
-                                    <p className="mb-0 popover-detail-label">click item to view detail</p>
-                                </div>
-                            </PopoverBody>
-                        </Popover>
-                    ) : null}
-                    <Row>
-                        {transaction.composeAsset.inputs.length > 0 && [
-                            <Col key="col-1" lg="3">
-                                <div className="summary-item">
-                                    <div className="title-panel">
-                                        <h3>Inputs</h3>
-                                    </div>
-                                    <div className="item-panel">
-                                        {_.map(
-                                            transaction.composeAsset.inputs.slice(0, this.itemLimit),
-                                            (input, i) =>
-                                                input.assetScheme == null ? (
-                                                    <>x</>
-                                                ) : (
-                                                    this.getAssetIcon(
-                                                        Metadata.parseMetadata(input.assetScheme.metadata),
-                                                        input.prevOut.assetType,
-                                                        i,
-                                                        input.prevOut.quantity,
-                                                        "input",
-                                                        _.partial(this.onClickItem, "input", i)
-                                                    )
-                                                )
-                                        )}
-                                        {transaction.composeAsset.inputs.length > this.itemLimit ? (
-                                            <p className="mb-0">
-                                                {transaction.composeAsset.inputs.length - this.itemLimit} more inputs
-                                            </p>
-                                        ) : null}
-                                    </div>
-                                </div>
-                            </Col>,
-                            <Col key="col-2" lg="3" className="d-flex align-items-center justify-content-center">
-                                <div className="text-center d-none d-lg-block arrow-icon">
-                                    <FontAwesomeIcon icon={faChevronCircleRight} size="2x" />
-                                </div>
-                                <div className="d-lg-none text-center pt-2 pb-2 arrow-icon">
-                                    <FontAwesomeIcon icon={faChevronCircleDown} size="2x" />
-                                </div>
-                            </Col>,
-                            <Col key="col-3" lg="3">
-                                <div className="summary-item">
-                                    <div className="title-panel">
-                                        <h3>Output</h3>
-                                    </div>
-                                    <div className="content-panel text-center">
-                                        <div className="content-item d-flex justify-content-center">
-                                            <ImageLoader
-                                                className="mr-3"
-                                                size={42}
-                                                data={transaction.composeAsset.assetType}
-                                                isAssetImage={true}
-                                            />
-                                            <div className="content-title d-inline-block text-left">
-                                                <Link to={`/asset/0x${transaction.composeAsset.assetType}`}>
-                                                    {metadata.name || transaction.composeAsset.assetType}
-                                                </Link>
-                                                <div>
-                                                    <span>x{transaction.composeAsset.supply}</span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div className="content-description">{metadata.description}</div>
-                                    </div>
-                                    <div className="registrar-panel d-flex">
-                                        <div>Approver</div>
-                                        <div className="registrar-text">
-                                            {transaction.composeAsset.approver ? (
-                                                <Link to={`/addr-platform/${transaction.composeAsset.approver}`}>
-                                                    {transaction.composeAsset.approver}
-                                                </Link>
-                                            ) : (
-                                                "None"
-                                            )}
-                                        </div>
-                                    </div>
-                                </div>
-                            </Col>
-                        ]}
-                    </Row>
-                </div>
-            );
-        } else if (transaction.type === "decomposeAsset") {
-            const metadata =
-                transaction.decomposeAsset.input.assetScheme == null
-                    ? { name: "", description: "" }
-                    : Metadata.parseMetadata(transaction.decomposeAsset.input.assetScheme.metadata);
-            return (
-                <div className="transaction-summary">
-                    {this.state.popoverTarget ? (
-                        <Popover placement="right" isOpen={this.state.popoverOpen} target={this.state.popoverTarget}>
-                            <PopoverBody>
-                                <div>
-                                    <p className="mb-0">{this.state.popoverName}</p>
-                                    <p className="mb-0">
-                                        x{this.state.popoverAmount ? this.state.popoverAmount.toLocaleString() : 0}
-                                    </p>
-                                    <p className="mb-0 popover-detail-label">click item to view detail</p>
-                                </div>
-                            </PopoverBody>
-                        </Popover>
-                    ) : null}
-                    <Row>
-                        <Col key="col-1" lg="3">
-                            <div className="summary-item">
-                                <div className="title-panel">
-                                    <h3>Input</h3>
-                                </div>
-                                <div className="content-panel text-center">
-                                    <div className="content-item d-flex justify-content-center">
-                                        <ImageLoader
-                                            className="mr-3"
-                                            size={42}
-                                            data={transaction.decomposeAsset.input.prevOut.assetType}
-                                            isAssetImage={true}
-                                        />
-                                        <div className="content-title d-inline-block text-left">
-                                            <Link to={`/asset/0x${transaction.decomposeAsset.input.prevOut.assetType}`}>
-                                                {metadata.name || transaction.decomposeAsset.input.prevOut.assetType}
-                                            </Link>
-                                            <div>
-                                                <span>x{transaction.decomposeAsset.input.prevOut.quantity}</span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div className="content-description">{metadata.description}</div>
-                                </div>
-                                {transaction.decomposeAsset.input.assetScheme && (
-                                    <div className="registrar-panel d-flex">
-                                        <div>Approver</div>
-                                        <div className="registrar-text">
-                                            {transaction.decomposeAsset.input.assetScheme.approver ? (
-                                                <Link
-                                                    to={`/addr-platform/${
-                                                        transaction.decomposeAsset.input.assetScheme.approver
-                                                    }`}
-                                                >
-                                                    {transaction.decomposeAsset.input.assetScheme.approver}
-                                                </Link>
-                                            ) : (
-                                                "None"
-                                            )}
-                                        </div>
-                                    </div>
-                                )}
-                            </div>
-                        </Col>
-                        ,
-                        <Col key="col-2" lg="3" className="d-flex align-items-center justify-content-center">
-                            <div className="text-center d-none d-lg-block arrow-icon">
-                                <FontAwesomeIcon icon={faChevronCircleRight} size="2x" />
-                            </div>
-                            <div className="d-lg-none text-center pt-2 pb-2 arrow-icon">
-                                <FontAwesomeIcon icon={faChevronCircleDown} size="2x" />
-                            </div>
-                        </Col>
-                        ,
-                        <Col key="col-3" lg="3">
-                            <div className="summary-item">
-                                <div className="title-panel">
-                                    <h3>Outputs</h3>
-                                </div>
-                                <div className="item-panel">
-                                    {_.map(
-                                        transaction.decomposeAsset.outputs.slice(0, this.itemLimit),
-                                        (output, i) =>
-                                            output.assetScheme == null ? (
-                                                <>x</>
-                                            ) : (
-                                                this.getAssetIcon(
-                                                    Metadata.parseMetadata(output.assetScheme.metadata),
-                                                    output.assetType,
-                                                    i,
-                                                    output.quantity,
-                                                    "output",
-                                                    _.partial(this.onClickItem, "output", i)
-                                                )
-                                            )
-                                    )}
-                                    {transaction.decomposeAsset.outputs.length > this.itemLimit ? (
-                                        <p className="mb-0">
-                                            {transaction.decomposeAsset.outputs.length - this.itemLimit} more outputs
-                                        </p>
-                                    ) : null}
-                                </div>
-                            </div>
-                        </Col>
-                    </Row>
-                </div>
-            );
-        }
-        return null;
-    }
+                    ]}
+                </Row>
+            </div>
+        );
+    };
 
-    private getAssetIcon = (
+    private renderDecomposeAssetSummary = (transaction: DecomposeAssetTransactionDoc) => {
+        const metadata =
+            transaction.decomposeAsset.input.assetScheme == null
+                ? { name: "", description: "" }
+                : Metadata.parseMetadata(transaction.decomposeAsset.input.assetScheme.metadata);
+        return (
+            <div className="transaction-summary">
+                {this.state.popoverTarget ? (
+                    <Popover placement="right" isOpen={this.state.popoverOpen} target={this.state.popoverTarget}>
+                        <PopoverBody>
+                            <div>
+                                <p className="mb-0">{this.state.popoverName}</p>
+                                <p className="mb-0">
+                                    x{this.state.popoverAmount ? this.state.popoverAmount.toLocaleString() : 0}
+                                </p>
+                                <p className="mb-0 popover-detail-label">click item to view detail</p>
+                            </div>
+                        </PopoverBody>
+                    </Popover>
+                ) : null}
+                <Row>
+                    <Col key="col-1" lg="3">
+                        <div className="summary-item">
+                            <div className="title-panel">
+                                <h3>Input</h3>
+                            </div>
+                            <div className="content-panel text-center">
+                                <div className="content-item d-flex justify-content-center">
+                                    <ImageLoader
+                                        className="mr-3"
+                                        size={42}
+                                        data={transaction.decomposeAsset.input.prevOut.assetType}
+                                        isAssetImage={true}
+                                    />
+                                    <div className="content-title d-inline-block text-left">
+                                        <Link to={`/asset/0x${transaction.decomposeAsset.input.prevOut.assetType}`}>
+                                            {metadata.name || transaction.decomposeAsset.input.prevOut.assetType}
+                                        </Link>
+                                        <div>
+                                            <span>x{transaction.decomposeAsset.input.prevOut.quantity}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div className="content-description">{metadata.description}</div>
+                            </div>
+                            {transaction.decomposeAsset.input.assetScheme && (
+                                <div className="registrar-panel d-flex">
+                                    <div>Approver</div>
+                                    <div className="registrar-text">
+                                        {transaction.decomposeAsset.input.assetScheme.approver ? (
+                                            <Link
+                                                to={`/addr-platform/${
+                                                    transaction.decomposeAsset.input.assetScheme.approver
+                                                }`}
+                                            >
+                                                {transaction.decomposeAsset.input.assetScheme.approver}
+                                            </Link>
+                                        ) : (
+                                            "None"
+                                        )}
+                                    </div>
+                                </div>
+                            )}
+                        </div>
+                    </Col>
+                    ,
+                    <Col key="col-2" lg="3" className="d-flex align-items-center justify-content-center">
+                        <div className="text-center d-none d-lg-block arrow-icon">
+                            <FontAwesomeIcon icon={faChevronCircleRight} size="2x" />
+                        </div>
+                        <div className="d-lg-none text-center pt-2 pb-2 arrow-icon">
+                            <FontAwesomeIcon icon={faChevronCircleDown} size="2x" />
+                        </div>
+                    </Col>
+                    ,
+                    <Col key="col-3" lg="3">
+                        <div className="summary-item">
+                            <div className="title-panel">
+                                <h3>Outputs</h3>
+                            </div>
+                            <div className="item-panel">
+                                {_.map(
+                                    transaction.decomposeAsset.outputs.slice(0, this.itemLimit),
+                                    (output, i) =>
+                                        output.assetScheme == null ? (
+                                            <>x</>
+                                        ) : (
+                                            this.renderAssetIcon(
+                                                Metadata.parseMetadata(output.assetScheme.metadata),
+                                                output.assetType,
+                                                i,
+                                                output.quantity,
+                                                "output",
+                                                _.partial(this.onClickItem, "output", i)
+                                            )
+                                        )
+                                )}
+                                {transaction.decomposeAsset.outputs.length > this.itemLimit ? (
+                                    <p className="mb-0">
+                                        {transaction.decomposeAsset.outputs.length - this.itemLimit} more outputs
+                                    </p>
+                                ) : null}
+                            </div>
+                        </div>
+                    </Col>
+                </Row>
+            </div>
+        );
+    };
+
+    private renderAssetIcon = (
         metadata: Metadata.Metadata,
         assetType: string,
         index: number,
