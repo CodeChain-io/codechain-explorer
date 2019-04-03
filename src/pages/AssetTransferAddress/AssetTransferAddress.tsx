@@ -186,7 +186,11 @@ class AssetTransferAddress extends React.Component<Props, State> {
     };
 
     private onTransactionTotalCount = (totalCount: number) => {
-        this.setState({ totalTransactionCount: totalCount, requestTotalTransactionCount: false });
+        this.setState({
+            totalTransactionCount: totalCount,
+            requestTotalTransactionCount: false,
+            noMoreTransaction: this.state.transactions.length >= totalCount
+        });
     };
 
     private onAggsUTXO = (aggsUTXO: AggsUTXODoc[]) => {

@@ -88,7 +88,7 @@ class PendingTransactions extends React.Component<Props, State> {
         if (totalTransactionCount === undefined) {
             return (
                 <RequestTotalPendingTransactionCount
-                    onTransactionTotalCount={this.onTotalTransactionCount}
+                    onTransactionTotalCount={this.onTransactionTotalCount}
                     onError={this.onError}
                 />
             );
@@ -274,7 +274,7 @@ class PendingTransactions extends React.Component<Props, State> {
         });
     };
 
-    private onTotalTransactionCount = (totalTransactionCount: number) => {
+    private onTransactionTotalCount = (totalTransactionCount: number) => {
         this.setState({ totalTransactionCount });
     };
 

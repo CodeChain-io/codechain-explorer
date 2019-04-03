@@ -96,7 +96,7 @@ class Transactions extends React.Component<Props, State> {
         if (totalTransactionCount === undefined) {
             return (
                 <RequestTotalTransactionCount
-                    onTransactionTotalCount={this.onTotalTransactionCount}
+                    onTransactionTotalCount={this.onTransactionTotalCount}
                     onError={this.onError}
                 />
             );
@@ -346,7 +346,7 @@ class Transactions extends React.Component<Props, State> {
         });
     };
 
-    private onTotalTransactionCount = (totalTransactionCount: number) => {
+    private onTransactionTotalCount = (totalTransactionCount: number) => {
         this.setState({ totalTransactionCount });
     };
 
