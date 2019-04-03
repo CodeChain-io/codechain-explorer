@@ -27,7 +27,7 @@
     "case-sensitive-paths-webpack-plugin": "^2.1.2",
     "chalk": "1.1.3",
     "codechain-indexer-types": "^0.10.0",
-    "codechain-sdk": "https://github.com/CodeChain-io/codechain-sdk-js#eee5d450b69e128bda39ac33820c7b43a6e4e13a",
+    "codechain-sdk": "^1.0.1",
     "concurrently": "^3.6.0",
     "cryptiles": "^4.1.2",
     "css-loader": "0.28.7",
