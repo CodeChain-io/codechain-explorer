@@ -1,6 +1,7 @@
 import * as React from "react";
 import { Col, Container, Row } from "reactstrap";
 
+import ExplorerInfo from "src/components/status/ExplorerInfo/ExplorerInfo";
 import ChainInfo from "../../components/status/ChainInfo/ChainInfo";
 import NodeStatus from "../../components/status/NodeStatus/NodeStatus";
 import SyncStatus from "../../components/status/SyncStatus/SyncStatus";
@@ -103,6 +104,9 @@ class Status extends React.Component<{}, State> {
                             {requestChainInfo ? (
                                 <RequestCodeChainStatus onCodeChain={this.onChainInfo} onError={this.onError} />
                             ) : null}
+                            <div className="mt-large">
+                                <ExplorerInfo />
+                            </div>
                         </Col>
                         <Col lg="6">
                             {transactions ? (
