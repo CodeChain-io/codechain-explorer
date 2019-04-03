@@ -1,13 +1,13 @@
 import { faAngleDoubleLeft, faAngleDoubleRight, faAngleLeft, faAngleRight } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import * as _ from "lodash";
-import * as moment from "moment";
 import * as React from "react";
 import { Redirect } from "react-router";
 import { Container } from "reactstrap";
 
 import { TransactionDoc } from "codechain-indexer-types";
 import { Link } from "react-router-dom";
+import { getUnixTimeLocaleString } from "src/utils/Time";
 import DataTable from "../../components/util/DataTable/DataTable";
 import HexString from "../../components/util/HexString/HexString";
 import { TypeBadge } from "../../components/util/TypeBadge/TypeBadge";
@@ -220,7 +220,7 @@ class PendingTransactions extends React.Component<Props, State> {
                                                     </Link>
                                                 </td>
                                                 <td className="text-right">
-                                                    {moment.unix(transaction.pendingTimestamp!).fromNow()}
+                                                    {getUnixTimeLocaleString(transaction.pendingTimestamp!)}
                                                 </td>
                                             </tr>
                                         );
