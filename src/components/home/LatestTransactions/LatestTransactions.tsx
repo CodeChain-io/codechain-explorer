@@ -1,9 +1,9 @@
 import * as _ from "lodash";
-import * as moment from "moment";
 import * as React from "react";
 
 import { TransactionDoc } from "codechain-indexer-types";
 import { Link } from "react-router-dom";
+import { getUnixTimeLocaleString } from "src/utils/Time";
 import DataTable from "../../util/DataTable/DataTable";
 import HexString from "../../util/HexString/HexString";
 import { TypeBadge } from "../../util/TypeBadge/TypeBadge";
@@ -50,7 +50,7 @@ const LatestTransactions = (props: Props) => {
                                     <td>
                                         <Link to={`/addr-platform/${transaction.signer}`}>{transaction.signer}</Link>
                                     </td>
-                                    <td className="text-right">{moment.unix(transaction.timestamp!).fromNow()}</td>
+                                    <td className="text-right">{getUnixTimeLocaleString(transaction.timestamp!)}</td>
                                 </tr>
                             );
                         })}

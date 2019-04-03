@@ -2,11 +2,11 @@ import { faAngleDoubleLeft, faAngleDoubleRight, faAngleLeft, faAngleRight } from
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { BlockDoc } from "codechain-indexer-types";
 import * as _ from "lodash";
-import * as moment from "moment";
 import * as React from "react";
 import { Redirect } from "react-router";
 import { Link } from "react-router-dom";
 import { Container } from "reactstrap";
+import { getUnixTimeLocaleString } from "src/utils/Time";
 import { CommaNumberString } from "../../components/util/CommaNumberString/CommaNumberString";
 import DataTable from "../../components/util/DataTable/DataTable";
 import { RequestBlocks, RequestTotalBlockCount } from "../../request";
@@ -210,7 +210,7 @@ class Blocks extends React.Component<Props, State> {
                                                 </td>
                                                 <td className="text-right">
                                                     {block.timestamp
-                                                        ? moment.unix(block.timestamp).fromNow()
+                                                        ? getUnixTimeLocaleString(block.timestamp)
                                                         : "Genesis"}
                                                 </td>
                                             </tr>

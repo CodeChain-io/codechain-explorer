@@ -1,9 +1,9 @@
 import * as _ from "lodash";
-import * as moment from "moment";
 import * as React from "react";
 import { Link } from "react-router-dom";
 
 import { BlockDoc } from "codechain-indexer-types";
+import { getUnixTimeLocaleString } from "src/utils/Time";
 import { CommaNumberString } from "../../util/CommaNumberString/CommaNumberString";
 import DataTable from "../../util/DataTable/DataTable";
 import "./LatestBlocks.scss";
@@ -48,7 +48,7 @@ const LatestBlocks = (props: Props) => {
                                         CCC
                                     </td>
                                     <td className="text-right">
-                                        {block.timestamp ? moment.unix(block.timestamp).fromNow() : "Genesis"}
+                                        {block.timestamp ? getUnixTimeLocaleString(block.timestamp) : "Genesis"}
                                     </td>
                                 </tr>
                             );
