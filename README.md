@@ -69,3 +69,4 @@ Build CodeChain-explorer with the following script. You can get optimized and ug
 | REACT_APP_SERVER_HOST         | http://127.0.0.1:8081 |         |                                 |
 | REACT_APP_URL                 |                       |         | This is used for the open graph |
 | REACT_APP_GOOGLE_ANALYTICS_ID |                       |         |                                 |
+| PUBLIC_URL                    |                       |         |                                 |
