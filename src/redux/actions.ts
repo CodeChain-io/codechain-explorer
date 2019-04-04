@@ -33,6 +33,8 @@ interface AppReducer {
             updatedAt: number;
         };
     };
+    serverTimeOffset?: number;
+    waitingServerTimeResponse: boolean;
 }
 
 const initialState: AppReducer = {
@@ -40,7 +42,9 @@ const initialState: AppReducer = {
     blocksByNumber: {},
     blocksByHash: {},
     assetSchemeByAssetType: {},
-    transactionByHash: {}
+    transactionByHash: {},
+    serverTimeOffset: undefined,
+    waitingServerTimeResponse: false
 };
 
 interface BestBlockNumberAction {
@@ -66,7 +70,23 @@ interface CacheAssetSchemeAction {
     };
 }
 
-type Action = BestBlockNumberAction | CacheAssetSchemeAction | CacheBlockAction | CacheTransactionAction;
+interface ServerTimeResponseAction {
+    type: "SERVER_TIME_RESPONSE_ACTION";
+    data: number;
+}
+
+interface ServerTimeRequestAction {
+    type: "SERVER_TIME_REQUEST_ACTION";
+    data: boolean;
+}
+
+type Action =
+    | BestBlockNumberAction
+    | CacheAssetSchemeAction
+    | CacheBlockAction
+    | CacheTransactionAction
+    | ServerTimeResponseAction
+    | ServerTimeRequestAction;
 
 const appReducer = (state = initialState, action: Action) => {
     if (action.type === "BEST_BLOCK_NUMBER_ACTION") {
@@ -93,6 +113,10 @@ const appReducer = (state = initialState, action: Action) => {
             [assetType]: { data: assetScheme, updatedAt: getCurrentTimestamp() }
         };
         return { ...state, assetSchemeByAssetType };
+    } else if (action.type === "SERVER_TIME_RESPONSE_ACTION") {
+        return { ...state, serverTimeOffset: action.data, waitingServerTimeResponse: false };
+    } else if (action.type === "SERVER_TIME_REQUEST_ACTION") {
+        return { ...state, waitingServerTimeResponse: action.data };
     } else {
         return state;
     }
