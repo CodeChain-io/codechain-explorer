@@ -1,10 +1,11 @@
+import { AssetSchemeDoc } from "codechain-indexer-types";
 import * as React from "react";
 
 import { ImageLoader } from "src/components/util/ImageLoader/ImageLoader";
-import * as Metadata from "src/utils/Metadata";
+import { RequestAssetScheme } from "src/request";
+import * as Metadata from "../../../utils/Metadata";
 
 interface OwnProps {
-    metadata: Metadata.Metadata;
     assetType: string;
     index: number;
     amount: string;
@@ -14,13 +15,30 @@ interface OwnProps {
     onMouseLeave: () => void;
 }
 
-class AssetIcon extends React.Component<OwnProps> {
+interface State {
+    name?: string;
+    err?: string;
+}
+
+class AssetIcon extends React.Component<OwnProps, State> {
     constructor(props: OwnProps) {
         super(props);
+        this.state = {};
     }
 
     public render() {
+        const { name, err } = this.state;
         const { index, assetType, type } = this.props;
+        if (name == null && err == null) {
+            return (
+                <RequestAssetScheme
+                    assetType={assetType}
+                    onAssetScheme={this.onAssetScheme}
+                    onAssetSchemeNotExist={this.onAssetSchemeNotExist}
+                    onError={this.onError}
+                />
+            );
+        }
         const { onClick, onMouseLeave } = this.props;
         const targetId = `icon-${index}-${assetType}-${type}`;
         return (
@@ -37,11 +55,33 @@ class AssetIcon extends React.Component<OwnProps> {
         );
     }
 
-    private onMouseEnter() {
-        const { index, assetType, type, metadata, amount } = this.props;
-        const targetId = `icon-${index}-${assetType}-${type}`;
-        this.props.onMouseEnter(targetId, metadata.name || `0x${assetType}`, amount);
-    }
+    private onMouseEnter = () => {
+        const { index, assetType, type, amount } = this.props;
+        const { name } = this.state;
+        if (name) {
+            const targetId = `icon-${index}-${assetType}-${type}`;
+            this.props.onMouseEnter(targetId, name, amount);
+        }
+    };
+
+    private onAssetScheme = (assetScheme: AssetSchemeDoc) => {
+        const { name = `0x${this.props.assetType}` } = Metadata.parseMetadata(assetScheme.metadata);
+        this.setState({
+            name
+        });
+    };
+
+    private onAssetSchemeNotExist = () => {
+        this.setState({
+            name: "Invalid AssetType"
+        });
+    };
+
+    private onError = () => {
+        this.setState({
+            err: ""
+        });
+    };
 }
 
 export default AssetIcon;
