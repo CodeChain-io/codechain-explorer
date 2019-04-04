@@ -17,6 +17,7 @@ import {
 import { Link } from "react-router-dom";
 import * as Metadata from "../../../utils/Metadata";
 import { ImageLoader } from "../../util/ImageLoader/ImageLoader";
+import AssetIcon from "./AssetIcon";
 import "./TransactionSummary.scss";
 
 interface OwnProps {
@@ -140,14 +141,16 @@ class TransactionSummaryInternal extends React.Component<Props, State> {
                                                   input.assetScheme == null ? (
                                                       <>x</>
                                                   ) : (
-                                                      this.renderAssetIcon(
-                                                          Metadata.parseMetadata(input.assetScheme.metadata),
-                                                          input.prevOut.assetType,
-                                                          i,
-                                                          input.prevOut.quantity,
-                                                          "input",
-                                                          _.partial(this.onClickItem, "input", i)
-                                                      )
+                                                      <AssetIcon
+                                                          metadata={Metadata.parseMetadata(input.assetScheme.metadata)}
+                                                          assetType={input.prevOut.assetType}
+                                                          index={i}
+                                                          amount={input.prevOut.quantity}
+                                                          type={"input"}
+                                                          onClick={_.partial(this.onClickItem, "input", i)}
+                                                          onMouseEnter={this.onMouseEnter}
+                                                          onMouseLeave={this.onMouseLeave}
+                                                      />
                                                   )
                                           )}
                                           {transaction.transferAsset.inputs.length > this.itemLimit ? (
@@ -178,14 +181,16 @@ class TransactionSummaryInternal extends React.Component<Props, State> {
                                                   output.assetScheme == null ? (
                                                       <>x</>
                                                   ) : (
-                                                      this.renderAssetIcon(
-                                                          Metadata.parseMetadata(output.assetScheme.metadata),
-                                                          output.assetType,
-                                                          i,
-                                                          output.quantity,
-                                                          "output",
-                                                          _.partial(this.onClickItem, "output", i)
-                                                      )
+                                                      <AssetIcon
+                                                          metadata={Metadata.parseMetadata(output.assetScheme.metadata)}
+                                                          assetType={output.assetType}
+                                                          index={i}
+                                                          amount={output.quantity}
+                                                          type={"output"}
+                                                          onClick={_.partial(this.onClickItem, "output", i)}
+                                                          onMouseEnter={this.onMouseEnter}
+                                                          onMouseLeave={this.onMouseLeave}
+                                                      />
                                                   )
                                           )}
                                           {transaction.transferAsset.outputs.length > this.itemLimit ? (
@@ -212,14 +217,16 @@ class TransactionSummaryInternal extends React.Component<Props, State> {
                                             burn.assetScheme == null ? (
                                                 <>x</>
                                             ) : (
-                                                this.renderAssetIcon(
-                                                    Metadata.parseMetadata(burn.assetScheme.metadata),
-                                                    burn.prevOut.assetType,
-                                                    i,
-                                                    burn.prevOut.quantity,
-                                                    "burn",
-                                                    _.partial(this.onClickItem, "burn", i)
-                                                )
+                                                <AssetIcon
+                                                    metadata={Metadata.parseMetadata(burn.assetScheme.metadata)}
+                                                    assetType={burn.prevOut.assetType}
+                                                    index={i}
+                                                    amount={burn.prevOut.quantity}
+                                                    type={"burn"}
+                                                    onClick={_.partial(this.onClickItem, "burn", i)}
+                                                    onMouseEnter={this.onMouseEnter}
+                                                    onMouseLeave={this.onMouseLeave}
+                                                />
                                             )
                                     )}
                                 </div>
@@ -262,14 +269,16 @@ class TransactionSummaryInternal extends React.Component<Props, State> {
                                             input.assetScheme == null ? (
                                                 <>x</>
                                             ) : (
-                                                this.renderAssetIcon(
-                                                    Metadata.parseMetadata(input.assetScheme.metadata),
-                                                    input.prevOut.assetType,
-                                                    i,
-                                                    input.prevOut.quantity,
-                                                    "input",
-                                                    _.partial(this.onClickItem, "input", i)
-                                                )
+                                                <AssetIcon
+                                                    metadata={Metadata.parseMetadata(input.assetScheme.metadata)}
+                                                    assetType={input.prevOut.assetType}
+                                                    index={i}
+                                                    amount={input.prevOut.quantity}
+                                                    type={"input"}
+                                                    onClick={_.partial(this.onClickItem, "input", i)}
+                                                    onMouseEnter={this.onMouseEnter}
+                                                    onMouseLeave={this.onMouseLeave}
+                                                />
                                             )
                                     )}
                                     {transaction.composeAsset.inputs.length > this.itemLimit ? (
@@ -419,14 +428,16 @@ class TransactionSummaryInternal extends React.Component<Props, State> {
                                         output.assetScheme == null ? (
                                             <>x</>
                                         ) : (
-                                            this.renderAssetIcon(
-                                                Metadata.parseMetadata(output.assetScheme.metadata),
-                                                output.assetType,
-                                                i,
-                                                output.quantity,
-                                                "output",
-                                                _.partial(this.onClickItem, "output", i)
-                                            )
+                                            <AssetIcon
+                                                metadata={Metadata.parseMetadata(output.assetScheme.metadata)}
+                                                assetType={output.assetType}
+                                                index={i}
+                                                amount={output.quantity}
+                                                type="output"
+                                                onClick={_.partial(this.onClickItem, "output", i)}
+                                                onMouseEnter={this.onMouseEnter}
+                                                onMouseLeave={this.onMouseLeave}
+                                            />
                                         )
                                 )}
                                 {transaction.decomposeAsset.outputs.length > this.itemLimit ? (
@@ -438,29 +449,6 @@ class TransactionSummaryInternal extends React.Component<Props, State> {
                         </div>
                     </Col>
                 </Row>
-            </div>
-        );
-    };
-
-    private renderAssetIcon = (
-        metadata: Metadata.Metadata,
-        assetType: string,
-        index: number,
-        amount: string,
-        type: string,
-        onClick: () => void
-    ) => {
-        const targetId = `icon-${index}-${assetType}-${type}`;
-        return (
-            <div
-                key={targetId}
-                className="d-inline-block icon"
-                id={targetId}
-                onClick={onClick}
-                onMouseLeave={this.onMouseLeave}
-                onMouseEnter={_.partial(this.onMouseEnter, targetId, metadata.name || `0x${assetType}`, amount)}
-            >
-                <ImageLoader size={42} data={assetType} isAssetImage={true} />
             </div>
         );
     };
