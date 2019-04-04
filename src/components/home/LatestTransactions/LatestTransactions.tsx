@@ -2,19 +2,31 @@ import * as _ from "lodash";
 import * as React from "react";
 
 import { TransactionDoc } from "codechain-indexer-types";
+import { connect } from "react-redux";
 import { Link } from "react-router-dom";
+import { RootState } from "src/redux/actions";
+import RequestServerTime from "src/request/RequestServerTime";
 import { getUnixTimeLocaleString } from "src/utils/Time";
 import DataTable from "../../util/DataTable/DataTable";
 import HexString from "../../util/HexString/HexString";
 import { TypeBadge } from "../../util/TypeBadge/TypeBadge";
 import "./LatestTransactions.scss";
 
-interface Props {
+interface OwnProps {
     transactions: TransactionDoc[];
 }
 
+interface StateProps {
+    serverTimeOffset?: number;
+}
+type Props = OwnProps & StateProps;
+
 const LatestTransactions = (props: Props) => {
-    const { transactions } = props;
+    const { transactions, serverTimeOffset } = props;
+
+    if (serverTimeOffset === undefined) {
+        return <RequestServerTime />;
+    }
     return (
         <div className="latest-transactions">
             <h1>Latest Transactions</h1>
@@ -50,7 +62,9 @@ const LatestTransactions = (props: Props) => {
                                     <td>
                                         <Link to={`/addr-platform/${transaction.signer}`}>{transaction.signer}</Link>
                                     </td>
-                                    <td className="text-right">{getUnixTimeLocaleString(transaction.timestamp!)}</td>
+                                    <td className="text-right">
+                                        {getUnixTimeLocaleString(transaction.timestamp!, serverTimeOffset)}
+                                    </td>
                                 </tr>
                             );
                         })}
@@ -70,4 +84,8 @@ const LatestTransactions = (props: Props) => {
     );
 };
 
-export default LatestTransactions;
+export default connect((state: RootState) => {
+    return {
+        serverTimeOffset: state.appReducer.serverTimeOffset
+    };
+})(LatestTransactions);

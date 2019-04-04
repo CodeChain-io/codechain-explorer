@@ -6,7 +6,10 @@ import { Redirect } from "react-router";
 import { Container } from "reactstrap";
 
 import { TransactionDoc } from "codechain-indexer-types";
+import { connect } from "react-redux";
 import { Link } from "react-router-dom";
+import { RootState } from "src/redux/actions";
+import RequestServerTime from "src/request/RequestServerTime";
 import { getUnixTimeLocaleString } from "src/utils/Time";
 import DataTable from "../../components/util/DataTable/DataTable";
 import HexString from "../../components/util/HexString/HexString";
@@ -23,11 +26,16 @@ interface State {
     redirectItemsPerPage?: number;
 }
 
-interface Props {
+interface OwnProps {
     location: {
         search: string;
     };
 }
+
+interface StateProps {
+    serverTimeOffset?: number;
+}
+type Props = OwnProps & StateProps;
 
 class PendingTransactions extends React.Component<Props, State> {
     constructor(props: Props) {
@@ -62,7 +70,8 @@ class PendingTransactions extends React.Component<Props, State> {
 
     public render() {
         const {
-            location: { search }
+            location: { search },
+            serverTimeOffset
         } = this.props;
         const params = new URLSearchParams(search);
         const currentPage = params.get("page") ? parseInt(params.get("page") as string, 10) : 1;
@@ -92,6 +101,9 @@ class PendingTransactions extends React.Component<Props, State> {
                     onError={this.onError}
                 />
             );
+        }
+        if (serverTimeOffset === undefined) {
+            return <RequestServerTime />;
         }
         const maxPage = Math.floor(Math.max(0, totalTransactionCount - 1) / itemsPerPage) + 1;
         return (
@@ -220,7 +232,10 @@ class PendingTransactions extends React.Component<Props, State> {
                                                     </Link>
                                                 </td>
                                                 <td className="text-right">
-                                                    {getUnixTimeLocaleString(transaction.pendingTimestamp!)}
+                                                    {getUnixTimeLocaleString(
+                                                        transaction.pendingTimestamp!,
+                                                        serverTimeOffset
+                                                    )}
                                                 </td>
                                             </tr>
                                         );
@@ -287,4 +302,8 @@ class PendingTransactions extends React.Component<Props, State> {
     };
 }
 
-export default PendingTransactions;
+export default connect((state: RootState) => {
+    return {
+        serverTimeOffset: state.appReducer.serverTimeOffset
+    };
+})(PendingTransactions);

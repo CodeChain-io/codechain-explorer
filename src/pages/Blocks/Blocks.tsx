@@ -3,9 +3,12 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { BlockDoc } from "codechain-indexer-types";
 import * as _ from "lodash";
 import * as React from "react";
+import { connect } from "react-redux";
 import { Redirect } from "react-router";
 import { Link } from "react-router-dom";
 import { Container } from "reactstrap";
+import { RootState } from "src/redux/actions";
+import RequestServerTime from "src/request/RequestServerTime";
 import { getUnixTimeLocaleString } from "src/utils/Time";
 import { CommaNumberString } from "../../components/util/CommaNumberString/CommaNumberString";
 import DataTable from "../../components/util/DataTable/DataTable";
@@ -21,11 +24,16 @@ interface State {
     redirectItemsPerPage?: number;
 }
 
-interface Props {
+interface OwnProps {
     location: {
         search: string;
     };
 }
+
+interface StateProps {
+    serverTimeOffset?: number;
+}
+type Props = OwnProps & StateProps;
 
 class Blocks extends React.Component<Props, State> {
     constructor(props: Props) {
@@ -60,7 +68,8 @@ class Blocks extends React.Component<Props, State> {
 
     public render() {
         const {
-            location: { search }
+            location: { search },
+            serverTimeOffset
         } = this.props;
         const params = new URLSearchParams(search);
         const currentPage = params.get("page") ? parseInt(params.get("page") as string, 10) : 1;
@@ -84,6 +93,9 @@ class Blocks extends React.Component<Props, State> {
         }
         if (totalBlockCount === undefined) {
             return <RequestTotalBlockCount onBlockTotalCount={this.onTotalBlockCount} onError={this.onError} />;
+        }
+        if (serverTimeOffset === undefined) {
+            return <RequestServerTime />;
         }
         const maxPage = Math.floor(Math.max(0, totalBlockCount - 1) / itemsPerPage) + 1;
         return (
@@ -210,7 +222,7 @@ class Blocks extends React.Component<Props, State> {
                                                 </td>
                                                 <td className="text-right">
                                                     {block.timestamp
-                                                        ? getUnixTimeLocaleString(block.timestamp)
+                                                        ? getUnixTimeLocaleString(block.timestamp, serverTimeOffset)
                                                         : "Genesis"}
                                                 </td>
                                             </tr>
@@ -278,4 +290,8 @@ class Blocks extends React.Component<Props, State> {
     };
 }
 
-export default Blocks;
+export default connect((state: RootState) => {
+    return {
+        serverTimeOffset: state.appReducer.serverTimeOffset
+    };
+})(Blocks);
