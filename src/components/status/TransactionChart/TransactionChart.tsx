@@ -57,7 +57,8 @@ class TransactionChart extends React.Component<Props, {}> {
                                     tickPadding: 5,
                                     tickRotation: 0,
                                     legendOffset: -60,
-                                    legend: "# of TXs"
+                                    legend: "# of TXs",
+                                    tickValues: this.getAxisLeftTickValues()
                                 }}
                                 enableDots={false}
                                 enableArea={true}
@@ -79,6 +80,15 @@ class TransactionChart extends React.Component<Props, {}> {
             </div>
         );
     }
+
+    private getAxisLeftTickValues = (): number[] => {
+        const { transactions } = this.props;
+        const maxY = _.max(transactions.map(t => parseInt(t.y, 10))) || 0;
+        if (maxY < 10) {
+            return _.range(0, maxY + 1, 1);
+        }
+        return _.range(0, Math.ceil(maxY / 10) * 10 + 1, Math.ceil(maxY / 10));
+    };
 }
 
 export default TransactionChart;
