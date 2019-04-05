@@ -1,7 +1,6 @@
 import { faCircle } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import * as React from "react";
-import { toast } from "react-toastify";
 
 import { RequestPing } from "../../../request";
 
@@ -76,9 +75,6 @@ class HealthChecker extends React.Component<Props, State> {
 
     private serverDeadNotify = () => {
         this.setState({ isDead: true });
-        toast.error("500. There was an error. Please try again later.", {
-            position: toast.POSITION.BOTTOM_RIGHT
-        });
     };
 }
 
