@@ -18,11 +18,6 @@ const Footer = () => {
                                 </a>
                             </li>
                             <li>
-                                <a href="https://saluki.codechain.io" target="_blank">
-                                    saluki.codechain.io
-                                </a>
-                            </li>
-                            <li>
                                 <a href="https://corgi.codechain.io" target="_blank">
                                     corgi.codechain.io
                                 </a>
