@@ -15,7 +15,6 @@ import {
     NavLink,
     UncontrolledDropdown
 } from "reactstrap";
-import { Popover, PopoverBody, PopoverHeader } from "reactstrap";
 import HealthChecker from "../../util/HealthChecker/HealthChecker";
 import Search from "../Search/Search";
 
@@ -26,19 +25,14 @@ import "./Header.scss";
 
 interface State {
     isOpen: boolean;
-    popoverOpen: boolean;
 }
 
 class Header extends React.Component<{}, State> {
     constructor(props: {}) {
         super(props);
         this.toggle = this.toggle.bind(this);
-        this.openToggle = this.openToggle.bind(this);
-        this.closeToggle = this.closeToggle.bind(this);
-        this.togglePopover = this.togglePopover.bind(this);
         this.state = {
-            isOpen: false,
-            popoverOpen: false
+            isOpen: false
         };
     }
 
@@ -52,11 +46,7 @@ class Header extends React.Component<{}, State> {
                             <IndexLinkContainer to="/">
                                 <NavbarBrand>
                                     <img src={logo} className="logo" />{" "}
-                                    <div
-                                        onMouseEnter={this.openToggle}
-                                        onMouseLeave={this.closeToggle}
-                                        className="d-inline-block header-big"
-                                    >
+                                    <div className="d-inline-block header-big">
                                         <span id="explorer-title" className="header-title">
                                             CodeChain Explorer - Corgi
                                         </span>
@@ -111,17 +101,6 @@ class Header extends React.Component<{}, State> {
                     <Search className="ml-auto" idString="small" />
                 </Container>
                 <LoadingBar className="loading-bar" />
-
-                <Popover
-                    className="network-description-popover"
-                    placement="bottom"
-                    isOpen={this.state.popoverOpen}
-                    target="explorer-title"
-                    toggle={this.togglePopover}
-                >
-                    <PopoverHeader>Corgi Testnet</PopoverHeader>
-                    <PopoverBody>This testnet uses a Tendermint consensus algorithm.</PopoverBody>
-                </Popover>
             </div>
         );
     }
@@ -129,24 +108,6 @@ class Header extends React.Component<{}, State> {
     private toggle() {
         this.setState({
             isOpen: !this.state.isOpen
-        });
-    }
-
-    private togglePopover() {
-        this.setState({
-            popoverOpen: !this.state.popoverOpen
-        });
-    }
-
-    private openToggle() {
-        this.setState({
-            popoverOpen: true
-        });
-    }
-
-    private closeToggle() {
-        this.setState({
-            popoverOpen: false
         });
     }
 
