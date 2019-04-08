@@ -13,6 +13,13 @@ export default class AssetTransferDetails extends React.Component<Props, any> {
         const { tx } = this.props;
         const transaction = tx as TransferAssetTransactionDoc;
         return [
+            <Row key="metadata">
+                <Col md="3">Metadata</Col>
+                <Col md="9">
+                    <div className="text-area">{transaction.transferAsset.metadata}</div>
+                </Col>
+            </Row>,
+            <hr key="metadata-hr" />,
             <Row key="approvals">
                 <Col md="3">Approvals</Col>
                 <Col md="9">
