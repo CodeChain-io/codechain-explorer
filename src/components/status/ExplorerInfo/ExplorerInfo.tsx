@@ -4,6 +4,8 @@ import DataSet from "../../util/DataSet/DataSet";
 
 import "./ExplorerInfo.scss";
 
+const { version } = require("../../../../package.json");
+
 class ExplorerInfo extends React.Component {
     public render() {
         return (
@@ -15,7 +17,7 @@ class ExplorerInfo extends React.Component {
                 <DataSet isStatus={true}>
                     <div className="one-line-data-set">
                         <div>Explorer version</div>
-                        <div>1.0.0-beta</div>
+                        <div>{version}</div>
                     </div>
                     <hr />
                     <div className="one-line-data-set">
