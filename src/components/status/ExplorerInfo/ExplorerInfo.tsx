@@ -2,11 +2,22 @@ import * as React from "react";
 
 import DataSet from "../../util/DataSet/DataSet";
 
+import RequestIndexerVersion from "src/request/RequestIndexerVersion";
 import "./ExplorerInfo.scss";
 
 const { version } = require("../../../../package.json");
 
-class ExplorerInfo extends React.Component {
+interface State {
+    indexerVersion?: string;
+    indexerVersionRequestError?: any;
+}
+
+class ExplorerInfo extends React.Component<{}, State> {
+    constructor(props: {}) {
+        super(props);
+        this.state = {};
+    }
+
     public render() {
         return (
             <div className="explorer-info">
@@ -22,13 +33,38 @@ class ExplorerInfo extends React.Component {
                     <hr />
                     <div className="one-line-data-set">
                         <div>Indexer version</div>
-                        <div>1.0.0-beta</div>
+                        <div>{this.renderIndexerVersion()}</div>
                     </div>
                     <hr />
                 </DataSet>
             </div>
         );
     }
+
+    private renderIndexerVersion() {
+        const { indexerVersion, indexerVersionRequestError } = this.state;
+        if (indexerVersion) {
+            return <>{indexerVersion}</>;
+        } else if (indexerVersionRequestError === true) {
+            return <>unavailable</>;
+        } else {
+            // FIXME: Progressbar
+            return (
+                <>
+                    loading...
+                    <RequestIndexerVersion onVersion={this.onIndexerVersion} onError={this.onError} />
+                </>
+            );
+        }
+    }
+
+    private onIndexerVersion = (indexerVersion: string) => {
+        this.setState({ indexerVersion });
+    };
+
+    private onError = () => {
+        this.setState({ indexerVersionRequestError: true });
+    };
 }
 
 export default ExplorerInfo;
