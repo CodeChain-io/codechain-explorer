@@ -1,5 +1,6 @@
 import { TransactionDoc, TransferAssetTransactionDoc } from "codechain-indexer-types";
 import * as _ from "lodash";
+import * as moment from "moment";
 import * as React from "react";
 import Col from "reactstrap/lib/Col";
 import Row from "reactstrap/lib/Row";
@@ -35,6 +36,15 @@ export default class AssetTransferDetails extends React.Component<Props, any> {
                 </Col>
             </Row>,
             <hr key="approvals-hr" />,
+            <Row key="expiration">
+                <Col md="3">Expiration</Col>
+                <Col md="9">
+                    {transaction.transferAsset.expiration
+                        ? moment.unix(parseInt(transaction.transferAsset.expiration, 10)).format("LLL")
+                        : "None"}
+                </Col>
+            </Row>,
+            <hr key="expiration-hr" />,
             <Row key="input">
                 <Col md="3"># of Input</Col>
                 <Col md="9">{transaction.transferAsset.inputs.length.toLocaleString()}</Col>

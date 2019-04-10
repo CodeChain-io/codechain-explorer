@@ -64,7 +64,14 @@ export default class ChangeAssetSchemeDetails extends React.Component<Props, any
                     />
                 </Col>
             </Row>,
-            <hr key="assetType-hr" />
+            <hr key="assetType-hr" />,
+            <Row key="metadata">
+                <Col md="3">Metadata</Col>
+                <Col md="9">
+                    <div className="text-area">{tx.changeAssetScheme.metadata}</div>
+                </Col>
+            </Row>,
+            <hr key="metadata-hr" />
         ];
     }
 }
