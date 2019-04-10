@@ -110,12 +110,18 @@ class PendingTransactions extends React.Component<Props, State> {
         return (
             <Container className="Pending-transactions animated fadeIn">
                 {!isTransactionRequested ? (
-                    <RequestPendingTransactions
-                        onTransactions={this.onTransactions}
-                        page={currentPage}
-                        itemsPerPage={itemsPerPage}
-                        onError={this.onError}
-                    />
+                    <div>
+                        <RequestPendingTransactions
+                            onTransactions={this.onTransactions}
+                            page={currentPage}
+                            itemsPerPage={itemsPerPage}
+                            onError={this.onError}
+                        />
+                        <RequestTotalPendingTransactionCount
+                            onTransactionTotalCount={this.onTransactionTotalCount}
+                            onError={this.onError}
+                        />
+                    </div>
                 ) : null}
                 <div className="d-flex align-items-end">
                     <div>

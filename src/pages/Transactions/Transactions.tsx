@@ -118,13 +118,19 @@ class Transactions extends React.Component<Props, State> {
         return (
             <Container className="transactions animated fadeIn">
                 {!isTransactionRequested ? (
-                    <RequestTransactions
-                        onTransactions={this.onTransactions}
-                        page={currentPage}
-                        itemsPerPage={itemsPerPage}
-                        onError={this.onError}
-                        selectedTypes={selectedTypes}
-                    />
+                    <div>
+                        <RequestTransactions
+                            onTransactions={this.onTransactions}
+                            page={currentPage}
+                            itemsPerPage={itemsPerPage}
+                            onError={this.onError}
+                            selectedTypes={selectedTypes}
+                        />
+                        <RequestTotalTransactionCount
+                            onTransactionTotalCount={this.onTransactionTotalCount}
+                            onError={this.onError}
+                        />
+                    </div>
                 ) : null}
                 <h1>Latest transactions</h1>
                 {!showTypeFilter && (
