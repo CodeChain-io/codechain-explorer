@@ -35,7 +35,7 @@ const LatestBlocks = (props: Props) => {
                     <thead>
                         <tr>
                             <th style={{ width: "15%" }}>No.</th>
-                            <th style={{ width: "15%" }}>Transactions</th>
+                            <th style={{ width: "15%" }}>Tx</th>
                             <th style={{ width: "35%" }}>Author</th>
                             <th style={{ width: "15%" }} className="text-right">
                                 Reward
