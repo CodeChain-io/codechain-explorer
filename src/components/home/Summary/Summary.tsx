@@ -9,7 +9,7 @@ import "./Summary.scss";
 import WeeklyChart from "./WeeklyChart";
 
 interface State {
-    latestBestBlockNumbrer?: number;
+    latestBestBlockNumber?: number;
 }
 
 interface StateProps {
@@ -23,7 +23,7 @@ class Summary extends React.Component<Props, State> {
     constructor(props: {}) {
         super(props);
         this.state = {
-            latestBestBlockNumbrer: undefined
+            latestBestBlockNumber: undefined
         };
     }
     public componentWillUnmount() {
@@ -64,7 +64,7 @@ class Summary extends React.Component<Props, State> {
 
     private refreshSummary = () => {
         const { bestBlockNumber } = this.props;
-        this.setState({ latestBestBlockNumbrer: bestBlockNumber });
+        this.setState({ latestBestBlockNumber: bestBlockNumber });
     };
 
     private onError = (error: any) => {
