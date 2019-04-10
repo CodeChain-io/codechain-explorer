@@ -131,7 +131,7 @@ class WeeklyChart extends React.Component<Props, State> {
                     bottom: 50,
                     left: 80
                 }}
-                minY="auto"
+                minY="0"
                 enableDots={false}
                 enableArea={true}
                 // tslint:disable-next-line:jsx-no-lambda
