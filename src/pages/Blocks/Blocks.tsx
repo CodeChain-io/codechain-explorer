@@ -101,12 +101,15 @@ class Blocks extends React.Component<Props, State> {
         return (
             <Container className="blocks animated fadeIn">
                 {!isBlockRequested ? (
-                    <RequestBlocks
-                        onBlocks={this.onBlocks}
-                        page={currentPage}
-                        itemsPerPage={itemsPerPage}
-                        onError={this.onError}
-                    />
+                    <div>
+                        <RequestBlocks
+                            onBlocks={this.onBlocks}
+                            page={currentPage}
+                            itemsPerPage={itemsPerPage}
+                            onError={this.onError}
+                        />
+                        <RequestTotalBlockCount onBlockTotalCount={this.onTotalBlockCount} onError={this.onError} />
+                    </div>
                 ) : null}
                 <div className="d-flex align-items-end">
                     <div>
