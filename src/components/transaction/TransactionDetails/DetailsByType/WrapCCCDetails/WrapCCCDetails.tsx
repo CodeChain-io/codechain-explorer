@@ -35,6 +35,7 @@ export default class WrapCCCDetails extends React.Component<Props, any> {
                     </div>
                 </Col>
             </Row>,
+            <hr key="parameters-hr" />,
             <Row key="recipient">
                 <Col md="3">Recipient</Col>
                 <Col md="9">

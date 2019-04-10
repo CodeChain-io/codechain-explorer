@@ -3,6 +3,7 @@ import * as _ from "lodash";
 import * as React from "react";
 import AssetOutput from "./AssetOutput/AssetOutput";
 import AssetTransferInputs from "./AssetTransferInputs/AssetTransferInputs";
+import AssetTransferOrders from "./AssetTransferOrders/AssetTransferOrders";
 import AssetTransferOutputs from "./AssetTransferOutputs/AssetTransferOutputs";
 
 interface Props {
@@ -31,7 +32,8 @@ export default class MoreInfo extends React.Component<Props, State> {
             return [
                 <AssetTransferInputs inputs={transaction.transferAsset.inputs} key="inputs" isBurn={false} />,
                 <AssetTransferInputs inputs={transaction.transferAsset.burns} isBurn={true} key="burns" />,
-                <AssetTransferOutputs outputs={transaction.transferAsset.outputs} key="output" />
+                <AssetTransferOutputs outputs={transaction.transferAsset.outputs} key="output" />,
+                <AssetTransferOrders orders={transaction.transferAsset.orders} key="orders" />
             ];
         } else if (transaction.type === "mintAsset") {
             return [<AssetOutput asset={transaction.mintAsset} key="asset" />];

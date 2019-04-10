@@ -12,6 +12,11 @@ export default class UnwrapCCCDetails extends React.Component<Props, any> {
         const { tx } = this.props;
         const transaction = tx as UnwrapCCCTransactionDoc;
         return [
+            <Row key="receiver">
+                <Col md="3">Receiver</Col>
+                <Col md="9">{transaction.unwrapCCC.receiver}</Col>
+            </Row>,
+            <hr key="receiver-hr" />,
             <Row key="quantity">
                 <Col md="3">Quantity</Col>
                 <Col md="9">
