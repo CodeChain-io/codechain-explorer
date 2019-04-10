@@ -190,7 +190,7 @@ class Blocks extends React.Component<Props, State> {
                                     <tr>
                                         <th style={{ width: "15%" }}>No.</th>
                                         <th style={{ width: "10%" }} className="text-right">
-                                            # of TXs
+                                            Tx
                                         </th>
                                         <th style={{ width: "40%" }}>Author</th>
                                         <th style={{ width: "15%" }} className="text-right">
