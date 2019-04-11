@@ -16,7 +16,7 @@ export default class UnwrapCCCDetails extends React.Component<Props, any> {
                 <Col md="3">Quantity</Col>
                 <Col md="9">
                     {transaction.unwrapCCC.burn.prevOut.quantity}
-                    CCC
+                    <span className="ccc">CCC</span>
                 </Col>
             </Row>,
             <hr key="quantity-hr" />

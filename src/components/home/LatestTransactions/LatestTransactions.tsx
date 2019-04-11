@@ -57,7 +57,7 @@ const LatestTransactions = (props: Props) => {
                                     </td>
                                     <td className="text-right">
                                         {transaction.fee}
-                                        CCC
+                                        <span className="ccc">CCC</span>
                                     </td>
                                     <td>
                                         <Link to={`/addr-platform/${transaction.signer}`}>{transaction.signer}</Link>

@@ -274,7 +274,7 @@ class Transactions extends React.Component<Props, State> {
                                                 </td>
                                                 <td className="text-right">
                                                     {transaction.fee}
-                                                    CCC
+                                                    <span className="ccc">CCC</span>
                                                 </td>
                                                 <td>
                                                     <Link to={`/addr-platform/${transaction.signer}`}>

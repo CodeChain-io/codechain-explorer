@@ -58,7 +58,7 @@ const LatestBlocks = (props: Props) => {
                                     </td>
                                     <td className="text-right">
                                         <CommaNumberString text={block.miningReward} />
-                                        CCC
+                                        <span className="ccc">CCC</span>
                                     </td>
                                     <td className="text-right">
                                         {block.timestamp

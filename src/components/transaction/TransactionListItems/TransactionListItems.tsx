@@ -99,7 +99,7 @@ class TransactionListItems extends React.Component<Props> {
                 <Col md="3">Fee</Col>
                 <Col md="9">
                     {transaction.fee}
-                    CCC
+                    <span className="ccc">CCC</span>
                 </Col>
             </Row>,
             <hr key="line5" />,
@@ -119,7 +119,7 @@ class TransactionListItems extends React.Component<Props> {
                 <Col md="3">Quantity</Col>
                 <Col md="9">
                     {transaction.pay.quantity}
-                    CCC
+                    <span className="ccc">CCC</span>
                 </Col>
             </Row>,
             <hr key="line2" />,

@@ -50,7 +50,7 @@ export default class WrapCCCDetails extends React.Component<Props, any> {
                 <Col md="3">Quantity</Col>
                 <Col md="9">
                     {transaction.wrapCCC.quantity}
-                    CCC
+                    <span className="ccc">CCC</span>
                 </Col>
             </Row>,
             <hr key="quantity-hr" />
