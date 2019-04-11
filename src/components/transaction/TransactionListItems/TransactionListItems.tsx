@@ -16,6 +16,7 @@ import {
 } from "codechain-indexer-types";
 import { H160 } from "codechain-sdk/lib/core/classes";
 
+import { CommaNumberString } from "src/components/util/CommaNumberString/CommaNumberString";
 import DataSet from "../../util/DataSet/DataSet";
 import HexString from "../../util/HexString/HexString";
 import { ImageLoader } from "../../util/ImageLoader/ImageLoader";
@@ -98,7 +99,7 @@ class TransactionListItems extends React.Component<Props> {
             <Row key="fee">
                 <Col md="3">Fee</Col>
                 <Col md="9">
-                    {transaction.fee}
+                    <CommaNumberString text={transaction.fee} />
                     <span className="ccc">CCC</span>
                 </Col>
             </Row>,

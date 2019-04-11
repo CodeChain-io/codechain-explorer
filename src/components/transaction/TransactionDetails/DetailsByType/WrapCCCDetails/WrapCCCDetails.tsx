@@ -4,6 +4,7 @@ import * as React from "react";
 import { Link } from "react-router-dom";
 import Col from "reactstrap/lib/Col";
 import Row from "reactstrap/lib/Row";
+import { CommaNumberString } from "src/components/util/CommaNumberString/CommaNumberString";
 import { getLockScriptName } from "src/utils/Transactions";
 
 interface Props {
@@ -49,7 +50,7 @@ export default class WrapCCCDetails extends React.Component<Props, any> {
             <Row key="quantity">
                 <Col md="3">Quantity</Col>
                 <Col md="9">
-                    {transaction.wrapCCC.quantity}
+                    <CommaNumberString text={transaction.wrapCCC.quantity} />
                     <span className="ccc">CCC</span>
                 </Col>
             </Row>,

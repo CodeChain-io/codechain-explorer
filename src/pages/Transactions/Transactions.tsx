@@ -10,6 +10,7 @@ import { connect } from "react-redux";
 import { Link } from "react-router-dom";
 import Col from "reactstrap/lib/Col";
 import Row from "reactstrap/lib/Row";
+import { CommaNumberString } from "src/components/util/CommaNumberString/CommaNumberString";
 import { RootState } from "src/redux/actions";
 import RequestServerTime from "src/request/RequestServerTime";
 import { getUnixTimeLocaleString } from "src/utils/Time";
@@ -273,7 +274,7 @@ class Transactions extends React.Component<Props, State> {
                                                     />
                                                 </td>
                                                 <td className="text-right">
-                                                    {transaction.fee}
+                                                    <CommaNumberString text={transaction.fee} />
                                                     <span className="ccc">CCC</span>
                                                 </td>
                                                 <td>

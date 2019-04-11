@@ -4,6 +4,7 @@ import * as React from "react";
 import { TransactionDoc } from "codechain-indexer-types";
 import { connect } from "react-redux";
 import { Link } from "react-router-dom";
+import { CommaNumberString } from "src/components/util/CommaNumberString/CommaNumberString";
 import { RootState } from "src/redux/actions";
 import RequestServerTime from "src/request/RequestServerTime";
 import { getUnixTimeLocaleString } from "src/utils/Time";
@@ -56,7 +57,7 @@ const LatestTransactions = (props: Props) => {
                                         <HexString link={`/tx/0x${transaction.hash}`} text={transaction.hash} />
                                     </td>
                                     <td className="text-right">
-                                        {transaction.fee}
+                                        <CommaNumberString text={transaction.fee} />
                                         <span className="ccc">CCC</span>
                                     </td>
                                     <td>
