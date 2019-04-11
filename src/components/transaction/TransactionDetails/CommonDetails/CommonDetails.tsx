@@ -44,7 +44,7 @@ export default class CommonDetails extends React.Component<Props, any> {
                 <Col md="3">Fee</Col>
                 <Col md="9">
                     {transaction.fee}
-                    CCC
+                    <span className="ccc">CCC</span>
                 </Col>
             </Row>,
             <hr key="fee-hr" />,

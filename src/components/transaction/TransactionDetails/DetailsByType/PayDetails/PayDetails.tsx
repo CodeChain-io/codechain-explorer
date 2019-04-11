@@ -17,7 +17,7 @@ export default class PayDetails extends React.Component<Props, any> {
                 <Col md="3">Quantity</Col>
                 <Col md="9">
                     {transaction.pay.quantity}
-                    CCC
+                    <span className="ccc">CCC</span>
                 </Col>
             </Row>,
             <hr key="hr1" />,

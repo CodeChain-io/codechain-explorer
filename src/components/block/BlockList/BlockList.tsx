@@ -90,7 +90,7 @@ class BlockList extends React.Component<Props, State> {
                                             <Col md="2">Reward</Col>
                                             <Col md="10">
                                                 <CommaNumberString text={block.miningReward} />
-                                                CCC
+                                                <span className="ccc">CCC</span>
                                             </Col>
                                         </Row>
                                     </DataSet>
