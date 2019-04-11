@@ -5,8 +5,6 @@ import ExplorerInfo from "src/components/status/ExplorerInfo/ExplorerInfo";
 import ChainInfo from "../../components/status/ChainInfo/ChainInfo";
 import NodeStatus from "../../components/status/NodeStatus/NodeStatus";
 import SyncStatus from "../../components/status/SyncStatus/SyncStatus";
-import TransactionChart from "../../components/status/TransactionChart/TransactionChart";
-import RequestBlockTransactions from "../../request/RequestBlockDifficulty";
 import RequestCodeChainStatus, { CodeChainData } from "../../request/RequestCodeChainStatus";
 import RequestNodeStatus from "../../request/RequestNodeStatus";
 import RequestSyncStatus, { SyncData } from "../../request/RequestSyncStatus";
@@ -68,11 +66,9 @@ class Status extends React.Component<{}, State> {
             nodeStatus,
             syncStatus,
             chainInfo,
-            transactions,
             requestNodeStatus,
             requestSyncStatus,
-            requestChainInfo,
-            requestTransactions
+            requestChainInfo
         } = this.state;
         return (
             <div className="status animated fadeIn">
@@ -108,27 +104,11 @@ class Status extends React.Component<{}, State> {
                                 <ExplorerInfo />
                             </div>
                         </Col>
-                        <Col lg="6">
-                            {transactions ? (
-                                <div className="mt-large">
-                                    <TransactionChart transactions={transactions} />
-                                </div>
-                            ) : null}
-                            {requestTransactions ? (
-                                <RequestBlockTransactions
-                                    onBlockTransactions={this.onTransactions}
-                                    onError={this.onError}
-                                />
-                            ) : null}
-                        </Col>
                     </Row>
                 </Container>
             </div>
         );
     }
-    private onTransactions = (transactions: Array<{ x: string; y: string }>) => {
-        this.setState({ transactions, requestTransactions: false });
-    };
     private onNodeStatus = (nodeStatus: boolean) => {
         this.setState({ nodeStatus, requestNodeStatus: false });
     };
