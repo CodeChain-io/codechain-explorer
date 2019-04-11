@@ -4,19 +4,7 @@ import { connect, Dispatch } from "react-redux";
 import { ApiError, apiRequest } from "./ApiRequest";
 
 export interface CodeChainData {
-    nodeVersion: string;
-    commitHash: string;
     networkId: string;
-    peerCount: number;
-    peers: string[];
-    whiteList: {
-        enabled: boolean;
-        list: string[];
-    };
-    blackList: {
-        enabled: boolean;
-        list: string[];
-    };
 }
 
 interface OwnProps {
