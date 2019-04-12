@@ -7,6 +7,7 @@ interface OwnProps {
     address?: string;
     onTransactionTotalCount: (transactionTotalCount: number) => void;
     onError: (e: ApiError) => void;
+    selectedTypes?: string[];
 }
 
 interface DispatchProps {
@@ -17,8 +18,12 @@ type Props = OwnProps & DispatchProps;
 
 class RequestTotalTransactionCount extends React.Component<Props> {
     public componentWillMount() {
-        const { onError, onTransactionTotalCount, dispatch, address } = this.props;
-        apiRequest({ path: `tx/count${address ? `?address=${address}` : ""}`, dispatch, showProgressBar: true })
+        const { onError, onTransactionTotalCount, dispatch, address, selectedTypes } = this.props;
+        let path = `tx/count?${address ? `address=${address}` : ""}`;
+        if (selectedTypes && selectedTypes.length > 0) {
+            path += `&type=${selectedTypes.join(",")}`;
+        }
+        apiRequest({ path, dispatch, showProgressBar: true })
             .then((response: any) => {
                 onTransactionTotalCount(response);
             })

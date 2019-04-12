@@ -128,6 +128,7 @@ class Transactions extends React.Component<Props, State> {
                         <RequestTotalTransactionCount
                             onTransactionTotalCount={this.onTransactionTotalCount}
                             onError={this.onError}
+                            selectedTypes={selectedTypes}
                         />
                     </div>
                 ) : null}
