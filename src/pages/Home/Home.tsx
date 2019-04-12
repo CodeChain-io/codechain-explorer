@@ -9,6 +9,7 @@ import { BlockDoc, TransactionDoc } from "codechain-indexer-types";
 import { connect } from "react-redux";
 import Summary from "../../components/home/Summary/Summary";
 import { RootState } from "../../redux/actions";
+import BlockCapacityUsageChart from "./BlockCapacityUsageChart";
 import BlockCreationTimeChart from "./BlockCreationTimeChart";
 import "./Home.scss";
 
@@ -58,6 +59,9 @@ class Home extends React.Component<Props, State> {
                         <Row>
                             <Col lg="6">
                                 <BlockCreationTimeChart blocks={blocks} />
+                            </Col>
+                            <Col lg="6" className="mt-3 mt-lg-0">
+                                <BlockCapacityUsageChart blocks={blocks} />
                             </Col>
                         </Row>
                     </div>
