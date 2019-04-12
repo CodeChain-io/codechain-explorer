@@ -4,7 +4,7 @@ import * as React from "react";
 import { Col, Container, Row } from "reactstrap";
 import LatestBlocks from "../../components/home/LatestBlocks/LatestBlocks";
 import LatestTransactions from "../../components/home/LatestTransactions/LatestTransactions";
-import { RequestBlocks, RequestTransactions } from "../../request";
+import { RequestBlockNumber, RequestBlocks, RequestTransactions } from "../../request";
 
 import { BlockDoc, TransactionDoc } from "codechain-indexer-types";
 import { connect } from "react-redux";
@@ -52,9 +52,12 @@ class Home extends React.Component<Props, State> {
         this.checkNewBlock(0);
     }
     public render() {
-        const { serverTimeOffset } = this.props;
+        const { serverTimeOffset, bestBlockNumber } = this.props;
         if (serverTimeOffset === undefined) {
             return <RequestServerTime />;
+        }
+        if (bestBlockNumber === undefined) {
+            return <RequestBlockNumber />;
         }
         const { lastBestBlockNumber, blocks, transactions, requestBlocks, requestTransactions } = this.state;
         return (
