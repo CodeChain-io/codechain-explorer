@@ -19,7 +19,7 @@ class BlockCapacityUsageChart extends React.Component<Props> {
             <div className="chart-container">
                 <div className="chart">
                     <div className="header-part">
-                        <h2 className="title">Block capacity usage</h2>
+                        <h2 className="title">Block size</h2>
                     </div>
                     <div className="chart-item">{this.renderBarChart()}</div>
                 </div>
