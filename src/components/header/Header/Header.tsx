@@ -39,7 +39,7 @@ class Header extends React.Component<{}, State> {
     public render() {
         return (
             <div className="header">
-                <RequestBlockNumber repeat={5000} onBlockNumber={this.handleRequestBlock} onError={this.handleError} />
+                <RequestBlockNumber repeat={2000} onBlockNumber={this.handleRequestBlock} onError={this.handleError} />
                 <Navbar className="header-container" dark={true} expand="xl">
                     <Container fluid={true}>
                         <div className="header-title-container">
