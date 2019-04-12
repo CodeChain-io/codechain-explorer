@@ -4,8 +4,8 @@ import { connect, Dispatch } from "react-redux";
 import { ApiError, apiRequest } from "./ApiRequest";
 
 interface OwnProps {
-    onBlockNumber: (n: number) => void;
-    onError: (e: any) => void;
+    onBlockNumber?: (n: number) => void;
+    onError?: (e: any) => void;
     repeat?: number;
 }
 
@@ -68,10 +68,14 @@ class RequestBlockNumber extends React.Component<Props, State> {
                     type: "BEST_BLOCK_NUMBER_ACTION",
                     data: num
                 });
-                onBlockNumber(num);
+                if (onBlockNumber) {
+                    onBlockNumber(num);
+                }
             })
             .catch((error: ApiError) => {
-                onError(error);
+                if (onError) {
+                    onError(error);
+                }
             });
     }
 }
