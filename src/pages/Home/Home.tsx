@@ -48,7 +48,7 @@ class Home extends React.Component<Props, State> {
         }
     }
     public componentDidMount() {
-        this.refresher = setInterval(this.checkNewBlock, 5000);
+        this.refresher = setInterval(this.checkNewBlock, 1000);
         this.checkNewBlock(0);
     }
     public render() {
