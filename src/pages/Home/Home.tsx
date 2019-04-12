@@ -9,7 +9,6 @@ import { RequestBlocks, RequestTransactions } from "../../request";
 import { BlockDoc, TransactionDoc } from "codechain-indexer-types";
 import { connect } from "react-redux";
 import RequestServerTime from "src/request/RequestServerTime";
-import Summary from "../../components/home/Summary/Summary";
 import { RootState } from "../../redux/actions";
 import BlockCapacityUsageChart from "./BlockCapacityUsageChart";
 import BlockCreationTimeChart from "./BlockCreationTimeChart";
@@ -61,9 +60,6 @@ class Home extends React.Component<Props, State> {
         return (
             <div className="home animated fadeIn">
                 <Container>
-                    <div className="home-element-container">
-                        <Summary />
-                    </div>
                     <div className="home-element-container">
                         <Row>
                             <Col lg="6">
