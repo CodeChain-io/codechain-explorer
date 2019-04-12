@@ -12,6 +12,7 @@ import { RootState } from "../../redux/actions";
 import BlockCapacityUsageChart from "./BlockCapacityUsageChart";
 import BlockCreationTimeChart from "./BlockCreationTimeChart";
 import "./Home.scss";
+import TransactionsCountByTypeChart from "./TransactionsCountByTypeChart";
 
 interface State {
     lastBestBlockNumber?: number;
@@ -62,6 +63,9 @@ class Home extends React.Component<Props, State> {
                             </Col>
                             <Col lg="6" className="mt-3 mt-lg-0">
                                 <BlockCapacityUsageChart blocks={blocks} />
+                            </Col>
+                            <Col lg="6" className="mt-3">
+                                <TransactionsCountByTypeChart blocks={blocks} />
                             </Col>
                         </Row>
                     </div>
