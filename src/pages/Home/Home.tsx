@@ -1,6 +1,6 @@
 import * as _ from "lodash";
 import * as React from "react";
-import { Container } from "reactstrap";
+import { Col, Container, Row } from "reactstrap";
 import LatestBlocks from "../../components/home/LatestBlocks/LatestBlocks";
 import LatestTransactions from "../../components/home/LatestTransactions/LatestTransactions";
 import { RequestBlocks, RequestTransactions } from "../../request";
@@ -9,6 +9,7 @@ import { BlockDoc, TransactionDoc } from "codechain-indexer-types";
 import { connect } from "react-redux";
 import Summary from "../../components/home/Summary/Summary";
 import { RootState } from "../../redux/actions";
+import BlockCreationTimeChart from "./BlockCreationTimeChart";
 import "./Home.scss";
 
 interface State {
@@ -52,6 +53,13 @@ class Home extends React.Component<Props, State> {
                 <Container>
                     <div className="home-element-container">
                         <Summary />
+                    </div>
+                    <div className="home-element-container">
+                        <Row>
+                            <Col lg="6">
+                                <BlockCreationTimeChart blocks={blocks} />
+                            </Col>
+                        </Row>
                     </div>
                     <div className="home-element-container">
                         <LatestBlocks blocks={blocks} />
