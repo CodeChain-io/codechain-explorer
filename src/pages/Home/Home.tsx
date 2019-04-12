@@ -1,3 +1,5 @@
+import { faCircle } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import * as _ from "lodash";
 import * as moment from "moment";
 import * as React from "react";
@@ -67,16 +69,27 @@ class Home extends React.Component<Props, State> {
                         <Row>
                             <Col lg="6">
                                 <h1>Network status</h1>
-                                <div>
-                                    Block number: {lastBestBlockNumber} (
+                                <br />
+                                <h5>
+                                    <span className="text-success mr-3">
+                                        <FontAwesomeIcon icon={faCircle} />
+                                    </span>
+                                    Last Block: {lastBestBlockNumber} (
                                     {blocks.length > 0 &&
                                         moment
                                             .unix(blocks[0].timestamp)
                                             .add(serverTimeOffset, "seconds")
                                             .fromNow()}
                                     )
+                                </h5>
+                                <br />
+                                <div className="mb-1">
+                                    Average block creation time in last 30 blocks:{" "}
+                                    <b>{this.calculateAvgBlockCreationTime()}</b> seconds
                                 </div>
-                                <div>Average block creation time: {this.calculateAvgBlockCreationTime()} seconds</div>
+                                <div className="mb-3">
+                                    Average block size in last 30 blocks: <b>{this.calculateAvgBlockSize()}</b> bytes
+                                </div>
                             </Col>
                             <Col lg="6">
                                 <BlockCreationTimeChart blocks={blocks} />
@@ -137,6 +150,11 @@ class Home extends React.Component<Props, State> {
                 ? [0]
                 : _.range(0, blocks.length - 1).map(i => blocks[i].timestamp - blocks[i + 1].timestamp);
         return _.mean(data).toFixed(2);
+    };
+
+    private calculateAvgBlockSize = () => {
+        const { blocks } = this.state;
+        return _.mean(blocks.map(block => block.size)).toFixed(0);
     };
 }
 
