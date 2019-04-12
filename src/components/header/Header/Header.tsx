@@ -20,6 +20,7 @@ import Search from "../Search/Search";
 
 import * as logo from "./img/logo-explorer.png";
 
+import { RequestBlockNumber } from "../../../request";
 import "./Header.scss";
 
 interface State {
@@ -38,6 +39,7 @@ class Header extends React.Component<{}, State> {
     public render() {
         return (
             <div className="header">
+                <RequestBlockNumber repeat={5000} onBlockNumber={this.handleRequestBlock} onError={this.handleError} />
                 <Navbar className="header-container" dark={true} expand="xl">
                     <Container fluid={true}>
                         <div className="header-title-container">
@@ -108,6 +110,13 @@ class Header extends React.Component<{}, State> {
             isOpen: !this.state.isOpen
         });
     }
+
+    private handleRequestBlock = () => {
+        // nothing
+    };
+    private handleError = (error: string) => {
+        console.log(error);
+    };
 }
 
 export default Header;
