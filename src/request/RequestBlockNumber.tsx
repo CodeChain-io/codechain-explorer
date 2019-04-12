@@ -62,7 +62,8 @@ class RequestBlockNumber extends React.Component<Props, State> {
         const { dispatch, onBlockNumber, onError } = this.props;
         apiRequest({ path: "block/count", showProgressBar: false, dispatch })
             .then((response: string) => {
-                const num = Number.parseInt(response);
+                // NOTE: /block/count returns the bestBlockNumber + 1 because it counts the block 0.
+                const num = Number.parseInt(response) - 1;
                 dispatch({
                     type: "BEST_BLOCK_NUMBER_ACTION",
                     data: num
