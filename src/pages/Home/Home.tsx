@@ -1,7 +1,6 @@
 import { faCircle } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import * as _ from "lodash";
-import * as moment from "moment";
 import * as React from "react";
 import { Col, Container, Row } from "reactstrap";
 import LatestBlocks from "../../components/home/LatestBlocks/LatestBlocks";
@@ -68,19 +67,13 @@ class Home extends React.Component<Props, State> {
                     <div className="home-element-container">
                         <Row>
                             <Col lg="6">
-                                <h1>Network status</h1>
+                                <h1>Network Status</h1>
                                 <br />
                                 <h5>
                                     <span className="text-success mr-3">
                                         <FontAwesomeIcon icon={faCircle} />
                                     </span>
-                                    Last Block: {lastBestBlockNumber} (
-                                    {blocks.length > 0 &&
-                                        moment
-                                            .unix(blocks[0].timestamp)
-                                            .add(serverTimeOffset, "seconds")
-                                            .fromNow()}
-                                    )
+                                    Last Block: {lastBestBlockNumber}
                                 </h5>
                                 <br />
                                 <div className="mb-1">
