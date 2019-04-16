@@ -13,6 +13,7 @@ import RequestServerTime from "src/request/RequestServerTime";
 import { RootState } from "../../redux/actions";
 import BlockCapacityUsageChart from "./BlockCapacityUsageChart";
 import BlockCreationTimeChart from "./BlockCreationTimeChart";
+import FeeStatusChart from "./FeeStatusChart";
 import "./Home.scss";
 import TransactionsCountByTypeChart from "./TransactionsCountByTypeChart";
 
@@ -92,6 +93,9 @@ class Home extends React.Component<Props, State> {
                             </Col>
                             <Col lg="6" className="mt-3">
                                 <TransactionsCountByTypeChart blocks={blocks} />
+                            </Col>
+                            <Col lg="6" className="mt-3">
+                                <FeeStatusChart onError={this.onError} />
                             </Col>
                         </Row>
                     </div>
