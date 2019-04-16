@@ -9,6 +9,7 @@
   "author": "CodeChain Team <codechain@kodebox.io>",
   "license": "Apache-2.0",
   "dependencies": {
+    "@data-ui/histogram": "^0.0.78",
     "@fortawesome/fontawesome-svg-core": "^1.2.0-14",
     "@fortawesome/free-brands-svg-icons": "^5.1.0-11",
     "@fortawesome/free-solid-svg-icons": "^5.1.0-11",
