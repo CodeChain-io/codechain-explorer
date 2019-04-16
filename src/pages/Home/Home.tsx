@@ -67,7 +67,7 @@ class Home extends React.Component<Props, State> {
                 <Container>
                     <div className="home-element-container">
                         <Row>
-                            <Col lg="6">
+                            <Col lg="12">
                                 <h1>Network Status</h1>
                                 <br />
                                 <h5>
@@ -85,7 +85,7 @@ class Home extends React.Component<Props, State> {
                                     Average block size in last 30 blocks: <b>{this.calculateAvgBlockSize()}</b> bytes
                                 </div>
                             </Col>
-                            <Col lg="6">
+                            <Col lg="6" className="mt-3">
                                 <BlockCreationTimeChart blocks={blocks} />
                             </Col>
                             <Col lg="6" className="mt-3">
