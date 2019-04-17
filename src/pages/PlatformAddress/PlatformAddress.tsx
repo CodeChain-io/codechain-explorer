@@ -207,7 +207,7 @@ class PlatformAddress extends React.Component<Props, State> {
                 <Row>
                     <Col>
                         <div className="d-flex justify-content-between align-items-end">
-                            <h2>Balance Log</h2>
+                            <h2>Balance History</h2>
                             <span>Total {balanceChangesCount} changes</span>
                         </div>
                         <hr className="heading-hr" />
