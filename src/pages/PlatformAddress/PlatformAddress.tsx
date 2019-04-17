@@ -5,21 +5,15 @@ import { match } from "react-router";
 import { Link } from "react-router-dom";
 import { Col, Container, Row } from "reactstrap";
 
-import { BlockDoc, TransactionDoc } from "codechain-indexer-types";
+import { TransactionDoc } from "codechain-indexer-types";
 import { U256 } from "codechain-sdk/lib/core/classes";
 
-import BlockList from "../../components/block/BlockList/BlockList";
 import { Error } from "../../components/error/Error/Error";
 import AccountDetails from "../../components/platformAddress/AccountDetails/AccountDetails";
 import TransactionList from "../../components/transaction/TransactionList/TransactionList";
 import CopyButton from "../../components/util/CopyButton/CopyButton";
 import { ImageLoader } from "../../components/util/ImageLoader/ImageLoader";
-import {
-    RequestPlatformAddressAccount,
-    RequestTotalPlatformBlockCount,
-    RequestTotalTransactionCount
-} from "../../request";
-import RequestPlatformAddressBlocks from "../../request/RequestPlatformAddressBlocks";
+import { RequestPlatformAddressAccount, RequestTotalTransactionCount } from "../../request";
 import RequestPlatformAddressTransactions from "../../request/RequestPlatformAddressTransactions";
 
 import { CommaNumberString } from "src/components/util/CommaNumberString/CommaNumberString";
@@ -40,15 +34,10 @@ interface State {
         seq: U256;
         balance: U256;
     };
-    blocks: BlockDoc[];
     transactions: TransactionDoc[];
     loadTransaction: boolean;
-    loadBlock: boolean;
-    pageForBlock: number;
     pageForTransaction: number;
-    noMoreBlock: boolean;
     notFound: boolean;
-    totalBlockCount?: number;
     totalTransactionCount?: number;
     noMoreTransaction: boolean;
 
@@ -68,21 +57,15 @@ interface State {
 type Props = OwnProps & DispatchProps;
 
 class PlatformAddress extends React.Component<Props, State> {
-    private blockItemsPerPage = 6;
     private transactionsPerPage = 6;
     private balanceChangesPerPage = 12;
     constructor(props: Props) {
         super(props);
         this.state = {
-            blocks: [],
             transactions: [],
             notFound: false,
-            loadBlock: true,
             loadTransaction: true,
-            pageForBlock: 1,
             pageForTransaction: 1,
-            noMoreBlock: false,
-            totalBlockCount: undefined,
             totalTransactionCount: undefined,
             noMoreTransaction: false
         };
@@ -102,14 +85,10 @@ class PlatformAddress extends React.Component<Props, State> {
         if (nextAddress !== address) {
             this.setState({
                 account: undefined,
-                blocks: [],
                 transactions: [],
                 notFound: false,
-                loadBlock: true,
                 loadTransaction: true,
-                noMoreBlock: false,
                 noMoreTransaction: false,
-                totalBlockCount: undefined,
                 totalTransactionCount: undefined,
                 balanceChanges: undefined,
                 balanceChangesCount: undefined,
@@ -131,13 +110,8 @@ class PlatformAddress extends React.Component<Props, State> {
         } = this.props;
         const {
             account,
-            blocks,
             notFound,
-            loadBlock,
             loadTransaction,
-            pageForBlock,
-            noMoreBlock,
-            totalBlockCount,
             pageForTransaction,
             transactions,
             totalTransactionCount,
@@ -190,13 +164,6 @@ class PlatformAddress extends React.Component<Props, State> {
                     <AccountDetails account={account} />
                 </div>
                 {this.renderBalanceChanges()}
-                {totalBlockCount == null && (
-                    <RequestTotalPlatformBlockCount
-                        address={address}
-                        onTotalCount={this.onTotalBlockCount}
-                        onError={this.onError}
-                    />
-                )}
                 {totalTransactionCount == null && (
                     <RequestTotalTransactionCount
                         address={address}
@@ -204,15 +171,6 @@ class PlatformAddress extends React.Component<Props, State> {
                         onError={this.onError}
                     />
                 )}
-                {totalBlockCount != null && loadBlock ? (
-                    <RequestPlatformAddressBlocks
-                        page={pageForBlock}
-                        itemsPerPage={this.blockItemsPerPage}
-                        address={address}
-                        onBlocks={this.onBlocks}
-                        onError={this.onError}
-                    />
-                ) : null}
                 {totalTransactionCount != null &&
                     loadTransaction && (
                         <RequestPlatformAddressTransactions
@@ -223,16 +181,6 @@ class PlatformAddress extends React.Component<Props, State> {
                             onError={this.onError}
                         />
                     )}
-                {totalBlockCount != null && blocks.length > 0 ? (
-                    <div className="mt-large">
-                        <BlockList
-                            blocks={blocks}
-                            totalCount={totalBlockCount}
-                            loadMoreAction={this.loadMoreBlock}
-                            hideMoreButton={noMoreBlock}
-                        />
-                    </div>
-                ) : null}
                 {totalTransactionCount != null &&
                     transactions.length > 0 && (
                         <div className="mt-large">
@@ -390,15 +338,6 @@ class PlatformAddress extends React.Component<Props, State> {
         }
     };
 
-    private onBlocks = (blocks: BlockDoc[]) => {
-        if (blocks.length < this.blockItemsPerPage) {
-            this.setState({ noMoreBlock: true });
-        }
-        this.setState({
-            blocks: this.state.blocks.concat(blocks),
-            loadBlock: false
-        });
-    };
     private onTransactions = (transactions: TransactionDoc[]) => {
         if (transactions.length < this.transactionsPerPage) {
             this.setState({ noMoreTransaction: true });
@@ -406,12 +345,6 @@ class PlatformAddress extends React.Component<Props, State> {
         this.setState({
             transactions: this.state.transactions.concat(transactions),
             loadTransaction: false
-        });
-    };
-    private loadMoreBlock = () => {
-        this.setState({
-            loadBlock: true,
-            pageForBlock: this.state.pageForBlock + 1
         });
     };
     private loadMoreTransaction = () => {
@@ -424,12 +357,6 @@ class PlatformAddress extends React.Component<Props, State> {
         this.setState({
             totalTransactionCount: totalCount,
             noMoreTransaction: this.state.transactions.length >= totalCount
-        });
-    };
-    private onTotalBlockCount = (totalCount: number) => {
-        this.setState({
-            totalBlockCount: totalCount,
-            noMoreBlock: this.state.blocks.length >= totalCount
         });
     };
     private onAccountNotExist = () => {
