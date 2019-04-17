@@ -221,10 +221,10 @@ class PlatformAddress extends React.Component<Props, State> {
                                     <th style={{ width: "10%" }}>Block</th>
                                     <th style={{ width: "20%" }}>Reason</th>
                                     <th style={{ width: "35%" }} className="text-right">
-                                        Spend
+                                        Spent
                                     </th>
                                     <th style={{ width: "35%" }} className="text-right">
-                                        Receive
+                                        Received
                                     </th>
                                 </tr>
                             </thead>
