@@ -322,13 +322,15 @@ class Transactions extends React.Component<Props, State> {
             this.setState({
                 redirectFilter: [...selectedTypes, event.target.value],
                 isTransactionRequested: false,
-                redirect: true
+                redirect: true,
+                redirectPage: 1
             });
         } else {
             this.setState({
                 redirectFilter: selectedTypes.filter(type => type !== event.target.value),
                 isTransactionRequested: false,
-                redirect: true
+                redirect: true,
+                redirectPage: 1
             });
         }
     };
