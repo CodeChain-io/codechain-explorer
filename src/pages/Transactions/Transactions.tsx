@@ -28,7 +28,7 @@ interface State {
     redirect: boolean;
     redirectPage?: number;
     redirectItemsPerPage?: number;
-    selectedTypes: string[];
+    redirectFilter: string[];
     showTypeFilter: boolean;
 }
 
@@ -53,7 +53,7 @@ class Transactions extends React.Component<Props, State> {
             redirect: false,
             redirectItemsPerPage: undefined,
             redirectPage: undefined,
-            selectedTypes: [],
+            redirectFilter: [],
             showTypeFilter: false
         };
     }
@@ -84,6 +84,8 @@ class Transactions extends React.Component<Props, State> {
         const params = new URLSearchParams(search);
         const currentPage = params.get("page") ? parseInt(params.get("page") as string, 10) : 1;
         const itemsPerPage = params.get("itemsPerPage") ? parseInt(params.get("itemsPerPage") as string, 10) : 25;
+        const selectedTypes = params.get("filter") ? params.get("filter")!.split(",") : [];
+
         const {
             transactions,
             totalTransactionCount,
@@ -91,15 +93,17 @@ class Transactions extends React.Component<Props, State> {
             redirect,
             redirectItemsPerPage,
             redirectPage,
-            showTypeFilter,
-            selectedTypes
+            redirectFilter,
+            showTypeFilter
         } = this.state;
 
         if (redirect) {
             return (
                 <Redirect
                     push={true}
-                    to={`/txs?page=${redirectPage || currentPage}&itemsPerPage=${redirectItemsPerPage || itemsPerPage}`}
+                    to={`/txs?page=${redirectPage || currentPage}&itemsPerPage=${redirectItemsPerPage || itemsPerPage}${
+                        selectedTypes || redirectFilter ? `&filter=${redirectFilter.sort().join(",")}` : ""
+                    }`}
                 />
             );
         }
@@ -157,7 +161,8 @@ class Transactions extends React.Component<Props, State> {
                                                 id={type}
                                                 checked={_.includes(selectedTypes, type)}
                                                 value={type}
-                                                onChange={this.handleFilterChange}
+                                                // tslint:disable-next-line:jsx-no-lambda
+                                                onChange={event => this.handleFilterChange(event, selectedTypes)}
                                             />
                                             <label className="form-check-label" htmlFor={`${type}`}>
                                                 {type}
@@ -312,16 +317,18 @@ class Transactions extends React.Component<Props, State> {
         this.setState({ showTypeFilter: false });
     };
 
-    private handleFilterChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    private handleFilterChange = (event: React.ChangeEvent<HTMLInputElement>, selectedTypes: string[]) => {
         if (event.target.checked) {
             this.setState({
-                selectedTypes: [...this.state.selectedTypes, event.target.value],
-                isTransactionRequested: false
+                redirectFilter: [...selectedTypes, event.target.value],
+                isTransactionRequested: false,
+                redirect: true
             });
         } else {
             this.setState({
-                selectedTypes: this.state.selectedTypes.filter(type => type !== event.target.value),
-                isTransactionRequested: false
+                redirectFilter: selectedTypes.filter(type => type !== event.target.value),
+                isTransactionRequested: false,
+                redirect: true
             });
         }
     };
