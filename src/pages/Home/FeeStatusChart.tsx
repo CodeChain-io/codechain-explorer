@@ -48,29 +48,33 @@ class FeeStatusChart extends React.Component<Props, State> {
                         </select>
                     </div>
                     <div className="chart-item">
-                        <ResponsiveHistogram
-                            // tslint:disable-next-line:jsx-no-lambda
-                            renderTooltip={({ _E, datum, _D, _C }: { _E: any; datum: any; _D: any; _C: any }) => (
-                                <div style={{ fontSize: 12 }}>
-                                    {datum.bin0}
-                                    CCC ~ {datum.bin1}
-                                    CCC: <strong>{datum.count}</strong>
-                                </div>
-                            )}
-                        >
-                            <PatternLines
-                                id="normal"
-                                height={8}
-                                width={8}
-                                stroke="#fff"
-                                background="hsl(191, 95%, 42%)"
-                                strokeWidth={1}
-                                orientation={["horizontal", "vertical"]}
-                            />
-                            <BarSeries stroke="hsl(191, 95%, 42%)" fill="hsl(191, 95%, 42%)" rawData={rawData} />
-                            <XAxis />
-                            <YAxis label={" "} />
-                        </ResponsiveHistogram>
+                        {rawData.length !== 0 ? (
+                            <ResponsiveHistogram
+                                // tslint:disable-next-line:jsx-no-lambda
+                                renderTooltip={({ _E, datum, _D, _C }: { _E: any; datum: any; _D: any; _C: any }) => (
+                                    <div style={{ fontSize: 12 }}>
+                                        {datum.bin0}
+                                        CCC ~ {datum.bin1}
+                                        CCC: <strong>{datum.count}</strong>
+                                    </div>
+                                )}
+                            >
+                                <PatternLines
+                                    id="normal"
+                                    height={8}
+                                    width={8}
+                                    stroke="#fff"
+                                    background="hsl(191, 95%, 42%)"
+                                    strokeWidth={1}
+                                    orientation={["horizontal", "vertical"]}
+                                />
+                                <BarSeries stroke="hsl(191, 95%, 42%)" fill="hsl(191, 95%, 42%)" rawData={rawData} />
+                                <XAxis />
+                                <YAxis label={" "} />
+                            </ResponsiveHistogram>
+                        ) : (
+                            ""
+                        )}
                     </div>
                 </div>
             </div>
