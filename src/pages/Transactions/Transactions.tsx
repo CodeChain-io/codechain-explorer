@@ -65,14 +65,18 @@ class Transactions extends React.Component<Props, State> {
         const {
             location: { search: nextSearch }
         } = props;
+        const typeFilter = new URLSearchParams(search).get("filter") !== undefined;
         if (nextSearch !== search) {
             this.setState({
                 transactions: [],
                 isTransactionRequested: false,
                 redirect: false,
                 redirectPage: undefined,
-                redirectItemsPerPage: undefined
+                redirectItemsPerPage: undefined,
+                showTypeFilter: typeFilter
             });
+        } else {
+            this.setState({ showTypeFilter: typeFilter });
         }
     }
 
