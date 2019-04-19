@@ -69,7 +69,13 @@ class FeeStatusChart extends React.Component<Props, State> {
                                     orientation={["horizontal", "vertical"]}
                                 />
                                 <BarSeries stroke="hsl(191, 95%, 42%)" fill="hsl(191, 95%, 42%)" rawData={rawData} />
-                                <XAxis />
+                                <XAxis
+                                    tickValues={this.bottomTickValues(rawData.sort())}
+                                    // tslint:disable-next-line:jsx-no-lambda
+                                    tickFormat={(x: any) => {
+                                        return String(Math.floor(x));
+                                    }}
+                                />
                                 <YAxis label={" "} />
                             </ResponsiveHistogram>
                         ) : (
@@ -115,6 +121,14 @@ class FeeStatusChart extends React.Component<Props, State> {
             transactionLogType: txType,
             rawData
         });
+    };
+
+    private bottomTickValues = (data: string[]) => {
+        if (data.length >= 2) {
+            return [_.first(data), _.first(data) === _.last(data) ? parseInt(_.last(data)!, 10) + 1 : _.last(data)];
+        } else {
+            return undefined;
+        }
     };
 }
 
