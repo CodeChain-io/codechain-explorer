@@ -1,3 +1,4 @@
+import * as _ from "lodash";
 import * as QRCode from "qrcode.react";
 import * as React from "react";
 import { connect, Dispatch } from "react-redux";
@@ -15,6 +16,7 @@ import CopyButton from "../../components/util/CopyButton/CopyButton";
 import { ImageLoader } from "../../components/util/ImageLoader/ImageLoader";
 import { RequestPlatformAddressAccount, RequestTotalTransactionCount } from "../../request";
 import RequestPlatformAddressTransactions from "../../request/RequestPlatformAddressTransactions";
+import { balanceHistoryReasons, historyReasonTypes } from "../../utils/BalanceHistory";
 
 import { CommaNumberString } from "src/components/util/CommaNumberString/CommaNumberString";
 import DataTable from "src/components/util/DataTable/DataTable";
@@ -44,7 +46,7 @@ interface State {
     balanceChanges?: {
         change: string;
         blockNumber: number;
-        reason: "fee" | "author" | "stake" | "tx" | "initial_distribution";
+        reason: balanceHistoryReasons;
         transactionHash?: string;
         transaction?: {
             type: string;
@@ -52,6 +54,8 @@ interface State {
     }[];
     balanceChangesCount?: number;
     balanceChangesNextPage?: number;
+    showReasonFilter: boolean;
+    selectedReasons: string[];
 }
 
 type Props = OwnProps & DispatchProps;
@@ -67,7 +71,9 @@ class PlatformAddress extends React.Component<Props, State> {
             loadTransaction: true,
             pageForTransaction: 1,
             totalTransactionCount: undefined,
-            noMoreTransaction: false
+            noMoreTransaction: false,
+            showReasonFilter: false,
+            selectedReasons: []
         };
     }
 
@@ -197,7 +203,13 @@ class PlatformAddress extends React.Component<Props, State> {
     }
 
     private renderBalanceChanges = () => {
-        const { balanceChanges, balanceChangesCount, balanceChangesNextPage } = this.state;
+        const {
+            balanceChanges,
+            balanceChangesCount,
+            balanceChangesNextPage,
+            showReasonFilter,
+            selectedReasons
+        } = this.state;
 
         if (balanceChanges == null) {
             return <></>;
@@ -210,6 +222,47 @@ class PlatformAddress extends React.Component<Props, State> {
                             <h2>Balance History</h2>
                             <span>Total {balanceChangesCount} changes</span>
                         </div>
+                        {!showReasonFilter && (
+                            <div className="show-reason-filter-container">
+                                <span className="filter-btn" onClick={this.showReasonFilter}>
+                                    Show reason filter
+                                </span>
+                            </div>
+                        )}
+                        {showReasonFilter && (
+                            <div className="reason-filter-container">
+                                <div className="filter-title">
+                                    <span>Reason Filter</span>
+                                </div>
+                                <Row>
+                                    {historyReasonTypes.map(reason => {
+                                        const displayName = this.mapReasonToDisplayName(reason);
+                                        return (
+                                            <Col md={3} key={reason}>
+                                                <div className="form-check">
+                                                    <input
+                                                        className="form-check-input"
+                                                        type="checkbox"
+                                                        id={reason}
+                                                        checked={_.includes(selectedReasons, reason)}
+                                                        value={reason}
+                                                        onChange={this.handleFilterChange}
+                                                    />
+                                                    <label className="form-check-label" htmlFor={`${reason}`}>
+                                                        {displayName}
+                                                    </label>
+                                                </div>
+                                            </Col>
+                                        );
+                                    })}
+                                </Row>
+                                <div className="hide-reason-filter-container">
+                                    <span className="filter-btn" onClick={this.hideReasonFilter}>
+                                        Hide reason filter
+                                    </span>
+                                </div>
+                            </div>
+                        )}
                         <hr className="heading-hr" />
                     </Col>
                 </Row>
@@ -263,7 +316,7 @@ class PlatformAddress extends React.Component<Props, State> {
                     <Row>
                         <Col>
                             <div className="mt-small">
-                                <button className="btn btn-primary w-100" onClick={this.loadBalanceHistory}>
+                                <button className="btn btn-primary w-100" onClick={this.loadBalanceHistoryWrapper}>
                                     Load changes
                                 </button>
                             </div>
@@ -274,8 +327,25 @@ class PlatformAddress extends React.Component<Props, State> {
         );
     };
 
+    private mapReasonToDisplayName(reason: string) {
+        switch (reason) {
+            case "fee":
+                return "Transaction Fee";
+            case "author":
+                return "Block author reward";
+            case "stake":
+                return "Stake reward";
+            case "tx":
+                return "Transaction";
+            case "initial_distribution":
+                return "Genesis account";
+            default:
+                return "";
+        }
+    }
+
     private renderBalanceChangeReason = (
-        reason: "fee" | "author" | "stake" | "tx" | "initial_distribution",
+        reason: balanceHistoryReasons,
         transactionHash?: string,
         transactionType?: string
     ) => {
@@ -294,7 +364,9 @@ class PlatformAddress extends React.Component<Props, State> {
         }
     };
 
-    private loadBalanceHistory = () => {
+    private loadBalanceHistoryWrapper = () => this.loadBalanceHistory();
+
+    private loadBalanceHistory = (paramReasons?: string[]) => {
         const {
             match: {
                 params: { address }
@@ -302,18 +374,34 @@ class PlatformAddress extends React.Component<Props, State> {
             dispatch
         } = this.props;
         const { balanceChangesNextPage } = this.state;
-        if (balanceChangesNextPage == null) {
+        const selectedReasons = paramReasons ? paramReasons : this.state.selectedReasons;
+
+        let reasonFilterQuerySuffix = "";
+        if (selectedReasons.length > 0) {
+            reasonFilterQuerySuffix = `reasonFilter=${selectedReasons.join(",")}`;
+        }
+
+        console.log(selectedReasons);
+        if (balanceChangesNextPage == null || paramReasons) {
             Promise.all([
                 apiRequest({
-                    path: `account/${address}/balance-history?page=1&itemsPerPage=${this.balanceChangesPerPage}`,
+                    path:
+                        `account/${address}/balance-history?page=1&itemsPerPage=${this.balanceChangesPerPage}` +
+                        "&" +
+                        reasonFilterQuerySuffix,
                     dispatch,
                     showProgressBar: true
                 }),
-                apiRequest({ path: `account/${address}/balance-history/count`, dispatch, showProgressBar: true })
+                apiRequest({
+                    path: `account/${address}/balance-history/count` + "?" + reasonFilterQuerySuffix,
+                    dispatch,
+                    showProgressBar: true
+                })
             ])
                 .then(([response, count]) => {
                     // FIXME: Remove any
                     this.setState({
+                        selectedReasons,
                         balanceChanges: response as any,
                         balanceChangesCount: count as number,
                         balanceChangesNextPage: 2
@@ -322,9 +410,12 @@ class PlatformAddress extends React.Component<Props, State> {
                 .catch(this.onError);
         } else {
             apiRequest({
-                path: `account/${address}/balance-history?page=${balanceChangesNextPage}&itemsPerPage=${
-                    this.balanceChangesPerPage
-                }`,
+                path:
+                    `account/${address}/balance-history?page=${balanceChangesNextPage}&itemsPerPage=${
+                        this.balanceChangesPerPage
+                    }` +
+                    "&" +
+                    reasonFilterQuerySuffix,
                 dispatch,
                 showProgressBar: true
             })
@@ -335,6 +426,16 @@ class PlatformAddress extends React.Component<Props, State> {
                     });
                 })
                 .catch(this.onError);
+        }
+    };
+
+    private handleFilterChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        if (event.target.checked) {
+            const selectedReasons = [...this.state.selectedReasons, event.target.value];
+            this.loadBalanceHistory(selectedReasons);
+        } else {
+            const selectedReasons = this.state.selectedReasons.filter(reason => reason !== event.target.value);
+            this.loadBalanceHistory(selectedReasons);
         }
     };
 
@@ -367,6 +468,14 @@ class PlatformAddress extends React.Component<Props, State> {
     };
     private onError = (e: any) => {
         console.error(e);
+    };
+
+    private showReasonFilter = () => {
+        this.setState({ showReasonFilter: true });
+    };
+
+    private hideReasonFilter = () => {
+        this.setState({ showReasonFilter: false });
     };
 }
 
