@@ -26,6 +26,31 @@
     padding-top: 30px;
     display: none;
   }
+  .reason-filter-container {
+    margin-top: 18px;
+    border: 1px solid $primary-color;
+    padding: 18px;
+
+    .filter-title {
+      margin-bottom: 18px;
+      span {
+        font-weight: bold;
+      }
+    }
+
+    .hide-reason-filter-container {
+      margin-top: 20px;
+    }
+  }
+
+  .show-reason-filter-container {
+    margin-top: 20px;
+  }
+
+  .filter-btn {
+    cursor: pointer;
+    text-decoration: underline;
+  }
   @include respond-below(sm) {
     .big-size-qr {
       display: block;
