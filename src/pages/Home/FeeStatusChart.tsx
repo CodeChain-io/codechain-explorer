@@ -41,7 +41,7 @@ class FeeStatusChart extends React.Component<Props, State> {
                 <div className="chart">
                     <div className="header-part">
                         <h2 className="title">Fee stats</h2>
-                        <div className="subtitle">Histogram of last 200 {transactionLogType} transactions</div>
+                        <div className="subtitle">Last 200 {transactionLogType} transactions</div>
                         <select className="select" defaultValue={transactionLogType} onChange={this.onTxLogTypeChanged}>
                             <option value={TransactionLogType.PAY}>Pay</option>
                             <option value={TransactionLogType.TRANSFER_ASSET}>TransferAsset</option>
