@@ -3,11 +3,13 @@ import { match } from "react-router";
 import { Col, Container, Row } from "reactstrap";
 import { Error } from "../../components/error/Error/Error";
 
-import { AssetSchemeDoc, TransactionDoc } from "codechain-indexer-types";
+import { AggsUTXODoc, AssetSchemeDoc, TransactionDoc } from "codechain-indexer-types";
 import AssetDetails from "../../components/asset/AssetDetails/AssetDetails";
+import AssetOwners from "../../components/asset/AssetOwners/AssetOwners";
 import TransactionList from "../../components/transaction/TransactionList/TransactionList";
 import { RequestAssetScheme, RequestTotalAssetTransactionCount } from "../../request";
 import RequestAssetTransactions from "../../request/RequestAssetTransactions";
+import RequestAssetTypeUTXO from "../../request/RequestAssetTypeUTXO";
 
 import { H160 } from "codechain-sdk/lib/core/classes";
 import CopyButton from "../../components/util/CopyButton/CopyButton";
@@ -21,10 +23,12 @@ interface Props {
 
 interface State {
     transactions: TransactionDoc[];
+    aggsUTXO: AggsUTXODoc[];
     assetScheme?: AssetSchemeDoc;
     page: number;
     totalTransactionCount: number;
     loadTransaction: boolean;
+    loadAggsUTXO: boolean;
     noMoreTransaction: boolean;
     notExistedInBlock: boolean;
 }
@@ -35,9 +39,11 @@ class Asset extends React.Component<Props, State> {
         super(props);
         this.state = {
             transactions: [],
+            aggsUTXO: [],
             page: 1,
             totalTransactionCount: 0,
             loadTransaction: true,
+            loadAggsUTXO: true,
             noMoreTransaction: false,
             notExistedInBlock: false
         };
@@ -62,6 +68,7 @@ class Asset extends React.Component<Props, State> {
                 page: 1,
                 totalTransactionCount: 0,
                 loadTransaction: true,
+                loadAggsUTXO: true,
                 noMoreTransaction: false,
                 notExistedInBlock: false
             });
@@ -79,8 +86,10 @@ class Asset extends React.Component<Props, State> {
             assetScheme,
             transactions,
             totalTransactionCount,
+            aggsUTXO,
             page,
             loadTransaction,
+            loadAggsUTXO,
             noMoreTransaction
         } = this.state;
 
@@ -128,6 +137,14 @@ class Asset extends React.Component<Props, State> {
                 <div className="mt-large">
                     <AssetDetails assetType={assetType} assetScheme={assetScheme} />
                 </div>
+                {loadAggsUTXO ? (
+                    <RequestAssetTypeUTXO assetType={assetType} onAggsUTXOs={this.onAggsUTXOs} onError={this.onError} />
+                ) : null}
+                {aggsUTXO.length !== 0 ? (
+                    <div className="mt-large">
+                        <AssetOwners aggsUTXO={aggsUTXO} />
+                    </div>
+                ) : null}
                 {
                     <RequestTotalAssetTransactionCount
                         assetType={assetType}
@@ -160,7 +177,7 @@ class Asset extends React.Component<Props, State> {
     }
 
     private loadMoreAction = () => {
-        this.setState({ loadTransaction: true, page: this.state.page + 1 });
+        this.setState({ loadTransaction: true, loadAggsUTXO: true, page: this.state.page + 1 });
     };
 
     private onTransactionTotalCount = (totalCount: number) => {
@@ -182,6 +199,10 @@ class Asset extends React.Component<Props, State> {
         if (this.state.transactions.length >= this.state.totalTransactionCount) {
             this.setState({ noMoreTransaction: true });
         }
+    };
+
+    private onAggsUTXOs = (aggsUTXO: AggsUTXODoc[]) => {
+        this.setState({ aggsUTXO, loadAggsUTXO: false });
     };
 
     private onAssetSchemeNotFound = () => {

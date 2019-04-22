@@ -1,0 +1,23 @@
+@import "../../../mixins.scss";
+@import "../../../variables.scss";
+.parcel-transaction-list {
+  .input-output-container {
+    background-color: $background-gray;
+    padding-left: 8px;
+    padding-right: 8px;
+    margin-top: 6px;
+    margin-bottom: 6px;
+  }
+  .view-more-transfer-btn {
+    margin-bottom: 6px;
+  }
+  .input-highlight {
+    background-color: #f9b7a9;
+  }
+  .output-highlight {
+    background-color: #c1eed4;
+  }
+  .arrow-icon {
+    color: #bdbdbd;
+  }
+}
