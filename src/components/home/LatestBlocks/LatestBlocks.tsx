@@ -7,7 +7,6 @@ import { connect } from "react-redux";
 import { RootState } from "src/redux/actions";
 import RequestServerTime from "src/request/RequestServerTime";
 import { getUnixTimeLocaleString } from "src/utils/Time";
-import { CommaNumberString } from "../../util/CommaNumberString/CommaNumberString";
 import DataTable from "../../util/DataTable/DataTable";
 import "./LatestBlocks.scss";
 
@@ -34,13 +33,12 @@ const LatestBlocks = (props: Props) => {
                 <DataTable>
                     <thead>
                         <tr>
-                            <th style={{ width: "15%" }}>No.</th>
-                            <th style={{ width: "15%" }}>Tx</th>
-                            <th style={{ width: "35%" }}>Author</th>
+                            <th style={{ width: "25%" }}>No.</th>
+                            <th style={{ width: "25%" }}>Hash</th>
                             <th style={{ width: "15%" }} className="text-right">
-                                Reward
+                                Tx
                             </th>
-                            <th style={{ width: "20%" }} className="text-right">
+                            <th style={{ width: "35%" }} className="text-right">
                                 Last seen
                             </th>
                         </tr>
@@ -52,14 +50,10 @@ const LatestBlocks = (props: Props) => {
                                     <td scope="row">
                                         <Link to={`/block/${block.number}`}>{block.number.toLocaleString()}</Link>
                                     </td>
-                                    <td>{block.transactionsCount.toLocaleString()}</td>
                                     <td>
-                                        <Link to={`/addr-platform/${block.author}`}>{block.author}</Link>
+                                        <Link to={`/block/${block.hash}`}>{`0x${block.hash}`}</Link>
                                     </td>
-                                    <td className="text-right">
-                                        <CommaNumberString text={block.miningReward} />
-                                        <span className="ccc">CCC</span>
-                                    </td>
+                                    <td className="text-right">{block.transactionsCount.toLocaleString()}</td>
                                     <td className="text-right">
                                         {block.timestamp
                                             ? getUnixTimeLocaleString(block.timestamp, serverTimeOffset)
