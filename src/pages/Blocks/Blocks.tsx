@@ -200,7 +200,7 @@ class Blocks extends React.Component<Props, State> {
                                             Reward
                                         </th>
                                         <th style={{ width: "20%" }} className="text-right">
-                                            Last seen
+                                            Time
                                         </th>
                                     </tr>
                                 </thead>

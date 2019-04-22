@@ -39,7 +39,7 @@ const LatestBlocks = (props: Props) => {
                                 Tx
                             </th>
                             <th style={{ width: "35%" }} className="text-right">
-                                Last seen
+                                Time
                             </th>
                         </tr>
                     </thead>
