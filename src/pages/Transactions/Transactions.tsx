@@ -271,7 +271,7 @@ class Transactions extends React.Component<Props, State> {
                                         </th>
                                         <th style={{ width: "25%" }}>Signer</th>
                                         <th style={{ width: "15%" }} className="text-right">
-                                            Last seen
+                                            Time
                                         </th>
                                     </tr>
                                 </thead>
