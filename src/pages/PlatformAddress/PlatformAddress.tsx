@@ -294,7 +294,14 @@ class PlatformAddress extends React.Component<Props, State> {
                                                 )}
                                             </td>
                                             <td className="text-right">
-                                                {change.startsWith("-") ? <CommaNumberString text={change} /> : ""}
+                                                {change.startsWith("-") ? (
+                                                    <>
+                                                        <CommaNumberString text={change} />
+                                                        <span className="ccc">CCC</span>
+                                                    </>
+                                                ) : (
+                                                    ""
+                                                )}
                                             </td>
                                             <td className="text-right">
                                                 {change.startsWith("-") ? (
@@ -302,6 +309,7 @@ class PlatformAddress extends React.Component<Props, State> {
                                                 ) : (
                                                     <>
                                                         +<CommaNumberString text={change} />
+                                                        <span className="ccc">CCC</span>
                                                     </>
                                                 )}
                                             </td>
