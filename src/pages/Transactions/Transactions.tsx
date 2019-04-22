@@ -165,8 +165,7 @@ class Transactions extends React.Component<Props, State> {
                                                 id={type}
                                                 checked={_.includes(selectedTypes, type)}
                                                 value={type}
-                                                // tslint:disable-next-line:jsx-no-lambda
-                                                onChange={event => this.handleFilterChange(event, selectedTypes)}
+                                                onChange={this.handleFilterChange}
                                             />
                                             <label className="form-check-label" htmlFor={`${type}`}>
                                                 {capitalizeFirstLetter(type)}
@@ -321,7 +320,13 @@ class Transactions extends React.Component<Props, State> {
         this.setState({ showTypeFilter: false });
     };
 
-    private handleFilterChange = (event: React.ChangeEvent<HTMLInputElement>, selectedTypes: string[]) => {
+    private handleFilterChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        const {
+            location: { search }
+        } = this.props;
+        const params = new URLSearchParams(search);
+        const selectedTypes = params.get("filter") ? params.get("filter")!.split(",") : [];
+
         if (event.target.checked) {
             this.setState({
                 redirectFilter: [...selectedTypes, event.target.value],
