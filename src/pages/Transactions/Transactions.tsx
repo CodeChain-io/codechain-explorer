@@ -169,7 +169,7 @@ class Transactions extends React.Component<Props, State> {
                                                 onChange={event => this.handleFilterChange(event, selectedTypes)}
                                             />
                                             <label className="form-check-label" htmlFor={`${type}`}>
-                                                {type}
+                                                {capitalizeFirstLetter(type)}
                                             </label>
                                         </div>
                                     </Col>
@@ -397,3 +397,7 @@ export default connect((state: RootState) => {
         serverTimeOffset: state.appReducer.serverTimeOffset
     };
 })(Transactions);
+
+function capitalizeFirstLetter(str: string) {
+    return str[0].toUpperCase() + str.slice(1);
+}
