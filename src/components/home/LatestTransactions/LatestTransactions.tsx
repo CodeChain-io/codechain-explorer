@@ -4,10 +4,9 @@ import * as React from "react";
 import { TransactionDoc } from "codechain-indexer-types";
 import { connect } from "react-redux";
 import { Link } from "react-router-dom";
-import { CommaNumberString } from "src/components/util/CommaNumberString/CommaNumberString";
+import { ImageLoader } from "src/components/util/ImageLoader/ImageLoader";
 import { RootState } from "src/redux/actions";
 import RequestServerTime from "src/request/RequestServerTime";
-import { getUnixTimeLocaleString } from "src/utils/Time";
 import DataTable from "../../util/DataTable/DataTable";
 import HexString from "../../util/HexString/HexString";
 import { TypeBadge } from "../../util/TypeBadge/TypeBadge";
@@ -35,15 +34,9 @@ const LatestTransactions = (props: Props) => {
                 <DataTable>
                     <thead>
                         <tr>
-                            <th style={{ width: "20%" }}>Type</th>
+                            <th style={{ width: "25%" }}>Type</th>
                             <th style={{ width: "25%" }}>Hash</th>
-                            <th style={{ width: "15%" }} className="text-right">
-                                Fee
-                            </th>
-                            <th style={{ width: "25%" }}>Signer</th>
-                            <th style={{ width: "15%" }} className="text-right">
-                                Last seen
-                            </th>
+                            <th style={{ width: "50%" }}>Signer</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -56,15 +49,11 @@ const LatestTransactions = (props: Props) => {
                                     <td scope="row">
                                         <HexString link={`/tx/0x${transaction.hash}`} text={transaction.hash} />
                                     </td>
-                                    <td className="text-right">
-                                        <CommaNumberString text={transaction.fee} />
-                                        <span className="ccc">CCC</span>
-                                    </td>
                                     <td>
-                                        <Link to={`/addr-platform/${transaction.signer}`}>{transaction.signer}</Link>
-                                    </td>
-                                    <td className="text-right">
-                                        {getUnixTimeLocaleString(transaction.timestamp!, serverTimeOffset)}
+                                        <Link to={`/addr-platform/${transaction.signer}`}>
+                                            <ImageLoader size={15} data={transaction.signer} isAssetImage={false} />
+                                            <span className="ml-1">{transaction.signer}</span>
+                                        </Link>
                                     </td>
                                 </tr>
                             );

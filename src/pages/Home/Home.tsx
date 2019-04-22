@@ -99,23 +99,34 @@ class Home extends React.Component<Props, State> {
                             </Col>
                         </Row>
                     </div>
-                    <div className="home-element-container">
-                        <LatestBlocks blocks={blocks} />
-                        {requestBlocks && (
-                            <RequestBlocks page={1} itemsPerPage={31} onBlocks={this.onBlocks} onError={this.onError} />
-                        )}
-                    </div>
-                    <div className="home-element-container">
-                        <LatestTransactions transactions={transactions} />
-                        {requestTransactions && (
-                            <RequestTransactions
-                                page={1}
-                                itemsPerPage={10}
-                                onTransactions={this.onTransactions}
-                                onError={this.onError}
-                            />
-                        )}
-                    </div>
+                    <Row>
+                        <Col lg="6">
+                            <div className="home-element-container">
+                                <LatestBlocks blocks={blocks} />
+                                {requestBlocks && (
+                                    <RequestBlocks
+                                        page={1}
+                                        itemsPerPage={31}
+                                        onBlocks={this.onBlocks}
+                                        onError={this.onError}
+                                    />
+                                )}
+                            </div>
+                        </Col>
+                        <Col lg="6">
+                            <div className="home-element-container">
+                                <LatestTransactions transactions={transactions} />
+                                {requestTransactions && (
+                                    <RequestTransactions
+                                        page={1}
+                                        itemsPerPage={10}
+                                        onTransactions={this.onTransactions}
+                                        onError={this.onError}
+                                    />
+                                )}
+                            </div>
+                        </Col>
+                    </Row>
                 </Container>
             </div>
         );
