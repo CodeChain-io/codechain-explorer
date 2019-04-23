@@ -15,12 +15,10 @@ import HexString from "../../components/util/HexString/HexString";
 import { RequestBlock } from "../../request";
 import { TransactionTypes } from "../../utils/Transactions";
 
-import RequestCountOfEachTransactionType from "src/request/RequestCountOfEachTransactionType";
 import "./Block.scss";
 
 interface State {
     block?: BlockDoc;
-    txTypeCounts?: { [type: string]: number };
     notFound: boolean;
 }
 
@@ -58,7 +56,7 @@ class Block extends React.Component<Props, State> {
                 params: { id }
             }
         } = this.props;
-        const { block, txTypeCounts, notFound } = this.state;
+        const { block, notFound } = this.state;
 
         if (notFound) {
             return (
@@ -74,16 +72,6 @@ class Block extends React.Component<Props, State> {
                     onBlock={this.onBlock}
                     onError={this.onError}
                     onBlockNotExist={this.onBlockNotExist}
-                />
-            );
-        }
-        if (!txTypeCounts) {
-            return (
-                <RequestCountOfEachTransactionType
-                    blockNumber={block.number}
-                    onError={this.onError}
-                    onBlockNotExist={this.onBlockNotExist}
-                    onCounts={this.onTxTypeCounts}
                 />
             );
         }
@@ -148,7 +136,7 @@ class Block extends React.Component<Props, State> {
                                 return [
                                     <div className="d-flex align-items-center" key="asset-info">
                                         <span className="mr-auto item-name">{tt}</span>
-                                        <span>{txTypeCounts[tt] || 0}</span>
+                                        <span>{block.transactionsCountByType[tt] || 0}</span>
                                     </div>,
                                     <hr key="hr" />
                                 ];
@@ -166,10 +154,6 @@ class Block extends React.Component<Props, State> {
 
     private onBlock = (block: BlockDoc) => {
         this.setState({ block });
-    };
-
-    private onTxTypeCounts = (txTypeCounts: { [type: string]: number }) => {
-        this.setState({ txTypeCounts });
     };
 
     private onError = (e: any) => {
