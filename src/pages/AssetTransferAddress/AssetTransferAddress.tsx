@@ -7,8 +7,6 @@ import { Col, Container, Row } from "reactstrap";
 import { AggsUTXODoc, TransactionDoc } from "codechain-indexer-types";
 import { RequestAssetTransferAddressTransactions, RequestAssetTransferAddressUTXO } from "../../request";
 
-import { faSpinner } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import * as _ from "lodash";
 import AssetList from "../../components/asset/AssetList/AssetList";
 import AddressDetails from "../../components/assetTransferAddress/AddressDetails/AddressDetails";
@@ -192,7 +190,6 @@ class AssetTransferAddress extends React.Component<Props, State> {
                             onTransactions={this.onTransactions}
                             onError={this.onError}
                         />
-                        <FontAwesomeIcon className="spin w-100 mt-3" icon={faSpinner} spin={true} size={"2x"} />
                     </>
                 )}
             </>
