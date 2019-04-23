@@ -6,7 +6,7 @@
     "type": "git",
     "url": "git+https://github.com/kodebox-io/codechain-explorer.git"
   },
-  "author": "CodeChain Team <codechain@kodebox.io>",
+  "author": "CodeChain Team <hi@codechain.io>",
   "license": "Apache-2.0",
   "dependencies": {
     "@data-ui/histogram": "^0.0.78",
