@@ -23,7 +23,7 @@ class RequestTotalTransactionCount extends React.Component<Props> {
         if (selectedTypes && selectedTypes.length > 0) {
             path += `&type=${selectedTypes.join(",")}`;
         }
-        apiRequest({ path, dispatch, showProgressBar: true })
+        apiRequest({ path, dispatch, showProgressBar: false })
             .then((response: any) => {
                 onTransactionTotalCount(response);
             })

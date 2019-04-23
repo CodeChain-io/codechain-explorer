@@ -18,7 +18,11 @@ type Props = OwnProps & DispatchProps;
 class RequestTotalPendingTransactionCount extends React.Component<Props> {
     public componentWillMount() {
         const { onError, onTransactionTotalCount, dispatch, address } = this.props;
-        apiRequest({ path: `pending-tx/count${address ? `?address=${address}` : ""}`, dispatch, showProgressBar: true })
+        apiRequest({
+            path: `pending-tx/count${address ? `?address=${address}` : ""}`,
+            dispatch,
+            showProgressBar: false
+        })
             .then((response: any) => {
                 onTransactionTotalCount(response);
             })

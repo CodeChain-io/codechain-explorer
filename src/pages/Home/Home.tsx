@@ -102,6 +102,7 @@ class Home extends React.Component<Props, State> {
                                     <RequestBlocks
                                         page={1}
                                         itemsPerPage={31}
+                                        showProgressBar={false}
                                         onBlocks={this.onBlocks}
                                         onError={this.onError}
                                     />
@@ -115,6 +116,7 @@ class Home extends React.Component<Props, State> {
                                     <RequestTransactions
                                         page={1}
                                         itemsPerPage={10}
+                                        showProgressBar={false}
                                         onTransactions={this.onTransactions}
                                         onError={this.onError}
                                     />

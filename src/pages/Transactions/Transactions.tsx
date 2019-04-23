@@ -131,6 +131,7 @@ class Transactions extends React.Component<Props, State> {
                             onTransactions={this.onTransactions}
                             page={currentPage}
                             itemsPerPage={itemsPerPage}
+                            showProgressBar={true}
                             onError={this.onError}
                             selectedTypes={selectedTypes}
                         />
