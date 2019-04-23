@@ -11,6 +11,7 @@ interface OwnProps {
     onError: (e: ApiError) => void;
     onAccountNotExist: () => void;
     progressBarTarget?: string;
+    showProgressBar: boolean;
 }
 
 interface DispatchProps {
@@ -21,12 +22,20 @@ type Props = OwnProps & DispatchProps;
 
 class RequestPlatformAddressAccount extends React.Component<Props> {
     public componentWillMount() {
-        const { address, onAccount, onError, dispatch, progressBarTarget, onAccountNotExist } = this.props;
+        const {
+            address,
+            onAccount,
+            onError,
+            dispatch,
+            progressBarTarget,
+            showProgressBar,
+            onAccountNotExist
+        } = this.props;
         apiRequest({
             path: `account/${address}`,
             dispatch,
             progressBarTarget,
-            showProgressBar: true
+            showProgressBar
         })
             .then((response: any) => {
                 if (response === null) {

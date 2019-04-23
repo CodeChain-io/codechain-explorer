@@ -23,7 +23,7 @@ class RequestPlatformAddressTransactions extends React.Component<Props> {
         apiRequest({
             path: `tx?page=${page}&itemsPerPage=${itemsPerPage}&address=${address}`,
             dispatch,
-            showProgressBar: true
+            showProgressBar: false
         })
             .then((response: TransactionDoc[]) => {
                 onTransactions(response);
