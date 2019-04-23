@@ -7,6 +7,8 @@ import { Col, Container, Row } from "reactstrap";
 import { AggsUTXODoc, TransactionDoc } from "codechain-indexer-types";
 import { RequestAssetTransferAddressTransactions, RequestAssetTransferAddressUTXO } from "../../request";
 
+import { faSpinner } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import * as _ from "lodash";
 import AssetList from "../../components/asset/AssetList/AssetList";
 import AddressDetails from "../../components/assetTransferAddress/AddressDetails/AddressDetails";
@@ -78,16 +80,7 @@ class AssetTransferAddress extends React.Component<Props, State> {
                 params: { address }
             }
         } = this.props;
-        const {
-            aggsUTXO,
-            transactions,
-            pageForTransactions,
-            loadTransaction,
-            loadUTXO,
-            totalTransactionCount,
-            noMoreTransaction,
-            requestTotalTransactionCount
-        } = this.state;
+        const { totalTransactionCount } = this.state;
         return (
             <Container className="asset-transfer-address animated fadeIn">
                 <Row>
@@ -123,48 +116,86 @@ class AssetTransferAddress extends React.Component<Props, State> {
                 </Row>
                 <Row>
                     <Col>
-                        {loadUTXO ? (
-                            <RequestAssetTransferAddressUTXO
-                                address={address}
-                                onAggsUTXO={this.onAggsUTXO}
-                                onError={this.onError}
-                            />
-                        ) : null}
-                        {aggsUTXO.length > 0 ? (
-                            <div className="mt-large">
-                                <AssetList aggsUTXO={aggsUTXO} />
-                            </div>
-                        ) : null}
-                        {requestTotalTransactionCount && (
-                            <ReqeustTotalTransferTransactionCount
-                                address={address}
-                                onTotalCount={this.onTransactionTotalCount}
-                                onError={this.onError}
-                            />
-                        )}
-                        {loadTransaction ? (
-                            <RequestAssetTransferAddressTransactions
-                                address={address}
-                                page={pageForTransactions}
-                                itemsPerPage={this.transactionItemsPerPage}
-                                onTransactions={this.onTransactions}
-                                onError={this.onError}
-                            />
-                        ) : null}
-                        {totalTransactionCount > 0 ? (
-                            <div className="mt-large">
-                                <TransactionList
-                                    owner={address}
-                                    transactions={transactions}
-                                    totalCount={totalTransactionCount}
-                                    loadMoreAction={this.loadMoreTransaction}
-                                    hideMoreButton={noMoreTransaction}
-                                />
-                            </div>
-                        ) : null}
+                        {this.renderAssetList()}
+                        {this.renderTransactions()}
                     </Col>
                 </Row>
             </Container>
+        );
+    }
+
+    private renderAssetList() {
+        const {
+            match: {
+                params: { address }
+            }
+        } = this.props;
+        const { aggsUTXO, loadUTXO } = this.state;
+        return (
+            <>
+                {loadUTXO ? (
+                    <RequestAssetTransferAddressUTXO
+                        address={address}
+                        onAggsUTXO={this.onAggsUTXO}
+                        onError={this.onError}
+                    />
+                ) : null}
+                {aggsUTXO.length > 0 ? (
+                    <div className="mt-large">
+                        <AssetList aggsUTXO={aggsUTXO} />
+                    </div>
+                ) : null}
+            </>
+        );
+    }
+
+    private renderTransactions() {
+        const {
+            match: {
+                params: { address }
+            }
+        } = this.props;
+        const {
+            transactions,
+            pageForTransactions,
+            loadTransaction,
+            totalTransactionCount,
+            noMoreTransaction,
+            requestTotalTransactionCount
+        } = this.state;
+        return (
+            <>
+                {requestTotalTransactionCount && (
+                    <ReqeustTotalTransferTransactionCount
+                        address={address}
+                        onTotalCount={this.onTransactionTotalCount}
+                        onError={this.onError}
+                    />
+                )}
+                {totalTransactionCount > 0 ? (
+                    <div className="mt-large">
+                        <TransactionList
+                            owner={address}
+                            transactions={transactions}
+                            totalCount={totalTransactionCount}
+                            loadMoreAction={this.loadMoreTransaction}
+                            hideMoreButton={noMoreTransaction}
+                        />
+                    </div>
+                ) : null}
+                {loadTransaction && (
+                    <>
+                        <RequestAssetTransferAddressTransactions
+                            address={address}
+                            page={pageForTransactions}
+                            itemsPerPage={this.transactionItemsPerPage}
+                            onTransactions={this.onTransactions}
+                            onError={this.onError}
+                        />
+                        <FontAwesomeIcon className="spin w-100 mt-3" icon={faSpinner} spin={true} size={"2x"} />
+                    </>
+                )}
+            </>
         );
     }
 
