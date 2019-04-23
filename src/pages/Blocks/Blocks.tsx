@@ -106,6 +106,7 @@ class Blocks extends React.Component<Props, State> {
                             onBlocks={this.onBlocks}
                             page={currentPage}
                             itemsPerPage={itemsPerPage}
+                            showProgressBar={true}
                             onError={this.onError}
                         />
                         <RequestTotalBlockCount onBlockTotalCount={this.onTotalBlockCount} onError={this.onError} />

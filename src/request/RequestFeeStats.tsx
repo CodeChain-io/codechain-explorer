@@ -25,7 +25,7 @@ class RequestFeeStats extends React.Component<Props> {
         apiRequest({
             path: `tx/fee-stats`,
             dispatch,
-            showProgressBar: true
+            showProgressBar: false
         })
             .then((response: FeeStatus) => {
                 onData(response);

@@ -20,7 +20,7 @@ class RequestTotalBlockCount extends React.Component<Props> {
         apiRequest({
             path: `block/count`,
             dispatch,
-            showProgressBar: true
+            showProgressBar: false
         })
             .then((response: any) => {
                 onBlockTotalCount(response);

@@ -1,7 +1,11 @@
+import { faSpinner } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import * as _ from "lodash";
 import * as React from "react";
-import RequestFeeStats, { FeeStatus } from "src/request/RequestFeeStats";
+
 const { BarSeries, Histogram, PatternLines, withParentSize, XAxis, YAxis } = require("@data-ui/histogram");
+
+import RequestFeeStats, { FeeStatus } from "src/request/RequestFeeStats";
 
 const ResponsiveHistogram = withParentSize(
     ({ parentWidth, parentHeight, ...rest }: { parentWidth: any; parentHeight: any }) => (
@@ -34,7 +38,25 @@ class FeeStatusChart extends React.Component<Props, State> {
     public render() {
         const { data, transactionLogType, rawData } = this.state;
         if (data == null || rawData == null) {
-            return <RequestFeeStats onData={this.onData} onError={this.props.onError} />;
+            return (
+                <div className="chart-container">
+                    <div className="chart">
+                        <div className="header-part">
+                            <h2 className="title">Fee stats</h2>
+                        </div>
+                        <div className="text-center mt-3">
+                            <FontAwesomeIcon
+                                className="spin"
+                                icon={faSpinner}
+                                spin={true}
+                                size={"2x"}
+                                style={{ marginTop: "80px" }}
+                            />
+                        </div>
+                        <RequestFeeStats onData={this.onData} onError={this.props.onError} />
+                    </div>
+                </div>
+            );
         }
         return (
             <div className="chart-container">

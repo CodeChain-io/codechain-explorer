@@ -6,6 +6,7 @@ import { ApiError, apiRequest } from "./ApiRequest";
 interface OwnProps {
     page: number;
     itemsPerPage: number;
+    showProgressBar: boolean;
     onTransactions: (transactions: TransactionDoc[]) => void;
     onError: (e: ApiError) => void;
     selectedTypes?: string[];
@@ -19,7 +20,7 @@ type Props = OwnProps & DispatchProps;
 
 class RequestTransactions extends React.Component<Props> {
     public componentWillMount() {
-        const { onError, onTransactions, dispatch, page, itemsPerPage, selectedTypes } = this.props;
+        const { onError, onTransactions, dispatch, page, itemsPerPage, showProgressBar, selectedTypes } = this.props;
         let path = `tx?page=${page}&itemsPerPage=${itemsPerPage}`;
         if (selectedTypes && selectedTypes.length > 0) {
             path += `&type=${selectedTypes.join(",")}`;
@@ -27,7 +28,7 @@ class RequestTransactions extends React.Component<Props> {
         apiRequest({
             path,
             dispatch,
-            showProgressBar: true
+            showProgressBar
         })
             .then((response: any) => {
                 onTransactions(response);
