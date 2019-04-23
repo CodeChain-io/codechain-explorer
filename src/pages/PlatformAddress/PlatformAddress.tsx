@@ -389,7 +389,6 @@ class PlatformAddress extends React.Component<Props, State> {
             reasonFilterQuerySuffix = `reasonFilter=${selectedReasons.join(",")}`;
         }
 
-        console.log(selectedReasons);
         if (balanceChangesNextPage == null || paramReasons) {
             Promise.all([
                 apiRequest({
