@@ -1,4 +1,10 @@
-import { faAngleDoubleLeft, faAngleDoubleRight, faAngleLeft, faAngleRight } from "@fortawesome/free-solid-svg-icons";
+import {
+    faAngleDoubleLeft,
+    faAngleDoubleRight,
+    faAngleLeft,
+    faAngleRight,
+    faSpinner
+} from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { BlockDoc } from "codechain-indexer-types";
 import * as _ from "lodash";
@@ -206,32 +212,49 @@ class Blocks extends React.Component<Props, State> {
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {_.map(blocks, block => {
-                                        return (
-                                            <tr key={`block-${block.hash}`}>
-                                                <td scope="row">
-                                                    <Link to={`/block/${block.number}`}>
-                                                        {block.number.toLocaleString()}
-                                                    </Link>
-                                                </td>
-                                                <td className="text-right">
-                                                    {block.transactionsCount.toLocaleString()}
-                                                </td>
-                                                <td>
-                                                    <Link to={`/addr-platform/${block.author}`}>{block.author}</Link>
-                                                </td>
-                                                <td className="text-right">
-                                                    <CommaNumberString text={block.miningReward} />
-                                                    <span className="ccc">CCC</span>
-                                                </td>
-                                                <td className="text-right">
-                                                    {block.timestamp
-                                                        ? getUnixTimeLocaleString(block.timestamp, serverTimeOffset)
-                                                        : "Genesis"}
-                                                </td>
-                                            </tr>
-                                        );
-                                    })}
+                                    {blocks.length === 0 ? (
+                                        <tr>
+                                            <td colSpan={12}>
+                                                <div className="text-center mt-12">
+                                                    <FontAwesomeIcon
+                                                        className="spin"
+                                                        icon={faSpinner}
+                                                        spin={true}
+                                                        size={"2x"}
+                                                    />
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    ) : (
+                                        _.map(blocks, block => {
+                                            return (
+                                                <tr key={`block-${block.hash}`}>
+                                                    <td scope="row">
+                                                        <Link to={`/block/${block.number}`}>
+                                                            {block.number.toLocaleString()}
+                                                        </Link>
+                                                    </td>
+                                                    <td className="text-right">
+                                                        {block.transactionsCount.toLocaleString()}
+                                                    </td>
+                                                    <td>
+                                                        <Link to={`/addr-platform/${block.author}`}>
+                                                            {block.author}
+                                                        </Link>
+                                                    </td>
+                                                    <td className="text-right">
+                                                        <CommaNumberString text={block.miningReward} />
+                                                        <span className="ccc">CCC</span>
+                                                    </td>
+                                                    <td className="text-right">
+                                                        {block.timestamp
+                                                            ? getUnixTimeLocaleString(block.timestamp, serverTimeOffset)
+                                                            : "Genesis"}
+                                                    </td>
+                                                </tr>
+                                            );
+                                        })
+                                    )}
                                 </tbody>
                             </DataTable>
                         </div>
