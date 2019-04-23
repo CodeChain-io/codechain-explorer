@@ -338,7 +338,7 @@ class PlatformAddress extends React.Component<Props, State> {
     private mapReasonToDisplayName(reason: string) {
         switch (reason) {
             case "fee":
-                return "Transaction Fee";
+                return "Transaction fee";
             case "author":
                 return "Block author reward";
             case "stake":
