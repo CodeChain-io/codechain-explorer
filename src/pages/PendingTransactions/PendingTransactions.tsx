@@ -1,4 +1,10 @@
-import { faAngleDoubleLeft, faAngleDoubleRight, faAngleLeft, faAngleRight } from "@fortawesome/free-solid-svg-icons";
+import {
+    faAngleDoubleLeft,
+    faAngleDoubleRight,
+    faAngleLeft,
+    faAngleRight,
+    faSpinner
+} from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import * as _ from "lodash";
 import * as React from "react";
@@ -217,36 +223,51 @@ class PendingTransactions extends React.Component<Props, State> {
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {_.map(transactions, transaction => {
-                                        return (
-                                            <tr key={`transaction-${transaction.hash}`}>
-                                                <td>
-                                                    <TypeBadge transaction={transaction} />{" "}
-                                                </td>
-                                                <td scope="row">
-                                                    <HexString
-                                                        link={`/tx/0x${transaction.hash}`}
-                                                        text={transaction.hash}
+                                    {transactions.length === 0 ? (
+                                        <tr>
+                                            <td colSpan={12}>
+                                                <div className="text-center mt-12">
+                                                    <FontAwesomeIcon
+                                                        className="spin"
+                                                        icon={faSpinner}
+                                                        spin={true}
+                                                        size={"2x"}
                                                     />
-                                                </td>
-                                                <td className="text-right">
-                                                    <CommaNumberString text={transaction.fee} />
-                                                    <span className="ccc">CCC</span>
-                                                </td>
-                                                <td>
-                                                    <Link to={`/addr-platform/${transaction.signer}`}>
-                                                        {transaction.signer}
-                                                    </Link>
-                                                </td>
-                                                <td className="text-right">
-                                                    {getUnixTimeLocaleString(
-                                                        transaction.pendingTimestamp!,
-                                                        serverTimeOffset
-                                                    )}
-                                                </td>
-                                            </tr>
-                                        );
-                                    })}
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    ) : (
+                                        _.map(transactions, transaction => {
+                                            return (
+                                                <tr key={`transaction-${transaction.hash}`}>
+                                                    <td>
+                                                        <TypeBadge transaction={transaction} />{" "}
+                                                    </td>
+                                                    <td scope="row">
+                                                        <HexString
+                                                            link={`/tx/0x${transaction.hash}`}
+                                                            text={transaction.hash}
+                                                        />
+                                                    </td>
+                                                    <td className="text-right">
+                                                        <CommaNumberString text={transaction.fee} />
+                                                        <span className="ccc">CCC</span>
+                                                    </td>
+                                                    <td>
+                                                        <Link to={`/addr-platform/${transaction.signer}`}>
+                                                            {transaction.signer}
+                                                        </Link>
+                                                    </td>
+                                                    <td className="text-right">
+                                                        {getUnixTimeLocaleString(
+                                                            transaction.pendingTimestamp!,
+                                                            serverTimeOffset
+                                                        )}
+                                                    </td>
+                                                </tr>
+                                            );
+                                        })
+                                    )}
                                 </tbody>
                             </DataTable>
                         </div>
