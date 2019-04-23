@@ -7,6 +7,7 @@ import { CommaNumberString } from "src/components/util/CommaNumberString/CommaNu
 import DataTable from "src/components/util/DataTable/DataTable";
 import { ImageLoader } from "src/components/util/ImageLoader/ImageLoader";
 import "./AssetOwners.scss";
+import AssetOwnersChart from "./AssetOwnersChart";
 
 interface OwnProps {
     aggsUTXO: AggsUTXODoc[];
@@ -21,31 +22,43 @@ const AssetOwners = (prop: OwnProps) => {
                     <hr className="heading-hr" />
                 </Col>
             </Row>
-            <DataTable>
-                <thead>
-                    <tr>
-                        <th style={{ width: "50%" }}>Address</th>
-                        <th style={{ width: "50%" }} className="text-right">
-                            Quantity
-                        </th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {prop.aggsUTXO.map((item: AggsUTXODoc) => {
-                        return (
-                            <tr key={`raw-${item.address}`} className="animated fadeIn">
-                                <td>
-                                    <ImageLoader className="mr-2" size={18} data={item.address} isAssetImage={true} />
-                                    <Link to={`/addr-asset/${item.address}`}>{item.address}</Link>
-                                </td>
-                                <td className="text-right">
-                                    <CommaNumberString text={item.totalAssetQuantity} />
-                                </td>
+            <Row className="justify-content-md-center">
+                <Col lg="6">
+                    <DataTable>
+                        <thead>
+                            <tr>
+                                <th style={{ width: "67%" }}>Address</th>
+                                <th style={{ width: "33%" }} className="text-right">
+                                    Quantity
+                                </th>
                             </tr>
-                        );
-                    })}
-                </tbody>
-            </DataTable>
+                        </thead>
+                        <tbody>
+                            {prop.aggsUTXO.map((item: AggsUTXODoc) => {
+                                return (
+                                    <tr key={`raw-${item.address}`} className="animated fadeIn">
+                                        <td>
+                                            <ImageLoader
+                                                className="mr-2"
+                                                size={18}
+                                                data={item.address}
+                                                isAssetImage={true}
+                                            />
+                                            <Link to={`/addr-asset/${item.address}`}>{item.address}</Link>
+                                        </td>
+                                        <td className="text-right">
+                                            <CommaNumberString text={item.totalAssetQuantity} />
+                                        </td>
+                                    </tr>
+                                );
+                            })}
+                        </tbody>
+                    </DataTable>
+                </Col>
+                <Col md="6">
+                    <AssetOwnersChart aggsUTXO={prop.aggsUTXO} />
+                </Col>
+            </Row>
         </div>
     );
 };

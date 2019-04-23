@@ -21,3 +21,21 @@
     color: #bdbdbd;
   }
 }
+
+.pie-chart-container {
+  background-color: #ffffff;
+  width: 100%;
+  height: 400px;
+  position: relative;
+  .chart {
+    position: absolute;
+    top: 70px;
+    left: 0;
+    bottom: 0;
+    right: 0;
+
+    .chart-item {
+      height: 100%;
+    }
+  }
+}
