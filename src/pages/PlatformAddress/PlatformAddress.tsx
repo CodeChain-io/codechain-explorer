@@ -18,6 +18,8 @@ import { RequestPlatformAddressAccount, RequestTotalTransactionCount } from "../
 import RequestPlatformAddressTransactions from "../../request/RequestPlatformAddressTransactions";
 import { balanceHistoryReasons, historyReasonTypes } from "../../utils/BalanceHistory";
 
+import { faSpinner } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { CommaNumberString } from "src/components/util/CommaNumberString/CommaNumberString";
 import DataTable from "src/components/util/DataTable/DataTable";
 import { apiRequest } from "src/request/ApiRequest";
@@ -114,15 +116,7 @@ class PlatformAddress extends React.Component<Props, State> {
                 params: { address }
             }
         } = this.props;
-        const {
-            account,
-            notFound,
-            loadTransaction,
-            pageForTransaction,
-            transactions,
-            totalTransactionCount,
-            noMoreTransaction
-        } = this.state;
+        const { account, notFound } = this.state;
         if (notFound) {
             return (
                 <div>
@@ -134,6 +128,7 @@ class PlatformAddress extends React.Component<Props, State> {
             return (
                 <RequestPlatformAddressAccount
                     address={address}
+                    showProgressBar={false}
                     onAccount={this.onAccount}
                     onError={this.onError}
                     onAccountNotExist={this.onAccountNotExist}
@@ -170,34 +165,7 @@ class PlatformAddress extends React.Component<Props, State> {
                     <AccountDetails account={account} />
                 </div>
                 {this.renderBalanceChanges()}
-                {totalTransactionCount == null && (
-                    <RequestTotalTransactionCount
-                        address={address}
-                        onTransactionTotalCount={this.onTransactionTotalCount}
-                        onError={this.onError}
-                    />
-                )}
-                {totalTransactionCount != null &&
-                    loadTransaction && (
-                        <RequestPlatformAddressTransactions
-                            page={pageForTransaction}
-                            itemsPerPage={this.transactionsPerPage}
-                            address={address}
-                            onTransactions={this.onTransactions}
-                            onError={this.onError}
-                        />
-                    )}
-                {totalTransactionCount != null &&
-                    transactions.length > 0 && (
-                        <div className="mt-large">
-                            <TransactionList
-                                transactions={transactions}
-                                totalCount={totalTransactionCount}
-                                loadMoreAction={this.loadMoreTransaction}
-                                hideMoreButton={noMoreTransaction}
-                            />
-                        </div>
-                    )}
+                {this.renderTransactions()}
             </Container>
         );
     }
@@ -212,7 +180,7 @@ class PlatformAddress extends React.Component<Props, State> {
         } = this.state;
 
         if (balanceChanges == null) {
-            return <></>;
+            return <FontAwesomeIcon className="spin w-100 mt-3" icon={faSpinner} spin={true} size={"2x"} />;
         }
         return (
             <div className="mt-large">
@@ -372,6 +340,58 @@ class PlatformAddress extends React.Component<Props, State> {
         }
     };
 
+    private renderTransactions = () => {
+        const {
+            match: {
+                params: { address }
+            }
+        } = this.props;
+        const {
+            loadTransaction,
+            pageForTransaction,
+            transactions,
+            totalTransactionCount,
+            noMoreTransaction
+        } = this.state;
+
+        if (totalTransactionCount == null) {
+            return (
+                <RequestTotalTransactionCount
+                    address={address}
+                    onTransactionTotalCount={this.onTransactionTotalCount}
+                    onError={this.onError}
+                />
+            );
+        }
+
+        return (
+            <>
+                {transactions.length > 0 && (
+                    <div className="mt-large">
+                        <TransactionList
+                            transactions={transactions}
+                            totalCount={totalTransactionCount}
+                            loadMoreAction={this.loadMoreTransaction}
+                            hideMoreButton={noMoreTransaction}
+                        />
+                    </div>
+                )}
+                {loadTransaction && (
+                    <>
+                        <RequestPlatformAddressTransactions
+                            page={pageForTransaction}
+                            itemsPerPage={this.transactionsPerPage}
+                            address={address}
+                            onTransactions={this.onTransactions}
+                            onError={this.onError}
+                        />
+                        <FontAwesomeIcon className="spin w-100 mt-3" icon={faSpinner} spin={true} size={"2x"} />
+                    </>
+                )}
+            </>
+        );
+    };
+
     private loadBalanceHistoryWrapper = () => this.loadBalanceHistory();
 
     private loadBalanceHistory = (paramReasons?: string[]) => {
@@ -397,12 +417,12 @@ class PlatformAddress extends React.Component<Props, State> {
                         "&" +
                         reasonFilterQuerySuffix,
                     dispatch,
-                    showProgressBar: true
+                    showProgressBar: false
                 }),
                 apiRequest({
                     path: `account/${address}/balance-history/count` + "?" + reasonFilterQuerySuffix,
                     dispatch,
-                    showProgressBar: true
+                    showProgressBar: false
                 })
             ])
                 .then(([response, count]) => {
@@ -424,7 +444,7 @@ class PlatformAddress extends React.Component<Props, State> {
                     "&" +
                     reasonFilterQuerySuffix,
                 dispatch,
-                showProgressBar: true
+                showProgressBar: false
             })
                 .then(response => {
                     this.setState({

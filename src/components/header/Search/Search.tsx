@@ -124,6 +124,7 @@ class Search extends React.Component<Props, State> {
                         />
                         <RequestPlatformAddressAccount
                             progressBarTarget="searchBar"
+                            showProgressBar={true}
                             address={inputValue}
                             onAccount={this.onAccount}
                             onAccountNotExist={this.onReqeustNotExist}
