@@ -23,7 +23,7 @@ class RequestPendingTransactions extends React.Component<Props> {
         apiRequest({
             path,
             dispatch,
-            showProgressBar: true
+            showProgressBar: false
         })
             .then((response: any) => {
                 onTransactions(response);
