@@ -9,9 +9,10 @@ interface OwnProps {
     assetType: string;
     index: number;
     amount: string;
+    owner: string;
     type: "input" | "output" | "burn";
     onClick: () => void;
-    onMouseEnter: (target: string, name: string, amount: string) => void;
+    onMouseEnter: (target: string, name: string, amount: string, owner: string) => void;
     onMouseLeave: () => void;
 }
 
@@ -56,11 +57,11 @@ class AssetIcon extends React.Component<OwnProps, State> {
     }
 
     private onMouseEnter = () => {
-        const { index, assetType, type, amount } = this.props;
+        const { index, assetType, type, amount, owner } = this.props;
         const { name } = this.state;
         if (name) {
             const targetId = `icon-${index}-${assetType}-${type}`;
-            this.props.onMouseEnter(targetId, name, amount);
+            this.props.onMouseEnter(targetId, name, amount, owner);
         }
     };
 

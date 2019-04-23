@@ -30,7 +30,6 @@
         margin-bottom: 10px;
         width: 42px;
         height: 42px;
-        cursor: pointer;
       }
     }
 
@@ -63,4 +62,8 @@
       }
     }
   }
+}
+
+.popover {
+  max-width: 400px;
 }
