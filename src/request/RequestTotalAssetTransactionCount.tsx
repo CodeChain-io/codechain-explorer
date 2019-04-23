@@ -21,7 +21,7 @@ class RequestTotalAssetTransactionCount extends React.Component<Props> {
         apiRequest({
             path: `tx/count?assetType=${assetType}`,
             dispatch,
-            showProgressBar: true
+            showProgressBar: false
         })
             .then((response: any) => {
                 onTotalCount(response);

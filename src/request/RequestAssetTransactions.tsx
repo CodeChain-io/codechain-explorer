@@ -24,7 +24,7 @@ class RequestAssetTransactions extends React.Component<Props> {
         apiRequest({
             path: `tx?page=${page}&itemsPerPage=${itemsPerPage}&assetType=${assetType}`,
             dispatch,
-            showProgressBar: true
+            showProgressBar: false
         })
             .then((response: TransactionDoc[]) => {
                 onTransactions(response);

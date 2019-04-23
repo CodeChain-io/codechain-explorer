@@ -48,7 +48,7 @@ class RequestAssetScheme extends React.Component<Props> {
             path: `asset-scheme/${assetType}`,
             dispatch,
             progressBarTarget,
-            showProgressBar: true
+            showProgressBar: false
         })
             .then((response: AssetSchemeDoc) => {
                 if (response === null) {

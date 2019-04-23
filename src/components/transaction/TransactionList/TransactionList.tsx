@@ -2,6 +2,8 @@ import * as _ from "lodash";
 import * as React from "react";
 import { Col, Row } from "reactstrap";
 
+import { faSpinner } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { TransactionDoc } from "codechain-indexer-types";
 import { H160 } from "codechain-sdk/lib/core/classes";
 
@@ -45,6 +47,11 @@ class TransactionList extends React.Component<Props, State> {
         return (
             <div className="parcel-transaction-list">
                 {this.renderTransactionListTitle()}
+                {transactions.length === 0 ? (
+                    <div className="text-center mt-3">
+                        <FontAwesomeIcon className="spin" icon={faSpinner} spin={true} size={"2x"} />
+                    </div>
+                ) : null}
                 <TransactionListItems transactions={loadedTransactions} assetType={assetType} owner={owner} />
                 {!hideMoreButton && (loadMoreAction || this.itemPerPage * page < transactions.length) ? (
                     <Row>
