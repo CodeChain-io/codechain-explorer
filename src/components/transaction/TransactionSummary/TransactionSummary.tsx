@@ -121,7 +121,6 @@ class TransactionSummaryInternal extends React.Component<Props, State> {
                                 <p className="mb-0">
                                     x{this.state.popoverAmount ? this.state.popoverAmount.toLocaleString() : 0}
                                 </p>
-                                <p className="mb-0 popover-detail-label">click item to view detail</p>
                             </div>
                         </PopoverBody>
                     </Popover>
@@ -238,7 +237,6 @@ class TransactionSummaryInternal extends React.Component<Props, State> {
                                 <p className="mb-0">
                                     x{this.state.popoverAmount ? this.state.popoverAmount.toLocaleString() : 0}
                                 </p>
-                                <p className="mb-0 popover-detail-label">click item to view detail</p>
                             </div>
                         </PopoverBody>
                     </Popover>
@@ -338,7 +336,6 @@ class TransactionSummaryInternal extends React.Component<Props, State> {
                                 <p className="mb-0">
                                     x{this.state.popoverAmount ? this.state.popoverAmount.toLocaleString() : 0}
                                 </p>
-                                <p className="mb-0 popover-detail-label">click item to view detail</p>
                             </div>
                         </PopoverBody>
                     </Popover>
