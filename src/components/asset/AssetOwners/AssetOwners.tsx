@@ -34,24 +34,25 @@ const AssetOwners = (prop: OwnProps) => {
                             </tr>
                         </thead>
                         <tbody>
-                            {prop.aggsUTXO.map((item: AggsUTXODoc) => {
-                                return (
-                                    <tr key={`raw-${item.address}`} className="animated fadeIn">
-                                        <td>
-                                            <ImageLoader
-                                                className="mr-2"
-                                                size={18}
-                                                data={item.address}
-                                                isAssetImage={true}
-                                            />
-                                            <Link to={`/addr-asset/${item.address}`}>{item.address}</Link>
-                                        </td>
-                                        <td className="text-right">
-                                            <CommaNumberString text={item.totalAssetQuantity} />
-                                        </td>
-                                    </tr>
-                                );
-                            })}
+                            {prop.aggsUTXO.length !== 0 &&
+                                prop.aggsUTXO.map((item: AggsUTXODoc) => {
+                                    return (
+                                        <tr key={`raw-${item.address}`}>
+                                            <td>
+                                                <ImageLoader
+                                                    className="mr-2"
+                                                    size={18}
+                                                    data={item.address}
+                                                    isAssetImage={true}
+                                                />
+                                                <Link to={`/addr-asset/${item.address}`}>{item.address}</Link>
+                                            </td>
+                                            <td className="text-right">
+                                                <CommaNumberString text={item.totalAssetQuantity} />
+                                            </td>
+                                        </tr>
+                                    );
+                                })}
                         </tbody>
                     </DataTable>
                 </Col>
