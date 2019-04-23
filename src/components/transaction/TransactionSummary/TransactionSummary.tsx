@@ -33,6 +33,7 @@ interface State {
     popoverTarget?: string;
     popoverName?: string;
     popoverAmount?: string;
+    popoverOwner?: string;
 }
 
 type Props = OwnProps & DispatchProps;
@@ -45,7 +46,8 @@ class TransactionSummaryInternal extends React.Component<Props, State> {
             popoverOpen: false,
             popoverTarget: undefined,
             popoverName: undefined,
-            popoverAmount: undefined
+            popoverAmount: undefined,
+            popoverOwner: undefined
         };
     }
     public render() {
@@ -117,6 +119,17 @@ class TransactionSummaryInternal extends React.Component<Props, State> {
                     <Popover placement="right" isOpen={this.state.popoverOpen} target={this.state.popoverTarget}>
                         <PopoverBody>
                             <div>
+                                {this.state.popoverOwner !== "" && (
+                                    <p className="mb-1">
+                                        <ImageLoader
+                                            className="mr-1"
+                                            size={18}
+                                            data={this.state.popoverOwner!}
+                                            isAssetImage={true}
+                                        />
+                                        {this.state.popoverOwner!}
+                                    </p>
+                                )}
                                 <p className="mb-0">{this.state.popoverName}</p>
                                 <p className="mb-0">
                                     x{this.state.popoverAmount ? this.state.popoverAmount.toLocaleString() : 0}
@@ -143,6 +156,7 @@ class TransactionSummaryInternal extends React.Component<Props, State> {
                                                       index={i}
                                                       amount={input.prevOut.quantity}
                                                       type={"input"}
+                                                      owner={input.owner || ""}
                                                       onClick={_.partial(this.onClickItem, "input", i)}
                                                       onMouseEnter={this.onMouseEnter}
                                                       onMouseLeave={this.onMouseLeave}
@@ -180,6 +194,7 @@ class TransactionSummaryInternal extends React.Component<Props, State> {
                                                       index={i}
                                                       amount={output.quantity}
                                                       type={"output"}
+                                                      owner={output.owner || ""}
                                                       onClick={_.partial(this.onClickItem, "output", i)}
                                                       onMouseEnter={this.onMouseEnter}
                                                       onMouseLeave={this.onMouseLeave}
@@ -211,6 +226,7 @@ class TransactionSummaryInternal extends React.Component<Props, State> {
                                             index={i}
                                             amount={burn.prevOut.quantity}
                                             type={"burn"}
+                                            owner={burn.owner || ""}
                                             onClick={_.partial(this.onClickItem, "burn", i)}
                                             onMouseEnter={this.onMouseEnter}
                                             onMouseLeave={this.onMouseLeave}
@@ -256,6 +272,7 @@ class TransactionSummaryInternal extends React.Component<Props, State> {
                                             index={i}
                                             amount={input.prevOut.quantity}
                                             type={"input"}
+                                            owner={input.owner || ""}
                                             onClick={_.partial(this.onClickItem, "input", i)}
                                             onMouseEnter={this.onMouseEnter}
                                             onMouseLeave={this.onMouseLeave}
@@ -408,6 +425,7 @@ class TransactionSummaryInternal extends React.Component<Props, State> {
                                         index={i}
                                         amount={output.quantity}
                                         type="output"
+                                        owner={output.owner || ""}
                                         onClick={_.partial(this.onClickItem, "output", i)}
                                         onMouseEnter={this.onMouseEnter}
                                         onMouseLeave={this.onMouseLeave}
@@ -433,13 +451,14 @@ class TransactionSummaryInternal extends React.Component<Props, State> {
         });
     };
 
-    private onMouseEnter = (target: string, name: string, amount: string) => {
+    private onMouseEnter = (target: string, name: string, amount: string, owner: string) => {
         setTimeout(() => {
             this.setState({
                 popoverTarget: target,
                 popoverOpen: true,
                 popoverAmount: amount,
-                popoverName: name
+                popoverName: name,
+                popoverOwner: owner
             });
         }, 100);
     };
