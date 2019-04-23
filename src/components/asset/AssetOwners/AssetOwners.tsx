@@ -1,6 +1,7 @@
 import * as React from "react";
 
 import { AggsUTXODoc } from "codechain-indexer-types";
+import { U64 } from "codechain-primitives/lib";
 import { Link } from "react-router-dom";
 import { Col, Row } from "reactstrap";
 import { CommaNumberString } from "src/components/util/CommaNumberString/CommaNumberString";
@@ -14,6 +15,9 @@ interface OwnProps {
 }
 
 const AssetOwners = (prop: OwnProps) => {
+    const n = prop.aggsUTXO.length === 11 ? 11 : 10;
+    const topOwners = prop.aggsUTXO.slice(0, n);
+    const others = prop.aggsUTXO.slice(n);
     return (
         <div className="asset-details">
             <Row>
@@ -34,25 +38,36 @@ const AssetOwners = (prop: OwnProps) => {
                             </tr>
                         </thead>
                         <tbody>
-                            {prop.aggsUTXO.length !== 0 &&
-                                prop.aggsUTXO.map((item: AggsUTXODoc) => {
-                                    return (
-                                        <tr key={`raw-${item.address}`}>
-                                            <td>
-                                                <ImageLoader
-                                                    className="mr-2"
-                                                    size={18}
-                                                    data={item.address}
-                                                    isAssetImage={true}
-                                                />
-                                                <Link to={`/addr-asset/${item.address}`}>{item.address}</Link>
-                                            </td>
-                                            <td className="text-right">
-                                                <CommaNumberString text={item.totalAssetQuantity} />
-                                            </td>
-                                        </tr>
-                                    );
-                                })}
+                            {topOwners.map(item => {
+                                return (
+                                    <tr key={`raw-${item.address}`}>
+                                        <td>
+                                            <ImageLoader
+                                                className="mr-2"
+                                                size={18}
+                                                data={item.address}
+                                                isAssetImage={true}
+                                            />
+                                            <Link to={`/addr-asset/${item.address}`}>{item.address}</Link>
+                                        </td>
+                                        <td className="text-right">
+                                            <CommaNumberString text={item.totalAssetQuantity} />
+                                        </td>
+                                    </tr>
+                                );
+                            })}
+                            {others.length > 0 && (
+                                <tr key="others">
+                                    <td style={{ fontFamily: `"Montserrat", sans-serif` }}>Others</td>
+                                    <td className="text-right">
+                                        <CommaNumberString
+                                            text={others
+                                                .reduce((sum, owner) => sum.plus(owner.totalAssetQuantity), new U64(0))
+                                                .toString()}
+                                        />
+                                    </td>
+                                </tr>
+                            )}
                         </tbody>
                     </DataTable>
                 </Col>

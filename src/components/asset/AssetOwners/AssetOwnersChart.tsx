@@ -2,6 +2,7 @@ import * as React from "react";
 const { ResponsivePie } = require("@nivo/pie");
 
 import { AggsUTXODoc } from "codechain-indexer-types";
+import { U64 } from "codechain-primitives/lib";
 
 interface OwnProps {
     aggsUTXO: AggsUTXODoc[];
@@ -26,12 +27,22 @@ class AssetOwnersChart extends React.Component<Props> {
 
     public renderPieChart() {
         const { aggsUTXO } = this.props;
-        const data = aggsUTXO.map(i => {
+
+        const n = aggsUTXO.length === 11 ? 11 : 10;
+        const topOwners = aggsUTXO.slice(0, n);
+        const others = aggsUTXO.slice(n);
+
+        const data = topOwners.map(i => {
             return {
                 id: `${i.address.slice(0, 10)}...`,
                 label: `${i.address.slice(0, 10)}...`,
-                value: parseInt(i.totalAssetQuantity, 10)
+                value: new U64(i.totalAssetQuantity).value.toNumber()
             };
+        });
+        data.push({
+            id: "Others",
+            label: "Others",
+            value: others.reduce((sum, owner) => sum.plus(owner.totalAssetQuantity), new U64(0)).value.toNumber()
         });
         return (
             <ResponsivePie
