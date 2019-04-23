@@ -225,14 +225,14 @@ class PlatformAddress extends React.Component<Props, State> {
                         {!showReasonFilter && (
                             <div className="show-reason-filter-container">
                                 <span className="filter-btn" onClick={this.showReasonFilter}>
-                                    Show reason filter
+                                    Show filter
                                 </span>
                             </div>
                         )}
                         {showReasonFilter && (
                             <div className="reason-filter-container">
                                 <div className="filter-title">
-                                    <span>Reason Filter</span>
+                                    <span>Filter</span>
                                 </div>
                                 <Row>
                                     {historyReasonTypes.map(reason => {
@@ -258,7 +258,7 @@ class PlatformAddress extends React.Component<Props, State> {
                                 </Row>
                                 <div className="hide-reason-filter-container">
                                     <span className="filter-btn" onClick={this.hideReasonFilter}>
-                                        Hide reason filter
+                                        Hide filter
                                     </span>
                                 </div>
                             </div>
@@ -272,7 +272,7 @@ class PlatformAddress extends React.Component<Props, State> {
                             <thead>
                                 <tr>
                                     <th style={{ width: "10%" }}>Block</th>
-                                    <th style={{ width: "20%" }}>Reason</th>
+                                    <th style={{ width: "20%" }}>Action</th>
                                     <th style={{ width: "35%" }} className="text-right">
                                         Spent
                                     </th>
