@@ -5,8 +5,6 @@ import { TransactionDoc } from "codechain-indexer-types";
 import { connect } from "react-redux";
 import { Link } from "react-router-dom";
 import { ImageLoader } from "src/components/util/ImageLoader/ImageLoader";
-import { RootState } from "src/redux/actions";
-import RequestServerTime from "src/request/RequestServerTime";
 import DataTable from "../../util/DataTable/DataTable";
 import HexString from "../../util/HexString/HexString";
 import { TypeBadge } from "../../util/TypeBadge/TypeBadge";
@@ -16,17 +14,10 @@ interface OwnProps {
     transactions: TransactionDoc[];
 }
 
-interface StateProps {
-    serverTimeOffset?: number;
-}
-type Props = OwnProps & StateProps;
+type Props = OwnProps;
 
 const LatestTransactions = (props: Props) => {
-    const { transactions, serverTimeOffset } = props;
-
-    if (serverTimeOffset === undefined) {
-        return <RequestServerTime />;
-    }
+    const { transactions } = props;
     return (
         <div className="latest-transactions">
             <h1>Latest Transactions</h1>
@@ -74,8 +65,4 @@ const LatestTransactions = (props: Props) => {
     );
 };
 
-export default connect((state: RootState) => {
-    return {
-        serverTimeOffset: state.appReducer.serverTimeOffset
-    };
-})(LatestTransactions);
+export default connect()(LatestTransactions);
