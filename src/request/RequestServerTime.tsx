@@ -27,7 +27,7 @@ class RequestServerTime extends React.Component<Props> {
             data: true
         });
 
-        apiRequest({ path: `status/server-time`, dispatch, showProgressBar: true })
+        apiRequest({ path: `status/server-time`, dispatch, showProgressBar: false })
             .then((response: any) => {
                 dispatch({
                     type: "SERVER_TIME_RESPONSE_ACTION",
