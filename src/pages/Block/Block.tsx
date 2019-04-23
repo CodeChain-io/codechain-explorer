@@ -7,6 +7,8 @@ import { Col, Container, Row } from "reactstrap";
 
 import { BlockDoc } from "codechain-indexer-types";
 
+import { faSpinner } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import BlockDetails from "../../components/block/BlockDetails/BlockDetails";
 import { Error } from "../../components/error/Error/Error";
 import BlockTransactionList from "../../components/transaction/BlockTransactionList/BlockTransactionList";
@@ -67,12 +69,17 @@ class Block extends React.Component<Props, State> {
         }
         if (!block) {
             return (
-                <RequestBlock
-                    id={id}
-                    onBlock={this.onBlock}
-                    onError={this.onError}
-                    onBlockNotExist={this.onBlockNotExist}
-                />
+                <div>
+                    <RequestBlock
+                        id={id}
+                        onBlock={this.onBlock}
+                        onError={this.onError}
+                        onBlockNotExist={this.onBlockNotExist}
+                    />
+                    <div className="text-center mt-3">
+                        <FontAwesomeIcon className="spin" icon={faSpinner} spin={true} size={"2x"} />
+                    </div>
+                </div>
             );
         }
         return (

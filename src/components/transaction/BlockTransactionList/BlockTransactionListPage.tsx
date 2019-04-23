@@ -4,7 +4,9 @@ import * as React from "react";
 import { TransactionDoc } from "codechain-indexer-types";
 import { H160 } from "codechain-sdk/lib/core/classes";
 
-import RequestBlockTransactions from "src/request/RequestBlockTransactions";
+import { faSpinner } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import RequestBlockTransactions from "../../../request/RequestBlockTransactions";
 import TransactionListItems from "../TransactionListItems/TransactionListItems";
 
 interface OwnProps {
@@ -32,13 +34,18 @@ class TransactionLoadableListPage extends React.Component<Props, State> {
         if (transactions == null) {
             const { blockId, page, itemsPerPage } = this.props;
             return (
-                <RequestBlockTransactions
-                    id={blockId}
-                    page={page}
-                    itemsPerPage={itemsPerPage}
-                    onTransactions={this.onLoad}
-                    onError={console.error}
-                />
+                <div>
+                    <div className="text-center mt-3">
+                        <FontAwesomeIcon className="spin" icon={faSpinner} spin={true} size={"2x"} />
+                    </div>
+                    <RequestBlockTransactions
+                        id={blockId}
+                        page={page}
+                        itemsPerPage={itemsPerPage}
+                        onTransactions={this.onLoad}
+                        onError={console.error}
+                    />
+                </div>
             );
         }
         const { assetType, owner } = this.props;

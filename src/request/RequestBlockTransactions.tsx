@@ -29,7 +29,7 @@ class RequestBlockTransactions extends React.Component<Props> {
         apiRequest({
             path: `block/${id}/tx?page=${page}&itemsPerPage=${itemsPerPage}`,
             dispatch,
-            showProgressBar: true
+            showProgressBar: false
         })
             .then(onTransactions)
             .catch(onError);

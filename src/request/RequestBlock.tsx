@@ -37,7 +37,7 @@ class RequestBlock extends React.Component<Props> {
             path: `block/${id}`,
             dispatch,
             progressBarTarget,
-            showProgressBar: true
+            showProgressBar: false
         })
             .then((response: BlockDoc) => {
                 if (response === null) {
