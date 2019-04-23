@@ -9,7 +9,6 @@ import { RequestBlockNumber, RequestBlocks, RequestTransactions } from "../../re
 
 import { BlockDoc, TransactionDoc } from "codechain-indexer-types";
 import { connect } from "react-redux";
-import RequestServerTime from "src/request/RequestServerTime";
 import { RootState } from "../../redux/actions";
 import BlockCapacityUsageChart from "./BlockCapacityUsageChart";
 import BlockCreationTimeChart from "./BlockCreationTimeChart";
@@ -27,7 +26,6 @@ interface State {
 
 interface StateProps {
     bestBlockNumber?: number;
-    serverTimeOffset?: number;
 }
 
 type Props = StateProps;
@@ -54,10 +52,7 @@ class Home extends React.Component<Props, State> {
         this.checkNewBlock(0);
     }
     public render() {
-        const { serverTimeOffset, bestBlockNumber } = this.props;
-        if (serverTimeOffset === undefined) {
-            return <RequestServerTime />;
-        }
+        const { bestBlockNumber } = this.props;
         if (bestBlockNumber === undefined) {
             return <RequestBlockNumber />;
         }
@@ -167,6 +162,5 @@ class Home extends React.Component<Props, State> {
 }
 
 export default connect((state: RootState) => ({
-    bestBlockNumber: state.appReducer.bestBlockNumber,
-    serverTimeOffset: state.appReducer.serverTimeOffset
+    bestBlockNumber: state.appReducer.bestBlockNumber
 }))(Home);

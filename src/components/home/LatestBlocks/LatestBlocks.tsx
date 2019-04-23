@@ -1,11 +1,10 @@
 import * as _ from "lodash";
+import * as moment from "moment";
 import * as React from "react";
 import { Link } from "react-router-dom";
 
 import { BlockDoc } from "codechain-indexer-types";
 import { connect } from "react-redux";
-import { RootState } from "src/redux/actions";
-import RequestServerTime from "src/request/RequestServerTime";
 import { getUnixTimeLocaleString } from "src/utils/Time";
 import DataTable from "../../util/DataTable/DataTable";
 import "./LatestBlocks.scss";
@@ -13,19 +12,11 @@ import "./LatestBlocks.scss";
 interface OwnProps {
     blocks: BlockDoc[];
 }
-interface StateProps {
-    serverTimeOffset?: number;
-}
-type Props = OwnProps & StateProps;
+type Props = OwnProps;
 
 const LatestBlocks = (props: Props) => {
     const { blocks } = props;
-    const { serverTimeOffset } = props;
-
-    if (serverTimeOffset === undefined) {
-        return <RequestServerTime />;
-    }
-
+    const offset = blocks.length === 0 ? 0 : blocks[0].timestamp - moment().unix();
     return (
         <div className="latest-blocks">
             <h1>Latest Blocks</h1>
@@ -56,7 +47,7 @@ const LatestBlocks = (props: Props) => {
                                     <td className="text-right">{block.transactionsCount.toLocaleString()}</td>
                                     <td className="text-right">
                                         {block.timestamp
-                                            ? getUnixTimeLocaleString(block.timestamp, serverTimeOffset)
+                                            ? getUnixTimeLocaleString(block.timestamp - offset, offset)
                                             : "Genesis"}
                                     </td>
                                 </tr>
@@ -78,8 +69,4 @@ const LatestBlocks = (props: Props) => {
     );
 };
 
-export default connect((state: RootState) => {
-    return {
-        serverTimeOffset: state.appReducer.serverTimeOffset
-    };
-})(LatestBlocks);
+export default connect()(LatestBlocks);
