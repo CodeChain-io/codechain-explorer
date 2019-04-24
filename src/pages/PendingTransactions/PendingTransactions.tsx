@@ -223,7 +223,7 @@ class PendingTransactions extends React.Component<Props, State> {
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {transactions.length === 0 && isTransactionRequested === false ? (
+                                    {!isTransactionRequested ? (
                                         <tr>
                                             <td colSpan={12}>
                                                 <div className="text-center mt-12">
@@ -234,6 +234,12 @@ class PendingTransactions extends React.Component<Props, State> {
                                                         size={"2x"}
                                                     />
                                                 </div>
+                                            </td>
+                                        </tr>
+                                    ) : transactions.length === 0 ? (
+                                        <tr>
+                                            <td colSpan={12}>
+                                                <div className="text-center mt-12">No pending transactions</div>
                                             </td>
                                         </tr>
                                     ) : (
