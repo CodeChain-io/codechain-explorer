@@ -201,7 +201,7 @@ class Transactions extends React.Component<Props, State> {
                                             <button
                                                 disabled={currentPage === 1 || !isTransactionRequested}
                                                 className={`btn btn-primary page-btn ${
-                                                    currentPage === 1 ? "disabled" : ""
+                                                    currentPage === 1 || !isTransactionRequested ? "disabled" : ""
                                                 }`}
                                                 type="button"
                                                 onClick={_.partial(this.moveFirst, currentPage)}
@@ -213,7 +213,7 @@ class Transactions extends React.Component<Props, State> {
                                             <button
                                                 disabled={currentPage === 1 || !isTransactionRequested}
                                                 className={`btn btn-primary page-btn ${
-                                                    currentPage === 1 ? "disabled" : ""
+                                                    currentPage === 1 || !isTransactionRequested ? "disabled" : ""
                                                 }`}
                                                 type="button"
                                                 onClick={_.partial(this.moveBefore, currentPage)}
@@ -230,7 +230,7 @@ class Transactions extends React.Component<Props, State> {
                                             <button
                                                 disabled={currentPage === maxPage || !isTransactionRequested}
                                                 className={`btn btn-primary page-btn ${
-                                                    currentPage === maxPage ? "disabled" : ""
+                                                    currentPage === maxPage || !isTransactionRequested ? "disabled" : ""
                                                 }`}
                                                 type="button"
                                                 onClick={_.partial(this.moveNext, currentPage, maxPage)}
@@ -242,7 +242,7 @@ class Transactions extends React.Component<Props, State> {
                                             <button
                                                 disabled={currentPage === maxPage || !isTransactionRequested}
                                                 className={`btn btn-primary page-btn ${
-                                                    currentPage === maxPage ? "disabled" : ""
+                                                    currentPage === maxPage || !isTransactionRequested ? "disabled" : ""
                                                 }`}
                                                 type="button"
                                                 onClick={_.partial(this.moveLast, currentPage, maxPage)}

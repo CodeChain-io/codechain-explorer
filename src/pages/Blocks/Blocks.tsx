@@ -128,7 +128,7 @@ class Blocks extends React.Component<Props, State> {
                                         <button
                                             disabled={currentPage === 1 || !isBlockRequested}
                                             className={`btn btn-primary page-btn ${
-                                                currentPage === 1 ? "disabled" : ""
+                                                currentPage === 1 || !isBlockRequested ? "disabled" : ""
                                             }`}
                                             type="button"
                                             onClick={_.partial(this.moveFirst, currentPage)}
@@ -140,7 +140,7 @@ class Blocks extends React.Component<Props, State> {
                                         <button
                                             disabled={currentPage === 1 || !isBlockRequested}
                                             className={`btn btn-primary page-btn ${
-                                                currentPage === 1 ? "disabled" : ""
+                                                currentPage === 1 || !isBlockRequested ? "disabled" : ""
                                             }`}
                                             type="button"
                                             onClick={_.partial(this.moveBefore, currentPage)}
@@ -157,7 +157,7 @@ class Blocks extends React.Component<Props, State> {
                                         <button
                                             disabled={currentPage === maxPage || !isBlockRequested}
                                             className={`btn btn-primary page-btn ${
-                                                currentPage === maxPage ? "disabled" : ""
+                                                currentPage === maxPage || !isBlockRequested ? "disabled" : ""
                                             }`}
                                             type="button"
                                             onClick={_.partial(this.moveNext, currentPage, maxPage)}
@@ -169,7 +169,7 @@ class Blocks extends React.Component<Props, State> {
                                         <button
                                             disabled={currentPage === maxPage || !isBlockRequested}
                                             className={`btn btn-primary page-btn ${
-                                                currentPage === maxPage ? "disabled" : ""
+                                                currentPage === maxPage || !isBlockRequested ? "disabled" : ""
                                             }`}
                                             type="button"
                                             onClick={_.partial(this.moveLast, currentPage, maxPage)}
