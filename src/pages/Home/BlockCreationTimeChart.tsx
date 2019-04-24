@@ -62,7 +62,10 @@ class BlockCreationTimeChart extends React.Component<Props> {
                 labelSkipHeight={12}
                 labelTextColor="inherit:darker(1.6)"
                 axisLeft={{
-                    format: (tick: string) => (tick.indexOf(".") === -1 ? tick : "")
+                    format: (tick: string) => (tick.indexOf(".") === -1 ? tick : ""),
+                    legend: "seconds",
+                    legendOffset: -40,
+                    legendPosition: "center"
                 }}
                 axisBottom={{
                     tickValues: this.bottomTickValues(data),

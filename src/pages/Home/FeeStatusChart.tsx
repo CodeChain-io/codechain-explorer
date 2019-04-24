@@ -98,7 +98,7 @@ class FeeStatusChart extends React.Component<Props, State> {
                                         return String(Math.floor(x) + " CCC");
                                     }}
                                 />
-                                <YAxis label={" "} />
+                                <YAxis label={"Transactions"} />
                             </ResponsiveHistogram>
                         ) : (
                             ""
