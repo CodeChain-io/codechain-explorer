@@ -38,6 +38,9 @@ class DataTable extends React.Component<Props, {}> {
         let cloneTbody;
         if (tbody) {
             cloneTbody = React.Children.map(tbody.props.children, (tr: any) => {
+                if (tr == null) {
+                    return;
+                }
                 const tdList = React.Children.map(tr.props.children, (td: any) => {
                     const newRef = React.createRef();
                     this.refList.push(newRef);
