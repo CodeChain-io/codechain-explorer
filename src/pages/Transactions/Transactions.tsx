@@ -173,6 +173,7 @@ class Transactions extends React.Component<Props, State> {
                                                 checked={_.includes(selectedTypes, type)}
                                                 value={type}
                                                 onChange={this.handleFilterChange}
+                                                disabled={!isTransactionRequested}
                                             />
                                             <label className="form-check-label" htmlFor={`${type}`}>
                                                 {capitalizeFirstLetter(type)}
