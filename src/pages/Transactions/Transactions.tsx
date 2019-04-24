@@ -130,7 +130,7 @@ class Transactions extends React.Component<Props, State> {
         }
         const maxPage = Math.floor(Math.max(0, totalTransactionCount - 1) / itemsPerPage) + 1;
         return (
-            <Container className="transactions animated fadeIn">
+            <Container className="transactions">
                 {!isTransactionRequested ? (
                     <div>
                         <RequestTransactions
