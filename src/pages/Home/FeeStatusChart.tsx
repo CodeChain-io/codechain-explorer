@@ -95,7 +95,7 @@ class FeeStatusChart extends React.Component<Props, State> {
                                     tickValues={this.bottomTickValues(rawData.sort())}
                                     // tslint:disable-next-line:jsx-no-lambda
                                     tickFormat={(x: any) => {
-                                        return String(Math.floor(x));
+                                        return String(Math.floor(x) + " CCC");
                                     }}
                                 />
                                 <YAxis label={" "} />
