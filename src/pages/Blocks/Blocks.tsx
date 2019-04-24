@@ -105,14 +105,14 @@ class Blocks extends React.Component<Props, State> {
         }
         const maxPage = Math.floor(Math.max(0, totalBlockCount - 1) / itemsPerPage) + 1;
         return (
-            <Container className="blocks animated fadeIn">
+            <Container className="blocks">
                 {!isBlockRequested ? (
                     <div>
                         <RequestBlocks
                             onBlocks={this.onBlocks}
                             page={currentPage}
                             itemsPerPage={itemsPerPage}
-                            showProgressBar={true}
+                            showProgressBar={false}
                             onError={this.onError}
                         />
                         <RequestTotalBlockCount onBlockTotalCount={this.onTotalBlockCount} onError={this.onError} />
