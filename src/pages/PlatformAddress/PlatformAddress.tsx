@@ -337,6 +337,10 @@ class PlatformAddress extends React.Component<Props, State> {
                 return <Link to={`/tx/0x${transactionHash}`}>{type}</Link>;
             case "initial_distribution":
                 return <>Genesis account</>;
+            case "deposit":
+                return <>Deposit</>;
+            case "validator":
+                return <>Validator Reward</>;
         }
     };
 
