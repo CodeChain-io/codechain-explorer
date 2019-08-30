@@ -315,6 +315,8 @@ class PlatformAddress extends React.Component<Props, State> {
                 return "Transaction";
             case "initial_distribution":
                 return "Genesis account";
+            case "report":
+                return "Report double vote";
             default:
                 return "";
         }
@@ -339,6 +341,8 @@ class PlatformAddress extends React.Component<Props, State> {
                 return <>Genesis account</>;
             case "deposit":
                 return <>Deposit</>;
+            case "report":
+                return <Link to={`/tx/0x${transactionHash}`}>Report double vote</Link>;
             case "validator":
                 return <>Validator Reward</>;
         }
