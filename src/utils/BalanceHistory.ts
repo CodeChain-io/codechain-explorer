@@ -5,7 +5,8 @@ export declare type balanceHistoryReasons =
     | "tx"
     | "initial_distribution"
     | "deposit"
-    | "validator";
+    | "validator"
+    | "report";
 
 const x: { [T in balanceHistoryReasons]: null } = {
     fee: null,
@@ -14,7 +15,8 @@ const x: { [T in balanceHistoryReasons]: null } = {
     tx: null,
     initial_distribution: null,
     deposit: null,
-    validator: null
+    validator: null,
+    report: null
 };
 
 export const historyReasonTypes = Object.keys(x);
