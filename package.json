@@ -89,6 +89,8 @@
   "scripts": {
     "start": "node scripts/start.js",
     "build": "node scripts/build.js",
+    "build:corgi": "./scripts/build-preset/corgi.sh",
+    "build:mainnet": "./scripts/build-preset/mainnet.sh",
     "test": "yarn lint && node scripts/test.js --env=jsdom",
     "lint": "tslint -p tsconfig.json && prettier 'src/**/*.{ts,tsx,scss,json,html,js,jsx}' -l",
     "fmt": "tslint -p tsconfig.json --fix && prettier 'src/**/*.{ts,tsx,scss,json,html,js,jsx}' --write"
