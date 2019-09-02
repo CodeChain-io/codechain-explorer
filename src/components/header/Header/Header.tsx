@@ -48,11 +48,11 @@ class Header extends React.Component<{}, State> {
                                     <img src={logo} className="logo" />{" "}
                                     <div className="d-inline-block header-big">
                                         <span id="explorer-title" className="header-title">
-                                            CodeChain Explorer - Corgi
+                                            {process.env.REACT_APP_HEADER_TITLE}
                                         </span>
                                     </div>
                                     <div className="d-inline-block header-small">
-                                        <span className="header-title">Explorer - Corgi</span>
+                                        <span className="header-title">{process.env.REACT_APP_HEADER_SHORT_TITLE}</span>
                                     </div>
                                 </NavbarBrand>
                             </IndexLinkContainer>
