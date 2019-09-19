@@ -1,11 +1,7 @@
-import { TransactionDoc } from "codechain-indexer-types";
-
-const x: { [T in TransactionDoc["type"]]: null } = {
+const x: { [index: string]: null } = {
     pay: null,
     mintAsset: null,
     transferAsset: null,
-    composeAsset: null,
-    decomposeAsset: null,
     wrapCCC: null,
     unwrapCCC: null,
     setRegularKey: null,

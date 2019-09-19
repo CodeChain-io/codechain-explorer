@@ -115,16 +115,6 @@ class RequestDailyLogs extends React.Component<Props> {
                 dispatch,
                 showProgressBar: true
             })) as number;
-            const composeCount = (await apiRequest({
-                path: `log/count?date=${date}&filter=composeAsset`,
-                dispatch,
-                showProgressBar: true
-            })) as number;
-            const decomposeCount = (await apiRequest({
-                path: `log/count?date=${date}&filter=decomposeAsset`,
-                dispatch,
-                showProgressBar: true
-            })) as number;
             const payCount = (await apiRequest({
                 path: `log/count?date=${date}&filter=pay`,
                 dispatch,
@@ -140,14 +130,7 @@ class RequestDailyLogs extends React.Component<Props> {
                 dispatch,
                 showProgressBar: true
             })) as number;
-            const logTotal =
-                mintCount +
-                transferCount +
-                composeCount +
-                decomposeCount +
-                payCount +
-                createShardCount +
-                setRegularKeyCount;
+            const logTotal = mintCount + transferCount + payCount + createShardCount + setRegularKeyCount;
             if (logTotal === 0) {
                 onEmptyResult();
                 return;
@@ -164,18 +147,6 @@ class RequestDailyLogs extends React.Component<Props> {
                     label: "Mint",
                     value: mintCount,
                     color: colorSet[1]
-                },
-                {
-                    id: `Compose (${((composeCount / logTotal) * 100).toFixed(1)}%)`,
-                    label: "Compose",
-                    value: composeCount,
-                    color: colorSet[2]
-                },
-                {
-                    id: `Decompose (${((decomposeCount / logTotal) * 100).toFixed(1)}%)`,
-                    label: "Decompose",
-                    value: decomposeCount,
-                    color: colorSet[3]
                 },
                 {
                     id: `Pay (${((payCount / logTotal) * 100).toFixed(1)}%)`,

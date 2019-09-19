@@ -3,10 +3,8 @@ import * as React from "react";
 import AssetMintDetails from "./AssetMintDetails/AssetMintDetails";
 import AssetTransferDetails from "./AssetTransferDetails/AssetTransferDetails";
 import ChangeAssetSchemeDetails from "./ChangeAssetSchemeDetails/ChangeAssetSchemeDetails";
-import ComposeAssetDetails from "./ComposeAssetDetails/ComposeAssetDetails";
 import CreateShardDetails from "./CreateShardDetails/CreateShardDetails";
 import CustomDetails from "./CustomDetails/CustomDetails";
-import DecomposeAssetDetails from "./DecomposeAssetDetails/DecomposeAssetDetails";
 import IncreaseAssetSupplyDetails from "./IncreaseAssetSupplyDetails/IncreaseAssetSupplyDetails";
 import PayDetails from "./PayDetails/PayDetails";
 import RemoveDetails from "./RemoveDetails/RemoveDetails";
@@ -28,10 +26,6 @@ export default class DetailsByType extends React.Component<Props, any> {
             return <AssetTransferDetails tx={transaction} />;
         } else if (transaction.type === "mintAsset") {
             return <AssetMintDetails tx={transaction} />;
-        } else if (transaction.type === "composeAsset") {
-            return <ComposeAssetDetails tx={transaction} />;
-        } else if (transaction.type === "decomposeAsset") {
-            return <DecomposeAssetDetails tx={transaction} />;
         } else if (transaction.type === "pay") {
             return <PayDetails tx={transaction} />;
         } else if (transaction.type === "setRegularKey") {
