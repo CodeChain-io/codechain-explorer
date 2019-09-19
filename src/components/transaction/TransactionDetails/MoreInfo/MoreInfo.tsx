@@ -37,16 +37,6 @@ export default class MoreInfo extends React.Component<Props, State> {
             ];
         } else if (transaction.type === "mintAsset") {
             return [<AssetOutput asset={transaction.mintAsset} key="asset" />];
-        } else if (transaction.type === "composeAsset") {
-            return [
-                <AssetTransferInputs inputs={transaction.composeAsset.inputs} key="inputs" isBurn={false} />,
-                <AssetOutput asset={transaction.composeAsset} key="asset" />
-            ];
-        } else if (transaction.type === "decomposeAsset") {
-            return [
-                <AssetTransferInputs inputs={[transaction.decomposeAsset.input]} key="input" isBurn={false} />,
-                <AssetTransferOutputs outputs={transaction.decomposeAsset.outputs} key="outputs" />
-            ];
         } else if (transaction.type === "unwrapCCC") {
             return [<AssetTransferInputs inputs={[transaction.unwrapCCC.burn]} key="burn" isBurn={true} />];
         }
