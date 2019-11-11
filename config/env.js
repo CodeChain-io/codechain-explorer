@@ -79,6 +79,23 @@ function getClientEnvironment(publicUrl) {
         PUBLIC_URL: publicUrl,
       }
     );
+
+  const listRequired = [
+    "REACT_APP_SERVER_HOST",
+    "REACT_APP_URL",
+    "REACT_APP_HEADER_TITLE",
+    "REACT_APP_HEADER_SHORT_TITLE",
+    "REACT_APP_OG_TITLE",
+    "REACT_APP_OG_DESC",
+    "REACT_APP_OG_IMAGE"
+  ];
+  for(const required of listRequired) {
+    if (raw[required] === undefined) {
+      throw new Error(`The ${required} environment variable is required but was not specified.`);
+    }
+    console.log(`${required}=${raw[required]}`);
+  }
+
   // Stringify all values so we can feed into Webpack DefinePlugin
   const stringified = {
     'process.env': Object.keys(raw).reduce(
