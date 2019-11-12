@@ -25,6 +25,16 @@ import DataTable from "src/components/util/DataTable/DataTable";
 import { apiRequest } from "src/request/ApiRequest";
 import "./PlatformAddress.scss";
 
+interface BalanceChange {
+    change: string;
+    blockNumber: number;
+    reason: balanceHistoryReasons;
+    transactionHash?: string;
+    transaction?: {
+        type: string;
+    };
+}
+
 interface OwnProps {
     match: match<{ address: string }>;
 }
@@ -45,17 +55,9 @@ interface State {
     totalTransactionCount?: number;
     noMoreTransaction: boolean;
 
-    balanceChanges?: {
-        change: string;
-        blockNumber: number;
-        reason: balanceHistoryReasons;
-        transactionHash?: string;
-        transaction?: {
-            type: string;
-        };
-    }[];
-    balanceChangesCount?: number;
+    balanceChanges?: BalanceChange[];
     balanceChangesNextPage?: number;
+    balanceChangesHasNext: boolean;
     showReasonFilter: boolean;
     selectedReasons: string[];
 }
@@ -74,6 +76,7 @@ class PlatformAddress extends React.Component<Props, State> {
             pageForTransaction: 1,
             totalTransactionCount: undefined,
             noMoreTransaction: false,
+            balanceChangesHasNext: true,
             showReasonFilter: false,
             selectedReasons: []
         };
@@ -99,7 +102,6 @@ class PlatformAddress extends React.Component<Props, State> {
                 noMoreTransaction: false,
                 totalTransactionCount: undefined,
                 balanceChanges: undefined,
-                balanceChangesCount: undefined,
                 balanceChangesNextPage: undefined
             });
             setTimeout(() => this.loadBalanceHistory());
@@ -171,13 +173,7 @@ class PlatformAddress extends React.Component<Props, State> {
     }
 
     private renderBalanceChanges = () => {
-        const {
-            balanceChanges,
-            balanceChangesCount,
-            balanceChangesNextPage,
-            showReasonFilter,
-            selectedReasons
-        } = this.state;
+        const { balanceChanges, balanceChangesHasNext, showReasonFilter, selectedReasons } = this.state;
 
         if (balanceChanges == null) {
             return <FontAwesomeIcon className="spin w-100 mt-3" icon={faSpinner} spin={true} size={"2x"} />;
@@ -188,7 +184,6 @@ class PlatformAddress extends React.Component<Props, State> {
                     <Col>
                         <div className="d-flex justify-content-between align-items-end">
                             <h2>Balance History</h2>
-                            <span>Total {balanceChangesCount} changes</span>
                         </div>
                         {!showReasonFilter && (
                             <div className="show-reason-filter-container">
@@ -288,7 +283,7 @@ class PlatformAddress extends React.Component<Props, State> {
                         </DataTable>
                     </Col>
                 </Row>
-                {(balanceChangesNextPage! - 1) * this.balanceChangesPerPage < balanceChangesCount! && (
+                {balanceChangesHasNext && (
                     <Row>
                         <Col>
                             <div className="mt-small">
@@ -418,27 +413,18 @@ class PlatformAddress extends React.Component<Props, State> {
         }
 
         if (balanceChangesNextPage == null || paramReasons) {
-            Promise.all([
-                apiRequest({
-                    path:
-                        `account/${address}/balance-history?page=1&itemsPerPage=${this.balanceChangesPerPage}` +
-                        "&" +
-                        reasonFilterQuerySuffix,
-                    dispatch,
-                    showProgressBar: false
-                }),
-                apiRequest({
-                    path: `account/${address}/balance-history/count` + "?" + reasonFilterQuerySuffix,
-                    dispatch,
-                    showProgressBar: false
-                })
-            ])
-                .then(([response, count]) => {
-                    // FIXME: Remove any
+            apiRequest({
+                path:
+                    `account/${address}/balance-history?page=1&itemsPerPage=${this.balanceChangesPerPage}` +
+                    "&" +
+                    reasonFilterQuerySuffix,
+                dispatch,
+                showProgressBar: false
+            })
+                .then((response: BalanceChange[]) => {
                     this.setState({
                         selectedReasons,
-                        balanceChanges: response as any,
-                        balanceChangesCount: count as number,
+                        balanceChanges: response,
                         balanceChangesNextPage: 2
                     });
                 })
@@ -454,11 +440,19 @@ class PlatformAddress extends React.Component<Props, State> {
                 dispatch,
                 showProgressBar: false
             })
-                .then(response => {
+                .then((response: BalanceChange[]) => {
                     this.setState({
-                        balanceChanges: [...this.state.balanceChanges!, ...(response as any)],
-                        balanceChangesNextPage: balanceChangesNextPage + 1
+                        balanceChanges: [...this.state.balanceChanges!, ...response]
                     });
+                    if (response.length < this.balanceChangesPerPage) {
+                        this.setState({
+                            balanceChangesHasNext: false
+                        });
+                    } else {
+                        this.setState({
+                            balanceChangesNextPage: balanceChangesNextPage + 1
+                        });
+                    }
                 })
                 .catch(this.onError);
         }
