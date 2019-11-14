@@ -7,7 +7,7 @@ import { AggsUTXODoc, AssetSchemeDoc, TransactionDoc } from "codechain-indexer-t
 import AssetDetails from "../../components/asset/AssetDetails/AssetDetails";
 import AssetOwners from "../../components/asset/AssetOwners/AssetOwners";
 import TransactionList from "../../components/transaction/TransactionList/TransactionList";
-import { RequestAssetScheme, RequestTotalAssetTransactionCount } from "../../request";
+import { RequestAssetScheme } from "../../request";
 import RequestAssetTransactions from "../../request/RequestAssetTransactions";
 import RequestAssetTypeUTXO from "../../request/RequestAssetTypeUTXO";
 
@@ -26,7 +26,6 @@ interface State {
     aggsUTXO: AggsUTXODoc[];
     assetScheme?: AssetSchemeDoc;
     page: number;
-    totalTransactionCount: number;
     loadTransaction: boolean;
     loadAggsUTXO: boolean;
     noMoreTransaction: boolean;
@@ -41,7 +40,6 @@ class Asset extends React.Component<Props, State> {
             transactions: [],
             aggsUTXO: [],
             page: 1,
-            totalTransactionCount: 0,
             loadTransaction: true,
             loadAggsUTXO: true,
             noMoreTransaction: false,
@@ -66,7 +64,6 @@ class Asset extends React.Component<Props, State> {
                 assetScheme: undefined,
                 transactions: [],
                 page: 1,
-                totalTransactionCount: 0,
                 loadTransaction: true,
                 loadAggsUTXO: true,
                 noMoreTransaction: false,
@@ -85,7 +82,6 @@ class Asset extends React.Component<Props, State> {
             notExistedInBlock,
             assetScheme,
             transactions,
-            totalTransactionCount,
             aggsUTXO,
             page,
             loadTransaction,
@@ -145,13 +141,6 @@ class Asset extends React.Component<Props, State> {
                         <AssetOwners aggsUTXO={aggsUTXO} />
                     </div>
                 ) : null}
-                {
-                    <RequestTotalAssetTransactionCount
-                        assetType={assetType}
-                        onTotalCount={this.onTransactionTotalCount}
-                        onError={this.onError}
-                    />
-                }
                 {loadTransaction ? (
                     <RequestAssetTransactions
                         assetType={assetType}
@@ -161,12 +150,11 @@ class Asset extends React.Component<Props, State> {
                         itemsPerPage={this.itemsPerPage}
                     />
                 ) : null}
-                {totalTransactionCount !== 0 ? (
+                {transactions.length !== 0 ? (
                     <div className="mt-large">
                         <TransactionList
                             assetType={new H160(assetType)}
                             transactions={transactions}
-                            totalCount={totalTransactionCount}
                             loadMoreAction={this.loadMoreAction}
                             hideMoreButton={noMoreTransaction}
                         />
@@ -180,13 +168,6 @@ class Asset extends React.Component<Props, State> {
         this.setState({ loadTransaction: true, loadAggsUTXO: true, page: this.state.page + 1 });
     };
 
-    private onTransactionTotalCount = (totalCount: number) => {
-        this.setState({
-            totalTransactionCount: totalCount,
-            noMoreTransaction: this.state.transactions.length >= totalCount
-        });
-    };
-
     private onAssetScheme = (assetScheme: AssetSchemeDoc) => {
         this.setState({ assetScheme });
     };
@@ -196,7 +177,7 @@ class Asset extends React.Component<Props, State> {
             transactions: this.state.transactions.concat(transactions),
             loadTransaction: false
         });
-        if (this.state.transactions.length >= this.state.totalTransactionCount) {
+        if (transactions.length < this.itemsPerPage) {
             this.setState({ noMoreTransaction: true });
         }
     };

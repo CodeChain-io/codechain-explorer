@@ -14,7 +14,7 @@ import AccountDetails from "../../components/platformAddress/AccountDetails/Acco
 import TransactionList from "../../components/transaction/TransactionList/TransactionList";
 import CopyButton from "../../components/util/CopyButton/CopyButton";
 import { ImageLoader } from "../../components/util/ImageLoader/ImageLoader";
-import { RequestPlatformAddressAccount, RequestTotalTransactionCount } from "../../request";
+import { RequestPlatformAddressAccount } from "../../request";
 import RequestPlatformAddressTransactions from "../../request/RequestPlatformAddressTransactions";
 import { balanceHistoryReasons, historyReasonTypes } from "../../utils/BalanceHistory";
 
@@ -52,7 +52,6 @@ interface State {
     loadTransaction: boolean;
     pageForTransaction: number;
     notFound: boolean;
-    totalTransactionCount?: number;
     noMoreTransaction: boolean;
 
     balanceChanges?: BalanceChange[];
@@ -74,7 +73,6 @@ class PlatformAddress extends React.Component<Props, State> {
             notFound: false,
             loadTransaction: true,
             pageForTransaction: 1,
-            totalTransactionCount: undefined,
             noMoreTransaction: false,
             balanceChangesHasNext: true,
             showReasonFilter: false,
@@ -100,7 +98,6 @@ class PlatformAddress extends React.Component<Props, State> {
                 notFound: false,
                 loadTransaction: true,
                 noMoreTransaction: false,
-                totalTransactionCount: undefined,
                 balanceChanges: undefined,
                 balanceChangesNextPage: undefined
             });
@@ -349,23 +346,7 @@ class PlatformAddress extends React.Component<Props, State> {
                 params: { address }
             }
         } = this.props;
-        const {
-            loadTransaction,
-            pageForTransaction,
-            transactions,
-            totalTransactionCount,
-            noMoreTransaction
-        } = this.state;
-
-        if (totalTransactionCount == null) {
-            return (
-                <RequestTotalTransactionCount
-                    address={address}
-                    onTransactionTotalCount={this.onTransactionTotalCount}
-                    onError={this.onError}
-                />
-            );
-        }
+        const { loadTransaction, pageForTransaction, transactions, noMoreTransaction } = this.state;
 
         return (
             <>
@@ -373,7 +354,6 @@ class PlatformAddress extends React.Component<Props, State> {
                     <div className="mt-large">
                         <TransactionList
                             transactions={transactions}
-                            totalCount={totalTransactionCount}
                             loadMoreAction={this.loadMoreTransaction}
                             hideMoreButton={noMoreTransaction}
                         />
@@ -481,12 +461,6 @@ class PlatformAddress extends React.Component<Props, State> {
         this.setState({
             loadTransaction: true,
             pageForTransaction: this.state.pageForTransaction + 1
-        });
-    };
-    private onTransactionTotalCount = (totalCount: number) => {
-        this.setState({
-            totalTransactionCount: totalCount,
-            noMoreTransaction: this.state.transactions.length >= totalCount
         });
     };
     private onAccountNotExist = () => {
