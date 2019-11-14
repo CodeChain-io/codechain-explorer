@@ -9,11 +9,9 @@ import { RequestAssetTransferAddressTransactions, RequestAssetTransferAddressUTX
 
 import * as _ from "lodash";
 import AssetList from "../../components/asset/AssetList/AssetList";
-import AddressDetails from "../../components/assetTransferAddress/AddressDetails/AddressDetails";
 import TransactionList from "../../components/transaction/TransactionList/TransactionList";
 import CopyButton from "../../components/util/CopyButton/CopyButton";
 import { ImageLoader } from "../../components/util/ImageLoader/ImageLoader";
-import ReqeustTotalTransferTransactionCount from "../../request/RequestTotalTransferTransactionCount";
 import "./AssetTransferAddress.scss";
 
 interface Props {
@@ -26,9 +24,7 @@ interface State {
     pageForTransactions: number;
     loadUTXO: boolean;
     loadTransaction: boolean;
-    totalTransactionCount: number;
     noMoreTransaction: boolean;
-    requestTotalTransactionCount: boolean;
 }
 
 class AssetTransferAddress extends React.Component<Props, State> {
@@ -39,11 +35,9 @@ class AssetTransferAddress extends React.Component<Props, State> {
             aggsUTXO: [],
             transactions: [],
             pageForTransactions: 1,
-            totalTransactionCount: 0,
             loadUTXO: true,
             loadTransaction: true,
-            noMoreTransaction: false,
-            requestTotalTransactionCount: true
+            noMoreTransaction: false
         };
     }
 
@@ -63,11 +57,9 @@ class AssetTransferAddress extends React.Component<Props, State> {
                 aggsUTXO: [],
                 transactions: [],
                 pageForTransactions: 1,
-                totalTransactionCount: 0,
                 loadUTXO: true,
                 loadTransaction: true,
-                noMoreTransaction: false,
-                requestTotalTransactionCount: true
+                noMoreTransaction: false
             });
         }
     }
@@ -78,7 +70,6 @@ class AssetTransferAddress extends React.Component<Props, State> {
                 params: { address }
             }
         } = this.props;
-        const { totalTransactionCount } = this.state;
         return (
             <Container className="asset-transfer-address animated fadeIn">
                 <Row>
@@ -105,11 +96,6 @@ class AssetTransferAddress extends React.Component<Props, State> {
                 <Row className="big-size-qr text-center">
                     <Col>
                         <QRCode size={120} value={address} />
-                    </Col>
-                </Row>
-                <Row className="mt-large">
-                    <Col>
-                        <AddressDetails totalTransactionCount={totalTransactionCount} />
                     </Col>
                 </Row>
                 <Row>
@@ -153,29 +139,14 @@ class AssetTransferAddress extends React.Component<Props, State> {
                 params: { address }
             }
         } = this.props;
-        const {
-            transactions,
-            pageForTransactions,
-            loadTransaction,
-            totalTransactionCount,
-            noMoreTransaction,
-            requestTotalTransactionCount
-        } = this.state;
+        const { transactions, pageForTransactions, loadTransaction, noMoreTransaction } = this.state;
         return (
             <>
-                {requestTotalTransactionCount && (
-                    <ReqeustTotalTransferTransactionCount
-                        address={address}
-                        onTotalCount={this.onTransactionTotalCount}
-                        onError={this.onError}
-                    />
-                )}
-                {totalTransactionCount > 0 ? (
+                {transactions.length > 0 ? (
                     <div className="mt-large">
                         <TransactionList
                             owner={address}
                             transactions={transactions}
-                            totalCount={totalTransactionCount}
                             loadMoreAction={this.loadMoreTransaction}
                             hideMoreButton={noMoreTransaction}
                         />
@@ -208,17 +179,9 @@ class AssetTransferAddress extends React.Component<Props, State> {
             transactions: this.state.transactions.concat(transactions),
             loadTransaction: false
         });
-        if (this.state.transactions.length >= this.state.totalTransactionCount) {
+        if (transactions.length < this.transactionItemsPerPage) {
             this.setState({ noMoreTransaction: true });
         }
-    };
-
-    private onTransactionTotalCount = (totalCount: number) => {
-        this.setState({
-            totalTransactionCount: totalCount,
-            requestTotalTransactionCount: false,
-            noMoreTransaction: this.state.transactions.length >= totalCount
-        });
     };
 
     private onAggsUTXO = (aggsUTXO: AggsUTXODoc[]) => {

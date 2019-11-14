@@ -1,10 +1,4 @@
-import {
-    faAngleDoubleLeft,
-    faAngleDoubleRight,
-    faAngleLeft,
-    faAngleRight,
-    faSpinner
-} from "@fortawesome/free-solid-svg-icons";
+import { faAngleLeft, faAngleRight, faSpinner } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { BlockDoc } from "codechain-indexer-types";
 import * as _ from "lodash";
@@ -131,27 +125,13 @@ class Blocks extends React.Component<Props, State> {
                                                 currentPage === 1 || !isBlockRequested ? "disabled" : ""
                                             }`}
                                             type="button"
-                                            onClick={_.partial(this.moveFirst, currentPage)}
-                                        >
-                                            <FontAwesomeIcon icon={faAngleDoubleLeft} />
-                                        </button>
-                                    </li>
-                                    <li className="list-inline-item">
-                                        <button
-                                            disabled={currentPage === 1 || !isBlockRequested}
-                                            className={`btn btn-primary page-btn ${
-                                                currentPage === 1 || !isBlockRequested ? "disabled" : ""
-                                            }`}
-                                            type="button"
                                             onClick={_.partial(this.moveBefore, currentPage)}
                                         >
                                             <FontAwesomeIcon icon={faAngleLeft} /> Prev
                                         </button>
                                     </li>
                                     <li className="list-inline-item">
-                                        <div className="number-view">
-                                            {currentPage} of {maxPage}
-                                        </div>
+                                        <div className="number-view">Page {currentPage}</div>
                                     </li>
                                     <li className="list-inline-item">
                                         <button
@@ -163,18 +143,6 @@ class Blocks extends React.Component<Props, State> {
                                             onClick={_.partial(this.moveNext, currentPage, maxPage)}
                                         >
                                             Next <FontAwesomeIcon icon={faAngleRight} />
-                                        </button>
-                                    </li>
-                                    <li className="list-inline-item">
-                                        <button
-                                            disabled={currentPage === maxPage || !isBlockRequested}
-                                            className={`btn btn-primary page-btn ${
-                                                currentPage === maxPage || !isBlockRequested ? "disabled" : ""
-                                            }`}
-                                            type="button"
-                                            onClick={_.partial(this.moveLast, currentPage, maxPage)}
-                                        >
-                                            <FontAwesomeIcon icon={faAngleDoubleRight} />
                                         </button>
                                     </li>
                                 </ul>
@@ -272,27 +240,12 @@ class Blocks extends React.Component<Props, State> {
         this.setState({ redirectPage: currentPage + 1, redirect: true });
     };
 
-    private moveLast = (currentPage: number, maxPage: number, e: any) => {
-        e.preventDefault();
-        if (currentPage >= maxPage) {
-            return;
-        }
-        this.setState({ redirectPage: maxPage, redirect: true });
-    };
-
     private moveBefore = (currentPage: number, e: any) => {
         e.preventDefault();
         if (currentPage <= 1) {
             return;
         }
         this.setState({ redirectPage: currentPage - 1, redirect: true });
-    };
-
-    private moveFirst = (currentPage: number, e: any) => {
-        if (currentPage <= 1) {
-            return;
-        }
-        this.setState({ redirectPage: 1, redirect: true });
     };
 
     private handleOptionChange = (event: any) => {

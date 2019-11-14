@@ -1,10 +1,4 @@
-import {
-    faAngleDoubleLeft,
-    faAngleDoubleRight,
-    faAngleLeft,
-    faAngleRight,
-    faSpinner
-} from "@fortawesome/free-solid-svg-icons";
+import { faAngleLeft, faAngleRight, faSpinner } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import * as _ from "lodash";
 import * as React from "react";
@@ -23,13 +17,13 @@ import { getUnixTimeLocaleString } from "src/utils/Time";
 import DataTable from "../../components/util/DataTable/DataTable";
 import HexString from "../../components/util/HexString/HexString";
 import { TypeBadge } from "../../components/util/TypeBadge/TypeBadge";
-import { RequestTotalTransactionCount, RequestTransactions } from "../../request";
+import { RequestTransactions } from "../../request";
 import { TransactionTypes } from "../../utils/Transactions";
 import "./Transactions.scss";
 
 interface State {
     transactions: TransactionDoc[];
-    totalTransactionCount?: number;
+    transactionsHasNext: boolean;
     isTransactionRequested: boolean;
     redirect: boolean;
     redirectPage?: number;
@@ -54,7 +48,7 @@ class Transactions extends React.Component<Props, State> {
         super(props);
         this.state = {
             transactions: [],
-            totalTransactionCount: undefined,
+            transactionsHasNext: true,
             isTransactionRequested: false,
             redirect: false,
             redirectItemsPerPage: undefined,
@@ -98,7 +92,7 @@ class Transactions extends React.Component<Props, State> {
 
         const {
             transactions,
-            totalTransactionCount,
+            transactionsHasNext,
             isTransactionRequested,
             redirect,
             redirectItemsPerPage,
@@ -117,18 +111,9 @@ class Transactions extends React.Component<Props, State> {
                 />
             );
         }
-        if (totalTransactionCount === undefined) {
-            return (
-                <RequestTotalTransactionCount
-                    onTransactionTotalCount={this.onTransactionTotalCount}
-                    onError={this.onError}
-                />
-            );
-        }
         if (serverTimeOffset === undefined) {
             return <RequestServerTime />;
         }
-        const maxPage = Math.floor(Math.max(0, totalTransactionCount - 1) / itemsPerPage) + 1;
         return (
             <Container className="transactions">
                 {!isTransactionRequested ? (
@@ -138,11 +123,6 @@ class Transactions extends React.Component<Props, State> {
                             page={currentPage}
                             itemsPerPage={itemsPerPage}
                             showProgressBar={false}
-                            onError={this.onError}
-                            selectedTypes={selectedTypes}
-                        />
-                        <RequestTotalTransactionCount
-                            onTransactionTotalCount={this.onTransactionTotalCount}
                             onError={this.onError}
                             selectedTypes={selectedTypes}
                         />
@@ -204,50 +184,25 @@ class Transactions extends React.Component<Props, State> {
                                                     currentPage === 1 || !isTransactionRequested ? "disabled" : ""
                                                 }`}
                                                 type="button"
-                                                onClick={_.partial(this.moveFirst, currentPage)}
-                                            >
-                                                <FontAwesomeIcon icon={faAngleDoubleLeft} />
-                                            </button>
-                                        </li>
-                                        <li className="list-inline-item">
-                                            <button
-                                                disabled={currentPage === 1 || !isTransactionRequested}
-                                                className={`btn btn-primary page-btn ${
-                                                    currentPage === 1 || !isTransactionRequested ? "disabled" : ""
-                                                }`}
-                                                type="button"
                                                 onClick={_.partial(this.moveBefore, currentPage)}
                                             >
                                                 <FontAwesomeIcon icon={faAngleLeft} /> Prev
                                             </button>
                                         </li>
                                         <li className="list-inline-item">
-                                            <div className="number-view">
-                                                {currentPage} of {maxPage}
-                                            </div>
+                                            <div className="number-view">Page {currentPage}</div>
                                         </li>
                                         <li className="list-inline-item">
+                                            {/* FIXME: Disable the button if transactions had loaded less than the page size */}
                                             <button
-                                                disabled={currentPage === maxPage || !isTransactionRequested}
+                                                disabled={!transactionsHasNext && !isTransactionRequested}
                                                 className={`btn btn-primary page-btn ${
-                                                    currentPage === maxPage || !isTransactionRequested ? "disabled" : ""
+                                                    !transactionsHasNext && !isTransactionRequested ? "disabled" : ""
                                                 }`}
                                                 type="button"
-                                                onClick={_.partial(this.moveNext, currentPage, maxPage)}
+                                                onClick={_.partial(this.moveNext, currentPage)}
                                             >
                                                 Next <FontAwesomeIcon icon={faAngleRight} />
-                                            </button>
-                                        </li>
-                                        <li className="list-inline-item">
-                                            <button
-                                                disabled={currentPage === maxPage || !isTransactionRequested}
-                                                className={`btn btn-primary page-btn ${
-                                                    currentPage === maxPage || !isTransactionRequested ? "disabled" : ""
-                                                }`}
-                                                type="button"
-                                                onClick={_.partial(this.moveLast, currentPage, maxPage)}
-                                            >
-                                                <FontAwesomeIcon icon={faAngleDoubleRight} />
                                             </button>
                                         </li>
                                     </ul>
@@ -376,20 +331,9 @@ class Transactions extends React.Component<Props, State> {
         }
     };
 
-    private moveNext = (currentPage: number, maxPage: number, e: any) => {
+    private moveNext = (currentPage: number, e: any) => {
         e.preventDefault();
-        if (currentPage >= maxPage) {
-            return;
-        }
         this.setState({ redirectPage: currentPage + 1, redirect: true });
-    };
-
-    private moveLast = (currentPage: number, maxPage: number, e: any) => {
-        e.preventDefault();
-        if (currentPage >= maxPage) {
-            return;
-        }
-        this.setState({ redirectPage: maxPage, redirect: true });
     };
 
     private moveBefore = (currentPage: number, e: any) => {
@@ -398,13 +342,6 @@ class Transactions extends React.Component<Props, State> {
             return;
         }
         this.setState({ redirectPage: currentPage - 1, redirect: true });
-    };
-
-    private moveFirst = (currentPage: number, e: any) => {
-        if (currentPage <= 1) {
-            return;
-        }
-        this.setState({ redirectPage: 1, redirect: true });
     };
 
     private handleOptionChange = (event: any) => {
@@ -416,12 +353,18 @@ class Transactions extends React.Component<Props, State> {
         });
     };
 
-    private onTransactionTotalCount = (totalTransactionCount: number) => {
-        this.setState({ totalTransactionCount });
-    };
-
     private onTransactions = (transactions: TransactionDoc[]) => {
         this.setState({ transactions, isTransactionRequested: true });
+        const {
+            location: { search }
+        } = this.props;
+        const params = new URLSearchParams(search);
+        const itemsPerPage = params.get("itemsPerPage") ? parseInt(params.get("itemsPerPage") as string, 10) : 25;
+        if (transactions.length < itemsPerPage) {
+            this.setState({
+                transactionsHasNext: false
+            });
+        }
     };
 
     private onError = (error: any) => {

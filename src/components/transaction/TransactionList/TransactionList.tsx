@@ -16,7 +16,6 @@ interface OwnProps {
     assetType?: H160;
     transactions: TransactionDoc[];
     loadMoreAction?: () => void;
-    totalCount: number;
     hideMoreButton?: boolean;
 }
 
@@ -69,13 +68,12 @@ class TransactionList extends React.Component<Props, State> {
     }
 
     private renderTransactionListTitle = () => {
-        const { totalCount } = this.props;
+        const { transactions } = this.props;
         return (
             <Row>
                 <Col>
                     <div className="d-flex justify-content-between align-items-end">
-                        {totalCount === 1 ? <h2>Transaction</h2> : <h2>Transactions</h2>}
-                        {totalCount !== 1 && <span>Total {totalCount} transactions</span>}
+                        {transactions.length === 1 ? <h2>Transaction</h2> : <h2>Transactions</h2>}
                     </div>
                     <hr className="heading-hr" />
                 </Col>
