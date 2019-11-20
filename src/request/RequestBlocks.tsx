@@ -4,11 +4,20 @@ import { connect, Dispatch } from "react-redux";
 import { BlockDoc } from "codechain-indexer-types";
 import { ApiError, apiRequest } from "./ApiRequest";
 
+export interface BlocksResponse {
+    data: BlockDoc[];
+    hasNextPage: boolean;
+    hasPreviousPage: boolean;
+    firstEvaluatedKey: string;
+    lastEvaluatedKey: string;
+}
+
 interface OwnProps {
-    page: number;
+    firstEvaluatedKey?: string;
+    lastEvaluatedKey?: string;
     itemsPerPage: number;
     showProgressBar: boolean;
-    onBlocks: (blocks: BlockDoc[]) => void;
+    onBlocks: (blocks: BlocksResponse) => void;
     onError: (e: ApiError) => void;
 }
 
@@ -20,8 +29,18 @@ type Props = OwnProps & DispatchProps;
 
 class RequestBlocks extends React.Component<Props> {
     public componentWillMount() {
-        const { onError, onBlocks, dispatch, page, itemsPerPage, showProgressBar } = this.props;
-        const path = `block?page=${page}&itemsPerPage=${itemsPerPage}`;
+        const {
+            onError,
+            onBlocks,
+            dispatch,
+            lastEvaluatedKey,
+            firstEvaluatedKey,
+            itemsPerPage,
+            showProgressBar
+        } = this.props;
+        const path = `block?itemsPerPage=${itemsPerPage}${
+            lastEvaluatedKey ? `&lastEvaluatedKey=${lastEvaluatedKey}` : ""
+        }${firstEvaluatedKey ? `&firstEvaluatedKey=${firstEvaluatedKey}` : ""}`;
         apiRequest({
             path,
             dispatch,
