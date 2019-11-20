@@ -8,6 +8,7 @@ import { Redirect } from "react-router";
 import { Link } from "react-router-dom";
 import { Container } from "reactstrap";
 import { RootState } from "src/redux/actions";
+import { BlocksResponse } from "src/request/RequestBlocks";
 import RequestServerTime from "src/request/RequestServerTime";
 import { getUnixTimeLocaleString } from "src/utils/Time";
 import { CommaNumberString } from "../../components/util/CommaNumberString/CommaNumberString";
@@ -15,13 +16,21 @@ import DataTable from "../../components/util/DataTable/DataTable";
 import { RequestBlocks, RequestTotalBlockCount } from "../../request";
 import "./Blocks.scss";
 
-interface State {
+interface PaginationState {
+    shouldMoveToNext: boolean;
+    shouldMoveToPrevious: boolean;
+    shouldMoveToFirst: boolean;
+    hasNextPage?: boolean;
+    hasPreviousPage?: boolean;
+    firstEvaluatedKey?: string;
+    lastEvaluatedKey?: string;
+    itemsPerPage?: number;
+}
+
+interface State extends PaginationState {
     blocks: BlockDoc[];
     totalBlockCount?: number;
     isBlockRequested: boolean;
-    redirect: boolean;
-    redirectPage?: number;
-    redirectItemsPerPage?: number;
 }
 
 interface OwnProps {
@@ -42,26 +51,22 @@ class Blocks extends React.Component<Props, State> {
             blocks: [],
             totalBlockCount: undefined,
             isBlockRequested: false,
-            redirect: false,
-            redirectItemsPerPage: undefined,
-            redirectPage: undefined
+            itemsPerPage: undefined,
+            shouldMoveToNext: false,
+            shouldMoveToPrevious: false,
+            shouldMoveToFirst: false
         };
     }
 
     public componentWillReceiveProps(props: Props) {
-        const {
-            location: { search }
-        } = this.props;
-        const {
-            location: { search: nextSearch }
-        } = props;
-        if (nextSearch !== search) {
+        if (props.location.search !== this.props.location.search) {
             this.setState({
                 blocks: [],
                 isBlockRequested: false,
-                redirect: false,
-                redirectPage: undefined,
-                redirectItemsPerPage: undefined
+                itemsPerPage: undefined,
+                shouldMoveToNext: false,
+                shouldMoveToPrevious: false,
+                shouldMoveToFirst: false
             });
         }
     }
@@ -72,24 +77,31 @@ class Blocks extends React.Component<Props, State> {
             serverTimeOffset
         } = this.props;
         const params = new URLSearchParams(search);
-        const currentPage = params.get("page") ? parseInt(params.get("page") as string, 10) : 1;
+        const lastEvaluatedKey = params.get("lastEvaluatedKey") || undefined;
+        const firstEvaluatedKey = params.get("firstEvaluatedKey") || undefined;
         const itemsPerPage = params.get("itemsPerPage") ? parseInt(params.get("itemsPerPage") as string, 10) : 25;
-        const { blocks, totalBlockCount, isBlockRequested, redirect, redirectItemsPerPage, redirectPage } = this.state;
+        const { blocks, totalBlockCount, isBlockRequested } = this.state;
 
-        if (redirect) {
-            return redirectPage && redirectPage - currentPage === 1 ? (
+        if (this.state.shouldMoveToNext) {
+            return (
                 <Redirect
                     push={true}
-                    to={`/blocks?page=${redirectPage || currentPage}&itemsPerPage=${redirectItemsPerPage ||
-                        itemsPerPage}`}
-                />
-            ) : (
-                <Redirect
-                    push={true}
-                    to={`/blocks?page=${redirectPage || currentPage}&itemsPerPage=${redirectItemsPerPage ||
-                        itemsPerPage}`}
+                    to={`/blocks?lastEvaluatedKey=${this.state.lastEvaluatedKey}&itemsPerPage=${this.state
+                        .itemsPerPage || itemsPerPage}`}
                 />
             );
+        }
+        if (this.state.shouldMoveToPrevious) {
+            return (
+                <Redirect
+                    push={true}
+                    to={`/blocks?firstEvaluatedKey=${this.state.firstEvaluatedKey}&itemsPerPage=${this.state
+                        .itemsPerPage || itemsPerPage}`}
+                />
+            );
+        }
+        if (this.state.shouldMoveToFirst) {
+            return <Redirect push={true} to={`/blocks?itemsPerPage=${this.state.itemsPerPage || itemsPerPage}`} />;
         }
         if (totalBlockCount === undefined) {
             return <RequestTotalBlockCount onBlockTotalCount={this.onTotalBlockCount} onError={this.onError} />;
@@ -97,14 +109,14 @@ class Blocks extends React.Component<Props, State> {
         if (serverTimeOffset === undefined) {
             return <RequestServerTime />;
         }
-        const maxPage = Math.floor(Math.max(0, totalBlockCount - 1) / itemsPerPage) + 1;
         return (
             <Container className="blocks">
                 {!isBlockRequested ? (
                     <div>
                         <RequestBlocks
                             onBlocks={this.onBlocks}
-                            page={currentPage}
+                            firstEvaluatedKey={firstEvaluatedKey}
+                            lastEvaluatedKey={lastEvaluatedKey}
                             itemsPerPage={itemsPerPage}
                             showProgressBar={false}
                             onError={this.onError}
@@ -120,27 +132,29 @@ class Blocks extends React.Component<Props, State> {
                                 <ul className="list-inline">
                                     <li className="list-inline-item">
                                         <button
-                                            disabled={currentPage === 1 || !isBlockRequested}
+                                            disabled={this.state.hasPreviousPage !== true || !isBlockRequested}
                                             className={`btn btn-primary page-btn ${
-                                                currentPage === 1 || !isBlockRequested ? "disabled" : ""
+                                                this.state.hasPreviousPage !== true || !isBlockRequested
+                                                    ? "disabled"
+                                                    : ""
                                             }`}
                                             type="button"
-                                            onClick={_.partial(this.moveBefore, currentPage)}
+                                            onClick={this.moveBefore}
                                         >
                                             <FontAwesomeIcon icon={faAngleLeft} /> Prev
                                         </button>
                                     </li>
                                     <li className="list-inline-item">
-                                        <div className="number-view">Page {currentPage}</div>
+                                        <div className="number-view" />
                                     </li>
                                     <li className="list-inline-item">
                                         <button
-                                            disabled={currentPage === maxPage || !isBlockRequested}
+                                            disabled={this.state.hasNextPage !== true || !isBlockRequested}
                                             className={`btn btn-primary page-btn ${
-                                                currentPage === maxPage || !isBlockRequested ? "disabled" : ""
+                                                this.state.hasNextPage !== true || !isBlockRequested ? "disabled" : ""
                                             }`}
                                             type="button"
-                                            onClick={_.partial(this.moveNext, currentPage, maxPage)}
+                                            onClick={this.moveNext}
                                         >
                                             Next <FontAwesomeIcon icon={faAngleRight} />
                                         </button>
@@ -232,28 +246,21 @@ class Blocks extends React.Component<Props, State> {
         );
     }
 
-    private moveNext = (currentPage: number, maxPage: number, e: any) => {
+    private moveNext = (e: any) => {
         e.preventDefault();
-        if (currentPage >= maxPage) {
-            return;
-        }
-        this.setState({ redirectPage: currentPage + 1, redirect: true });
+        this.setState({ shouldMoveToNext: true });
     };
 
-    private moveBefore = (currentPage: number, e: any) => {
+    private moveBefore = (e: any) => {
         e.preventDefault();
-        if (currentPage <= 1) {
-            return;
-        }
-        this.setState({ redirectPage: currentPage - 1, redirect: true });
+        this.setState({ shouldMoveToPrevious: true });
     };
 
     private handleOptionChange = (event: any) => {
         const selected = parseInt(event.target.value, 10);
         this.setState({
-            redirectItemsPerPage: selected,
-            redirect: true,
-            redirectPage: 1
+            itemsPerPage: selected,
+            shouldMoveToFirst: true
         });
     };
 
@@ -261,8 +268,16 @@ class Blocks extends React.Component<Props, State> {
         this.setState({ totalBlockCount });
     };
 
-    private onBlocks = (blocks: BlockDoc[]) => {
-        this.setState({ blocks, isBlockRequested: true });
+    private onBlocks = (response: BlocksResponse) => {
+        const { data, hasNextPage, hasPreviousPage, lastEvaluatedKey, firstEvaluatedKey } = response;
+        this.setState({
+            blocks: data,
+            isBlockRequested: true,
+            hasNextPage,
+            hasPreviousPage,
+            lastEvaluatedKey,
+            firstEvaluatedKey
+        });
     };
 
     private onError = (error: any) => {

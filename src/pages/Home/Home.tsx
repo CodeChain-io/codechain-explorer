@@ -9,6 +9,7 @@ import { RequestBlockNumber, RequestBlocks, RequestTransactions } from "../../re
 
 import { BlockDoc, TransactionDoc } from "codechain-indexer-types";
 import { connect } from "react-redux";
+import { BlocksResponse } from "src/request/RequestBlocks";
 import { RootState } from "../../redux/actions";
 import BlockCapacityUsageChart from "./BlockCapacityUsageChart";
 import BlockCreationTimeChart from "./BlockCreationTimeChart";
@@ -100,7 +101,6 @@ class Home extends React.Component<Props, State> {
                                 <LatestBlocks blocks={blocks} />
                                 {requestBlocks && (
                                     <RequestBlocks
-                                        page={1}
                                         itemsPerPage={31}
                                         showProgressBar={false}
                                         onBlocks={this.onBlocks}
@@ -129,8 +129,9 @@ class Home extends React.Component<Props, State> {
         );
     }
 
-    private onBlocks = (blocks: BlockDoc[]) => {
-        this.setState({ blocks, requestBlocks: false });
+    private onBlocks = (response: BlocksResponse) => {
+        const { data } = response;
+        this.setState({ blocks: data, requestBlocks: false });
     };
 
     private onTransactions = (transactions: TransactionDoc[]) => {
