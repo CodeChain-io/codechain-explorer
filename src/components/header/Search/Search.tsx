@@ -10,13 +10,14 @@ import * as Metadata from "../../../utils/Metadata";
 
 import { AssetSchemeDoc, BlockDoc, TransactionDoc } from "codechain-indexer-types";
 import { H256, U256 } from "codechain-sdk/lib/core/classes";
+import { TransactionsResponse } from "src/request/RequestTransactions";
 import {
     RequestAssetInfosByName,
     RequestAssetScheme,
-    RequestAssetTransferAddressTransactions,
     RequestBlock,
     RequestPlatformAddressAccount,
-    RequestTransaction
+    RequestTransaction,
+    RequestTransactions
 } from "../../../request";
 import { isAssetAddress } from "../../../utils/Address";
 import { ImageLoader } from "../../util/ImageLoader/ImageLoader";
@@ -130,12 +131,12 @@ class Search extends React.Component<Props, State> {
                             onAccountNotExist={this.onReqeustNotExist}
                             onError={this.onError}
                         />
-                        <RequestAssetTransferAddressTransactions
+                        <RequestTransactions
                             progressBarTarget="searchBar"
-                            page={1}
+                            showProgressBar={false}
                             itemsPerPage={1}
                             address={inputValue}
-                            onTransactions={this.onTransactionsForAssetTransferAddress}
+                            onTransactions={_.partial(this.onTransactionsForAssetTransferAddress, inputValue)}
                             onError={this.onError}
                         />
                     </div>
@@ -199,8 +200,8 @@ class Search extends React.Component<Props, State> {
         });
     };
 
-    private onTransactionsForAssetTransferAddress = (transactions: TransactionDoc[], address: string) => {
-        if (isAssetAddress(address) && transactions.length > 0) {
+    private onTransactionsForAssetTransferAddress = (address: string, response: TransactionsResponse) => {
+        if (isAssetAddress(address) && response.data.length > 0) {
             this.setState({
                 redirectTo: `/addr-asset/${address}`,
                 requestCount: this.state.requestCount - 1
