@@ -3,11 +3,20 @@ import * as React from "react";
 import { connect, Dispatch } from "react-redux";
 import { ApiError, apiRequest } from "./ApiRequest";
 
+export interface TransactionsResponse {
+    data: TransactionDoc[];
+    hasNextPage: boolean;
+    hasPreviousPage: boolean;
+    firstEvaluatedKey: string;
+    lastEvaluatedKey: string;
+}
+
 interface OwnProps {
-    page: number;
+    firstEvaluatedKey?: string;
+    lastEvaluatedKey?: string;
     itemsPerPage: number;
     showProgressBar: boolean;
-    onTransactions: (transactions: TransactionDoc[]) => void;
+    onTransactions: (transactions: TransactionsResponse) => void;
     onError: (e: ApiError) => void;
     selectedTypes?: string[];
 }
@@ -20,8 +29,19 @@ type Props = OwnProps & DispatchProps;
 
 class RequestTransactions extends React.Component<Props> {
     public componentWillMount() {
-        const { onError, onTransactions, dispatch, page, itemsPerPage, showProgressBar, selectedTypes } = this.props;
-        let path = `tx?page=${page}&itemsPerPage=${itemsPerPage}`;
+        const {
+            onError,
+            onTransactions,
+            dispatch,
+            lastEvaluatedKey,
+            firstEvaluatedKey,
+            itemsPerPage,
+            showProgressBar,
+            selectedTypes
+        } = this.props;
+        let path = `tx?itemsPerPage=${itemsPerPage}${lastEvaluatedKey ? `&lastEvaluatedKey=${lastEvaluatedKey}` : ""}${
+            firstEvaluatedKey ? `&firstEvaluatedKey=${firstEvaluatedKey}` : ""
+        }`;
         if (selectedTypes && selectedTypes.length > 0) {
             path += `&type=${selectedTypes.join(",")}`;
         }
