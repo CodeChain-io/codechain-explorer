@@ -7,11 +7,11 @@ import { AggsUTXODoc, AssetSchemeDoc, TransactionDoc } from "codechain-indexer-t
 import AssetDetails from "../../components/asset/AssetDetails/AssetDetails";
 import AssetOwners from "../../components/asset/AssetOwners/AssetOwners";
 import TransactionList from "../../components/transaction/TransactionList/TransactionList";
-import { RequestAssetScheme } from "../../request";
-import RequestAssetTransactions from "../../request/RequestAssetTransactions";
+import { RequestAssetScheme, RequestTransactions } from "../../request";
 import RequestAssetTypeUTXO from "../../request/RequestAssetTypeUTXO";
 
 import { H160 } from "codechain-sdk/lib/core/classes";
+import { TransactionsResponse } from "src/request/RequestTransactions";
 import CopyButton from "../../components/util/CopyButton/CopyButton";
 import HexString from "../../components/util/HexString/HexString";
 import { ImageLoader } from "../../components/util/ImageLoader/ImageLoader";
@@ -25,10 +25,10 @@ interface State {
     transactions: TransactionDoc[];
     aggsUTXO: AggsUTXODoc[];
     assetScheme?: AssetSchemeDoc;
-    page: number;
     loadTransaction: boolean;
     loadAggsUTXO: boolean;
     noMoreTransaction: boolean;
+    lastEvaluatedKeyForTransactions?: string;
     notExistedInBlock: boolean;
 }
 
@@ -39,7 +39,6 @@ class Asset extends React.Component<Props, State> {
         this.state = {
             transactions: [],
             aggsUTXO: [],
-            page: 1,
             loadTransaction: true,
             loadAggsUTXO: true,
             noMoreTransaction: false,
@@ -63,7 +62,6 @@ class Asset extends React.Component<Props, State> {
                 ...this.state,
                 assetScheme: undefined,
                 transactions: [],
-                page: 1,
                 loadTransaction: true,
                 loadAggsUTXO: true,
                 noMoreTransaction: false,
@@ -83,10 +81,10 @@ class Asset extends React.Component<Props, State> {
             assetScheme,
             transactions,
             aggsUTXO,
-            page,
             loadTransaction,
             loadAggsUTXO,
-            noMoreTransaction
+            noMoreTransaction,
+            lastEvaluatedKeyForTransactions
         } = this.state;
 
         if (!assetScheme) {
@@ -142,12 +140,13 @@ class Asset extends React.Component<Props, State> {
                     </div>
                 ) : null}
                 {loadTransaction ? (
-                    <RequestAssetTransactions
-                        assetType={assetType}
-                        onTransactions={this.onTransactionList}
-                        onError={this.onError}
-                        page={page}
+                    <RequestTransactions
+                        lastEvaluatedKey={lastEvaluatedKeyForTransactions}
                         itemsPerPage={this.itemsPerPage}
+                        assetType={assetType}
+                        showProgressBar={false}
+                        onTransactions={this.onTransactions}
+                        onError={this.onError}
                     />
                 ) : null}
                 {transactions.length !== 0 ? (
@@ -165,21 +164,21 @@ class Asset extends React.Component<Props, State> {
     }
 
     private loadMoreAction = () => {
-        this.setState({ loadTransaction: true, loadAggsUTXO: true, page: this.state.page + 1 });
+        this.setState({ loadTransaction: true });
     };
 
     private onAssetScheme = (assetScheme: AssetSchemeDoc) => {
         this.setState({ assetScheme });
     };
 
-    private onTransactionList = (transactions: TransactionDoc[]) => {
+    private onTransactions = (response: TransactionsResponse) => {
+        const { data: transactions, hasNextPage, lastEvaluatedKey } = response;
         this.setState({
             transactions: this.state.transactions.concat(transactions),
+            noMoreTransaction: !hasNextPage,
+            lastEvaluatedKeyForTransactions: lastEvaluatedKey,
             loadTransaction: false
         });
-        if (transactions.length < this.itemsPerPage) {
-            this.setState({ noMoreTransaction: true });
-        }
     };
 
     private onAggsUTXOs = (aggsUTXO: AggsUTXODoc[]) => {
