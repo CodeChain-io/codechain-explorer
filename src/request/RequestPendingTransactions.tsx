@@ -1,12 +1,13 @@
-import { TransactionDoc } from "codechain-indexer-types";
 import * as React from "react";
 import { connect, Dispatch } from "react-redux";
 import { ApiError, apiRequest } from "./ApiRequest";
+import { TransactionsResponse } from "./RequestTransactions";
 
 interface OwnProps {
-    page: number;
+    firstEvaluatedKey?: string;
+    lastEvaluatedKey?: string;
     itemsPerPage: number;
-    onTransactions: (transactions: TransactionDoc[]) => void;
+    onTransactions: (transactions: TransactionsResponse) => void;
     onError: (e: ApiError) => void;
 }
 
@@ -18,8 +19,11 @@ type Props = OwnProps & DispatchProps;
 
 class RequestPendingTransactions extends React.Component<Props> {
     public componentWillMount() {
-        const { onError, onTransactions, dispatch, page, itemsPerPage } = this.props;
-        const path = `pending-tx?page=${page}&itemsPerPage=${itemsPerPage}`;
+        const { onError, onTransactions, dispatch, lastEvaluatedKey, firstEvaluatedKey, itemsPerPage } = this.props;
+        const path = `pending-tx?
+            itemsPerPage=${itemsPerPage}${lastEvaluatedKey ? `&lastEvaluatedKey=${lastEvaluatedKey}` : ""}${
+            firstEvaluatedKey ? `&firstEvaluatedKey=${firstEvaluatedKey}` : ""
+        }`;
         apiRequest({
             path,
             dispatch,
