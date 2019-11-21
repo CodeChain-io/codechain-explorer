@@ -4,6 +4,11 @@ import { connect, Dispatch } from "react-redux";
 import { AggsUTXODoc } from "codechain-indexer-types";
 import { ApiError, apiRequest } from "./ApiRequest";
 
+export interface AggsUTXOResponse {
+    data: AggsUTXODoc[];
+}
+
+// FIXME: Support pagination
 interface OwnProps {
     assetType: string;
     onAggsUTXOs: (aggsUTXOs: AggsUTXODoc[]) => void;
@@ -21,8 +26,8 @@ class RequestAssetTypeUTXO extends React.Component<Props> {
         const { assetType, onAggsUTXOs, onError, dispatch } = this.props;
         const path = `aggs-utxo?assetType=${assetType}&itemsPerPage=100`;
         apiRequest({ path, dispatch, showProgressBar: false })
-            .then((response: AggsUTXODoc[]) => {
-                onAggsUTXOs(response);
+            .then((response: AggsUTXOResponse) => {
+                onAggsUTXOs(response.data);
             })
             .catch(onError);
     }

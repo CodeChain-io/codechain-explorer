@@ -3,7 +3,9 @@ import { connect, Dispatch } from "react-redux";
 
 import { AggsUTXODoc } from "codechain-indexer-types";
 import { ApiError, apiRequest } from "./ApiRequest";
+import { AggsUTXOResponse } from "./RequestAssetTypeUTXO";
 
+// FIXME: Support pagination
 interface OwnProps {
     address: string;
     onAggsUTXO: (aggsUTXO: AggsUTXODoc[]) => void;
@@ -21,8 +23,8 @@ class RequestAssetTransferAddressUTXO extends React.Component<Props> {
         const { address, onAggsUTXO, onError, dispatch } = this.props;
         const path = `aggs-utxo?address=${address}`;
         apiRequest({ path, dispatch, showProgressBar: true })
-            .then((response: AggsUTXODoc[]) => {
-                onAggsUTXO(response);
+            .then((response: AggsUTXOResponse) => {
+                onAggsUTXO(response.data);
             })
             .catch(onError);
     }
