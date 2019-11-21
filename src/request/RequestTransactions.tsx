@@ -21,6 +21,7 @@ interface OwnProps {
     selectedTypes?: string[];
     progressBarTarget?: string;
     address?: string;
+    assetType?: string;
 }
 
 interface DispatchProps {
@@ -41,7 +42,8 @@ class RequestTransactions extends React.Component<Props> {
             showProgressBar,
             selectedTypes,
             progressBarTarget,
-            address
+            address,
+            assetType
         } = this.props;
         let path = `tx?itemsPerPage=${itemsPerPage}${lastEvaluatedKey ? `&lastEvaluatedKey=${lastEvaluatedKey}` : ""}${
             firstEvaluatedKey ? `&firstEvaluatedKey=${firstEvaluatedKey}` : ""
@@ -51,6 +53,9 @@ class RequestTransactions extends React.Component<Props> {
         }
         if (address) {
             path += `&address=${address}`;
+        }
+        if (assetType) {
+            path += `&assetType=${assetType}`;
         }
         apiRequest({
             path,
