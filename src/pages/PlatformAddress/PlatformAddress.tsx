@@ -14,8 +14,7 @@ import AccountDetails from "../../components/platformAddress/AccountDetails/Acco
 import TransactionList from "../../components/transaction/TransactionList/TransactionList";
 import CopyButton from "../../components/util/CopyButton/CopyButton";
 import { ImageLoader } from "../../components/util/ImageLoader/ImageLoader";
-import { RequestPlatformAddressAccount } from "../../request";
-import RequestPlatformAddressTransactions from "../../request/RequestPlatformAddressTransactions";
+import { RequestPlatformAddressAccount, RequestTransactions } from "../../request";
 import { balanceHistoryReasons, historyReasonTypes } from "../../utils/BalanceHistory";
 
 import { faSpinner } from "@fortawesome/free-solid-svg-icons";
@@ -23,6 +22,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { CommaNumberString } from "src/components/util/CommaNumberString/CommaNumberString";
 import DataTable from "src/components/util/DataTable/DataTable";
 import { apiRequest } from "src/request/ApiRequest";
+import { TransactionsResponse } from "src/request/RequestTransactions";
 import "./PlatformAddress.scss";
 
 interface BalanceChange {
@@ -50,8 +50,8 @@ interface State {
     };
     transactions: TransactionDoc[];
     loadTransaction: boolean;
-    pageForTransaction: number;
     notFound: boolean;
+    lastEvaluatedKeyForTransactions?: string;
     noMoreTransaction: boolean;
 
     balanceChanges?: BalanceChange[];
@@ -72,7 +72,6 @@ class PlatformAddress extends React.Component<Props, State> {
             transactions: [],
             notFound: false,
             loadTransaction: true,
-            pageForTransaction: 1,
             noMoreTransaction: false,
             balanceChangesHasNext: true,
             showReasonFilter: false,
@@ -346,7 +345,7 @@ class PlatformAddress extends React.Component<Props, State> {
                 params: { address }
             }
         } = this.props;
-        const { loadTransaction, pageForTransaction, transactions, noMoreTransaction } = this.state;
+        const { loadTransaction, lastEvaluatedKeyForTransactions, transactions, noMoreTransaction } = this.state;
 
         return (
             <>
@@ -361,10 +360,11 @@ class PlatformAddress extends React.Component<Props, State> {
                 )}
                 {loadTransaction && (
                     <>
-                        <RequestPlatformAddressTransactions
-                            page={pageForTransaction}
+                        <RequestTransactions
+                            lastEvaluatedKey={lastEvaluatedKeyForTransactions}
                             itemsPerPage={this.transactionsPerPage}
                             address={address}
+                            showProgressBar={false}
                             onTransactions={this.onTransactions}
                             onError={this.onError}
                         />
@@ -448,19 +448,18 @@ class PlatformAddress extends React.Component<Props, State> {
         }
     };
 
-    private onTransactions = (transactions: TransactionDoc[]) => {
-        if (transactions.length < this.transactionsPerPage) {
-            this.setState({ noMoreTransaction: true });
-        }
+    private onTransactions = (response: TransactionsResponse) => {
+        const { data: transactions, hasNextPage, lastEvaluatedKey } = response;
         this.setState({
             transactions: this.state.transactions.concat(transactions),
+            noMoreTransaction: !hasNextPage,
+            lastEvaluatedKeyForTransactions: lastEvaluatedKey,
             loadTransaction: false
         });
     };
     private loadMoreTransaction = () => {
         this.setState({
-            loadTransaction: true,
-            pageForTransaction: this.state.pageForTransaction + 1
+            loadTransaction: true
         });
     };
     private onAccountNotExist = () => {
