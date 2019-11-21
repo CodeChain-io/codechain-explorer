@@ -306,8 +306,12 @@ class PlatformAddress extends React.Component<Props, State> {
                 return "Transaction";
             case "initial_distribution":
                 return "Genesis account";
+            case "deposit":
+                return "Deposit";
             case "report":
                 return "Report double vote";
+            case "validator":
+                return "Validator reward";
             default:
                 return "";
         }
