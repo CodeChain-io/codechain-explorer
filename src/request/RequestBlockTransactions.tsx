@@ -1,33 +1,32 @@
-import { TransactionDoc } from "codechain-indexer-types";
 import * as _ from "lodash";
 import * as React from "react";
 import { connect, Dispatch } from "react-redux";
 
 import { ApiError, apiRequest } from "./ApiRequest";
+import { TransactionsResponse } from "./RequestTransactions";
 
 interface OwnProps {
     id: number | string;
-    page: number;
+    firstEvaluatedKey?: string;
+    lastEvaluatedKey?: string;
     itemsPerPage: number;
-    onTransactions: (txs: TransactionDoc[]) => void;
+    onTransactions: (response: TransactionsResponse) => void;
     onError: (e: ApiError) => void;
-}
-
-interface StateProps {
-    cached?: { data: TransactionDoc[]; updatedAt: number };
 }
 
 interface DispatchProps {
     dispatch: Dispatch;
 }
 
-type Props = OwnProps & StateProps & DispatchProps;
+type Props = OwnProps & DispatchProps;
 class RequestBlockTransactions extends React.Component<Props> {
     public componentWillMount() {
-        const { id, page, itemsPerPage, dispatch } = this.props;
+        const { id, lastEvaluatedKey, firstEvaluatedKey, itemsPerPage, dispatch } = this.props;
         const { onError, onTransactions } = this.props;
         apiRequest({
-            path: `block/${id}/tx?page=${page}&itemsPerPage=${itemsPerPage}`,
+            path: `block/${id}/tx?itemsPerPage=${itemsPerPage}${
+                lastEvaluatedKey ? `&lastEvaluatedKey=${lastEvaluatedKey}` : ""
+            }${firstEvaluatedKey ? `&firstEvaluatedKey=${firstEvaluatedKey}` : ""}`,
             dispatch,
             showProgressBar: false
         })
