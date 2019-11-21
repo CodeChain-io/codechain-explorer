@@ -55,8 +55,8 @@ interface State {
     noMoreTransaction: boolean;
 
     balanceChanges?: BalanceChange[];
-    balanceChangesNextPage?: number;
-    balanceChangesHasNext: boolean;
+    lastEvaluatedKeyForBalanceChanges?: string;
+    balanceChangesHasNext?: boolean;
     showReasonFilter: boolean;
     selectedReasons: string[];
 }
@@ -97,8 +97,7 @@ class PlatformAddress extends React.Component<Props, State> {
                 notFound: false,
                 loadTransaction: true,
                 noMoreTransaction: false,
-                balanceChanges: undefined,
-                balanceChangesNextPage: undefined
+                balanceChanges: undefined
             });
             setTimeout(() => this.loadBalanceHistory());
         }
@@ -388,7 +387,7 @@ class PlatformAddress extends React.Component<Props, State> {
             },
             dispatch
         } = this.props;
-        const { balanceChangesNextPage } = this.state;
+        const { lastEvaluatedKeyForBalanceChanges } = this.state;
         const selectedReasons = paramReasons ? paramReasons : this.state.selectedReasons;
 
         let reasonFilterQuerySuffix = "";
@@ -396,50 +395,30 @@ class PlatformAddress extends React.Component<Props, State> {
             reasonFilterQuerySuffix = `reasonFilter=${selectedReasons.join(",")}`;
         }
 
-        if (balanceChangesNextPage == null || paramReasons) {
-            apiRequest({
-                path:
-                    `account/${address}/balance-history?page=1&itemsPerPage=${this.balanceChangesPerPage}` +
-                    "&" +
-                    reasonFilterQuerySuffix,
-                dispatch,
-                showProgressBar: false
+        apiRequest({
+            path:
+                `account/${address}/balance-history?itemsPerPage=${this.balanceChangesPerPage}${
+                    lastEvaluatedKeyForBalanceChanges && paramReasons == null
+                        ? `&lastEvaluatedKey=${lastEvaluatedKeyForBalanceChanges}`
+                        : ""
+                }` +
+                "&" +
+                reasonFilterQuerySuffix,
+            dispatch,
+            showProgressBar: false
+        })
+            .then((response: { data: BalanceChange[]; hasNextPage: boolean; lastEvaluatedKey: string }) => {
+                const { data: balanceChanges, hasNextPage, lastEvaluatedKey } = response;
+                this.setState({
+                    balanceChanges: paramReasons
+                        ? balanceChanges
+                        : [...(this.state.balanceChanges || []), ...balanceChanges],
+                    balanceChangesHasNext: hasNextPage,
+                    lastEvaluatedKeyForBalanceChanges: lastEvaluatedKey,
+                    selectedReasons
+                });
             })
-                .then((response: BalanceChange[]) => {
-                    this.setState({
-                        selectedReasons,
-                        balanceChanges: response,
-                        balanceChangesNextPage: 2
-                    });
-                })
-                .catch(this.onError);
-        } else {
-            apiRequest({
-                path:
-                    `account/${address}/balance-history?page=${balanceChangesNextPage}&itemsPerPage=${
-                        this.balanceChangesPerPage
-                    }` +
-                    "&" +
-                    reasonFilterQuerySuffix,
-                dispatch,
-                showProgressBar: false
-            })
-                .then((response: BalanceChange[]) => {
-                    this.setState({
-                        balanceChanges: [...this.state.balanceChanges!, ...response]
-                    });
-                    if (response.length < this.balanceChangesPerPage) {
-                        this.setState({
-                            balanceChangesHasNext: false
-                        });
-                    } else {
-                        this.setState({
-                            balanceChangesNextPage: balanceChangesNextPage + 1
-                        });
-                    }
-                })
-                .catch(this.onError);
-        }
+            .catch(this.onError);
     };
 
     private handleFilterChange = (event: React.ChangeEvent<HTMLInputElement>) => {
