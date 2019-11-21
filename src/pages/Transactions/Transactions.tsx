@@ -13,6 +13,7 @@ import Row from "reactstrap/lib/Row";
 import { CommaNumberString } from "src/components/util/CommaNumberString/CommaNumberString";
 import { RootState } from "src/redux/actions";
 import RequestServerTime from "src/request/RequestServerTime";
+import { TransactionsResponse } from "src/request/RequestTransactions";
 import { getUnixTimeLocaleString } from "src/utils/Time";
 import DataTable from "../../components/util/DataTable/DataTable";
 import HexString from "../../components/util/HexString/HexString";
@@ -21,13 +22,21 @@ import { RequestTransactions } from "../../request";
 import { TransactionTypes } from "../../utils/Transactions";
 import "./Transactions.scss";
 
-interface State {
+interface PaginationState {
+    shouldMoveToNext: boolean;
+    shouldMoveToPrevious: boolean;
+    shouldMoveToFirst: boolean;
+    hasNextPage?: boolean;
+    hasPreviousPage?: boolean;
+    firstEvaluatedKey?: string;
+    lastEvaluatedKey?: string;
+    itemsPerPage?: number;
+}
+
+interface State extends PaginationState {
+    shouldChangeFilter: boolean;
     transactions: TransactionDoc[];
-    transactionsHasNext: boolean;
     isTransactionRequested: boolean;
-    redirect: boolean;
-    redirectPage?: number;
-    redirectItemsPerPage?: number;
     redirectFilter: string[];
     showTypeFilter: boolean;
 }
@@ -48,13 +57,14 @@ class Transactions extends React.Component<Props, State> {
         super(props);
         this.state = {
             transactions: [],
-            transactionsHasNext: true,
             isTransactionRequested: false,
-            redirect: false,
-            redirectItemsPerPage: undefined,
-            redirectPage: undefined,
             redirectFilter: [],
-            showTypeFilter: false
+            showTypeFilter: false,
+            itemsPerPage: undefined,
+            shouldMoveToNext: false,
+            shouldMoveToPrevious: false,
+            shouldMoveToFirst: false,
+            shouldChangeFilter: false
         };
     }
 
@@ -70,10 +80,12 @@ class Transactions extends React.Component<Props, State> {
             this.setState({
                 transactions: [],
                 isTransactionRequested: false,
-                redirect: false,
-                redirectPage: undefined,
-                redirectItemsPerPage: undefined,
-                showTypeFilter: typeFilter
+                showTypeFilter: typeFilter,
+                itemsPerPage: undefined,
+                shouldMoveToNext: false,
+                shouldMoveToPrevious: false,
+                shouldMoveToFirst: false,
+                shouldChangeFilter: false
             });
         } else {
             this.setState({ showTypeFilter: typeFilter });
@@ -86,31 +98,46 @@ class Transactions extends React.Component<Props, State> {
             serverTimeOffset
         } = this.props;
         const params = new URLSearchParams(search);
-        const currentPage = params.get("page") ? parseInt(params.get("page") as string, 10) : 1;
+        const lastEvaluatedKey = params.get("lastEvaluatedKey") || undefined;
+        const firstEvaluatedKey = params.get("firstEvaluatedKey") || undefined;
         const itemsPerPage = params.get("itemsPerPage") ? parseInt(params.get("itemsPerPage") as string, 10) : 25;
         const selectedTypes = params.get("filter") ? params.get("filter")!.split(",") : [];
 
-        const {
-            transactions,
-            transactionsHasNext,
-            isTransactionRequested,
-            redirect,
-            redirectItemsPerPage,
-            redirectPage,
-            redirectFilter,
-            showTypeFilter
-        } = this.state;
+        const { transactions, isTransactionRequested, redirectFilter, showTypeFilter } = this.state;
 
-        if (redirect) {
+        if (this.state.shouldMoveToNext) {
             return (
                 <Redirect
                     push={true}
-                    to={`/txs?page=${redirectPage || currentPage}&itemsPerPage=${redirectItemsPerPage || itemsPerPage}${
+                    to={`/txs?lastEvaluatedKey=${this.state.lastEvaluatedKey}&itemsPerPage=${this.state.itemsPerPage ||
+                        itemsPerPage}${
                         selectedTypes || redirectFilter ? `&filter=${redirectFilter.sort().join(",")}` : ""
                     }`}
                 />
             );
         }
+        if (this.state.shouldMoveToPrevious) {
+            return (
+                <Redirect
+                    push={true}
+                    to={`/txs?firstEvaluatedKey=${this.state.firstEvaluatedKey}&itemsPerPage=${this.state
+                        .itemsPerPage || itemsPerPage}${
+                        selectedTypes || redirectFilter ? `&filter=${redirectFilter.sort().join(",")}` : ""
+                    }`}
+                />
+            );
+        }
+        if (this.state.shouldMoveToFirst || this.state.shouldChangeFilter) {
+            return (
+                <Redirect
+                    push={true}
+                    to={`/txs?itemsPerPage=${this.state.itemsPerPage || itemsPerPage}${
+                        selectedTypes || redirectFilter ? `&filter=${redirectFilter.sort().join(",")}` : ""
+                    }`}
+                />
+            );
+        }
+
         if (serverTimeOffset === undefined) {
             return <RequestServerTime />;
         }
@@ -120,7 +147,8 @@ class Transactions extends React.Component<Props, State> {
                     <div>
                         <RequestTransactions
                             onTransactions={this.onTransactions}
-                            page={currentPage}
+                            firstEvaluatedKey={firstEvaluatedKey}
+                            lastEvaluatedKey={lastEvaluatedKey}
                             itemsPerPage={itemsPerPage}
                             showProgressBar={false}
                             onError={this.onError}
@@ -179,28 +207,33 @@ class Transactions extends React.Component<Props, State> {
                                     <ul className="list-inline">
                                         <li className="list-inline-item">
                                             <button
-                                                disabled={currentPage === 1 || !isTransactionRequested}
+                                                disabled={
+                                                    this.state.hasPreviousPage !== true || !isTransactionRequested
+                                                }
                                                 className={`btn btn-primary page-btn ${
-                                                    currentPage === 1 || !isTransactionRequested ? "disabled" : ""
+                                                    this.state.hasPreviousPage !== true || !isTransactionRequested
+                                                        ? "disabled"
+                                                        : ""
                                                 }`}
                                                 type="button"
-                                                onClick={_.partial(this.moveBefore, currentPage)}
+                                                onClick={this.moveBefore}
                                             >
                                                 <FontAwesomeIcon icon={faAngleLeft} /> Prev
                                             </button>
                                         </li>
                                         <li className="list-inline-item">
-                                            <div className="number-view">Page {currentPage}</div>
+                                            <div className="number-view" />
                                         </li>
                                         <li className="list-inline-item">
-                                            {/* FIXME: Disable the button if transactions had loaded less than the page size */}
                                             <button
-                                                disabled={!transactionsHasNext && !isTransactionRequested}
+                                                disabled={this.state.hasNextPage !== true && !isTransactionRequested}
                                                 className={`btn btn-primary page-btn ${
-                                                    !transactionsHasNext && !isTransactionRequested ? "disabled" : ""
+                                                    this.state.hasNextPage !== true && !isTransactionRequested
+                                                        ? "disabled"
+                                                        : ""
                                                 }`}
                                                 type="button"
-                                                onClick={_.partial(this.moveNext, currentPage)}
+                                                onClick={this.moveNext}
                                             >
                                                 Next <FontAwesomeIcon icon={faAngleRight} />
                                             </button>
@@ -318,43 +351,46 @@ class Transactions extends React.Component<Props, State> {
             this.setState({
                 redirectFilter: [...selectedTypes, event.target.value],
                 isTransactionRequested: false,
-                redirect: true,
-                redirectPage: 1
+                shouldChangeFilter: true
             });
         } else {
             this.setState({
                 redirectFilter: selectedTypes.filter(type => type !== event.target.value),
                 isTransactionRequested: false,
-                redirect: true,
-                redirectPage: 1
+                shouldChangeFilter: true
             });
         }
     };
 
-    private moveNext = (currentPage: number, e: any) => {
+    private moveNext = (e: any) => {
         e.preventDefault();
-        this.setState({ redirectPage: currentPage + 1, redirect: true });
+        this.setState({ shouldMoveToNext: true });
     };
 
-    private moveBefore = (currentPage: number, e: any) => {
+    private moveBefore = (e: any) => {
         e.preventDefault();
-        if (currentPage <= 1) {
-            return;
-        }
-        this.setState({ redirectPage: currentPage - 1, redirect: true });
+        this.setState({ shouldMoveToPrevious: true });
     };
 
     private handleOptionChange = (event: any) => {
         const selected = parseInt(event.target.value, 10);
         this.setState({
-            redirectItemsPerPage: selected,
-            redirect: true,
-            redirectPage: 1
+            itemsPerPage: selected,
+            shouldMoveToFirst: true
         });
     };
 
-    private onTransactions = (transactions: TransactionDoc[]) => {
-        this.setState({ transactions, isTransactionRequested: true });
+    private onTransactions = (response: TransactionsResponse) => {
+        const { data, hasNextPage, hasPreviousPage, lastEvaluatedKey, firstEvaluatedKey } = response;
+        this.setState({
+            transactions: data,
+            isTransactionRequested: true,
+            hasNextPage,
+            hasPreviousPage,
+            lastEvaluatedKey,
+            firstEvaluatedKey
+        });
+        /* What is it?
         const {
             location: { search }
         } = this.props;
@@ -365,6 +401,7 @@ class Transactions extends React.Component<Props, State> {
                 transactionsHasNext: false
             });
         }
+        */
     };
 
     private onError = (error: any) => {
