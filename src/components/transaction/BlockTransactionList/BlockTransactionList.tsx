@@ -15,7 +15,9 @@ interface OwnProps {
 }
 
 interface State {
-    pages: number;
+    pages: [undefined, ...string[]];
+    hasNextPage?: boolean;
+    lastEvaluatedKey?: string;
 }
 
 type Props = OwnProps;
@@ -25,27 +27,25 @@ class BlockTransactionList extends React.Component<Props, State> {
     constructor(props: Props) {
         super(props);
         this.state = {
-            pages: 1
+            pages: [undefined]
         };
     }
 
     public render() {
-        const { pages } = this.state;
-        const { blockId, totalCount } = this.props;
+        const { pages, hasNextPage } = this.state;
+        const { blockId } = this.props;
         return (
             <div className="parcel-transaction-list">
                 {this.renderTransactionListTitle()}
-                {_.range(1, pages + 1).map(page => {
-                    return (
-                        <BlockTransactionListPage
-                            key={page}
-                            blockId={blockId}
-                            page={page}
-                            itemsPerPage={this.itemsPerPage}
-                        />
-                    );
-                })}
-                {pages * this.itemsPerPage < totalCount && (
+                {pages.map(page => (
+                    <BlockTransactionListPage
+                        lastEvaluatedKey={page}
+                        blockId={blockId}
+                        itemsPerPage={this.itemsPerPage}
+                        onLoad={this.handlePageLoad}
+                    />
+                ))}
+                {hasNextPage && (
                     <Row>
                         <Col>
                             <div className="mt-small">
@@ -76,7 +76,23 @@ class BlockTransactionList extends React.Component<Props, State> {
     };
 
     private loadMore = () => {
-        this.setState({ pages: this.state.pages + 1 });
+        const { pages, lastEvaluatedKey } = this.state;
+        this.setState({ pages: [...pages, lastEvaluatedKey] as [undefined, ...string[]] });
+    };
+
+    private handlePageLoad = (params: {
+        requestedKey: string | undefined;
+        requestedItemsPerPage: number;
+        hasNextPage: boolean;
+        lastEvaluatedKey: string;
+    }) => {
+        const { requestedKey, hasNextPage, lastEvaluatedKey } = params;
+        if (_.last(this.state.pages) === requestedKey) {
+            this.setState({
+                hasNextPage,
+                lastEvaluatedKey
+            });
+        }
     };
 }
 

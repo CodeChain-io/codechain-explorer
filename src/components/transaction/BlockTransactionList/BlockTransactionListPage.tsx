@@ -6,15 +6,24 @@ import { H160 } from "codechain-sdk/lib/core/classes";
 
 import { faSpinner } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { TransactionsResponse } from "src/request/RequestTransactions";
 import RequestBlockTransactions from "../../../request/RequestBlockTransactions";
 import TransactionListItems from "../TransactionListItems/TransactionListItems";
 
 interface OwnProps {
-    page: number;
+    lastEvaluatedKey?: string;
     itemsPerPage: number;
     blockId: number | string;
     assetType?: H160;
     owner?: string;
+    onLoad: (
+        params: {
+            requestedKey: string | undefined;
+            requestedItemsPerPage: number;
+            hasNextPage: boolean;
+            lastEvaluatedKey: string;
+        }
+    ) => void;
 }
 
 interface State {
@@ -32,7 +41,7 @@ class BlockTransactionListPage extends React.Component<Props, State> {
     public render() {
         const { transactions } = this.state;
         if (transactions == null) {
-            const { blockId, page, itemsPerPage } = this.props;
+            const { blockId, lastEvaluatedKey, itemsPerPage } = this.props;
             return (
                 <div>
                     <div className="text-center mt-3">
@@ -40,7 +49,7 @@ class BlockTransactionListPage extends React.Component<Props, State> {
                     </div>
                     <RequestBlockTransactions
                         id={blockId}
-                        page={page}
+                        lastEvaluatedKey={lastEvaluatedKey}
                         itemsPerPage={itemsPerPage}
                         onTransactions={this.onLoad}
                         onError={console.error}
@@ -52,8 +61,11 @@ class BlockTransactionListPage extends React.Component<Props, State> {
         return <TransactionListItems transactions={transactions} assetType={assetType} owner={owner} />;
     }
 
-    private onLoad = (transactions: TransactionDoc[]) => {
+    private onLoad = (response: TransactionsResponse) => {
+        const { data: transactions, hasNextPage, lastEvaluatedKey } = response;
         this.setState({ transactions });
+        const { lastEvaluatedKey: requestedKey, itemsPerPage: requestedItemsPerPage } = this.props;
+        this.props.onLoad({ requestedKey, requestedItemsPerPage, hasNextPage, lastEvaluatedKey });
     };
 }
 
