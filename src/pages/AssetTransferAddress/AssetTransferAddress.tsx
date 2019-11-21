@@ -5,9 +5,10 @@ import { match } from "react-router";
 import { Col, Container, Row } from "reactstrap";
 
 import { AggsUTXODoc, TransactionDoc } from "codechain-indexer-types";
-import { RequestAssetTransferAddressTransactions, RequestAssetTransferAddressUTXO } from "../../request";
+import { RequestAssetTransferAddressUTXO, RequestTransactions } from "../../request";
 
 import * as _ from "lodash";
+import { TransactionsResponse } from "src/request/RequestTransactions";
 import AssetList from "../../components/asset/AssetList/AssetList";
 import TransactionList from "../../components/transaction/TransactionList/TransactionList";
 import CopyButton from "../../components/util/CopyButton/CopyButton";
@@ -25,6 +26,7 @@ interface State {
     loadUTXO: boolean;
     loadTransaction: boolean;
     noMoreTransaction: boolean;
+    trarnsactionsLastEvaluatedKey?: string;
 }
 
 class AssetTransferAddress extends React.Component<Props, State> {
@@ -139,7 +141,7 @@ class AssetTransferAddress extends React.Component<Props, State> {
                 params: { address }
             }
         } = this.props;
-        const { transactions, pageForTransactions, loadTransaction, noMoreTransaction } = this.state;
+        const { transactions, loadTransaction, noMoreTransaction, trarnsactionsLastEvaluatedKey } = this.state;
         return (
             <>
                 {transactions.length > 0 ? (
@@ -154,10 +156,11 @@ class AssetTransferAddress extends React.Component<Props, State> {
                 ) : null}
                 {loadTransaction && (
                     <>
-                        <RequestAssetTransferAddressTransactions
+                        <RequestTransactions
                             address={address}
-                            page={pageForTransactions}
+                            lastEvaluatedKey={trarnsactionsLastEvaluatedKey}
                             itemsPerPage={this.transactionItemsPerPage}
+                            showProgressBar={false}
                             onTransactions={this.onTransactions}
                             onError={this.onError}
                         />
@@ -174,14 +177,13 @@ class AssetTransferAddress extends React.Component<Props, State> {
         });
     };
 
-    private onTransactions = (transactions: TransactionDoc[]) => {
+    private onTransactions = (response: TransactionsResponse) => {
+        const { data: transactions, hasNextPage, lastEvaluatedKey } = response;
         this.setState({
             transactions: this.state.transactions.concat(transactions),
             loadTransaction: false
         });
-        if (transactions.length < this.transactionItemsPerPage) {
-            this.setState({ noMoreTransaction: true });
-        }
+        this.setState({ noMoreTransaction: !hasNextPage, trarnsactionsLastEvaluatedKey: lastEvaluatedKey });
     };
 
     private onAggsUTXO = (aggsUTXO: AggsUTXODoc[]) => {

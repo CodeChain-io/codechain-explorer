@@ -1,6 +1,5 @@
 import RequestAssetInfosByName from "./RequestAssetInfosByName";
 import RequestAssetScheme from "./RequestAssetScheme";
-import RequestAssetTransferAddressTransactions from "./RequestAssetTransferAddressTransactions";
 import RequestAssetTransferAddressUTXO from "./RequestAssetTransferAddressUTXO";
 import RequestBlock from "./RequestBlock";
 import RequestBlockNumber from "./RequestBlockNumber";
@@ -22,7 +21,6 @@ export { RequestBlock };
 export { RequestAssetScheme };
 export { RequestTransaction };
 export { RequestAssetTransferAddressUTXO };
-export { RequestAssetTransferAddressTransactions };
 export { RequestPlatfromAddressBlocks };
 export { RequestPlatformAddressAccount };
 export { RequestBlocks };

@@ -19,6 +19,8 @@ interface OwnProps {
     onTransactions: (transactions: TransactionsResponse) => void;
     onError: (e: ApiError) => void;
     selectedTypes?: string[];
+    progressBarTarget?: string;
+    address?: string;
 }
 
 interface DispatchProps {
@@ -37,7 +39,9 @@ class RequestTransactions extends React.Component<Props> {
             firstEvaluatedKey,
             itemsPerPage,
             showProgressBar,
-            selectedTypes
+            selectedTypes,
+            progressBarTarget,
+            address
         } = this.props;
         let path = `tx?itemsPerPage=${itemsPerPage}${lastEvaluatedKey ? `&lastEvaluatedKey=${lastEvaluatedKey}` : ""}${
             firstEvaluatedKey ? `&firstEvaluatedKey=${firstEvaluatedKey}` : ""
@@ -45,10 +49,14 @@ class RequestTransactions extends React.Component<Props> {
         if (selectedTypes && selectedTypes.length > 0) {
             path += `&type=${selectedTypes.join(",")}`;
         }
+        if (address) {
+            path += `&address=${address}`;
+        }
         apiRequest({
             path,
             dispatch,
-            showProgressBar
+            showProgressBar,
+            progressBarTarget
         })
             .then((response: any) => {
                 onTransactions(response);
