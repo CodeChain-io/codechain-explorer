@@ -11,6 +11,7 @@ import { Link } from "react-router-dom";
 import { CommaNumberString } from "src/components/util/CommaNumberString/CommaNumberString";
 import { RootState } from "src/redux/actions";
 import RequestServerTime from "src/request/RequestServerTime";
+import { TransactionsResponse } from "src/request/RequestTransactions";
 import { getUnixTimeLocaleString } from "src/utils/Time";
 import DataTable from "../../components/util/DataTable/DataTable";
 import HexString from "../../components/util/HexString/HexString";
@@ -18,13 +19,20 @@ import { TypeBadge } from "../../components/util/TypeBadge/TypeBadge";
 import { RequestPendingTransactions } from "../../request";
 import "./PendingTransactions.scss";
 
-interface State {
+interface PaginationState {
+    shouldMoveToNext: boolean;
+    shouldMoveToPrevious: boolean;
+    shouldMoveToFirst: boolean;
+    hasNextPage?: boolean;
+    hasPreviousPage?: boolean;
+    firstEvaluatedKey?: string;
+    lastEvaluatedKey?: string;
+    itemsPerPage?: number;
+}
+
+interface State extends PaginationState {
     transactions: TransactionDoc[];
-    transactionsHasNext: boolean;
     isTransactionRequested: boolean;
-    redirect: boolean;
-    redirectPage?: number;
-    redirectItemsPerPage?: number;
 }
 
 interface OwnProps {
@@ -43,11 +51,11 @@ class PendingTransactions extends React.Component<Props, State> {
         super(props);
         this.state = {
             transactions: [],
-            transactionsHasNext: true,
             isTransactionRequested: false,
-            redirect: false,
-            redirectItemsPerPage: undefined,
-            redirectPage: undefined
+            itemsPerPage: undefined,
+            shouldMoveToNext: false,
+            shouldMoveToPrevious: false,
+            shouldMoveToFirst: false
         };
     }
 
@@ -62,9 +70,10 @@ class PendingTransactions extends React.Component<Props, State> {
             this.setState({
                 transactions: [],
                 isTransactionRequested: false,
-                redirect: false,
-                redirectPage: undefined,
-                redirectItemsPerPage: undefined
+                itemsPerPage: undefined,
+                shouldMoveToNext: false,
+                shouldMoveToPrevious: false,
+                shouldMoveToFirst: false
             });
         }
     }
@@ -75,25 +84,31 @@ class PendingTransactions extends React.Component<Props, State> {
             serverTimeOffset
         } = this.props;
         const params = new URLSearchParams(search);
-        const currentPage = params.get("page") ? parseInt(params.get("page") as string, 10) : 1;
+        const lastEvaluatedKey = params.get("lastEvaluatedKey") || undefined;
+        const firstEvaluatedKey = params.get("firstEvaluatedKey") || undefined;
         const itemsPerPage = params.get("itemsPerPage") ? parseInt(params.get("itemsPerPage") as string, 10) : 25;
-        const {
-            transactions,
-            transactionsHasNext,
-            isTransactionRequested,
-            redirect,
-            redirectItemsPerPage,
-            redirectPage
-        } = this.state;
+        const { transactions, isTransactionRequested } = this.state;
 
-        if (redirect) {
+        if (this.state.shouldMoveToNext) {
             return (
                 <Redirect
                     push={true}
-                    to={`/pending-txs?page=${redirectPage || currentPage}&itemsPerPage=${redirectItemsPerPage ||
-                        itemsPerPage}`}
+                    to={`/pending-txs?lastEvaluatedKey=${this.state.lastEvaluatedKey}&itemsPerPage=${this.state
+                        .itemsPerPage || itemsPerPage}`}
                 />
             );
+        }
+        if (this.state.shouldMoveToPrevious) {
+            return (
+                <Redirect
+                    push={true}
+                    to={`/pending-txs?firstEvaluatedKey=${this.state.firstEvaluatedKey}&itemsPerPage=${this.state
+                        .itemsPerPage || itemsPerPage}`}
+                />
+            );
+        }
+        if (this.state.shouldMoveToFirst) {
+            return <Redirect push={true} to={`/pending-txs?itemsPerPage=${this.state.itemsPerPage || itemsPerPage}`} />;
         }
         if (serverTimeOffset === undefined) {
             return <RequestServerTime />;
@@ -104,7 +119,8 @@ class PendingTransactions extends React.Component<Props, State> {
                     <div>
                         <RequestPendingTransactions
                             onTransactions={this.onTransactions}
-                            page={currentPage}
+                            firstEvaluatedKey={firstEvaluatedKey}
+                            lastEvaluatedKey={lastEvaluatedKey}
                             itemsPerPage={itemsPerPage}
                             onError={this.onError}
                         />
@@ -119,27 +135,33 @@ class PendingTransactions extends React.Component<Props, State> {
                                     <ul className="list-inline">
                                         <li className="list-inline-item">
                                             <button
-                                                disabled={currentPage === 1 || !isTransactionRequested}
+                                                disabled={
+                                                    this.state.hasPreviousPage !== true || !isTransactionRequested
+                                                }
                                                 className={`btn btn-primary page-btn ${
-                                                    currentPage === 1 || !isTransactionRequested ? "disabled" : ""
+                                                    this.state.hasPreviousPage !== true || !isTransactionRequested
+                                                        ? "disabled"
+                                                        : ""
                                                 }`}
                                                 type="button"
-                                                onClick={_.partial(this.moveBefore, currentPage)}
+                                                onClick={this.moveBefore}
                                             >
                                                 <FontAwesomeIcon icon={faAngleLeft} /> Prev
                                             </button>
                                         </li>
                                         <li className="list-inline-item">
-                                            <div className="number-view">Page {currentPage}</div>
+                                            <div className="number-view" />
                                         </li>
                                         <li className="list-inline-item">
                                             <button
-                                                disabled={!transactionsHasNext || !isTransactionRequested}
+                                                disabled={this.state.hasNextPage !== true || !isTransactionRequested}
                                                 className={`btn btn-primary page-btn ${
-                                                    !transactionsHasNext || !isTransactionRequested ? "disabled" : ""
+                                                    this.state.hasNextPage !== true || !isTransactionRequested
+                                                        ? "disabled"
+                                                        : ""
                                                 }`}
                                                 type="button"
-                                                onClick={_.partial(this.moveNext, currentPage)}
+                                                onClick={this.moveNext}
                                             >
                                                 Next <FontAwesomeIcon icon={faAngleRight} />
                                             </button>
@@ -238,30 +260,35 @@ class PendingTransactions extends React.Component<Props, State> {
         );
     }
 
-    private moveNext = (currentPage: number, e: any) => {
+    private moveNext = (e: any) => {
         e.preventDefault();
-        this.setState({ redirectPage: currentPage + 1, redirect: true });
+        this.setState({ shouldMoveToNext: true });
     };
 
-    private moveBefore = (currentPage: number, e: any) => {
+    private moveBefore = (e: any) => {
         e.preventDefault();
-        if (currentPage <= 1) {
-            return;
-        }
-        this.setState({ redirectPage: currentPage - 1, redirect: true });
+        this.setState({ shouldMoveToPrevious: true });
     };
 
     private handleOptionChange = (event: any) => {
         const selected = parseInt(event.target.value, 10);
         this.setState({
-            redirectItemsPerPage: selected,
-            redirect: true,
-            redirectPage: 1
+            itemsPerPage: selected,
+            shouldMoveToFirst: true
         });
     };
 
-    private onTransactions = (transactions: TransactionDoc[]) => {
-        this.setState({ transactions, isTransactionRequested: true });
+    private onTransactions = (response: TransactionsResponse) => {
+        const { data, hasNextPage, hasPreviousPage, lastEvaluatedKey, firstEvaluatedKey } = response;
+        this.setState({
+            transactions: data,
+            isTransactionRequested: true,
+            hasNextPage,
+            hasPreviousPage,
+            lastEvaluatedKey,
+            firstEvaluatedKey
+        });
+        /* What is it?
         const {
             location: { search }
         } = this.props;
@@ -272,6 +299,7 @@ class PendingTransactions extends React.Component<Props, State> {
                 transactionsHasNext: false
             });
         }
+        */
     };
 
     private onError = (error: any) => {
