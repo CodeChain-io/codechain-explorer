@@ -23,7 +23,7 @@ interface State {
 
 type Props = OwnProps;
 
-class TransactionLoadableListPage extends React.Component<Props, State> {
+class BlockTransactionListPage extends React.Component<Props, State> {
     constructor(props: Props) {
         super(props);
         this.state = {};
@@ -57,4 +57,4 @@ class TransactionLoadableListPage extends React.Component<Props, State> {
     };
 }
 
-export default TransactionLoadableListPage;
+export default BlockTransactionListPage;
