@@ -1,5 +1,5 @@
 import * as React from "react";
-import { connect, Dispatch } from "react-redux";
+import { connect, DispatchProp } from "react-redux";
 
 import { H160 } from "codechain-sdk/lib/core/classes";
 
@@ -23,11 +23,7 @@ interface StateProps {
     };
 }
 
-interface DispatchProps {
-    dispatch: Dispatch;
-}
-
-type Props = OwnProps & StateProps & DispatchProps;
+type Props = OwnProps & StateProps & DispatchProp;
 
 class RequestAssetScheme extends React.Component<Props> {
     public componentWillMount() {

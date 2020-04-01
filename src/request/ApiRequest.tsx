@@ -1,10 +1,9 @@
-import { Dispatch } from "react-redux";
 import { hideLoading, showLoading } from "react-redux-loading-bar";
 
 interface ApiRequestData {
     path: string;
     body?: any | null;
-    dispatch: Dispatch;
+    dispatch: any;
     showProgressBar: boolean;
     progressBarTarget?: string;
 }

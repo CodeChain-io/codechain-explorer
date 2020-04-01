@@ -1,5 +1,5 @@
 import * as React from "react";
-import { connect, Dispatch } from "react-redux";
+import { connect, DispatchProp } from "react-redux";
 
 import { ApiError, apiRequest } from "./ApiRequest";
 
@@ -10,16 +10,12 @@ interface OwnProps {
     repeat?: number;
 }
 
-interface DispatchProps {
-    dispatch: Dispatch;
-}
-
 interface State {
     // FIXME: | number
     timer?: NodeJS.Timer;
 }
 
-type Props = OwnProps & DispatchProps;
+type Props = OwnProps & DispatchProp;
 
 class RequestPing extends React.Component<Props, State> {
     public componentWillMount() {

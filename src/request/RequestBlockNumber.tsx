@@ -1,6 +1,6 @@
 import * as React from "react";
 
-import { connect, Dispatch } from "react-redux";
+import { connect, DispatchProp } from "react-redux";
 import { ApiError, apiRequest } from "./ApiRequest";
 
 interface OwnProps {
@@ -9,11 +9,7 @@ interface OwnProps {
     repeat?: number;
 }
 
-interface DispatchProps {
-    dispatch: Dispatch;
-}
-
-type Props = OwnProps & DispatchProps;
+type Props = OwnProps & DispatchProp;
 
 interface State {
     // FIXME: | number

@@ -1,5 +1,5 @@
 import * as React from "react";
-import { connect, Dispatch } from "react-redux";
+import { connect, DispatchProp } from "react-redux";
 
 import { U256 } from "codechain-sdk/lib/core/classes";
 
@@ -14,11 +14,7 @@ interface OwnProps {
     showProgressBar: boolean;
 }
 
-interface DispatchProps {
-    dispatch: Dispatch;
-}
-
-type Props = OwnProps & DispatchProps;
+type Props = OwnProps & DispatchProp;
 
 class RequestPlatformAddressAccount extends React.Component<Props> {
     public componentWillMount() {

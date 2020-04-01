@@ -1,5 +1,5 @@
 import * as React from "react";
-import { connect, Dispatch } from "react-redux";
+import { connect, DispatchProp } from "react-redux";
 
 import { ApiError, apiRequest } from "./ApiRequest";
 
@@ -9,11 +9,8 @@ interface OwnProps {
     progressBarTarget?: string;
 }
 
-interface DispatchProps {
-    dispatch: Dispatch;
-}
+type Props = OwnProps & DispatchProp;
 
-type Props = OwnProps & DispatchProps;
 class RequestIndexerVersion extends React.Component<Props> {
     public componentWillMount() {
         const { dispatch, progressBarTarget } = this.props;

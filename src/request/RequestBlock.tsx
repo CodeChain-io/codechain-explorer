@@ -1,6 +1,6 @@
 import * as _ from "lodash";
 import * as React from "react";
-import { connect, Dispatch } from "react-redux";
+import { connect, DispatchProp } from "react-redux";
 
 import { H256 } from "codechain-sdk/lib/core/classes";
 
@@ -21,10 +21,8 @@ interface StateProps {
     cached?: { data: BlockDoc; updatedAt: number };
 }
 
-interface DispatchProps {
-    dispatch: Dispatch;
-}
-type Props = OwnProps & StateProps & DispatchProps;
+type Props = OwnProps & StateProps & DispatchProp;
+
 class RequestBlock extends React.Component<Props> {
     public componentWillMount() {
         const { cached, dispatch, onError, onBlock, id, progressBarTarget, onBlockNotExist } = this.props;
