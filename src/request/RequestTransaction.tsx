@@ -1,6 +1,6 @@
 import { H256 } from "codechain-sdk/lib/core/classes";
 import * as React from "react";
-import { connect, Dispatch } from "react-redux";
+import { connect, DispatchProp } from "react-redux";
 
 import { TransactionDoc } from "codechain-indexer-types";
 import { RootState } from "../redux/actions";
@@ -19,11 +19,7 @@ interface StateProps {
     cached?: { data: TransactionDoc; updatedAt: number };
 }
 
-interface DispatchProps {
-    dispatch: Dispatch;
-}
-
-type Props = OwnProps & StateProps & DispatchProps;
+type Props = OwnProps & StateProps & DispatchProp;
 
 class RequestTransaction extends React.Component<Props> {
     public componentWillMount() {

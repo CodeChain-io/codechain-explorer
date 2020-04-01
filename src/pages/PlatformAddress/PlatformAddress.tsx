@@ -1,7 +1,7 @@
 import * as _ from "lodash";
 import * as QRCode from "qrcode.react";
 import * as React from "react";
-import { connect, Dispatch } from "react-redux";
+import { connect, DispatchProp } from "react-redux";
 import { match } from "react-router";
 import { Link } from "react-router-dom";
 import { Col, Container, Row } from "reactstrap";
@@ -39,10 +39,6 @@ interface OwnProps {
     match: match<{ address: string }>;
 }
 
-interface DispatchProps {
-    dispatch: Dispatch;
-}
-
 interface State {
     account?: {
         seq: U256;
@@ -61,7 +57,7 @@ interface State {
     selectedReasons: string[];
 }
 
-type Props = OwnProps & DispatchProps;
+type Props = OwnProps & DispatchProp;
 
 class PlatformAddress extends React.Component<Props, State> {
     private transactionsPerPage = 6;

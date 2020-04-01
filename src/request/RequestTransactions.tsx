@@ -1,6 +1,7 @@
 import { TransactionDoc } from "codechain-indexer-types";
 import * as React from "react";
-import { connect, Dispatch } from "react-redux";
+import { connect, DispatchProp } from "react-redux";
+
 import { ApiError, apiRequest } from "./ApiRequest";
 
 export interface TransactionsResponse {
@@ -24,11 +25,7 @@ interface OwnProps {
     assetType?: string;
 }
 
-interface DispatchProps {
-    dispatch: Dispatch;
-}
-
-type Props = OwnProps & DispatchProps;
+type Props = OwnProps & DispatchProp;
 
 class RequestTransactions extends React.Component<Props> {
     public componentWillMount() {

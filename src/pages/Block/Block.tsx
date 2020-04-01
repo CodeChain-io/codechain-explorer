@@ -25,7 +25,7 @@ interface State {
 }
 
 interface Props {
-    match: match<{ id: number | string }>;
+    match: match<{ id: string }>;
 }
 
 class Block extends React.Component<Props, State> {

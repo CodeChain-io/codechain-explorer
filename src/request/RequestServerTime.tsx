@@ -1,18 +1,14 @@
 import * as moment from "moment";
 import * as React from "react";
-import { connect, Dispatch } from "react-redux";
+import { connect, DispatchProp } from "react-redux";
 import { RootState } from "src/redux/actions";
 import { ApiError, apiRequest } from "./ApiRequest";
-
-interface DispatchProps {
-    dispatch: Dispatch;
-}
 
 interface StateProps {
     waitingServerTimeResponse: boolean;
 }
 
-type Props = DispatchProps & StateProps;
+type Props = DispatchProp & StateProps;
 
 class RequestServerTime extends React.Component<Props> {
     public componentWillMount() {

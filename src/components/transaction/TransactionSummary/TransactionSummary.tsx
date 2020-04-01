@@ -1,6 +1,6 @@
 import * as _ from "lodash";
 import * as React from "react";
-import { connect, Dispatch } from "react-redux";
+import { connect, DispatchProp } from "react-redux";
 
 import { faChevronCircleDown, faChevronCircleRight } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -18,10 +18,6 @@ interface OwnProps {
     transaction: TransactionDoc;
 }
 
-interface DispatchProps {
-    dispatch: Dispatch;
-}
-
 interface State {
     popoverOpen: boolean;
     popoverTarget?: string;
@@ -30,7 +26,7 @@ interface State {
     popoverOwner?: string;
 }
 
-type Props = OwnProps & DispatchProps;
+type Props = OwnProps & DispatchProp;
 
 class TransactionSummaryInternal extends React.Component<Props, State> {
     private itemLimit = 6;
@@ -259,7 +255,7 @@ class TransactionSummaryInternal extends React.Component<Props, State> {
 }
 const TransactionSummary = connect(
     null,
-    (dispatch: Dispatch) => {
+    (dispatch: any) => {
         return { dispatch };
     }
 )(TransactionSummaryInternal);
