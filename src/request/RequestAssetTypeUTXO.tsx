@@ -20,7 +20,9 @@ type Props = OwnProps & DispatchProp;
 class RequestAssetTypeUTXO extends React.Component<Props> {
     public componentWillMount() {
         const { assetType, onAggsUTXOs, onError, dispatch } = this.props;
-        const path = `aggs-utxo?assetType=${assetType}&itemsPerPage=100`;
+
+        const max32bit = 2147483647;
+        const path = `aggs-utxo?assetType=${assetType}&itemsPerPage=${max32bit - 10}`;
         apiRequest({ path, dispatch, showProgressBar: false })
             .then((response: AggsUTXOResponse) => {
                 onAggsUTXOs(response.data);
