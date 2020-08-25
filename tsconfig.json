@@ -18,5 +18,5 @@
     "outDir": "build/dist",
     "rootDir": "src"
   },
-  "exclude": ["node_modules", "build", "scripts", "acceptance-tests", "webpack", "jest", "config"]
+  "exclude": ["node_modules", "build", "scripts", "acceptance-tests", "webpack", "config"]
 }
