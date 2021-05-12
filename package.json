@@ -45,7 +45,7 @@
     "identicon.js": "^2.3.2",
     "js-sha256": "^0.9.0",
     "macaddress": "^0.2.9",
-    "merge": "^1.2.1",
+    "merge": "^2.1.1",
     "moment": "^2.22.2",
     "node-sass": "^4.9.1",
     "object-assign": "4.1.1",
